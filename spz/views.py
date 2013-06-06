@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template
-
 from spz import app
+from spz.decorators import templated
 
 
 @app.route('/')
+@templated('baselayout.html')
 def index():
-    return render_template('baselayout.html')
+    return None
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
