@@ -1,0 +1,14 @@
+Flask==0.9
+Flask-Cache==0.12
+Flask-SQLAlchemy==0.16
+Flask-WTF==0.8.3
+Jinja2==2.7
+MarkupSafe==0.18
+SQLAlchemy==0.8.1
+WTForms==1.0.4
+Werkzeug==0.8.3
+flake8==2.0
+mccabe==0.2.1
+pep8==1.4.5
+pyflakes==0.7.2
+wsgiref==0.1.2
