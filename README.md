@@ -1,4 +1,0 @@
-spz-signup
-==========
-
-signup repository
