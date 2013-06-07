@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 
+"""Custom error handlers.
+
+   Registers error handlers for the most common errors.
+"""
+
 from flask import render_template
 
 from spz import app
 
 
-# the error code has to be passed to the client explicitely
 def render_error(errorcode, errormessage):
+    """Renders the error handler template and explicitely sets the HTTP status code.
+
+       :param errorcode: The HTTP error code.
+       :param errormessage: The error message to render.
+    """
     return render_template('errorhandler.html', errorcode=errorcode, errormessage=errormessage), errorcode
 
 

@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
 
+"""Function decorators for often used idioms.
+
+   .. warning::
+      Flask's @route decorator has to be the outermost.
+"""
+
 from functools import wraps
 
 from flask import request, render_template
 
 
 def templated(template=None):
+    """Automatically renders the given template with the values returned from the decorated function.
+
+    .. seealso:: http://flask.pocoo.org/docs/patterns/viewdecorators/#templating-decorator
+    """
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
