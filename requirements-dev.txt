@@ -4,9 +4,12 @@ Flask-SQLAlchemy==0.16
 Flask-WTF==0.8.3
 Jinja2==2.7
 MarkupSafe==0.18
+Pygments==1.6
 SQLAlchemy==0.8.1
+Sphinx==1.2b1
 WTForms==1.0.4
 Werkzeug==0.8.3
+docutils==0.10
 flake8==2.0
 mccabe==0.2.1
 pep8==1.4.5
