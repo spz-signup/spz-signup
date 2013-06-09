@@ -1,5 +1,10 @@
 *.py[cod]
 *.swp
 *.log
+
 env
 doc/build
+
+spz/static/.webassets-cache/
+spz/static/js/packed.js
+spz/static/css/packed.css

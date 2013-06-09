@@ -9,6 +9,14 @@ spz Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`assets` Module
+--------------------
+
+.. automodule:: spz.assets
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`decorators` Module
 ------------------------
 

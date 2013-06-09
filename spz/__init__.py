@@ -10,6 +10,10 @@
 """
 
 from flask import Flask
+from flask.ext.assets import Environment
+from webassets.loaders import PythonLoader as PythonAssetsLoader
+
+from spz import assets
 
 
 class CustomFlask(Flask):
@@ -22,6 +26,16 @@ class CustomFlask(Flask):
 app = CustomFlask(__name__, instance_relative_config=True)
 
 
+# Assets handling; keep the spz.asserts module in sync with the static directory
+assets_env = Environment(app)
+
+bundles = PythonAssetsLoader(assets).load_bundles()
+
+for name, bundle in bundles.iteritems():
+    assets_env.register(name, bundle)
+
+
+# Configuration loading
 app.config.from_pyfile('development.cfg')
 #app.config.from_pyfile('production.cfg')
 
