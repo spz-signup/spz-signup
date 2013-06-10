@@ -26,7 +26,7 @@ class CustomFlask(Flask):
 app = CustomFlask(__name__, instance_relative_config=True)
 
 
-# Assets handling; keep the spz.asserts module in sync with the static directory
+# Assets handling; keep the spz.assets module in sync with the static directory
 assets_env = Environment(app)
 
 bundles = PythonAssetsLoader(assets).load_bundles()

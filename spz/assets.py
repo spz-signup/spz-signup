@@ -15,7 +15,8 @@
       Paths are relative to the static directory.
 
    .. warning::
-      Synchronize this listing with static directory changes.
+      * Synchronize this listing with static directory changes.
+      * License get's stripped too, provide external file.
 """
 
 from flask.ext.assets import Bundle
