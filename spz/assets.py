@@ -9,7 +9,7 @@
 
    We support the two most common and mature filters only:
         - rjsmin (for *.js files)
-        - cssmin (for *.css files)
+        - rcssmin (for *.css files)
 
    .. note::
       Paths are relative to the static directory.
