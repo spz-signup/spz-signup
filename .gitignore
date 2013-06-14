@@ -9,3 +9,5 @@ spz/static/.webassets-cache/
 spz/static/js/packed.js
 spz/static/js/packed_ie.js
 spz/static/css/packed.css
+
+local.db

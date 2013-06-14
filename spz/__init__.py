@@ -11,6 +11,7 @@
 
 from flask import Flask
 from flask.ext.assets import Environment
+from flask.ext.sqlalchemy import SQLAlchemy
 
 from spz import assets
 
@@ -37,6 +38,9 @@ for name, bundle in bundles.iteritems():
 # Configuration loading
 app.config.from_pyfile('development.cfg')
 #app.config.from_pyfile('production.cfg')
+
+# Database handling
+db = SQLAlchemy(app)
 
 
 # Register all views here
