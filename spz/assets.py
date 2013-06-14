@@ -8,8 +8,8 @@
    Register static files for those asset bundles here.
 
    We support the two most common and mature filters only:
-        - rjsmin (for *.js files)
-        - rcssmin (for *.css files)
+        - rjsmin (for .js files)
+        - rcssmin (for .css files)
 
    .. note::
       Paths are relative to the static directory.
@@ -54,7 +54,7 @@ all_css = Bundle('css/bootstrap.css',
 def get_bundles():
     """Returns all registered bundles.
 
-       .. note: Returns only bundles from the assets module, you shouldn't register them anywhere else
+       .. note:: Returns only bundles from the assets module, you shouldn't register them anywhere else
     """
     loader = PythonAssetsLoader(__name__)
 

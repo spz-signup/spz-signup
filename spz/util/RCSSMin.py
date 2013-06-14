@@ -13,7 +13,7 @@ from flask.ext.assets import Filter
 class RCSSMin(Filter):
     """Stylesheet minifier, using the RCSSmin library.
 
-       .. note: you have to register this filter explicitely before using it
+       .. note:: you have to register this filter explicitely before using it
     """
 
     name = 'rcssmin'

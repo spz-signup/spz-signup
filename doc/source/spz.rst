@@ -33,6 +33,14 @@ spz Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`models` Module
+--------------------
+
+.. automodule:: spz.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`views` Module
 -------------------
 
@@ -40,4 +48,11 @@ spz Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    spz.util
 

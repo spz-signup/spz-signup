@@ -23,6 +23,7 @@ def init_db():
 # Ressources:
 # http://docs.sqlalchemy.org/en/rel_0_8/core/schema.html#sqlalchemy.schema.Column
 # http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
+# http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
 
 
 # n:m, Applicants:Courses
@@ -34,16 +35,16 @@ attendances = db.Table(
 
 
 class Applicant(db.Model):
-    """Represents a person, applying for one or more :py:class:`Course`es.
+    """Represents a person, applying for one or more :py:class:`Course`.
 
        :param mail: Mail address
        :param tag: System wide identification tag
        :param first_name: First name
        :param last_name: Last name
        :param phone: Optional phone number
-       :param courses: A Applicant attends one or multiple :py:class:`Course`es.
+       :param courses: A :py:class:`Applicant` attends one or multiple :py:class:`Course`.
 
-       .. note: see the :py:data:`attendances` relationship
+       .. note:: see the :py:data:`attendances` relationship
     """
 
     __tablename__ = 'applicant'
@@ -79,14 +80,14 @@ class Applicant(db.Model):
 
 
 class Course(db.Model):
-    """Represents a course that has a :py:class:`Language` and gets attended by :py:class:`Applicant`s.
+    """Represents a course that has a :py:class:`Language` and gets attended by a :py:class:`Applicant`.
 
        :param level: The course's level
-       :param limit: The max. number of :py:class:`Applicant`s that can attend this course.
+       :param limit: The max. number of :py:class:`Applicant` that can attend this course.
        :param price: The course's price.
        :param language: The :py:class:`Language` for this course
 
-       .. note: see the :py:data:`attendances` relationship
+       .. note:: see the :py:data:`attendances` relationship
     """
 
     __tablename__ = 'course'
@@ -107,7 +108,7 @@ class Course(db.Model):
         self.language_id = language.id
 
     def __repr__(self):
-        return '<Course %r %r>' % (self.language, self.level)
+        return '<Course %r %r>' % (self.language_id, self.level)
 
 
 class Language(db.Model):
