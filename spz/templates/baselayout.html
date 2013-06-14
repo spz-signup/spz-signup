@@ -5,16 +5,30 @@
         <meta charset="utf-8">
         <title>spz-signup</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% assets "all_css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+        {% endassets %}
+
         {# TODO(#10): <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> #}
+
+        {% assets "ie_js" %}
+        <!--[if lt IE 9]>
+        <script src="{{ ASSET_URL }}"></script>
+        <![endif]-->
+        {% endassets %}
+
         {% endblock head %}
     </head>
     <body>
         {% block body %}
         {% endblock body %}
     </body>
+
     {% assets "all_js" %}
     <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
+
     {% block scripts %}
     {% endblock scripts%}
 </html>

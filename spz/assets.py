@@ -19,15 +19,46 @@
       * License get's stripped too, provide external file.
 """
 
-from flask.ext.assets import Bundle
+from flask.ext.assets import Bundle, register_filter
+from webassets.loaders import PythonLoader as PythonAssetsLoader
 
+from spz.util.RCSSMin import RCSSMin
+
+
+register_filter(RCSSMin)
+
+
+# Javascript bundles:
 
 all_js = Bundle('js/jquery-1.10.1.min.js',
                 'js/mailcheck.1.0.2.min.js',
                 'js/garlic-1.2.2.min.js',
                 'js/parsley-1.1.16.min.js',
                 'js/moment.2.0.0.min.js',
+                'js/bootstrap.min.js',
                 filters='rjsmin', output='js/packed.js')
+
+# Internet Explorer specific Javascript workarounds
+ie_js = Bundle('js/html5shiv.js',
+               'js/respond.min.js',
+               filters='rjsmin', output='js/packed_ie.js')
+
+
+# Stylesheet bundles:
+
+all_css = Bundle('css/bootstrap.css',
+                 filters='rcssmin', output='css/packed.css')
+
+
+# Hide concrete loading method inside this module
+def get_bundles():
+    """Returns all registered bundles.
+
+       .. note: Returns only bundles from the assets module, you shouldn't register them anywhere else
+    """
+    loader = PythonAssetsLoader(__name__)
+
+    return loader.load_bundles()
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

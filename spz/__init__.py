@@ -11,7 +11,6 @@
 
 from flask import Flask
 from flask.ext.assets import Environment
-from webassets.loaders import PythonLoader as PythonAssetsLoader
 
 from spz import assets
 
@@ -29,7 +28,7 @@ app = CustomFlask(__name__, instance_relative_config=True)
 # Assets handling; keep the spz.assets module in sync with the static directory
 assets_env = Environment(app)
 
-bundles = PythonAssetsLoader(assets).load_bundles()
+bundles = assets.get_bundles()
 
 for name, bundle in bundles.iteritems():
     assets_env.register(name, bundle)
