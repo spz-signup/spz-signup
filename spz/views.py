@@ -10,7 +10,7 @@ from spz.decorators import templated
 
 
 @app.route('/')
-@templated('baselayout.html')
+@templated('signup.html')
 def index():
     return None
 
