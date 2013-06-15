@@ -21,7 +21,7 @@ def index():
 
     if form.validate_on_submit():
         # applicant = Applicant(first_name = form.first_name.data, ..)
-        flash(u'Saved', 'success')
+        flash(u'Erfolgreich eingetragen', 'success')
         return redirect(url_for('index'))
 
     return dict(form=form)

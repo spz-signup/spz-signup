@@ -21,22 +21,22 @@ def render_error(errorcode, errormessage):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_error(404, u'Page not found')
+    return render_error(404, u'Seite nicht gefunden')
 
 
 @app.errorhandler(403)
 def page_forbidden(e):
-    return render_error(403, u'Access forbidden')
+    return render_error(403, u'Keine Berechtigung')
 
 
 @app.errorhandler(410)
 def page_gone(e):
-    return render_error(410, u'Page gone')
+    return render_error(410, u'Seite wurde entfernt')
 
 
 @app.errorhandler(500)
 def not_found(e):
-    return render_error(500, u'Internal server error')
+    return render_error(500, u'Interner Fehler')
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
