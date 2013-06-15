@@ -3,7 +3,7 @@
 """User-protecting headers.
 
    .. warning::
-      The webser we deploy this application on should take care of the headers.
+      The webserver we deploy this application on should take care of the headers.
 """
 
 from functools import update_wrapper
@@ -12,7 +12,13 @@ from flask import make_response
 
 
 def upheaders(f):
-    """Updated the response with user-protecting headers.
+    """Updates the response with user-protecting headers.
+
+       Provided headers:
+         * X-Frame-Options
+         * X-Content-Type-Options
+         * X-Download-Options
+         * X-XSS-Protection
 
       .. seealso:: https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     """
