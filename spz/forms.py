@@ -15,7 +15,8 @@ class SignupForm(Form):
     phone = TextField('Phone', [validators.Length(max=20, message='Length max. is 20')])
     mail = TextField('Mail', [validators.Email('Valid mail is required'),
                               validators.Length(max=120, message='Length has to be between 1 and 120')])
-    tag = TextField('Identification', [validators.DataRequired('Identification is required')])
+    tag = TextField('Identification', [validators.DataRequired('Identification is required'),
+                                       validators.Length(max=20, message='Length max. is 20')])
 
     # course
 
