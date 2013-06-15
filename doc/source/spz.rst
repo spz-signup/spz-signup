@@ -6,7 +6,6 @@ spz Package
 
 .. automodule:: spz.__init__
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`assets` Module
@@ -14,7 +13,6 @@ spz Package
 
 .. automodule:: spz.assets
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`decorators` Module
@@ -22,7 +20,6 @@ spz Package
 
 .. automodule:: spz.decorators
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`errorhandlers` Module
@@ -30,7 +27,6 @@ spz Package
 
 .. automodule:: spz.errorhandlers
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`models` Module
@@ -38,7 +34,6 @@ spz Package
 
 .. automodule:: spz.models
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`views` Module
@@ -46,7 +41,6 @@ spz Package
 
 .. automodule:: spz.views
     :members:
-    :undoc-members:
     :show-inheritance:
 
 Subpackages
