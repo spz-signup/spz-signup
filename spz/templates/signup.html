@@ -5,7 +5,7 @@
     <div class="control-group{% if field.errors %} has-error{% endif %}">
         <label for="{{ field.id }}" class="col col-lg-2 control-label">{{ field.label.text }}</label>
         <div class="col col-lg-8 controls">
-            <input class="input-with-feedback" type="text" id="{{ field.id }}" name="{{ field.id }}" {% if field.data %}value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true" {% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+            <input class="input-with-feedback" type="text" id="{{ field.id }}" name="{{ field.id }}" {% if field.data %}value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
             {% for error in field.errors %}
             <span class="label label-error">{{ error }}</span>
             {% endfor %}
@@ -42,4 +42,20 @@
     </div>
 </div>
 {% endblock body %}
+
+
+{% block scripts %}
+<script>
+    $('#mail').on('blur', function() {
+        $(this).mailcheck({
+            suggested: function(element, suggestion) {
+                console.log(suggestion)
+            },
+            empty: function(element) {
+                // nop
+            }
+        });
+    });
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
