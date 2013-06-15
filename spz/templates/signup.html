@@ -1,11 +1,45 @@
 {% extends 'baselayout.html' %}
 
+{% macro form_row(field, placeholder=None) %}
+<div class="row">
+    <div class="control-group{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id }}" class="col col-lg-2 control-label">{{ field.label.text }}</label>
+        <div class="col col-lg-8 controls">
+            <input class="input-with-feedback" type="text" id="{{ field.id }}" name="{{ field.id }}" placeholder="{{ placeholder }}">
+            {% for error in field.errors %}
+            <span class="label label-error">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+
 {% block body %}
 <div class="row">
-    <div class="col col-lg-8 col-offset-2">
+    <div class="col col-lg-12">
         <div class="page-header">
             <h1>Sign Up</h1>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12">
+        <form class="form-horizontal" method="post">
+            {{ form.hidden_tag() }}
+
+            {{ form_row(form.first_name, "Max") }}
+            {{ form_row(form.last_name, "Mustermann") }}
+            {{ form_row(form.phone) }}
+            {{ form_row(form.mail, "max.mustermann@example.com") }}
+            {{ form_row(form.tag) }}
+
+            <div class="row">
+                <div class="col col-lg-8 col-offset-2">
+                    <button type="submit" class="btn btn-default btn-large btn-block">Sign up</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock body %}
