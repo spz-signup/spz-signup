@@ -9,10 +9,12 @@ from flask import redirect, url_for, flash
 
 from spz import app
 from spz.decorators import templated
+from spz.headers import upheaders
 from spz.forms import SignupForm
 
 
 @app.route('/', methods=['GET', 'POST'])
+@upheaders
 @templated('signup.html')
 def index():
     form = SignupForm()

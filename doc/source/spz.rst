@@ -29,6 +29,20 @@ spz Package
     :members:
     :show-inheritance:
 
+:mod:`forms` Module
+-------------------
+
+.. automodule:: spz.forms
+    :members:
+    :show-inheritance:
+
+:mod:`headers` Module
+---------------------
+
+.. automodule:: spz.headers
+    :members:
+    :show-inheritance:
+
 :mod:`models` Module
 --------------------
 

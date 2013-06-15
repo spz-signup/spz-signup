@@ -6,7 +6,6 @@ util Package
 
 .. automodule:: spz.util
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`RCSSMin` Module
@@ -14,6 +13,5 @@ util Package
 
 .. automodule:: spz.util.RCSSMin
     :members:
-    :undoc-members:
     :show-inheritance:
 

@@ -42,7 +42,7 @@ class Applicant(db.Model):
        :param phone: Optional phone number
        :param courses: A :py:class:`Applicant` attends one or multiple :py:class:`Course`.
 
-       .. note:: see the :py:data:`attendances` relationship
+       .. seealso:: the :py:data:`attendances` relationship
     """
 
     __tablename__ = 'applicant'
@@ -85,7 +85,7 @@ class Course(db.Model):
        :param price: The course's price.
        :param language: The :py:class:`Language` for this course
 
-       .. note:: see the :py:data:`attendances` relationship
+       .. seealso:: the :py:data:`attendances` relationship
     """
 
     __tablename__ = 'course'
