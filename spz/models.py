@@ -5,15 +5,13 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
-#from flask.ext.sqlalchemy import SQLAlchemy
-
 from spz import db
 
 
 def init_db():
     """Creates all tables.
 
-       .. warning: Has to be done only once, to initialize the database; do not use this in regular code
+       .. warning:: Has to be done only once, to initialize the database; do not use this in regular code
     """
     db.create_all()
 
@@ -80,7 +78,7 @@ class Applicant(db.Model):
 
 
 class Course(db.Model):
-    """Represents a course that has a :py:class:`Language` and gets attended by a :py:class:`Applicant`.
+    """Represents a course that has a :py:class:`Language` and gets attended by multiple :py:class:`Applicant`.
 
        :param level: The course's level
        :param limit: The max. number of :py:class:`Applicant` that can attend this course.
