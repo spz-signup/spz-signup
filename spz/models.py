@@ -5,6 +5,8 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
+from datetime import datetime
+
 from spz import db
 
 
@@ -40,7 +42,11 @@ class Applicant(db.Model):
        :param first_name: First name
        :param last_name: Last name
        :param phone: Optional phone number
-       :param courses: A :py:class:`Applicant` attends one or multiple :py:class:`Course`.
+       :param courses: A :py:class:`Applicant` attends one or multiple :py:class:`Course`
+       :param degree: Degree aimed for
+       :param semester: Enrolled in semester
+       :param origin: Facility of origin
+       :param registered: When this user was registered **in UTC**; defaults to utcnow()
 
        .. seealso:: the :py:data:`attendances` relationship
     """
@@ -58,20 +64,24 @@ class Applicant(db.Model):
 
     courses = db.relationship("Course", secondary=attendances, backref="applicants")
 
-    # TODO(daniel):
-    # from
-    # degree
-    # department
-    # semester
-    # date/time
+    degree = db.relationship("Degree", uselist=False, backref="applicant")
+    semester = db.relationship("Semester", uselist=False, backref="applicant")
+    origin = db.relationship("Origin", uselist=False, backref="applicant")
 
-    def __init__(self, mail, tag, first_name, last_name, phone, courses):
+    # TODO(daniel):
+    registered = db.DateTime()
+
+    def __init__(self, mail, tag, first_name, last_name, phone, courses, degree, semester, origin, registered=datetime.utcnow()):
         self.mail = mail
         self.tag = tag
         self.first_name = first_name
         self.last_name = last_name
         self.phone = phone
         self.courses = courses
+        self.degree = degree
+        self.semester = semester
+        self.origin = origin
+        self.registered = registered
 
     def __repr__(self):
         return '<Applicant %r>' % self.tag
@@ -91,7 +101,7 @@ class Course(db.Model):
     __tablename__ = 'course'
 
     id = db.Column(db.Integer, primary_key=True)
-    level = db.Column(db.String(120))
+    level = db.Column(db.String(20))
     limit = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
@@ -103,10 +113,10 @@ class Course(db.Model):
         self.level = level
         self.limit = limit
         self.price = price
-        self.language_id = language.id
+        self.language = language
 
     def __repr__(self):
-        return '<Course %r %r>' % (self.language_id, self.level)
+        return '<Course %r %r>' % (self.language, self.level)
 
 
 class Language(db.Model):
@@ -129,6 +139,83 @@ class Language(db.Model):
 
     def __repr__(self):
         return '<Language %r>' % self.name
+
+
+class Degree(db.Model):
+    """Represents the degree a :py:class:`Applicant` aims for.
+
+       :param name: The degree's name
+    """
+
+    __tablename__ = 'degree'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Degree %r>' % self.name
+
+
+class Semester(db.Model):
+    """Represents the current semester a :py:class:`Applicant` is in.
+
+       :param level: The semester's level
+    """
+
+    __tablename__ = 'semester'
+
+    id = db.Column(db.Integer, primary_key=True)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
+
+    def __init__(self, level):
+        self.level = level
+
+    def __repr__(self):
+        return '<Semester %r>' % self.level
+
+
+class Origin(db.Model):
+    """Represents the origin of a :py:class:`Applicant`.
+
+       :param name: The origin's name
+    """
+
+    __tablename__ = 'origin'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), unique=True, nullable=False)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
+    department = db.relationship("Department", uselist=False, backref="origin")
+
+    def __init__(self, name, department):
+        self.name = name
+        self.department = department
+
+    def __repr__(self):
+        return '<Origin %r %r>' % (self.name, self.department)
+
+
+class Department(db.Model):
+    """Represents the department of a :py:class:`Origin` a :py:class:`Applicant` comes from.
+
+       :param name: The department's name
+    """
+
+    __tablename__ = 'department'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), unique=True, nullable=False)
+    origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Department %r>' % self.name
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
