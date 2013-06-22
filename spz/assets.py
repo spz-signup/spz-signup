@@ -32,6 +32,7 @@ register_filter(RCSSMin)
 
 all_js = Bundle('js/jquery-1.10.1.min.js',
                 'js/mailcheck.1.0.2.min.js',
+                'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
                 'js/parsley-1.1.16-de.js',
                 'js/parsley-1.1.16.min.js',

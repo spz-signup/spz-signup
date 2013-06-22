@@ -48,9 +48,13 @@
 <script>
     $('#mail').on('blur', function() {
         $(this).mailcheck({
+            domains: mailcheckDomains['domains'],
+            topLevelDomains: mailcheckDomains['topLevelDomains'],
+
             suggested: function(element, suggestion) {
                 console.log(suggestion)
             },
+
             empty: function(element) {
                 // nop
             }
