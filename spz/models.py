@@ -10,14 +10,6 @@ from datetime import datetime
 from spz import db
 
 
-def init_db():
-    """Creates all tables.
-
-       .. warning:: Has to be done only once, to initialize the database; do not use this in regular code
-    """
-    db.create_all()
-
-
 # TODO(daniel): check nullable constraints, string lengths, indices
 
 # Ressources:
