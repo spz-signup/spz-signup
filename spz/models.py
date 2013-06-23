@@ -95,6 +95,7 @@ class Course(db.Model):
     """
 
     __tablename__ = 'course'
+    __table_args__ = (db.UniqueConstraint('language_id', 'level'),)
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
@@ -159,40 +160,22 @@ class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
        :param name: The origin's name
-       :param departments: The origin's :py:class:`Department`
+       :param department: The origin's department
     """
 
     __tablename__ = 'origin'
+    __table_args__ = (db.UniqueConstraint('name', 'department'),)
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True, nullable=False)
-    departments = db.relationship("Department", backref="origin")
+    name = db.Column(db.String(60), nullable=False)
+    department = db.Column(db.String(60), nullable=False)
 
-    def __init__(self, name, departments=[]):
+    def __init__(self, name, department):
         self.name = name
-        self.departments = departments
+        self.department = department
 
     def __repr__(self):
-        return '<Origin %r %r>' % (self.name, self.departments)
-
-
-class Department(db.Model):
-    """Represents the department of a :py:class:`Origin` a :py:class:`Applicant` comes from.
-
-       :param name: The department's name
-    """
-
-    __tablename__ = 'department'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True, nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Department %r>' % self.name
+        return '<Origin %r %r>' % (self.name, self.department)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
