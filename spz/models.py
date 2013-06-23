@@ -56,27 +56,31 @@ class Applicant(db.Model):
 
     courses = db.relationship("Course", secondary=attendances, backref="applicants")
 
-    degree = db.relationship("Degree", uselist=False, backref="applicant")
-    semester = db.relationship("Semester", uselist=False, backref="applicant")
-    origin = db.relationship("Origin", uselist=False, backref="applicant")
+    degree_id = db.Column(db.Integer, db.ForeignKey('degree.id'))
+    degree = db.relationship("Degree", backref="applicants")
+
+    semester = db.Column(db.Integer)
+
+    origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
+    origin = db.relationship("Origin", backref="applicants")
 
     # TODO(daniel):
     registered = db.DateTime()
 
-    def __init__(self, mail, tag, first_name, last_name, phone, courses, degree, semester, origin, registered=datetime.utcnow()):
+    def __init__(self, mail, tag, first_name, last_name, phone, degree, semester, origin, courses=[], registered=datetime.utcnow()):
         self.mail = mail
         self.tag = tag
         self.first_name = first_name
         self.last_name = last_name
         self.phone = phone
-        self.courses = courses
         self.degree = degree
         self.semester = semester
         self.origin = origin
+        self.courses = courses
         self.registered = registered
 
     def __repr__(self):
-        return '<Applicant %r>' % self.tag
+        return '<Applicant %r %r>' % (self.mail, self.tag)
 
 
 class Course(db.Model):
@@ -93,19 +97,19 @@ class Course(db.Model):
     __tablename__ = 'course'
 
     id = db.Column(db.Integer, primary_key=True)
+    language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     level = db.Column(db.String(20))
     limit = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
 
     # TODO(daniel):
     # qualification eng
 
-    def __init__(self, level, limit, price, language):
+    def __init__(self, language, level, limit, price):
+        self.language = language
         self.level = level
         self.limit = limit
         self.price = price
-        self.language = language
 
     def __repr__(self):
         return '<Course %r %r>' % (self.language, self.level)
@@ -143,7 +147,6 @@ class Degree(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
 
     def __init__(self, name):
         self.name = name
@@ -152,43 +155,25 @@ class Degree(db.Model):
         return '<Degree %r>' % self.name
 
 
-class Semester(db.Model):
-    """Represents the current semester a :py:class:`Applicant` is in.
-
-       :param level: The semester's level
-    """
-
-    __tablename__ = 'semester'
-
-    id = db.Column(db.Integer, primary_key=True)
-    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
-
-    def __init__(self, level):
-        self.level = level
-
-    def __repr__(self):
-        return '<Semester %r>' % self.level
-
-
 class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
        :param name: The origin's name
+       :param departments: The origin's :py:class:`Department`
     """
 
     __tablename__ = 'origin'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
-    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'))
-    department = db.relationship("Department", uselist=False, backref="origin")
+    departments = db.relationship("Department", backref="origin")
 
-    def __init__(self, name, department):
+    def __init__(self, name, departments=[]):
         self.name = name
-        self.department = department
+        self.departments = departments
 
     def __repr__(self):
-        return '<Origin %r %r>' % (self.name, self.department)
+        return '<Origin %r %r>' % (self.name, self.departments)
 
 
 class Department(db.Model):
@@ -201,7 +186,7 @@ class Department(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
-    origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
+    parent_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
 
     def __init__(self, name):
         self.name = name
