@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from spz import db
+from spz.models import *
 
 
 # Has to be done only once, to initialize the database;
