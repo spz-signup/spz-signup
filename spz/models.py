@@ -48,7 +48,7 @@ class Applicant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     mail = db.Column(db.String(120), unique=True, nullable=False)
-    tag = db.Column(db.String(10), unique=True, nullable=False)
+    tag = db.Column(db.String(10), unique=True)
 
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
@@ -100,8 +100,8 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     level = db.Column(db.String(20))
-    limit = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
+    price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
 
     # TODO(daniel):
     # qualification eng
