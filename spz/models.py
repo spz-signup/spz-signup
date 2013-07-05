@@ -10,8 +10,6 @@ from datetime import datetime
 from spz import db
 
 
-# TODO(daniel): check nullable constraints, string lengths, indices
-
 # Ressources:
 # http://docs.sqlalchemy.org/en/rel_0_8/core/schema.html#sqlalchemy.schema.Column
 # http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
@@ -64,8 +62,7 @@ class Applicant(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
 
-    # TODO(daniel):
-    registered = db.DateTime()
+    registered = db.Column(db.DateTime())
 
     def __init__(self, mail, tag, first_name, last_name, phone, degree, semester, origin, courses=[], registered=datetime.utcnow()):
         self.mail = mail
@@ -120,19 +117,26 @@ class Language(db.Model):
     """Represents a language for a :py:class:`course`.
 
        :param name: The language's name
+       :param signup_begin: The date time the signup begins **in UTC**
+       :param signup_end: The date time the signup ends **in UTC**; constraint to **end > begin**
     """
 
     __tablename__ = 'language'
+    __table_args__ = (db.CheckConstraint('signup_end > signup_begin'),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
     courses = db.relationship('Course', backref='language', lazy='dynamic')
 
-    # TODO(daniel):
-    # time interval, open for signup
+    # Not using db.Interval here, because it needs native db support
+    # See: http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.Interval
+    signup_begin = db.Column(db.DateTime())
+    signup_end = db.Column(db.DateTime())
 
-    def __init__(self, name):
+    def __init__(self, name, signup_begin, signup_end):
         self.name = name
+        self.signup_begin = signup_begin
+        self.signup_end = signup_end
 
     def __repr__(self):
         return '<Language %r>' % self.name
@@ -168,7 +172,7 @@ class Origin(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
-    department = db.Column(db.String(60), nullable=False)
+    department = db.Column(db.String(60))
 
     def __init__(self, name, department):
         self.name = name
