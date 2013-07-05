@@ -51,6 +51,13 @@
     {% endassets %}
 
     {% block scripts %}
+    <script>
+        $('.fmt-datetime').each(function (idx, elem) {
+            var $elem = $(elem);
+            var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
+            $elem.text(fmt);
+        });
+    </script>
     {% endblock scripts%}
 </html>
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
