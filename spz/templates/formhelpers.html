@@ -1,0 +1,36 @@
+{# Various helpers to render form fields #}
+{# Independent short macros, to allow for greater flexibility #}
+
+
+{% macro render_input(field, placeholder=None, required=True, required_extras=None, type="text") %}
+<div class="row">
+    <div class="control-group{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id }}" class="col col-lg-2 control-label">{{ field.label.text }}</label>
+        <div class="col col-lg-8 controls">
+            <input class="input-with-feedback" type="{{ type }}" id="{{ field.id }}" name="{{ field.id }}" {% if field.data %}value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+            {% for error in field.errors %}
+            <span class="label label-error">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_option(field, placeholder=None, required=True, required_extras=None) %}
+<div class="row">
+    <div class="control-group{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id }}" class="col col-lg-2 control-label">{{ field.label.text }}</label>
+        <div class="col col-lg-8 controls">
+            <select{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+                <option selected="selected">{{ placeholder|default('', true) }}</option>
+                {% for id, name in field.choices %}
+                <option value="{{ id }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
