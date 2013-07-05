@@ -1,0 +1,50 @@
+{% extends 'baselayout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col col-lg-12">
+        <div class="page-header">
+            <h1>Bewerber <small><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.first_name ~ " " ~ applicant_last_name }}</a></small></h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-mail</th>
+                    <th>Identifikation</th>
+                    <th>Telefon</th>
+                    <th>Abschluss</th>
+                    <th>Semester</th>
+                    <th>Herkunft</th>
+                    <th>Kurse</th>
+                    <th>Anmeldedatum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ applicant.first_name }}</td>
+                    <td>{{ applicant.last_name }}</td>
+                    <td>{{ applicant.mail }}</td>
+                    <td>{{ applicant.tag }}</td>
+                    <td>{{ applicant.phone }}</td>
+                    <td>{{ applicant.degree.name }}</td>
+                    <td>{{ applicant.semester }}</td>
+                    <td>{{ applicant.origin.name ~ " (" ~ applicant.origin.department ~ ")" }}</td>
+                    <td>
+                    {% for course in applicant.courses %}
+                    [<a href="{{ url_for('course', id=course.id) }}">{{ course.language.name ~ " " ~course.level }}</a>] 
+                    {% endfor %}
+                    </td>
+                    <td>{{ applicant.registered }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock body %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

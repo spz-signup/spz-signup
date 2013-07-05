@@ -7,7 +7,7 @@
 
 from flask import redirect, url_for, flash
 
-from spz import app
+from spz import app, models
 from spz.decorators import templated
 from spz.headers import upheaders
 from spz.forms import SignupForm
@@ -25,6 +25,27 @@ def index():
         return redirect(url_for('index'))
 
     return dict(form=form)
+
+
+@app.route('/course/<int:id>')
+@upheaders
+@templated('course.html')
+def course(id):
+    return dict(course=models.Course.query.get_or_404(id))
+
+
+@app.route('/language/<int:id>')
+@upheaders
+@templated('language.html')
+def language(id):
+    return dict(language=models.Language.query.get_or_404(id))
+
+
+@app.route('/applicant/<int:id>')
+@upheaders
+@templated('applicant.html')
+def applicant(id):
+    return dict(applicant=models.Applicant.query.get_or_404(id))
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

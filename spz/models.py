@@ -52,8 +52,6 @@ class Applicant(db.Model):
     last_name = db.Column(db.String(60), nullable=False)
     phone = db.Column(db.String(20))
 
-    courses = db.relationship("Course", secondary=attendances, backref="applicants")
-
     degree_id = db.Column(db.Integer, db.ForeignKey('degree.id'))
     degree = db.relationship("Degree", backref="applicants")
 
@@ -61,6 +59,8 @@ class Applicant(db.Model):
 
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
+
+    courses = db.relationship("Course", secondary=attendances, backref="applicants")
 
     registered = db.Column(db.DateTime())
 
@@ -174,7 +174,7 @@ class Origin(db.Model):
     name = db.Column(db.String(60), nullable=False)
     department = db.Column(db.String(60))
 
-    def __init__(self, name, department):
+    def __init__(self, name, department=None):
         self.name = name
         self.department = department
 

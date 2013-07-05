@@ -1,0 +1,36 @@
+{% extends 'baselayout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col col-lg-12">
+        <div class="page-header">
+            <h1>Sprache <small><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></small></h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Kurs Id</th>
+                    <th>Level</th>
+                    <th>Limit</th>
+                    <th>Preis</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in language.courses.all() %}
+                <tr>
+                    <td><a href="{{ url_for('course', id=course.id) }}">{{ course.id }}</a></td>
+                    <td>{{ course.level }}</td>
+                    <td>{{ course.limit }}</td>
+                    <td>{{ course.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock body %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
