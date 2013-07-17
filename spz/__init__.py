@@ -12,6 +12,7 @@
 from flask import Flask
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.mail import Mail
 
 from spz import assets
 
@@ -41,6 +42,9 @@ app.config.from_pyfile('development.cfg')
 
 # Database handling
 db = SQLAlchemy(app)
+
+# Mail sending
+mail = Mail(app)
 
 
 # Register all views here
