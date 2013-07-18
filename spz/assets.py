@@ -46,6 +46,11 @@ ie_js = Bundle('js/html5shiv.js',
                filters='rjsmin', output='js/packed_ie.js')
 
 
+# Tooling bundles
+tools_js = Bundle('js/persona.js',
+                  filters='rjsmin', output='js/packed_tools.js')
+
+
 # Stylesheet bundles:
 
 all_css = Bundle('css/bootstrap.css',

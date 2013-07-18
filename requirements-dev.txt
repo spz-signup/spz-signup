@@ -19,6 +19,7 @@ mccabe==0.2.1
 pep8==1.4.5
 pyflakes==0.7.2
 rcssmin==1.0.2
+requests==1.2.3
 rjsmin==1.0.6
 webassets==0.8
 wsgiref==0.1.2

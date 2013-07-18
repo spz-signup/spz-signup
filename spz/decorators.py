@@ -8,13 +8,13 @@
 
 from functools import wraps
 
-from flask import request, render_template
+from flask import request, render_template, redirect, url_for, g
 
 
 def templated(template=None):
     """Automatically renders the given template with the values returned from the decorated function.
 
-    .. seealso:: http://flask.pocoo.org/docs/patterns/viewdecorators/#templating-decorator
+       .. seealso:: http://flask.pocoo.org/docs/patterns/viewdecorators/#templating-decorator
     """
     def decorator(f):
         @wraps(f)
@@ -30,6 +30,19 @@ def templated(template=None):
             return render_template(template_name, **ctx)
         return decorated_function
     return decorator
+
+
+def login_required(f):
+    """Checks the authentication status of the current user and redirects to the index on unauthenticated access.
+
+       .. seealso:: The :py:mod:`spz.auth` module
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

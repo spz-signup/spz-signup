@@ -48,13 +48,18 @@ mail = Mail(app)
 
 
 # Register all views here
-from spz import views, errorhandlers
+from spz import views, errorhandlers, auth
+
+app.before_request = auth.get_current_user
+
 
 routes = [('/', views.index, ['GET', 'POST']),
           ('/language/<int:id>', views.language, ['GET']),
           ('/course/<int:id>', views.course, ['GET']),
           ('/applicant/<int:id>', views.applicant, ['GET']),
-          ('/nullmailer', views.nullmailer, ['GET'])]
+          ('/nullmailer', views.nullmailer, ['GET']),
+          ('/_auth/login', auth.login_handler, ['GET', 'POST']),
+          ('/_auth/logout', auth.logout_handler, ['POST'])]
 
 for rule, view_func, methods in routes:
     app.add_url_rule(rule, view_func=view_func, methods=methods)

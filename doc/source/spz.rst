@@ -15,10 +15,24 @@ spz Package
     :members:
     :show-inheritance:
 
+:mod:`auth` Module
+------------------
+
+.. automodule:: spz.auth
+    :members:
+    :show-inheritance:
+
 :mod:`decorators` Module
 ------------------------
 
 .. automodule:: spz.decorators
+    :members:
+    :show-inheritance:
+
+:mod:`dummy` Module
+-------------------
+
+.. automodule:: spz.dummy
     :members:
     :show-inheritance:
 

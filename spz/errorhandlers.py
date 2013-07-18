@@ -7,8 +7,6 @@
 
 from flask import render_template
 
-from spz import app
-
 
 def render_error(errorcode, errormessage):
     """Renders the error handler template and explicitely sets the HTTP status code.
