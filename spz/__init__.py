@@ -48,8 +48,25 @@ mail = Mail(app)
 
 
 # Register all views here
-from spz import views
-from spz import errorhandlers
+from spz import views, errorhandlers
+
+routes = [('/', views.index, ['GET', 'POST']),
+          ('/language/<int:id>', views.language, ['GET']),
+          ('/course/<int:id>', views.course, ['GET']),
+          ('/applicant/<int:id>', views.applicant, ['GET']),
+          ('/nullmailer', views.nullmailer, ['GET'])]
+
+for rule, view_func, methods in routes:
+    app.add_url_rule(rule, view_func=view_func, methods=methods)
+
+
+handlers = [(404, errorhandlers.page_not_found),
+            (403, errorhandlers.page_forbidden),
+            (410, errorhandlers.page_gone),
+            (500, errorhandlers.not_found)]
+
+for errno, handler in handlers:
+    app.error_handlers[errno] = handler
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

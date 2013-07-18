@@ -6,14 +6,21 @@
 """
 
 from flask import redirect, url_for, flash
+from flask.ext.mail import Message
 
-from spz import app, models
+from spz import models, mail
 from spz.decorators import templated
 from spz.headers import upheaders
 from spz.forms import SignupForm
 
 
-@app.route('/', methods=['GET', 'POST'])
+def nullmailer():
+    msg = Message("hello", recipients=["alice@example.com"])
+    mail.send(msg)
+
+    return u'mail sent'
+
+
 @upheaders
 @templated('signup.html')
 def index():
@@ -27,21 +34,18 @@ def index():
     return dict(form=form)
 
 
-@app.route('/course/<int:id>')
 @upheaders
 @templated('course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
 
 
-@app.route('/language/<int:id>')
 @upheaders
 @templated('language.html')
 def language(id):
     return dict(language=models.Language.query.get_or_404(id))
 
 
-@app.route('/applicant/<int:id>')
 @upheaders
 @templated('applicant.html')
 def applicant(id):
