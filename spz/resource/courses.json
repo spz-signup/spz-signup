@@ -1,0 +1,282 @@
+{
+	"languages": [
+		{
+			"name": "Arabisch",
+			"courses": [
+				{"level": "1a"},
+				{"level": "1b"},
+				{"level": "2a"},
+				{"level": "2b"},
+				{"level": "3"}
+			]
+		},
+		{
+			"name": "Chinesisch",
+			"courses": [
+				{"level": "1a"},
+				{"level": "1b"},
+				{"level": "1c"},
+				{"level": "1d"},
+				{"level": "2a"},
+				{"level": "2b"},
+				{"level": "3a"},
+				{"level": "3b"},
+				{"level": "4a"},
+				{"level": "4b"},
+				{"level": "express 1"}
+			]
+		},
+		{
+			"name": "Deutsch als Fremdsprache",
+			"courses": [
+
+			]
+		},
+		{
+			"name": "English",
+			"courses": [
+				{"level": "A2 Elementary 1"},
+				{"level": "A2 Elementary 2"},
+				{"level": "B1 Engineering a"},
+				{"level": "B1 Engineering b"},
+				{"level": "B1 Intermediate 1 a"},
+				{"level": "B1 Intermediate 1 b"},
+				{"level": "B1 Intermediate 2 a"},
+				{"level": "B1 Intermediate 2 b"},
+				{"level": "B1 Intermediate 2 Intensive"},
+				{"level": "B1 Science"},
+				{"level": "B2 Business Leadership"},
+				{"level": "B2 Science + Technology a"},
+				{"level": "B2 Science + Technology b"},
+				{"level": "B2 Upper Intermediate Intensive"},
+				{"level": "B2 Upper intermediate"},
+				{"level": "C1 Business Studies 1"},
+				{"level": "C1 Business Studies 1 Intensive"},
+				{"level": "C1 Business Studies 2"},
+				{"level": "B2 Business Studies"},
+				{"level": "C1 Advanced a"},
+				{"level": "C1 Advanced b"},
+				{"level": "C1 Business Leadership"},
+				{"level": "A2 Communicating at Work"},
+				{"level": "C1 Discussion + Debate"},
+				{"level": "B2 Grammar Review"},
+				{"level": "B2 Grammar in Context"},
+				{"level": "B2 Intercultural Communication"},
+				{"level": "C1 Intercultural Communication"},
+				{"level": "C1 Issues in Science and Technology"},
+				{"level": "B2 Presentation Skills"},
+				{"level": "C1 Presentation Skills"},
+				{"level": "C1 Scientific Writing a"},
+				{"level": "C1 Scientific Writing b"},
+				{"level": "TOEFL iBT Vorbereitung a"},
+				{"level": "TOEFL iBT Vorbereitung b"},
+				{"level": "B2 Topical Issues"},
+				{"level": "B2 Writing Skills"},
+				{"level": "for Architecture (TOEFL)"},
+				{"level": "for Business Communication a (B1)"},
+				{"level": "for Business Communication b (B1)"},
+				{"level": "for Business Communication c (B1)"},
+				{"level": "for Engineers a (B2)"},
+				{"level": "for Engineers b (B2)"},
+				{"level": "for Engineers (C1)"},
+				{"level": "for Work a (B2)"},
+				{"level": "for Work b (B2)"},
+				{"level": "for Work c (B2)"},
+				{"level": "for Work d (B2)"},
+				{"level": "for Work e (B2)"},
+				{"level": "for Work f (B2)"},
+				{"level": "for Work Intensive (B2)"},
+				{"level": "for Work a (C1)"},
+				{"level": "for Work b (C1)"},
+				{"level": "for Work Intensive (C1)"},
+				{"level": "in Everyday Situations (B1)"}
+			]
+		},
+		{
+			"name": "Französisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "2"},
+				{"level": "3"},
+				{"level": "4"},
+				{"level": "5"},
+				{"level": "6"},
+				{"level": "7"},
+				{"level": "Aktuelle Themen plus"},
+				{"level": "Autonomes multimediales Lernen"},
+				{"level": "Energie + Umwelt"},
+				{"level": "Express + 2"},
+				{"level": "Express + 3"},
+				{"level": "Frankreich heute"},
+				{"level": "Grammatik a"},
+				{"level": "Grammatik b"},
+				{"level": "Intensiv 1 a"},
+				{"level": "Intensiv 1 b"},
+				{"level": "Intensiv 1 c"},
+				{"level": "Intensiv 2 a"},
+				{"level": "Intensiv 2 b"},
+				{"level": "Intensiv 3"},
+				{"level": "Intensiv 4"},
+				{"level": "Pro und Contra"},
+				{"level": "fit für Frankreich a"},
+				{"level": "fit für Frankreich b"},
+				{"level": "für Business u. Marketing"},
+				{"level": "für alle Fälle"}
+			]
+		},
+		{
+			"name": "Italienisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "1 e"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "3 a"},
+				{"level": "3 b"},
+				{"level": "4"},
+				{"level": "5"},
+				{"level": "espresso 1"}
+			]
+		},
+		{
+			"name": "Japanisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "2 c"},
+				{"level": "3 a"},
+				{"level": "3 b"},
+				{"level": "4"},
+				{"level": "5"},
+				{"level": "6"}
+			]
+		},
+		{
+			"name": "Portugiesisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "2"},
+				{"level": "3"},
+				{"level": "4"}
+			]
+		},
+		{
+			"name": "Russisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "3"},
+				{"level": "4"},
+				{"level": "für Zweisprachige"}
+			]
+		},
+		{
+			"name": "Schwedisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "3"}
+			]
+		},
+		{
+			"name": "Spanisch",
+			"courses": [
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "1 e"},
+				{"level": "1 f"},
+				{"level": "1 g"},
+				{"level": "1 h"},
+				{"level": "1 i"},
+				{"level": "1 j"},
+				{"level": "1 k"},
+				{"level": "1 l"},
+				{"level": "1 m"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "2 c"},
+				{"level": "2 d"},
+				{"level": "2 e"},
+				{"level": "2 f"},
+				{"level": "2 g"},
+				{"level": "2 h"},
+				{"level": "3 a"},
+				{"level": "3 b"},
+				{"level": "3 c"},
+				{"level": "3 d"},
+				{"level": "4 a"},
+				{"level": "4 b"},
+				{"level": "4 c"},
+				{"level": "5"},
+				{"level": "Auslandsvorbereitungskurs"},
+				{"level": "Dele Nivel Intermedio"},
+				{"level": "Economia"},
+				{"level": "Grammatik-Übungskurs"},
+				{"level": "Informatica"},
+				{"level": "Intercultural"},
+				{"level": "Mejora tu oido"},
+				{"level": "Temas de Actualidad"},
+				{"level": "intensiv 1 a"},
+				{"level": "intensiv 1 b"},
+				{"level": "intensiv 2 a"},
+				{"level": "intensiv 2 b"},
+				{"level": "rápido 1 a"},
+				{"level": "rápido 1 b"},
+				{"level": "rápido 2 a"},
+				{"level": "rápido 2 b"}
+			]
+		},
+		{
+			"name": "Polnisch",
+			"courses": [
+				{"level": "Polnisch 0 (DummyKurs)"},
+				{"level": "Polnisch 1"},
+				{"level": "Polnisch 2"},
+				{"level": "Polnisch 3"},
+				{"level": "Polnisch 4 (Konversation)"}
+			]
+		},
+		{
+			"name": "Niederländisch",
+			"courses": [
+				{"level": "1"},
+				{"level": "2"},
+				{"level": "3"}
+			]
+		},
+		{
+			"name": "Türkisch",
+			"courses": [
+				{"level": "1"},
+				{"level": "2"}
+			]
+		},
+		{
+			"name": "Latein",
+			"courses": [
+				{"level": "1"},
+				{"level": "2"}
+			]
+		}
+	]
+}

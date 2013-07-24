@@ -29,13 +29,6 @@ spz Package
     :members:
     :show-inheritance:
 
-:mod:`dummy` Module
--------------------
-
-.. automodule:: spz.dummy
-    :members:
-    :show-inheritance:
-
 :mod:`errorhandlers` Module
 ---------------------------
 
