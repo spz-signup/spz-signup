@@ -21,7 +21,7 @@
     <div class="control-group{% if field.errors %} has-error{% endif %}">
         <label for="{{ field.id }}" class="col col-lg-2 control-label">{{ field.label.text }}</label>
         <div class="col col-lg-8 controls">
-            <select{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+            <select id="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
                 <option selected="selected">{{ placeholder|default('', true) }}</option>
                 {% for id, name in field.choices %}
                 <option value="{{ id }}">{{ name }}</option>
