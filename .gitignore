@@ -8,6 +8,7 @@ doc/build
 spz/static/.webassets-cache/
 spz/static/js/packed.js
 spz/static/js/packed_ie.js
+spz/static/js/packed_tools.js
 spz/static/css/packed.css
 
 local.db

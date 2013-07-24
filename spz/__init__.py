@@ -13,6 +13,7 @@ from flask import Flask
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail
+from flask.ext.cache import Cache
 
 from spz import assets
 
@@ -46,10 +47,14 @@ db = SQLAlchemy(app)
 # Mail sending
 mail = Mail(app)
 
+# Cache setup
+cache = Cache(app, config=app.config['CACHE_CONFIG'])
+
 
 # Register all views here
 from spz import views, errorhandlers, auth
 
+# Authentication
 app.before_request = auth.get_current_user
 
 
@@ -71,7 +76,7 @@ handlers = [(404, errorhandlers.page_not_found),
             (500, errorhandlers.not_found)]
 
 for errno, handler in handlers:
-    app.error_handlers[errno] = handler
+    app.register_error_handler(errno, handler)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
