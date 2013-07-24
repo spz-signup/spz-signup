@@ -2,27 +2,33 @@
 
 from datetime import datetime, timedelta
 
-from spz import db
-from spz.models import *
+from flask import json
+
+from spz import app, db
+from spz.models import *  # Keep this import, otherwise the create_all call won't any models at all
 
 
-def dummy_values():
-    fst_lang = Language('First Language', datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
-    snd_lang = Language('Second Language', datetime.utcnow() + timedelta(days=2), datetime.utcnow() + timedelta(days=4))
+def insert_resources():
+    with app.open_resource('resource/degrees.json') as fd:
+        res = json.load(fd)
 
-    c1 = Course(fst_lang, '1a', limit=15, price=60)
-    c2 = Course(fst_lang, '1b', limit=10, price=60)
-    c3 = Course(snd_lang, '2a', limit=15, price=60)
-    c4 = Course(snd_lang, '2b', limit=15, price=120)
-    db.session.add_all([c1, c2, c3, c4])
+        for degree in res["degrees"]:
+            db.session.add(Degree(degree))
 
-    bsc = Degree('Bachelor')
-    msc = Degree('Master')
-    db.session.add_all([bsc, msc])
+    with app.open_resource('resource/origins.json') as fd:
+        res = json.load(fd)
 
-    o1 = Origin('First origin')
-    o2 = Origin('Second origin', 'Department')
-    db.session.add_all([o1, o2])
+        for origin in res["origins"]:
+            db.session.add(Origin(origin))
+
+    with app.open_resource('resource/courses.json') as fd:
+        res = json.load(fd)
+
+        for language in res["languages"]:
+            ref_lang = Language(language["name"], datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
+
+            for course in language["courses"]:
+                db.session.add(Course(ref_lang, course["level"], limit=20, price=60))
 
     db.session.commit()
 
@@ -33,7 +39,7 @@ def dummy_values():
 if __name__ == '__main__':
     db.create_all()
 
-    dummy_values()
+    insert_resources()
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
