@@ -26,6 +26,12 @@ def origins_to_choicelist():
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
 
+@cache.cached(key_prefix='languages')
+def languages_to_choicelist():
+    return [(x.id, x.name)
+            for x in models.Language.query.order_by(models.Language.id.asc()).all()]
+
+
 @cache.cached(key_prefix='courses')
 def courses_to_choicelist():
     return [(x.id, u'{0} {1}'.format(x.language.name, x.level))
@@ -52,6 +58,7 @@ class SignupForm(Form):
     degree = SelectField('Angestrebter Abschluss', [validators.Optional()])
     semester = IntegerField('Semester', [validators.Optional()])
     origin = SelectField('Herkunft', [validators.Optional()])
+    languages = SelectField('Sprache', [validators.Optional])  # TODO: only used for filtering, not needed b/c of the course id
     courses = SelectField('Kurs', [validators.Optional()])
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
@@ -63,6 +70,7 @@ class SignupForm(Form):
     def populate(self):
         self.degree.choices = degrees_to_choicelist()
         self.origin.choices = origins_to_choicelist()
+        self.languages.choices = languages_to_choicelist()
         self.courses.choices = courses_to_choicelist()
 
 
