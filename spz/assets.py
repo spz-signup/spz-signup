@@ -30,7 +30,7 @@ register_filter(RCSSMin)
 
 # Javascript bundles:
 
-all_js = Bundle('js/jquery-1.10.1.min.js',
+all_js = Bundle('js/jquery-1.10.2.min.js',
                 'js/mailcheck.1.0.2.min.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
@@ -53,7 +53,7 @@ tools_js = Bundle('js/persona.js',
 
 # Stylesheet bundles:
 
-all_css = Bundle('css/bootstrap.css',
+all_css = Bundle('css/bootstrap.min.css',
                  filters='rcssmin', output='css/packed.css')
 
 
