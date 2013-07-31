@@ -47,19 +47,19 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    first_name = TextField('Vorname', [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')])
-    last_name = TextField('Nachname', [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')])
-    phone = TextField('Telefon', [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
-    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'),
-                                validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
-    tag = TextField('Identifikation', [validators.DataRequired('Identifikation wird benötigt'),
-                                       validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
+    first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
+    last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
+    phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
+                                validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
+    tag = TextField(u'Identifikation', [validators.DataRequired(u'Identifikation wird benötigt'),
+                                       validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField('Angestrebter Abschluss', [validators.Optional()])
-    semester = IntegerField('Semester', [validators.Optional()])
-    origin = SelectField('Herkunft', [validators.Optional()])
-    languages = SelectField('Sprache', [validators.Optional()])  # TODO: only used for filtering, not needed b/c of the course id
-    courses = SelectField('Kurs', [validators.Optional()])
+    degree = SelectField(u'Angestrebter Abschluss', [validators.Optional()])
+    semester = IntegerField(u'Semester', [validators.Optional()])
+    origin = SelectField(u'Herkunft', [validators.Optional()])
+    languages = SelectField(u'Sprache', [validators.Optional()])  # TODO: only used for filtering, not needed b/c of the course id
+    courses = SelectField(u'Kurs', [validators.Optional()])
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
