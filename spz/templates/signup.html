@@ -12,56 +12,34 @@
 </div>
 <div class="row">
     <div class="col col-lg-12">
-        <form class="form-horizontal" data-persist="garlic" data-validate="parsley" method="post">
+        <form data-persist="garlic" data-validate="parsley" method="post">
             {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>Persönliche Angaben</legend>
+                {{ render_input(form.first_name, placeholder='Max') }}
+                {{ render_input(form.last_name, placeholder='Mustermann') }}
+                {{ render_input(form.phone) }}
+                {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
+                {{ render_option(form.origin) }}
+                {{ render_input(form.tag) }}
+            </fieldset>
 
-            {# TODO: group into formsets, instead of ugly rows.. #}
-            <div class="row">
-            {{ render_input(form.first_name, placeholder='Max', required_extras='autofocus="autofocus"') }}
-            </div>
+            <fieldset class="kit-only">
+                <legend>Weitere Angaben</legend>
+                {{ render_option(form.degree, required=False) }}
+                {{ render_input(form.semester, type='number', required=False, required_extras='step="1" type="range" min="1" max="16"') }}
+            </fieldset>
 
-            <div class="row">
-            {{ render_input(form.last_name, placeholder='Mustermann') }}
-            </div>
+            <fieldset>
+                <legend>Kurswahl</legend>
+                {{ render_option(form.languages, required_extras='data-trigger="change"') }}
+                {{ render_option(form.courses, required_extras='data-trigger="change"') }}
+            </fieldset>
 
-            <div class="row">
-            {{ render_input(form.phone) }}
-            </div>
-
-            <div class="row">
-            {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
-            </div>
-
-            <div class="row">
-            {{ render_option(form.origin, required=False) }}
-            </div>
-
-            <div class="row">
-            {{ render_input(form.tag) }}
-            </div>
-
-            <div class="row kit-only">
-            {{ render_option(form.degree, required=False) }}
-            </div>
-
-            <div class="row kit-only">
-            {{ render_input(form.semester, type='number', required=False, required_extras='step="1" type="range" min="1" max="16"') }}
-            </div>
-
-            <div class="row">
-            {{ render_option(form.languages) }}
-            </div>
-
-            <div class="row">
-            {{ render_option(form.courses, required=True, required_extras='data-trigger="change"') }}
-            </div>
-
-            <div class="row">
-                <div class="col col-lg-8 col-offset-2">
-                    <button type="submit" class="btn btn-default btn-large btn-block">Anmelden</button>
-                    <button type="reset" class="btn btn-default btn-large btn-block">Zurücksetzen</button>
-                </div>
-            </div>
+            <fieldset>
+                <button type="submit" class="btn btn-default btn-large btn-block">Anmelden</button>
+                <button type="reset" class="btn btn-default btn-large btn-block">Zurücksetzen</button>
+            </fieldset>
         </form>
     </div>
 </div>
@@ -70,6 +48,7 @@
 
 {% block scripts %}
 <script>
+    /* TODO: this hides them, when we come back, too -- should trigger only on first run */
     $('.kit-only').hide();
 
     $('#languages').change(function() {
