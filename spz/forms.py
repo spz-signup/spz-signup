@@ -58,13 +58,13 @@ class SignupForm(Form):
     degree = SelectField('Angestrebter Abschluss', [validators.Optional()])
     semester = IntegerField('Semester', [validators.Optional()])
     origin = SelectField('Herkunft', [validators.Optional()])
-    languages = SelectField('Sprache', [validators.Optional])  # TODO: only used for filtering, not needed b/c of the course id
+    languages = SelectField('Sprache', [validators.Optional()])  # TODO: only used for filtering, not needed b/c of the course id
     courses = SelectField('Kurs', [validators.Optional()])
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
-    def __init__(self):
-        super(SignupForm, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
         self.populate()
 
     def populate(self):
