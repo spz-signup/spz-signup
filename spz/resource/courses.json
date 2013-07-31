@@ -3,26 +3,26 @@
 		{
 			"name": "Arabisch",
 			"courses": [
-				{"level": "1a"},
-				{"level": "1b"},
-				{"level": "2a"},
-				{"level": "2b"},
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "2 a"},
+				{"level": "2 b"},
 				{"level": "3"}
 			]
 		},
 		{
 			"name": "Chinesisch",
 			"courses": [
-				{"level": "1a"},
-				{"level": "1b"},
-				{"level": "1c"},
-				{"level": "1d"},
-				{"level": "2a"},
-				{"level": "2b"},
-				{"level": "3a"},
-				{"level": "3b"},
-				{"level": "4a"},
-				{"level": "4b"},
+				{"level": "1 a"},
+				{"level": "1 b"},
+				{"level": "1 c"},
+				{"level": "1 d"},
+				{"level": "2 a"},
+				{"level": "2 b"},
+				{"level": "3 a"},
+				{"level": "3 b"},
+				{"level": "4 a"},
+				{"level": "4 b"},
 				{"level": "express 1"}
 			]
 		},
@@ -249,7 +249,6 @@
 		{
 			"name": "Polnisch",
 			"courses": [
-				{"level": "Polnisch 0 (DummyKurs)"},
 				{"level": "Polnisch 1"},
 				{"level": "Polnisch 2"},
 				{"level": "Polnisch 3"},
