@@ -27,12 +27,6 @@
 			]
 		},
 		{
-			"name": "Deutsch als Fremdsprache",
-			"courses": [
-
-			]
-		},
-		{
 			"name": "English",
 			"courses": [
 				{"level": "A2 Elementary 1"},
@@ -251,8 +245,7 @@
 			"courses": [
 				{"level": "Polnisch 1"},
 				{"level": "Polnisch 2"},
-				{"level": "Polnisch 3"},
-				{"level": "Polnisch 4 (Konversation)"}
+				{"level": "Polnisch 3"}
 			]
 		},
 		{
