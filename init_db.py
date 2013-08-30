@@ -3,9 +3,21 @@
 from datetime import datetime, timedelta
 
 from flask import json
+from jsonschema import validate, ValidationError, SchemaError
 
 from spz import app, db
 from spz.models import *  # Keep this import, otherwise the create_all call won't any models at all
+
+
+def validate_resources():
+    resources = ('degrees', 'origins', 'courses')
+
+    for fname in resources:
+        with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, app.open_resource('resource/{0}.schema'.format(fname)) as fd_schema:
+            res_json = json.load(fd_json)
+            res_schema = json.load(fd_schema)
+
+            validate(res_json, res_schema)
 
 
 def insert_resources():
@@ -37,9 +49,15 @@ def insert_resources():
 # do not use this in regular code
 
 if __name__ == '__main__':
-    db.create_all()
+    try:
+        validate_resources()  # Strong exception safety guarantee
 
-    insert_resources()
+        db.create_all()
+        insert_resources()
+
+        print('Import OK')
+    except (ValidationError, SchemaError) as e:
+        print(e)  # Stacktrace does not contain any useful information
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
