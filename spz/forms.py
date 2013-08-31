@@ -26,16 +26,11 @@ def origins_to_choicelist():
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
 
-@cache.cached(key_prefix='languages')
-def languages_to_choicelist():
-    return [(unicode(x.id), x.name)
-            for x in models.Language.query.order_by(models.Language.id.asc()).all()]
-
-
-@cache.cached(key_prefix='courses')
-def courses_to_choicelist():
-    return [(unicode(x.id), u'{0} {1}'.format(x.language.name, x.level))
-            for x in models.Course.query.order_by(models.Course.id.asc()).all()]
+@cache.cached(key_prefix='coursegroups')
+def coursegroups_to_choicelist():
+    # List of (language, [courses for this language]) tuples, i.e. [(lang, [(cid, cname), (cid, cname)]), (lang, [(cid, cname)]), ...]
+    return [(lang.name, [(unicode(course.id), u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
+            for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
 class SignupForm(Form):
@@ -58,8 +53,7 @@ class SignupForm(Form):
     degree = SelectField(u'Angestrebter Abschluss', [validators.Optional()])
     semester = IntegerField(u'Semester', [validators.Optional()])
     origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')])
-    languages = SelectField(u'Sprache', [validators.Optional()])  # only used for filtering on the frontend
-    courses = SelectField(u'Kurs', [validators.Required(u'Kurs muss angegeben werden')])
+    coursegroups = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')])
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
@@ -70,8 +64,7 @@ class SignupForm(Form):
     def populate(self):
         self.degree.choices = degrees_to_choicelist()
         self.origin.choices = origins_to_choicelist()
-        self.languages.choices = languages_to_choicelist()
-        self.courses.choices = courses_to_choicelist()
+        self.coursegroups.choices = coursegroups_to_choicelist()
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

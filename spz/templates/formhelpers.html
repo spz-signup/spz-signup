@@ -29,4 +29,24 @@
 {% endmacro %}
 
 
+{% macro render_optgroup(field, placeholder=None, required=True, required_extras=None) %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
+    <select class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+        <option selected="selected">{{ placeholder|default('', true) }}</option>
+        {% for group in field.choices %}
+        <optgroup label="{{ group[0] }}">
+            {% for id, name in group[1] %}
+            <option value="{{ id }}">{{ name }}</option>
+            {% endfor %}
+        </optgroup>
+        {% endfor %}
+    </select>
+    {% for error in field.errors %}
+    <span class="label label-error">{{ error }}</span>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

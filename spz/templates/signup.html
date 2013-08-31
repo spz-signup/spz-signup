@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import render_input, render_option %}
+{% from 'formhelpers.html' import render_input, render_option, render_optgroup %}
 
 
 {% block body %}
@@ -32,8 +32,7 @@
 
             <fieldset>
                 <legend>Kurswahl</legend>
-                {{ render_option(form.languages, required_extras='data-trigger="change"') }}
-                {{ render_option(form.courses, required_extras='data-trigger="change"') }}
+                {{ render_optgroup(form.coursegroups) }}
             </fieldset>
 
             <fieldset>
@@ -50,10 +49,6 @@
 <script>
     /* TODO: this hides them, when we come back, too -- should trigger only on first run */
     $('.kit-only').hide();
-
-    $('#languages').change(function() {
-        /* TODO: filter course list based on this selection */
-    });
 
     $('#origin').change(function() {
         if ($(this).find('option:selected:contains(\'KIT\')').length > 0) {
