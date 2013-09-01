@@ -7,7 +7,7 @@
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
     {% for error in field.errors %}
-    <span class="label label-error">{{ error }}</span>
+    <span class="label label-danger">{{ error }}</span>
     {% endfor %}
 </div>
 {% endmacro %}
@@ -23,7 +23,7 @@
         {% endfor %}
     </select>
     {% for error in field.errors %}
-    <span class="label label-error">{{ error }}</span>
+    <span class="label label-danger">{{ error }}</span>
     {% endfor %}
 </div>
 {% endmacro %}
@@ -43,7 +43,7 @@
         {% endfor %}
     </select>
     {% for error in field.errors %}
-    <span class="label label-error">{{ error }}</span>
+    <span class="label label-danger">{{ error }}</span>
     {% endfor %}
 </div>
 {% endmacro %}
