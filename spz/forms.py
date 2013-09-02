@@ -16,20 +16,20 @@ from spz import models, cache
 
 @cache.cached(key_prefix='degrees')
 def degrees_to_choicelist():
-    return [(unicode(x.id), x.name)
+    return [(x.id, x.name)
             for x in models.Degree.query.order_by(models.Degree.id.asc()).all()]
 
 
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
-    return [(unicode(x.id), u'{0} {1}'.format(x.name, x.department if x.department else u''))
+    return [(x.id, u'{0} {1}'.format(x.name, x.department if x.department else u''))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
 
 @cache.cached(key_prefix='coursegroups')
 def coursegroups_to_choicelist():
     # List of (language, [courses for this language]) tuples, i.e. [(lang, [(cid, cname), (cid, cname)]), (lang, [(cid, cname)]), ...]
-    return [(lang.name, [(unicode(course.id), u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
+    return [(u'{0}'.format(lang.name), [(course.id, u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
             for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
@@ -50,10 +50,10 @@ class SignupForm(Form):
     tag = TextField(u'Identifikation', [validators.Required(u'Identifikation wird benötigt'),
                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField(u'Angestrebter Abschluss', [validators.Optional()])
+    degree = SelectField(u'Angestrebter Abschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Semester', [validators.Optional()])
-    origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')])
-    coursegroups = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')])
+    origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+    coursegroups = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
