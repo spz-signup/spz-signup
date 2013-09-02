@@ -9,7 +9,7 @@ from flask import redirect, url_for, flash
 from flask.ext.mail import Message
 
 from spz import models, mail
-from spz.decorators import templated
+from spz.decorators import templated, auth_required
 from spz.headers import upheaders
 from spz.forms import SignupForm
 
@@ -41,12 +41,14 @@ def internal():
 
 
 @upheaders
+@auth_required
 @templated('internal/statistics.html')
 def statistics():
     return None
 
 
 @upheaders
+@auth_required
 @templated('internal/notifications.html')
 def notifications():
     return None

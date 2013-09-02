@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-{% if g.user %}
+{% if g.user and g.access %}
 {% block internal_body %}{% endblock %}
 {% endif %}
 {% endblock body %}

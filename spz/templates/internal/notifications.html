@@ -6,10 +6,12 @@
 
 
 {% block internal_body %}
+{% if g.access == 'unrestricted' %}
 <div class="row">
     <div class="col-md-12">
         <p>Send mail</p>
     </div>
 </div>
+{% endif %}
 {% endblock internal_body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

@@ -32,7 +32,7 @@ def templated(template=None):
     return decorator
 
 
-def login_required(f):
+def auth_required(f):
     """Checks the authentication status of the current user and redirects to the index on unauthenticated access.
 
        .. seealso:: The :py:mod:`spz.auth` module

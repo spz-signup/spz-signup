@@ -58,7 +58,17 @@ from spz import views, errorhandlers, auth
 # Authentication
 @app.before_request
 def get_current_user():
-    g.user = session.get('email', None)
+    mail = session.get('email', None)
+    acl = app.config['ACCESS_CONTROL']
+
+    if mail in acl['unrestricted']:
+        g.access = 'unrestricted'
+    elif mail in acl['restricted']:
+        g.access = 'restricted'
+    else:
+        g.access = None
+
+    g.user = mail
 
 
 routes = [('/', views.index, ['GET', 'POST']),
