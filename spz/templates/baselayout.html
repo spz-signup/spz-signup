@@ -27,7 +27,7 @@
 
         <div class="container">
             <div class="row">
-                <div class="col col-lg-12">
+                <div class="col-md-12">
                     {% block alert %}
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -61,6 +61,6 @@
             $elem.text(fmt);
         });
     </script>
-    {% endblock scripts%}
+    {% endblock scripts %}
 </html>
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

@@ -9,7 +9,7 @@
       Some code analyzers may flag view imports as unused, because they are only imported for their side effects.
 """
 
-from flask import Flask
+from flask import Flask, session, g
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail
@@ -54,15 +54,22 @@ cache = Cache(app, config=app.config['CACHE_CONFIG'])
 # Register all views here
 from spz import views, errorhandlers, auth
 
+
 # Authentication
-app.before_request = auth.get_current_user
+@app.before_request
+def get_current_user():
+    g.user = session.get('email', None)
 
 
 routes = [('/', views.index, ['GET', 'POST']),
+          ('/internal', views.internal, ['GET']),
+
           ('/language/<int:id>', views.language, ['GET']),
           ('/course/<int:id>', views.course, ['GET']),
           ('/applicant/<int:id>', views.applicant, ['GET']),
+
           ('/nullmailer', views.nullmailer, ['GET']),
+
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]
 

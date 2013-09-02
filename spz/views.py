@@ -35,6 +35,12 @@ def index():
 
 
 @upheaders
+@templated('internal.html')
+def internal():
+    return None
+
+
+@upheaders
 @templated('course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
