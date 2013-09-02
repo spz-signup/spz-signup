@@ -1,26 +1,10 @@
-{% extends 'baselayout.html' %}
+{% extends 'internal/internal.html' %}
 
-{% block body %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1>Interner Bereich</h1>
-            <small>
-                {% if g.user %}
-                Angemeldet als <strong>{{ g.user }}</strong>
-                (<a href="#" class="signout">Abmelden</a>)
-                {% else %}
-                Nicht angemeldet. <a href="#" class="signin">Anmelden</a>
-                {% endif %}
-            </small>
-        </div>
-    </div>
-</div>
-{% if g.user %}
+{% block internal_body %}
 <div class="row">
     <div class="col-md-12">
         <div class="list-group">
-            <a href="#" class="list-group-item">
+            <a href="{{ url_for('statistics') }}" class="list-group-item">
                 <h4 class="list-group-item-heading">Statistiken</h4>
                 <p class="list-group-item-text text-info">Quantitative Information zum Anmeldeprozess</p>
             </a>
@@ -28,7 +12,7 @@
                 <h4 class="list-group-item-heading">Kurslisten</h4>
                 <p class="list-group-item-text text-info">Listen der Teilnehmer je Kurs</p>
             </a>
-            <a href="#" class="list-group-item">
+            <a href="{{ url_for('notifications') }}" class="list-group-item">
                 <h4 class="list-group-item-heading">Mail Zentrale</h4>
                 <p class="list-group-item-text text-info">Mails an Kursteilnehmer schicken</p>
             </a>
@@ -39,16 +23,5 @@
         </div>
     </div>
 </div>
-{% endif %}
-{% endblock body %}
-
-
-{% block scripts %}
-<script src="{{ config.PERSONA_JS }}"></script>
-<script>
-    var $URL_ROOT = {{ request.url_root|tojson }};
-    var $CURRENT_USER = {{ g.user|tojson }};
-</script>
-<script src="{{ url_for('static', filename='js/persona.js') }}"></script>
-{% endblock scripts %}
+{% endblock internal_body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

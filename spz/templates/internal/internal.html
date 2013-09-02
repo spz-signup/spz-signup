@@ -1,0 +1,31 @@
+{% extends 'baselayout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1><a href="{{ url_for('internal') }}">Interner Bereich</a><small>{% block internal_heading %}{% endblock internal_heading %}</small></h1>
+            {% if g.user %}
+            Angemeldet als <strong>{{ g.user }}</strong>
+            (<a href="#" class="signout">Abmelden</a>)
+            {% else %}
+            Nicht angemeldet. <a href="#" class="signin">Anmelden</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% if g.user %}
+{% block internal_body %}{% endblock %}
+{% endif %}
+{% endblock body %}
+
+
+{% block scripts %}
+<script src="{{ config.PERSONA_JS }}"></script>
+<script>
+    var $URL_ROOT = {{ request.url_root|tojson }};
+    var $CURRENT_USER = {{ g.user|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/persona.js') }}"></script>
+{% endblock scripts %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

@@ -35,8 +35,20 @@ def index():
 
 
 @upheaders
-@templated('internal.html')
+@templated('internal/overview.html')
 def internal():
+    return None
+
+
+@upheaders
+@templated('internal/statistics.html')
+def statistics():
+    return None
+
+
+@upheaders
+@templated('internal/notifications.html')
+def notifications():
     return None
 
 
