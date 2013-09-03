@@ -74,7 +74,7 @@ def get_current_user():
 routes = [('/', views.index, ['GET', 'POST']),
           ('/internal', views.internal, ['GET']),
           ('/statistics', views.statistics, ['GET']),
-          ('/notifications', views.notifications, ['GET']),
+          ('/notifications', views.notifications, ['GET', 'POST']),
 
           ('/language/<int:id>', views.language, ['GET']),
           ('/course/<int:id>', views.course, ['GET']),

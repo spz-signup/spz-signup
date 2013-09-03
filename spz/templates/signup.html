@@ -46,7 +46,10 @@
 
 
 {% block scripts %}
+{{ super() }}
 <script>
+    "use strict";
+
     /* TODO: this hides them, when we come back, too -- should trigger only on first run */
     $('.kit-only').hide();
 

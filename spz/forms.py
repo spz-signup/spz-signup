@@ -6,7 +6,7 @@
 """
 
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, IntegerField, validators
+from wtforms import TextField, SelectField, IntegerField, TextField, TextAreaField, validators
 
 from spz import models, cache
 
@@ -65,6 +65,16 @@ class SignupForm(Form):
         self.degree.choices = degrees_to_choicelist()
         self.origin.choices = origins_to_choicelist()
         self.coursegroups.choices = coursegroups_to_choicelist()
+
+
+class NotificationForm(Form):
+    """Represents the form for sending notifications.
+
+       The field's length are limited on purpose.
+    """
+
+    mail_subject = TextField('Betreff', [validators.Length(1, 200, u'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
+    mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

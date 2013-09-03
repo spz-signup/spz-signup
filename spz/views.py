@@ -5,13 +5,15 @@
    Manages the mapping between routes and their activities.
 """
 
+import socket
+
 from flask import redirect, url_for, flash
 from flask.ext.mail import Message
 
 from spz import models, mail
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
-from spz.forms import SignupForm
+from spz.forms import SignupForm, NotificationForm
 
 
 def nullmailer():
@@ -51,7 +53,20 @@ def statistics():
 @auth_required
 @templated('internal/notifications.html')
 def notifications():
-    return None
+    form = NotificationForm()
+
+    if form.validate_on_submit():
+        try:
+            # TODO(daniel): extract recipients from courses; sender from config
+            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None)
+            mail.send(msg)
+            flash(u'Mail erfolgreich verschickt', 'success')
+            return redirect(url_for('internal'))
+
+        except (AssertionError, socket.error) as e:
+            flash(u'Mail wurde nicht verschickt: {0}'.format(e), 'danger')
+
+    return dict(form=form)
 
 
 @upheaders

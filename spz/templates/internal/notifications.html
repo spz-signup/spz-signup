@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input, render_textarea %}
 
 {% block internal_heading %}
 <a href="{{ url_for('notifications') }}"> Mail Zentrale</a>
@@ -9,9 +10,32 @@
 {% if g.access == 'unrestricted' %}
 <div class="row">
     <div class="col-md-12">
-        <p>Send mail</p>
+        <form method="post" id="confirm">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>Inhalt der Mail</legend>
+                {{ render_input(form.mail_subject) }}
+                {{ render_textarea(form.mail_body) }}
+            </fieldset>
+            <fieldset>
+                <button type="submit" class="btn btn-default btn-large">Abschicken</button>
+                <button type="reset" class="btn btn-default btn-large">Zurücksetzen</button>
+            </fieldset>
+        </form>
     </div>
 </div>
 {% endif %}
 {% endblock internal_body %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+    "use strict";
+
+    $('#confirm').submit(function() {
+        return confirm("Mailversand bestätigen");
+    });
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
