@@ -1,0 +1,43 @@
+{% extends 'baselayout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="page-header">
+            <h1>Lizenzen</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="list-group">
+            <a href="{{ url_for('static', filename='licenses/bootstrap.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">Bootstrap 3</h4>
+                <p class="list-group-item-text">getbootstrap.com</p>
+            </a>
+            <a href="{{ url_for('static', filename='licenses/jquery.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">jQuery</h4>
+                <p class="list-group-item-text">jquery.com</p>
+            </a>
+            <a href="{{ url_for('static', filename='licenses/parsleyjs.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">Parsley.js</h4>
+                <p class="list-group-item-text">parsley.js.org</p>
+            </a>
+            <a href="{{ url_for('static', filename='licenses/garlicjs.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">Garlic.js</h4>
+                <p class="list-group-item-text">garlicjs.org</p>
+            </a>
+            <a href="{{ url_for('static', filename='licenses/momentjs.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">moment.js</h4>
+                <p class="list-group-item-text">momentjs.com</p>
+            </a>
+            <a href="{{ url_for('static', filename='licenses/mailcheckjs.txt') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">mailcheck.js</h4>
+                <p class="list-group-item-text">github.com/Kicksend/mailcheck</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

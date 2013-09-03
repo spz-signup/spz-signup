@@ -30,6 +30,12 @@ def index():
 
 
 @upheaders
+@templated('licenses.html')
+def licenses():
+    return None
+
+
+@upheaders
 @templated('internal/overview.html')
 def internal():
     return None
