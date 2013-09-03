@@ -16,13 +16,6 @@ from spz.headers import upheaders
 from spz.forms import SignupForm, NotificationForm
 
 
-def nullmailer():
-    msg = Message("hello", recipients=["alice@example.com"])
-    mail.send(msg)
-
-    return u'mail sent'
-
-
 @upheaders
 @templated('signup.html')
 def index():
@@ -70,19 +63,29 @@ def notifications():
 
 
 @upheaders
-@templated('course.html')
+@auth_required
+@templated('internal/lists.html')
+def lists():
+    return dict(languages=models.Language.query.all())
+
+
+@upheaders
+@auth_required
+@templated('internal/course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
 
 
 @upheaders
-@templated('language.html')
+@auth_required
+@templated('internal/language.html')
 def language(id):
     return dict(language=models.Language.query.get_or_404(id))
 
 
 @upheaders
-@templated('applicant.html')
+@auth_required
+@templated('internal/applicant.html')
 def applicant(id):
     return dict(applicant=models.Applicant.query.get_or_404(id))
 

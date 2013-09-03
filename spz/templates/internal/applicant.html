@@ -1,13 +1,11 @@
-{% extends 'baselayout.html' %}
+{% extends 'internal/internal.html' %}
 
-{% block body %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1>Bewerber <small><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.first_name ~ " " ~ applicant.last_name }}</a></small></h1>
-        </div>
-    </div>
-</div>
+{% block internal_heading %}
+<a href="{{ url_for('applicant', id=applicant.id) }}"> Bewerber: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
+{% endblock internal_heading %}
+
+
+{% block internal_body %}
 <div class="row">
     <div class="col-md-12">
         <table class="table table-striped">
@@ -46,5 +44,5 @@
         </table>
     </div>
 </div>
-{% endblock body %}
+{% endblock internal_body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

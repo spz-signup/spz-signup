@@ -73,14 +73,13 @@ def get_current_user():
 
 routes = [('/', views.index, ['GET', 'POST']),
           ('/internal', views.internal, ['GET']),
-          ('/statistics', views.statistics, ['GET']),
-          ('/notifications', views.notifications, ['GET', 'POST']),
+          ('/internal/statistics', views.statistics, ['GET']),
+          ('/internal/notifications', views.notifications, ['GET', 'POST']),
 
-          ('/language/<int:id>', views.language, ['GET']),
-          ('/course/<int:id>', views.course, ['GET']),
-          ('/applicant/<int:id>', views.applicant, ['GET']),
-
-          ('/nullmailer', views.nullmailer, ['GET']),
+          ('/internal/lists', views.lists, ['GET']),
+          ('/internal/language/<int:id>', views.language, ['GET']),
+          ('/internal/course/<int:id>', views.course, ['GET']),
+          ('/internal/applicant/<int:id>', views.applicant, ['GET']),
 
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]

@@ -1,13 +1,11 @@
-{% extends 'baselayout.html' %}
+{% extends 'internal/internal.html' %}
 
-{% block body %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1>Sprache <small><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></small></h1>
-        </div>
-    </div>
-</div>
+{% block internal_heading %}
+<a href="{{ url_for('language', id=language.id) }}"> Sprache: {{ language.name }}</a>
+{% endblock internal_heading %}
+
+
+{% block internal_body %}
 <div class="row">
     <div class="col-md-12">
         <dl>
@@ -42,5 +40,5 @@
         </table>
     </div>
 </div>
-{% endblock body %}
+{% endblock internal_body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

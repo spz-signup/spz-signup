@@ -1,0 +1,30 @@
+{% extends 'internal/internal.html' %}
+
+{% block internal_heading %}
+<a href="{{ url_for('notifications') }}"> Kurslisten</a>
+{% endblock internal_heading %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Sprach Id</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for language in languages %}
+                <tr>
+                    <td><a href="{{ url_for('language', id=language.id) }}">{{ language.id }}</a></td>
+                    <td>{{ language.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
