@@ -29,6 +29,7 @@ class Applicant(db.Model):
 
        :param mail: Mail address
        :param tag: System wide identification tag
+       :param sex: Male or not male
        :param first_name: First name
        :param last_name: Last name
        :param phone: Optional phone number
@@ -48,6 +49,7 @@ class Applicant(db.Model):
     mail = db.Column(db.String(120), unique=True, nullable=False)
     tag = db.Column(db.String(10), unique=True)
 
+    sex = db.Column(db.Boolean, nullable=False)
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
     phone = db.Column(db.String(20))
@@ -64,9 +66,10 @@ class Applicant(db.Model):
 
     registered = db.Column(db.DateTime())
 
-    def __init__(self, mail, tag, first_name, last_name, phone, degree, semester, origin, courses=[], registered=datetime.utcnow()):
+    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, courses=[], registered=datetime.utcnow()):
         self.mail = mail
         self.tag = tag
+        self.sex = sex
         self.first_name = first_name
         self.last_name = last_name
         self.phone = phone
