@@ -69,6 +69,7 @@ class SignupForm(Form):
         self.populate()
 
     def populate(self):
+        self.sex.choices = sexes_to_choicelist()
         self.degree.choices = degrees_to_choicelist()
         self.origin.choices = origins_to_choicelist()
         self.coursegroups.choices = coursegroups_to_choicelist()
