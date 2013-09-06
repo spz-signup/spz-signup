@@ -15,7 +15,8 @@
         <form data-persist="garlic" data-validate="parsley" method="post">
             {{ form.hidden_tag() }}
             <fieldset>
-                <legend>Persönliche Angaben</legend>
+                <legend>Persönliche Angaben *</legend>
+                {{ render_option(form.sex) }}
                 {{ render_input(form.first_name, placeholder='Max') }}
                 {{ render_input(form.last_name, placeholder='Mustermann') }}
                 {{ render_input(form.phone) }}

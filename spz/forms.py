@@ -14,6 +14,12 @@ from spz import models, cache
 # Cacheable helpers for database fields that are not supposed to change often or quickly
 # Do not specify a timeout; so the default one (from the configuration) gets picked up
 
+@cache.cached(key_prefix='sexes')
+def sexes_to_choicelist():
+    return [(x.id, x.name)
+            for x in models.Sex.query.order_by(models.Sex.id.asc()).all()]
+
+
 @cache.cached(key_prefix='degrees')
 def degrees_to_choicelist():
     return [(x.id, x.name)
