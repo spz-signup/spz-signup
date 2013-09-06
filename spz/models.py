@@ -49,7 +49,9 @@ class Applicant(db.Model):
     mail = db.Column(db.String(120), unique=True, nullable=False)
     tag = db.Column(db.String(10), unique=True)
 
-    sex = db.Column(db.Boolean, nullable=False)
+    sex_id = db.Column(db.Integer, db.ForeignKey('sex.id'))
+    sex = db.relationship("Sex", backref="applicants")
+
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
     phone = db.Column(db.String(20))
@@ -161,6 +163,24 @@ class Degree(db.Model):
 
     def __repr__(self):
         return '<Degree %r>' % self.name
+
+
+class Sex(db.Model):
+    """Represents the sex a :py:class:`Applicant` aims for.
+
+       :param name: The sex'es name
+    """
+
+    __tablename__ = 'sex'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(5), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Sex %r>' % self.name
 
 
 class Origin(db.Model):

@@ -42,6 +42,7 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
+    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], coerce=int)
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
