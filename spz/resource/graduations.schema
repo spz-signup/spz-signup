@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+		"title": "Graduations",
+		"type": "object",
+		"properties": {
+			"graduations": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"uniqueItems": true
+			}
+		},
+		"required": [ "graduations" ]
+}
