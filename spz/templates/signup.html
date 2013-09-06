@@ -29,6 +29,7 @@
                 <legend>Weitere Angaben</legend>
                 {{ render_option(form.degree, required=False) }}
                 {{ render_input(form.semester, type='number', required=False, required_extras='step="1" type="range" min="1" max="16"') }}
+                {{ render_option(form.graduation) }}
             </fieldset>
 
             <fieldset>

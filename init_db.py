@@ -33,6 +33,12 @@ def insert_resources():
         for degree in res["degrees"]:
             db.session.add(Degree(degree))
 
+    with app.open_resource('resource/graduations.json') as fd:
+        res = json.load(fd)
+
+        for graduation in res["graduations"]:
+            db.session.add(Graduation(graduation))
+
     with app.open_resource('resource/origins.json') as fd:
         res = json.load(fd)
 

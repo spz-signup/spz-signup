@@ -183,6 +183,24 @@ class Sex(db.Model):
         return '<Sex %r>' % self.name
 
 
+class Graduation(db.Model):
+    """Represents the graduation a :py:class:`Applicant` aims for.
+
+       :param name: The graduation's name
+    """
+
+    __tablename__ = 'graduation'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Graduation %r>' % self.name
+
+
 class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
