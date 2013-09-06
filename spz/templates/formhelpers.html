@@ -2,8 +2,8 @@
 {# Independent short macros, to allow for greater flexibility #}
 
 
-{% macro render_input(field, placeholder=None, required=True, required_extras=None, type="text") %}
-<div class="form-group{% if field.errors %} has-error{% endif %}">
+{% macro render_input(field, width=12, placeholder=None, required=True, required_extras=None, type="text") %}
+<div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
     {% for error in field.errors %}
@@ -13,8 +13,8 @@
 {% endmacro %}
 
 
-{% macro render_textarea(field, placeholder=None, required=True, required_extras=None) %}
-<div class="form-group{% if field.errors %} has-error{% endif %}">
+{% macro render_textarea(field, width=12, placeholder=None, required=True, required_extras=None) %}
+<div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <textarea class="form-control" rows="10" id="{{ field.id }}" name="{{ field.id }}" placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>{% if field.data %}{{ field.data }}{% endif %}</textarea>
     {% for error in field.errors %}
@@ -24,8 +24,8 @@
 {% endmacro %}
 
 
-{% macro render_option(field, placeholder=None, required=True, required_extras=None) %}
-<div class="form-group{% if field.errors %} has-error{% endif %}">
+{% macro render_option(field, width=12, placeholder=None, required=True, required_extras=None) %}
+<div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <select class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
         <option selected="selected">{{ placeholder|default('', true) }}</option>
@@ -40,8 +40,8 @@
 {% endmacro %}
 
 
-{% macro render_optgroup(field, placeholder=None, required=True, required_extras=None) %}
-<div class="form-group{% if field.errors %} has-error{% endif %}">
+{% macro render_optgroup(field, width=12, placeholder=None, required=True, required_extras=None) %}
+<div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <select class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
         <option selected="selected">{{ placeholder|default('', true) }}</option>
