@@ -147,24 +147,6 @@ class Language(db.Model):
         return '<Language %r>' % self.name
 
 
-class Degree(db.Model):
-    """Represents the degree a :py:class:`Applicant` aims for.
-
-       :param name: The degree's name
-    """
-
-    __tablename__ = 'degree'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True, nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Degree %r>' % self.name
-
-
 class Sex(db.Model):
     """Represents the sex a :py:class:`Applicant` aims for.
 
@@ -183,6 +165,24 @@ class Sex(db.Model):
         return '<Sex %r>' % self.name
 
 
+class Degree(db.Model):
+    """Represents the degree a :py:class:`Applicant` aims for.
+
+       :param name: The degree's name
+    """
+
+    __tablename__ = 'degree'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Degree %r>' % self.name
+
+
 class Graduation(db.Model):
     """Represents the graduation a :py:class:`Applicant` aims for.
 
@@ -199,6 +199,24 @@ class Graduation(db.Model):
 
     def __repr__(self):
         return '<Graduation %r>' % self.name
+
+
+class StateOfAtt(db.Model):
+    """Represents the state of attendance a :py:class:`Applicant` aims for.
+
+       :param name: The state's name
+    """
+
+    __tablename__ = 'stateofatt'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<StateOfAtt %r>' % self.name
 
 
 class Origin(db.Model):

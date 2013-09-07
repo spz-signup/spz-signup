@@ -32,6 +32,12 @@ def graduations_to_choicelist():
             for x in models.Graduation.query.order_by(models.Graduation.id.asc()).all()]
 
 
+##@cache.cached(key_prefix='stateofatts')
+##def stateofatts_to_choicelist():
+##    return [(x.id, x.name)
+##            for x in models.StateOfAtt.query.order_by(models.StateOfAtt.id.asc()).all()]
+
+
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
     return [(x.id, u'{0} {1}'.format(x.name, x.department if x.department else u''))
@@ -80,6 +86,7 @@ class SignupForm(Form):
         self.sex.choices = sexes_to_choicelist()
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
+        #self.stateofatt.choices = stateofatts_to_choicelist()
         self.origin.choices = origins_to_choicelist()
         self.coursegroups.choices = coursegroups_to_choicelist()
 

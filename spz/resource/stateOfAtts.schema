@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+		"title": "stateofatts",
+		"type": "object",
+		"properties": {
+			"stateofatts": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"uniqueItems": true
+			}
+		},
+		"required": [ "stateOfAtts" ]
+}
