@@ -28,7 +28,7 @@
             <fieldset class="kit-only">
                 <legend>Angaben für Studierende am KIT</legend>
                 {{ render_option(form.degree, width=5, required=True) }}
-                {{ render_input(form.semester, width=2, placeholder='1', type='number', required=True, required_extras='step="1" type="range" min="1" max="26"') }}
+                {{ render_input(form.semester, width=2, placeholder='1', type='number', required=False, required_extras='step="1" type="range" min="1" max="26"') }}
                 {{ render_option(form.graduation, width=5, required=True) }}
             </fieldset>
 

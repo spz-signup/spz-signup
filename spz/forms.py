@@ -65,7 +65,7 @@ class SignupForm(Form):
     tag = TextField(u'Identifikation', [validators.Required(u'Identifikation wird benötigt'),
                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField(u'Angestrebter Studienabschluss', [validators.Optional()], coerce=int)
+    degree = SelectField(u'Studiengang', [validators.Optional()], coerce=int)
     graduation = SelectField(u'Angestrebter Kursabschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
     coursegroups = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
