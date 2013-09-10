@@ -22,7 +22,7 @@
                 {{ render_input(form.phone, width=4) }}
                 {{ render_input(form.mail, width=8, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
                 {{ render_option(form.origin, width=6) }}
-                {{ render_input(form.tag, width=6) }}
+                {{ render_input(form.tag, width=6, placeholder='Für gebührenfreie Teilnahme an einem Kurs und für alles Englischkurse') }}
             </fieldset>
 
             <fieldset class="kit-only">
@@ -34,7 +34,7 @@
 
             <fieldset>
                 <legend>Kurswahl</legend>
-                {{ render_optgroup(form.coursegroups) }}
+                {{ render_option(form.course) }}
             </fieldset>
 
             <fieldset>
@@ -57,7 +57,7 @@
     $('.kit-only').hide();
 
     $('#origin').change(function() {
-        if ($(this).find('option:selected:contains(\'KIT\')').length > 0) {
+        if ($(this).find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').show();
         } else {
             $('.kit-only').hide();

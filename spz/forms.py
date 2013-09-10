@@ -51,6 +51,12 @@ def coursegroups_to_choicelist():
             for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
+@cache.cached(key_prefix='course')
+def course_to_choicelist():
+    return [(course.id, u'{0} {1}'.format(course.language_id, course.level))
+            for course in models.Course.query.order_by(models.Course.id.asc()).all()]
+
+
 class SignupForm(Form):
     """Represents the main sign up form.
 
@@ -68,13 +74,13 @@ class SignupForm(Form):
                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
     origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
-    tag = TextField(u'Identifikation', [validators.Required(u'Identifikation wird benötigt'),
+    tag = TextField(u'Matrikelnummer', [validators.Optional(),
                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
     degree = SelectField(u'Studiengang', [validators.Optional()], coerce=int)
     graduation = SelectField(u'Angestrebter Kursabschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
-    coursegroups = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
+    course = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
@@ -88,7 +94,8 @@ class SignupForm(Form):
         self.graduation.choices = graduations_to_choicelist()
         #self.stateofatt.choices = stateofatts_to_choicelist()
         self.origin.choices = origins_to_choicelist()
-        self.coursegroups.choices = coursegroups_to_choicelist()
+        #self.coursegroups.choices = coursegroups_to_choicelist()
+        self.course.choices = course_to_choicelist()
 
 
 class NotificationForm(Form):

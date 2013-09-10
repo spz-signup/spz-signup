@@ -144,7 +144,7 @@ class Language(db.Model):
         self.signup_end = signup_end
 
     def __repr__(self):
-        return '<Language %r>' % self.name
+        return '<Language %r %r>' % (self.name, self.id)
 
 
 class Sex(db.Model):

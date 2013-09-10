@@ -22,11 +22,18 @@ def index():
     form = SignupForm()
 
     if form.validate_on_submit():
-        # applicant = Applicant(first_name = form.first_name.data, ..)
-        flash(u'Erfolgreich eingetragen', 'success')
-        return redirect(url_for('index'))
+        matrikelnummer =  form.tag.data
+        flash(u'Ihre Angaben waren plausibel', 'success')
+        #flash(matrikelnummer, 'success')
+        return redirect(url_for('confirm'))
 
     return dict(form=form)
+
+
+@upheaders
+@templated('confirm.html')
+def confirm():
+    return None
 
 
 @upheaders

@@ -243,9 +243,9 @@
 		{
 			"name": "Polnisch",
 			"courses": [
-				{"level": "Polnisch 1"},
-				{"level": "Polnisch 2"},
-				{"level": "Polnisch 3"}
+				{"level": "1"},
+				{"level": "2"},
+				{"level": "3"}
 			]
 		},
 		{
