@@ -6,9 +6,12 @@
 """
 
 import socket
+import os
 
-from flask import redirect, url_for, flash
+from flask import request, redirect, url_for, flash
 from flask.ext.mail import Message
+from werkzeug import secure_filename
+
 
 from spz import models, mail
 from spz.decorators import templated, auth_required
@@ -25,7 +28,7 @@ def index():
         matrikelnummer =  form.tag.data
         flash(u'Ihre Angaben waren plausibel', 'success')
         #flash(matrikelnummer, 'success')
-        return redirect(url_for('confirm'))
+        return redirect(url_for('confirm', form=form))
 
     return dict(form=form)
 
@@ -52,6 +55,34 @@ def internal():
 @auth_required
 @templated('internal/statistics.html')
 def statistics():
+    return None
+
+
+@upheaders
+@auth_required
+@templated('internal/datainput.html')
+def datainput():
+    return None
+
+
+@upheaders
+@auth_required
+@templated('internal/datainput/matrikelnummer.html')
+def matrikelnummer():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file: #and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            up = app.config['UPLOAD_FOLDER']
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('matrikelnummer', filename=filename))
+    return None
+
+
+@upheaders
+@auth_required
+@templated('internal/datainput/zulassungen.html')
+def zulassungen():
     return None
 
 
