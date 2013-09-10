@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th>Bewerber Id</th>
+                    <th>G</th>
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>E-mail</th>
@@ -22,6 +23,7 @@
                 {% for applicant in course.applicants %}
                 <tr>
                     <td><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.id }}</a></td>
+                    <td>{{ applicant.sex }}</td>
                     <td>{{ applicant.first_name }}</td>
                     <td>{{ applicant.last_name }}</td>
                     <td>{{ applicant.mail }}</td>

@@ -4,9 +4,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="list-group">
-            <a href="{{ url_for('statistics') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Statistiken</h4>
-                <p class="list-group-item-text text-info">Quantitative Information zum Anmeldeprozess</p>
+            <a href="{{ url_for('datainput') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">Dateneingabe</h4>
+                <p class="list-group-item-text text-info">Gültige Matrikelnummern, Zulassungen für Englischkurse</p>
             </a>
             <a href="{{ url_for('lists') }}" class="list-group-item">
                 <h4 class="list-group-item-heading">Kurslisten</h4>
@@ -19,6 +19,10 @@
             <a href="#" class="list-group-item">
                 <h4 class="list-group-item-heading">Bewerber Zentrale</h4>
                 <p class="list-group-item-text text-info">Bewerber erstellen, bearbeiten, löschen</p>
+            </a>
+            <a href="{{ url_for('statistics') }}" class="list-group-item">
+                <h4 class="list-group-item-heading">Statistiken</h4>
+                <p class="list-group-item-text text-info">Quantitative Information zum Anmeldeprozess</p>
             </a>
         </div>
     </div>
