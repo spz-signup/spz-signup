@@ -72,7 +72,6 @@ def get_current_user():
 
 
 routes = [('/', views.index, ['GET', 'POST']),
-          ('/confirm', views.confirm, ['GET']),
           ('/licenses', views.licenses, ['GET']),
 
           ('/internal', views.internal, ['GET']),
