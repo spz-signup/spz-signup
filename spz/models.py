@@ -241,4 +241,22 @@ class Origin(db.Model):
         return '<Origin %r %r>' % (self.name, self.department)
 
 
+class Registration(db.Model):
+    """Represents the registration a :py:class:`Applicant` aims for.
+
+       :param name: The state's name
+    """
+
+    __tablename__ = 'registration'
+
+    id = db.Column(db.Integer, primary_key=True)
+    rnumber = db.Column(db.String(10), unique=True, nullable=False)
+
+    def __init__(self, rnumber):
+        self.name = rnumber
+
+    def __repr__(self):
+        return '<Registration %r>' % self.rnumber
+
+
 # vim: set tabstop=4 shiftwidth=4 expandtab:
