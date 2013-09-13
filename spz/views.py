@@ -73,18 +73,35 @@ def datainput():
     return None
 
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
 @upheaders
 @auth_required
 @templated('internal/datainput/matrikelnummer.html')
 def matrikelnummer():
     if request.method == 'POST':
-        file = request.files['file']
-        if file: #and allowed_file(file.filename):
-            #filename = secure_filename(file.filename)
-            filename = 'test'
-            up = app.config['UPLOAD_FOLDER']
+        file = request.files['file_name']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            fp = open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            anz = 0
+            for l in fp:
+                rm = models.Registration(l)
+##                db.session.add(Registration(rm))
+                anz += 1
+            fp.close()
+##            models.Registration.commit()
+            print '\nFile %s uploaded: %s records\n' % (file.filename, anz)
+
+
             return redirect(url_for('matrikelnummer', filename=filename))
+        msg = '\n%s: Wrong file name \n\n' % (file.filename)
+        print msg
+        return redirect(url_for('matrikelnummer'))
     return None
 
 
