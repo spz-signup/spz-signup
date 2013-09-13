@@ -28,7 +28,7 @@
 <div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <select class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
-        <option selected="selected">{{ placeholder|default('', true) }}</option>
+        <option>{{ placeholder|default('', true) }}</option>
         {% for id, name in field.choices %}
         <option value="{{ id }}">{{ name }}</option>
         {% endfor %}
@@ -44,7 +44,7 @@
 <div class="form-group col-md-{{width}}{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="control-label">{{ field.label }}</label>
     <select class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
-        <option selected="selected">{{ placeholder|default('', true) }}</option>
+        <option>{{ placeholder|default('', true) }}</option>
         {% for group in field.choices %}
         <optgroup label="{{ group[0] }}">
             {% for id, name in group[1] %}
