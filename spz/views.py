@@ -8,12 +8,12 @@
 import socket
 import os
 
-from flask import request, redirect, url_for, flash
+from flask import request, redirect, render_template, url_for, flash
 from flask.ext.mail import Message
 from werkzeug import secure_filename
 
 
-from spz import models, mail
+from spz import app, models, mail
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
 from spz.forms import SignupForm, NotificationForm
@@ -25,19 +25,27 @@ def index():
     form = SignupForm()
 
     if form.validate_on_submit():
-        matrikelnummer =  form.tag.data
+        erg = BerErg(form)
         flash(u'Ihre Angaben waren plausibel', 'success')
-        #flash(matrikelnummer, 'success')
-        return redirect(url_for('confirm', form=form))
+        return render_template('confirm.html', erg=erg)
 
     return dict(form=form)
 
 
-@upheaders
-@templated('confirm.html')
-def confirm():
-    return None
+#hier werde die Teilnahmebedingunen geprüft 
+def BerErg(form):
+    
+    who = form.first_name.data + ' ' + form.last_name.data
+    mat = form.tag.data
+    mail = form.mail.data
+    kurs_id = form.course.data
 
+    kurs = models.Course.query.get(kurs_id)
+    lang = models.Language.query.get(kurs.language_id)
+    k = '%s %s (%s %s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
+
+    erg = dict(a=who, b=mat, c=mail, d=k)
+    return erg
 
 @upheaders
 @templated('licenses.html')
@@ -72,7 +80,8 @@ def matrikelnummer():
     if request.method == 'POST':
         file = request.files['file']
         if file: #and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            #filename = secure_filename(file.filename)
+            filename = 'test'
             up = app.config['UPLOAD_FOLDER']
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('matrikelnummer', filename=filename))

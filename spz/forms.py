@@ -46,14 +46,13 @@ def origins_to_choicelist():
 
 @cache.cached(key_prefix='coursegroups')
 def coursegroups_to_choicelist():
-    # List of (language, [courses for this language]) tuples, i.e. [(lang, [(cid, cname), (cid, cname)]), (lang, [(cid, cname)]), ...]
     return [(u'{0}'.format(lang.name), [(course.id, u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
             for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
 @cache.cached(key_prefix='course')
 def course_to_choicelist():
-    return [(course.id, u'{0} {1}'.format(course.language_id, course.level))
+    return [(course.id, u'{0} {1}'.format(course.language.name, course.level))
             for course in models.Course.query.order_by(models.Course.id.asc()).all()]
 
 
