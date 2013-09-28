@@ -223,22 +223,18 @@ class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
        :param name: The origin's name
-       :param department: The origin's department
     """
 
     __tablename__ = 'origin'
-    __table_args__ = (db.UniqueConstraint('name', 'department'),)
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    department = db.Column(db.String(60))
+    name = db.Column(db.String(60), unique=True, nullable=False)
 
-    def __init__(self, name, department=None):
+    def __init__(self, name):
         self.name = name
-        self.department = department
 
     def __repr__(self):
-        return '<Origin %r %r>' % (self.name, self.department)
+        return '<Origin %r>' % self.name
 
 
 class Registration(db.Model):

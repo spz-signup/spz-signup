@@ -40,7 +40,7 @@ def graduations_to_choicelist():
 
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
-    return [(x.id, u'{0} {1}'.format(x.name, x.department if x.department else u''))
+    return [(x.id, u'{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
 
