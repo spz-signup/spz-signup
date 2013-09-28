@@ -6,7 +6,7 @@
 """
 
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, IntegerField, TextField, TextAreaField, validators
+from wtforms import TextField, SelectField, IntegerField, TextAreaField, validators
 
 from spz import models, cache
 

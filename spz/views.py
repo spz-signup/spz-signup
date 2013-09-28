@@ -32,9 +32,8 @@ def index():
     return dict(form=form)
 
 
-#hier werde die Teilnahmebedingunen geprüft 
+#hier werde die Teilnahmebedingunen geprüft
 def BerErg(form):
-    
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
     mail = form.mail.data
@@ -46,6 +45,7 @@ def BerErg(form):
 
     erg = dict(a=who, b=mat, c=mail, d=k)
     return erg
+
 
 @upheaders
 @templated('licenses.html')
