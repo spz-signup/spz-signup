@@ -14,6 +14,9 @@
             {{ form.hidden_tag() }}
             <fieldset>
                 <legend>Inhalt der Mail</legend>
+                {{ render_input(form.mail_cc) }}
+                {{ render_input(form.mail_bcc) }}
+                <hr>
                 {{ render_input(form.mail_subject) }}
                 {{ render_textarea(form.mail_body) }}
             </fieldset>

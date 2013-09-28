@@ -27,22 +27,10 @@ def graduations_to_choicelist():
             for x in models.Graduation.query.order_by(models.Graduation.id.asc()).all()]
 
 
-##@cache.cached(key_prefix='stateofatts')
-##def stateofatts_to_choicelist():
-##    return [(x.id, x.name)
-##            for x in models.StateOfAtt.query.order_by(models.StateOfAtt.id.asc()).all()]
-
-
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
-
-
-@cache.cached(key_prefix='coursegroups')
-def coursegroups_to_choicelist():
-    return [(u'{0}'.format(lang.name), [(course.id, u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
-            for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
 @cache.cached(key_prefix='course')
@@ -87,9 +75,7 @@ class SignupForm(Form):
     def populate(self):
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
-        #self.stateofatt.choices = stateofatts_to_choicelist()
         self.origin.choices = origins_to_choicelist()
-        #self.coursegroups.choices = coursegroups_to_choicelist()
         self.course.choices = course_to_choicelist()
 
 
@@ -101,6 +87,8 @@ class NotificationForm(Form):
 
     mail_subject = TextField('Betreff', [validators.Length(1, 200, u'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
     mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
+    mail_cc = TextField('CC', [validators.Optional()])
+    mail_bcc = TextField('BCC', [validators.Optional()])
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

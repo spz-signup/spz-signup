@@ -104,8 +104,6 @@ class Course(db.Model):
     limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
 
-    # TODO(daniel):
-    # qualification eng
 
     def __init__(self, language, level, limit, price):
         self.language = language
