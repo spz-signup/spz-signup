@@ -49,8 +49,7 @@ class Applicant(db.Model):
     mail = db.Column(db.String(120), unique=True, nullable=False)
     tag = db.Column(db.String(10), unique=True)
 
-    sex_id = db.Column(db.Integer, db.ForeignKey('sex.id'))
-    sex = db.relationship("Sex", backref="applicants")
+    sex = db.Column(db.Boolean)
 
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
@@ -145,24 +144,6 @@ class Language(db.Model):
 
     def __repr__(self):
         return '<Language %r %r>' % (self.name, self.id)
-
-
-class Sex(db.Model):
-    """Represents the sex a :py:class:`Applicant` aims for.
-
-       :param name: The sex'es name
-    """
-
-    __tablename__ = 'sex'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(5), unique=True, nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Sex %r>' % self.name
 
 
 class Degree(db.Model):

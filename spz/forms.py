@@ -14,11 +14,6 @@ from spz import models, cache
 # Cacheable helpers for database fields that are not supposed to change often or quickly
 # Do not specify a timeout; so the default one (from the configuration) gets picked up
 
-@cache.cached(key_prefix='sexes')
-def sexes_to_choicelist():
-    return [(x.id, x.name)
-            for x in models.Sex.query.order_by(models.Sex.id.asc()).all()]
-
 
 @cache.cached(key_prefix='degrees')
 def degrees_to_choicelist():
@@ -65,7 +60,9 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], coerce=int)
+    # This should be a BooleanField, because of select-between-two semantics
+    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
@@ -88,7 +85,6 @@ class SignupForm(Form):
         self.populate()
 
     def populate(self):
-        self.sex.choices = sexes_to_choicelist()
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
         #self.stateofatt.choices = stateofatts_to_choicelist()
