@@ -13,7 +13,7 @@ from flask.ext.mail import Message
 from werkzeug import secure_filename
 
 
-from spz import app, models, mail
+from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
 from spz.forms import SignupForm, NotificationForm
@@ -82,24 +82,20 @@ def allowed_file(filename):
 @templated('internal/datainput/matrikelnummer.html')
 def matrikelnummer():
     if request.method == 'POST':
-        file = request.files['file_name']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            fp = open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            anz = 0
-            for l in fp:
-                rm = models.Registration(l)
-##                db.session.add(Registration(rm))
-                anz += 1
-            fp.close()
-##            models.Registration.commit()
-            print '\nFile %s uploaded: %s records\n' % (file.filename, anz)
+        fp = request.files['file_name']
+        if fp:
+            lst = {models.Registration(line) for line in fp}
+            gel = models.Registration.query.delete()
+            db.session.add_all(lst)
+            db.session.commit()
+            anz = models.Registration.query.count()
+            flash(u'Dateiname war OK %s Zeilne gelöscht %s Zeilen gelesen' % (gel, anz), 'success')
+#            print '\nFile %s uploaded: %s records\n' % (fp.filename, anz)
 
 
-            return redirect(url_for('matrikelnummer', filename=filename))
-        msg = '\n%s: Wrong file name \n\n' % (file.filename)
+            return redirect(url_for('matrikelnummer', filename=fp.filename))
+        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
+        msg = '\n%s: Wrong file name \n\n' % (fp.filename)
         print msg
         return redirect(url_for('matrikelnummer'))
     return None

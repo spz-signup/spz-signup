@@ -244,7 +244,7 @@ class Origin(db.Model):
 class Registration(db.Model):
     """Represents the registration a :py:class:`Applicant` aims for.
 
-       :param name: The state's name
+       :param rnumber: The registration number
     """
 
     __tablename__ = 'registration'
@@ -253,7 +253,13 @@ class Registration(db.Model):
     rnumber = db.Column(db.String(10), unique=True, nullable=False)
 
     def __init__(self, rnumber):
-        self.name = rnumber
+        self.rnumber = rnumber
+
+    def __eq__(self, other):
+        return self.rnumber == other.rnumber
+
+    def __hash__(self):
+        return hash(self.__repr__())
 
     def __repr__(self):
         return '<Registration %r>' % self.rnumber
