@@ -32,7 +32,7 @@
                     <td>{{ applicant.phone }}</td>
                     <td>{{ applicant.degree.name }}</td>
                     <td>{{ applicant.semester }}</td>
-                    <td>{{ applicant.origin.name ~ " (" ~ applicant.origin.department ~ ")" }}</td>
+                    <td>{{ applicant.origin.name }}</td>
                     <td>
                     {% for course in applicant.courses %}
                     [<a href="{{ url_for('course', id=course.id) }}">{{ course.language.name ~ " " ~course.level }}</a>] 

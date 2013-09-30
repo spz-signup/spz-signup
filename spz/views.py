@@ -5,7 +5,7 @@
    Manages the mapping between routes and their activities.
 """
 
-import socket
+import socket  # To check for SMTP connectivity error only
 import os
 
 from flask import request, redirect, render_template, url_for, flash
@@ -32,9 +32,8 @@ def index():
     return dict(form=form)
 
 
-#hier werde die Teilnahmebedingunen geprüft 
+#hier werde die Teilnahmebedingunen geprüft
 def BerErg(form):
-    
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
     mail = form.mail.data
@@ -46,6 +45,7 @@ def BerErg(form):
 
     erg = dict(a=who, b=mat, c=mail, d=k)
     return erg
+
 
 @upheaders
 @templated('licenses.html')
@@ -117,7 +117,7 @@ def notifications():
     if form.validate_on_submit():
         try:
             # TODO(daniel): extract recipients from courses; sender from config
-            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None)
+            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None, cc=None, bcc=None)
             mail.send(msg)
             flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))

@@ -6,18 +6,13 @@
 """
 
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, IntegerField, TextField, TextAreaField, validators
+from wtforms import TextField, SelectField, IntegerField, TextAreaField, validators
 
 from spz import models, cache
 
 
 # Cacheable helpers for database fields that are not supposed to change often or quickly
 # Do not specify a timeout; so the default one (from the configuration) gets picked up
-
-@cache.cached(key_prefix='sexes')
-def sexes_to_choicelist():
-    return [(x.id, x.name)
-            for x in models.Sex.query.order_by(models.Sex.id.asc()).all()]
 
 
 @cache.cached(key_prefix='degrees')
@@ -32,22 +27,10 @@ def graduations_to_choicelist():
             for x in models.Graduation.query.order_by(models.Graduation.id.asc()).all()]
 
 
-##@cache.cached(key_prefix='stateofatts')
-##def stateofatts_to_choicelist():
-##    return [(x.id, x.name)
-##            for x in models.StateOfAtt.query.order_by(models.StateOfAtt.id.asc()).all()]
-
-
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
-    return [(x.id, u'{0} {1}'.format(x.name, x.department if x.department else u''))
+    return [(x.id, u'{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
-
-
-@cache.cached(key_prefix='coursegroups')
-def coursegroups_to_choicelist():
-    return [(u'{0}'.format(lang.name), [(course.id, u'{0} {1}'.format(lang.name, course.level)) for course in lang.courses.all()])
-            for lang in models.Language.query.order_by(models.Language.id.asc()).all()]
 
 
 @cache.cached(key_prefix='course')
@@ -65,7 +48,9 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], coerce=int)
+    # This should be a BooleanField, because of select-between-two semantics
+    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
@@ -88,12 +73,9 @@ class SignupForm(Form):
         self.populate()
 
     def populate(self):
-        self.sex.choices = sexes_to_choicelist()
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
-        #self.stateofatt.choices = stateofatts_to_choicelist()
         self.origin.choices = origins_to_choicelist()
-        #self.coursegroups.choices = coursegroups_to_choicelist()
         self.course.choices = course_to_choicelist()
 
 
@@ -105,6 +87,8 @@ class NotificationForm(Form):
 
     mail_subject = TextField('Betreff', [validators.Length(1, 200, u'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
     mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
+    mail_cc = TextField('CC', [validators.Optional()])
+    mail_bcc = TextField('BCC', [validators.Optional()])
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

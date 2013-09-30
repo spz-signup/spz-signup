@@ -49,8 +49,7 @@ class Applicant(db.Model):
     mail = db.Column(db.String(120), unique=True, nullable=False)
     tag = db.Column(db.String(10), unique=True)
 
-    sex_id = db.Column(db.Integer, db.ForeignKey('sex.id'))
-    sex = db.relationship("Sex", backref="applicants")
+    sex = db.Column(db.Boolean)
 
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
@@ -105,9 +104,6 @@ class Course(db.Model):
     limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
 
-    # TODO(daniel):
-    # qualification eng
-
     def __init__(self, language, level, limit, price):
         self.language = language
         self.level = level
@@ -145,24 +141,6 @@ class Language(db.Model):
 
     def __repr__(self):
         return '<Language %r %r>' % (self.name, self.id)
-
-
-class Sex(db.Model):
-    """Represents the sex a :py:class:`Applicant` aims for.
-
-       :param name: The sex'es name
-    """
-
-    __tablename__ = 'sex'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(5), unique=True, nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Sex %r>' % self.name
 
 
 class Degree(db.Model):
@@ -223,22 +201,18 @@ class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
        :param name: The origin's name
-       :param department: The origin's department
     """
 
     __tablename__ = 'origin'
-    __table_args__ = (db.UniqueConstraint('name', 'department'),)
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    department = db.Column(db.String(60))
+    name = db.Column(db.String(60), unique=True, nullable=False)
 
-    def __init__(self, name, department=None):
+    def __init__(self, name):
         self.name = name
-        self.department = department
 
     def __repr__(self):
-        return '<Origin %r %r>' % (self.name, self.department)
+        return '<Origin %r>' % self.name
 
 
 class Registration(db.Model):

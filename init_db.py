@@ -10,7 +10,7 @@ from spz.models import *  # Keep this import, otherwise the create_all call won'
 
 
 def validate_resources():
-    resources = ('degrees', 'origins', 'courses', 'sexes', 'degrees', 'graduations')
+    resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations')
 
     for fname in resources:
         with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, app.open_resource('resource/{0}.schema'.format(fname)) as fd_schema:
@@ -21,12 +21,6 @@ def validate_resources():
 
 
 def insert_resources():
-    with app.open_resource('resource/sexes.json') as fd:
-        res = json.load(fd)
-
-        for sex in res["sexes"]:
-            db.session.add(Sex(sex))
-
     with app.open_resource('resource/degrees.json') as fd:
         res = json.load(fd)
 
