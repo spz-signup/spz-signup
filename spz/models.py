@@ -15,13 +15,29 @@ from spz import db
 # http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
 # http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
 
+class Attendance(db.Model):
+    """Connects Applicants with Courses
 
-# n:m, Applicants:Courses
-attendances = db.Table(
-    'attendances',
-    db.Column('applicant_id', db.Integer, db.ForeignKey('applicant.id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
-)
+    """
+    # TODO: Assotiation object
+    __tablename__ = 'attendance'
+
+    applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
+    course_id    = db.Column(db.Integer, db.ForeignKey('course.id'),    primary_key=True)
+    status_id    = db.Column(db.Integer, db.ForeignKey('stateofatt.id'))
+    registered   = db.Column(db.DateTime())
+    
+    course = db.relationship("Course", backref="attendances")
+
+    def __init__(self, applicant_id, course_id, status_id, registered=datetime.utcnow()):
+        self.applicant_id = applicant_id
+        self.course_id = course_id
+        self.status_id = status_id
+        self.registered = registered
+
+    def __repr__(self):
+        return '<Attendance %r %r %r>' % (applicant_id, course_id, status_id)
+    
 
 
 class Applicant(db.Model):
@@ -33,7 +49,6 @@ class Applicant(db.Model):
        :param first_name: First name
        :param last_name: Last name
        :param phone: Optional phone number
-       :param courses: A :py:class:`Applicant` attends one or multiple :py:class:`Course`
        :param degree: Degree aimed for
        :param semester: Enrolled in semester
        :param origin: Facility of origin
@@ -63,11 +78,9 @@ class Applicant(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
 
-    courses = db.relationship("Course", secondary=attendances, backref="applicants")
-
     registered = db.Column(db.DateTime())
 
-    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, courses=[], registered=datetime.utcnow()):
+    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, registered=datetime.utcnow()):
         self.mail = mail
         self.tag = tag
         self.sex = sex
@@ -77,7 +90,6 @@ class Applicant(db.Model):
         self.degree = degree
         self.semester = semester
         self.origin = origin
-        self.courses = courses
         self.registered = registered
 
     def __repr__(self):

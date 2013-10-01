@@ -5,7 +5,7 @@
    Manages the mapping between routes and their activities.
 """
 
-import socket  # To check for SMTP connectivity error only
+import socket
 import os
 
 from flask import request, redirect, render_template, url_for, flash
@@ -32,8 +32,9 @@ def index():
     return dict(form=form)
 
 
-#hier werde die Teilnahmebedingunen geprüft
+#hier werden die Teilnahmebedingunen geprüft 
 def BerErg(form):
+    
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
     mail = form.mail.data
@@ -45,7 +46,6 @@ def BerErg(form):
 
     erg = dict(a=who, b=mat, c=mail, d=k)
     return erg
-
 
 @upheaders
 @templated('licenses.html')
@@ -84,14 +84,13 @@ def matrikelnummer():
     if request.method == 'POST':
         fp = request.files['file_name']
         if fp:
-            lst = {models.Registration(line) for line in fp}
+            lst = {models.Registration(line.rstrip('\r\n')) for line in fp}
+#            print lst
             gel = models.Registration.query.delete()
             db.session.add_all(lst)
             db.session.commit()
             anz = models.Registration.query.count()
             flash(u'Dateiname war OK %s Zeilne gelöscht %s Zeilen gelesen' % (gel, anz), 'success')
-#            print '\nFile %s uploaded: %s records\n' % (fp.filename, anz)
-
 
             return redirect(url_for('matrikelnummer', filename=fp.filename))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
@@ -117,7 +116,7 @@ def notifications():
     if form.validate_on_submit():
         try:
             # TODO(daniel): extract recipients from courses; sender from config
-            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None, cc=None, bcc=None)
+            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None)
             mail.send(msg)
             flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
