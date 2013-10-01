@@ -16,32 +16,39 @@ from spz import db
 # http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
 
 class Attendance(db.Model):
-    """Connects Applicants with Courses
+    """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
+       :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
+       :param status: The :py:class:`StateOfAtt` of the :py:`Attendance`.
+
+       .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
-    # TODO: Assotiation object
+
     __tablename__ = 'attendance'
 
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
-    course_id    = db.Column(db.Integer, db.ForeignKey('course.id'),    primary_key=True)
-    status_id    = db.Column(db.Integer, db.ForeignKey('stateofatt.id'))
-    registered   = db.Column(db.DateTime())
-    
-    course = db.relationship("Course", backref="attendances")
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
+    course = db.relationship("Course", backref="applicant_attendances")
 
-    def __init__(self, applicant_id, course_id, status_id, registered=datetime.utcnow()):
-        self.applicant_id = applicant_id
-        self.course_id = course_id
-        self.status_id = status_id
+    status_id = db.Column(db.Integer, db.ForeignKey('stateofatt.id'))
+    status = db.relationship("StateOfAtt", backref="attendances")
+
+    registered = db.Column(db.DateTime())
+
+    def __init__(self, course, status, registered=datetime.utcnow()):
+        self.course = course
+        self.status = status
         self.registered = registered
 
     def __repr__(self):
-        return '<Attendance %r %r %r>' % (applicant_id, course_id, status_id)
-    
+        return '<Attendance %r %r>' % (self.applicant, self.course)
 
 
 class Applicant(db.Model):
     """Represents a person, applying for one or more :py:class:`Course`.
+
+       Use the :py:func:`add_course_attendance` and :py:func:`remove_course_attendance`
+       member functions to associate a :py:class:`Applicant` to a specific :py:class:`Course`.
 
        :param mail: Mail address
        :param tag: System wide identification tag
@@ -54,7 +61,7 @@ class Applicant(db.Model):
        :param origin: Facility of origin
        :param registered: When this user was registered **in UTC**; defaults to utcnow()
 
-       .. seealso:: the :py:data:`attendances` relationship
+       .. seealso:: the :py:data:`Attendance` association
     """
 
     __tablename__ = 'applicant'
@@ -78,6 +85,8 @@ class Applicant(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
 
+    course = db.relationship("Attendance", backref="applicant") # See {add,remove}_course_attendance member functions below
+
     registered = db.Column(db.DateTime())
 
     def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, registered=datetime.utcnow()):
@@ -94,6 +103,13 @@ class Applicant(db.Model):
 
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
+
+    def add_course_attendance(self, course, status):
+        attendance = Attendance(course, status)
+        self.course.append(attendance)
+
+    def remove_course_attendance(self, course):
+        self.course = filter(lambda attendance: attendance.course != course, self.course)
 
 
 class Course(db.Model):
