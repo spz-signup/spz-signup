@@ -35,16 +35,20 @@ def index():
 #hier werden die Teilnahmebedingunen geprüft 
 def BerErg(form):
     
+    isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).limit(1).first() else False
+
+
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
     mail = form.mail.data
     kurs_id = form.course.data
+    
 
     kurs = models.Course.query.get(kurs_id)
     lang = models.Language.query.get(kurs.language_id)
     k = '%s %s (%s %s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
 
-    erg = dict(a=who, b=mat, c=mail, d=k)
+    erg = dict(a=who, b=mat, c=mail, d=k, e=isStudent)
     return erg
 
 @upheaders
