@@ -12,6 +12,7 @@ import csv
 from flask import request, redirect, render_template, url_for, flash
 from flask.ext.mail import Message
 from werkzeug import secure_filename
+from sqlalchemy.orm.exc import FlushError
 
 
 from spz import app, models, mail, db
@@ -44,22 +45,32 @@ def BerErg(form):
 
     c = models.Course.query.get_or_404(form.course.data)
     s = models.StateOfAtt.query.first()  ## TODO
+
     if retrievedFromSystem:
-        retrievedFromSystem.add_course_attendance(c, s)
-        db.session.commit()
+        # prüfe erfolgte Belegungen (mit Status 'f')
+        numberOfAtt = models.Attendance.query.filter_by(applicant_id = models.Applicant.query.filter_by(mail = form.mail.data).first().id).count()
+
+
+        # belege Kurs
+        try:
+            retrievedFromSystem.add_course_attendance(c, s)
+            db.session.commit()
+        except (FlushError) as e:
+            db.session.rollback()
+            flash(u'Diesen Kurs haben Sie bereits belegt): {0}'.format(e), 'danger')                
     else:
+        numberOfAtt = 0
         mail = form.mail.data
         tag = form.tag.data
         sex = True if form.sex.data == 1 else False
         first_name = form.first_name.data
         last_name = form.last_name.data
         phone = form.phone.data
-        # for KIT students only
 
+        # for KIT students only
         degree = models.Degree.query.get_or_404(form.degree.data) if form.degree.data else None
         semester = form.semester.data if form.semester.data else None
         origin  = models.Origin.query.get_or_404(form.origin.data) if form.origin.data else None
-
             
         applicant = models.Applicant(mail, tag, sex, first_name, last_name, phone, degree, semester, origin)
         applicant.add_course_attendance(c, s)
@@ -67,17 +78,18 @@ def BerErg(form):
         db.session.add(applicant)
         db.session.commit()
 
+
+
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
     mail = form.mail.data
     kurs_id = form.course.data
-    
 
     kurs = models.Course.query.get(kurs_id)
     lang = models.Language.query.get(kurs.language_id)
-    k = '%s %s (%s %s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
+    kurs = '%s %s (lang_id=%s, kurs_id=%s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
 
-    erg = dict(a=who, b=mat, c=mail, d=k, e=isStudent, f=bestApproval)
+    erg = dict(a=who, b=mat, c=mail, d=kurs, e=isStudent, f=bestApproval, g=numberOfAtt)
     return erg
 
 @upheaders
