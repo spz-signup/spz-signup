@@ -251,4 +251,25 @@ class Registration(db.Model):
         return '<Registration %r>' % self.rnumber
 
 
+class Approval(db.Model):
+    """Represents the approval for English cours a :py:class:`Applicant` aims for.
+
+       :param tag: The registration number or other identification
+       :param percent: applicant's level for English course
+    """
+
+    __tablename__ = 'approval'
+
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(10), unique=True, nullable=False)
+    percent = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, tag, percent):
+        self.tag = tag
+        self.percent = percent
+
+    def __repr__(self):
+        return '<Approval %r %r>' % (self.tag, self.percent)
+
+
 # vim: set tabstop=4 shiftwidth=4 expandtab:

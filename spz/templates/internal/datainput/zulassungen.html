@@ -6,7 +6,14 @@
 
 
 {% block internal_body %}
+<form method="post" enctype="multipart/form-data">
+	<p>
+		<input type="file" name="file_name">
+		<input type="submit" value="Einlesen">
+	</p>
+</form>
 
 
 {% endblock internal_body %}
+
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

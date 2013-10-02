@@ -7,6 +7,7 @@
 
 import socket
 import os
+import csv
 
 from flask import request, redirect, render_template, url_for, flash
 from flask.ext.mail import Message
@@ -89,17 +90,13 @@ def matrikelnummer():
         fp = request.files['file_name']
         if fp:
             lst = {models.Registration(line.rstrip('\r\n')) for line in fp}
-#            print lst
             gel = models.Registration.query.delete()
             db.session.add_all(lst)
             db.session.commit()
-            anz = models.Registration.query.count()
-            flash(u'Dateiname war OK %s Zeilne gelöscht %s Zeilen gelesen' % (gel, anz), 'success')
+            flash(u'Dateiname war OK %s Zeilen gelöscht %s Zeilen gelesen' % (gel, len(lst)), 'success')
 
-            return redirect(url_for('matrikelnummer', filename=fp.filename))
+            return redirect(url_for('internal'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        msg = '\n%s: Wrong file name \n\n' % (fp.filename)
-        print msg
         return redirect(url_for('matrikelnummer'))
     return None
 
@@ -108,6 +105,23 @@ def matrikelnummer():
 @auth_required
 @templated('internal/datainput/zulassungen.html')
 def zulassungen():
+    if request.method == 'POST':
+        fp = request.files['file_name']
+        if fp:
+            filecontent = csv.reader(fp, delimiter=';')
+            try: 
+                lst = [models.Approval(line[0], line[1]) for line in filecontent]
+                gel = models.Approval.query.delete()
+                db.session.add_all(lst)
+                db.session.commit()
+#                anz = models.Approval.query.count()
+                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen' % (gel, len(lst), fp.filename), 'success')
+            except (IndexError, csv.Error) as e:
+                flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
+
+            return redirect(url_for('internal'))
+        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
+        return redirect(url_for('zulassungen'))
     return None
 
 
