@@ -36,8 +36,36 @@ def index():
 #hier werden die Teilnahmebedingunen geprüft 
 def BerErg(form):
     
-    isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).limit(1).first() else False
+    isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
+    approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
+    bestApproval = max(approval) if approval else 0
 
+    retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
+
+    c = models.Course.query.get_or_404(form.course.data)
+    s = models.StateOfAtt.query.first()  ## TODO
+    if retrievedFromSystem:
+        retrievedFromSystem.add_course_attendance(c, s)
+        db.session.commit()
+    else:
+        mail = form.mail.data
+        tag = form.tag.data
+        sex = True if form.sex.data == 1 else False
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        phone = form.phone.data
+        # for KIT students only
+
+        degree = models.Degree.query.get_or_404(form.degree.data) if form.degree.data else None
+        semester = form.semester.data if form.semester.data else None
+        origin  = models.Origin.query.get_or_404(form.origin.data) if form.origin.data else None
+
+            
+        applicant = models.Applicant(mail, tag, sex, first_name, last_name, phone, degree, semester, origin)
+        applicant.add_course_attendance(c, s)
+        
+        db.session.add(applicant)
+        db.session.commit()
 
     who = form.first_name.data + ' ' + form.last_name.data
     mat = form.tag.data
@@ -49,7 +77,7 @@ def BerErg(form):
     lang = models.Language.query.get(kurs.language_id)
     k = '%s %s (%s %s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
 
-    erg = dict(a=who, b=mat, c=mail, d=k, e=isStudent)
+    erg = dict(a=who, b=mat, c=mail, d=k, e=isStudent, f=bestApproval)
     return erg
 
 @upheaders
