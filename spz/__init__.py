@@ -86,9 +86,9 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/lists', views.lists, ['GET']),
           ('/internal/all_courses', views.all_courses, ['GET']),
           ('/internal/course_attendances/<int:id>', views.course_attendances, ['GET']),
+          ('/internal/applicant/<int:id>', views.applicant, ['GET']),
           ('/internal/language/<int:id>', views.language, ['GET']),
           ('/internal/course/<int:id>', views.course, ['GET']),
-          ('/internal/applicant/<int:id>', views.applicant, ['GET']),
 
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]

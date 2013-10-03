@@ -196,12 +196,17 @@ def all_courses():
 @auth_required
 @templated('internal/course_attendances.html')
 def course_attendances(id):
-
     course = models.Course.query.get_or_404(id)
-    attendances = models.Attendance.query.filter_by(course_id=id)
-    x = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id ==models.Attendance.applicant_id).filter(models.Attendance.course_id==id).all()
+    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id ==models.Attendance.applicant_id).filter(models.Attendance.course_id==id).all()
+    return dict(c=course, a=attendances)
 
-    return dict(c=course, a=x)
+
+@upheaders
+@auth_required
+@templated('internal/applicant.html')
+def applicant(id):
+    return dict(applicant=models.Applicant.query.get_or_404(id))
+
 
 @upheaders
 @auth_required
@@ -224,11 +229,11 @@ def course(id):
     return dict(course=models.Course.query.get_or_404(id))
 
 
-@upheaders
-@auth_required
-@templated('internal/applicant.html')
-def applicant(id):
-    return dict(applicant=models.Applicant.query.get_or_404(id))
+##@upheaders
+##@auth_required
+##@templated('internal/applicant.html')
+##def applicant(id):
+##    return dict(applicant=models.Applicant.query.get_or_404(id))
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
