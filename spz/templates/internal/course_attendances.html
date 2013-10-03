@@ -2,11 +2,13 @@
 
 {% block internal_heading %}
 <a href="{{ url_for('all_courses') }}"> Liste aller Kurse</a>
+
 {% endblock internal_heading %}
 
 {% block internal_body %}
 
-<h3>Kurs: {{ c.language.name }} {{ c.level }}</h3>
+<h3><a href="{ url_for('notifications') }}"> Mail an alle Kursteilnehmer</a></h3>
+<h2>Kurs: {{ c.language.name }} {{ c.level }}</h2>
 
 <div class="row">
     <div class="col-md-12">

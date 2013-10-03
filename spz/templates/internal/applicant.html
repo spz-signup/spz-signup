@@ -1,48 +1,56 @@
 {% extends 'internal/internal.html' %}
 
 {% block internal_heading %}
-<a href="{{ url_for('applicant', id=applicant.id) }}"> Teilnehmer am Kurs: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
+<a href="{{ url_for('applicant', id=b.id) }}"> Bewerber: {{ b.first_name ~ " " ~ b.last_name }}</a>
 {% endblock internal_heading %}
 
 
 {% block internal_body %}
-<div class="row">
-    <div class="col-md-12">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>E-mail</th>
-                    <th>Identifikation</th>
-                    <th>Telefon</th>
-                    <th>Abschluss</th>
-                    <th>Semester</th>
-                    <th>Herkunft</th>
-                    <th>Kurse</th>
-                    <th>Anmeldedatum</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ applicant.first_name }}</td>
-                    <td>{{ applicant.last_name }}</td>
-                    <td>{{ applicant.mail }}</td>
-                    <td>{{ applicant.tag }}</td>
-                    <td>{{ applicant.phone }}</td>
-                    <td>{{ applicant.degree.name }}</td>
-                    <td>{{ applicant.semester }}</td>
-                    <td>{{ applicant.origin.name }}</td>
-                    <td>
-                    {% for course in applicant.courses %}
-                    [<a href="{{ url_for('course', id=course.id) }}">{{ course.language.name ~ " " ~course.level }}</a>] 
-                    {% endfor %}
-                    </td>
-                    <td class="fmt-datetime">{{ applicant.registered }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+		<label for="input_first_name" class="col-lg-2 control-label">Vorname</label>
+		<div class="col-lg-10">
+			<input type="first_name" class="form-control" id="input_first_name" value="{{ b.first_name }}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="input_last_name" class="col-lg-2 control-label">Nachname</label>
+			<div class="col-lg-10">
+			<input type="last_name" class="form-control" id="input_last_name" value="{{ b.last_name }}">
+		</div>
+	</div>
+    <div class="form-group">
+		<label for="input_mail" class="col-lg-2 control-label">E-Mail</label>
+		<div class="col-lg-10">
+			<input type="mail" class="form-control" id="input_mail" value="{{ b.mail }}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="input_phone" class="col-lg-2 control-label">Telefon</label>
+			<div class="col-lg-10">
+			<input type="phone" class="form-control" id="input_phone" value="{{ b.phone }}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="input_tag" class="col-lg-2 control-label">Identifikation</label>
+			<div class="col-lg-10">
+			<input type="tag" class="form-control" id="input_tag" value="{{ b.tag }}">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-2 col-lg-10">
+			<button type="submit" class="btn btn-default">Änderungen speichern</button>
+		</div>
+	</div>
+</form>
+
+{% for course in c %}
+<p>
+	<a href="{{ url_for('course_attendances', id=course.Attendance.course_id ) }}"> {{course.Attendance.course.language.name }} {{course.Attendance.course.level}} </a>
+	{{course.Attendance.status.name}}
+</p>
+{% endfor %}
 {% endblock internal_body %}
+
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

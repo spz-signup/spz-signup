@@ -205,7 +205,9 @@ def course_attendances(id):
 @auth_required
 @templated('internal/applicant.html')
 def applicant(id):
-    return dict(applicant=models.Applicant.query.get_or_404(id))
+    applicant = models.Applicant.query.get_or_404(id)
+    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id==models.Attendance.applicant_id).filter(models.Applicant.id==id).all()
+    return dict(b=applicant, c=attendances)
 
 
 @upheaders
@@ -227,13 +229,6 @@ def language(id):
 @templated('internal/course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
-
-
-##@upheaders
-##@auth_required
-##@templated('internal/applicant.html')
-##def applicant(id):
-##    return dict(applicant=models.Applicant.query.get_or_404(id))
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
