@@ -1,0 +1,40 @@
+{% extends 'internal/internal.html' %}
+
+{% block internal_heading %}
+<a href="{{ url_for('all_courses') }}"> Liste aller Kurse</a>
+{% endblock internal_heading %}
+
+{% block internal_body %}
+<h3>Kurs: {{ course.language.name }} {{ course.level }}</h3>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bewerber Id</th>
+                    <th>Geschlecht</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-mail</th>
+                    <th>Identifikation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicant in course.applicants %}
+                <tr>
+                    <td><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.id }}</a></td>
+                    <td>{{ 'Männlich' if applicant.sex else 'Weiblich' }}</td>
+                    <td>{{ applicant.first_name }}</td>
+                    <td>{{ applicant.last_name }}</td>
+                    <td>{{ applicant.mail }}</td>
+                    <td>{{ applicant.tag }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

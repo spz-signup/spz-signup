@@ -27,6 +27,7 @@ class Attendance(db.Model):
     __tablename__ = 'attendance'
 
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
+    
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
     course = db.relationship("Course", backref="applicant_attendances")
 
@@ -102,7 +103,7 @@ class Applicant(db.Model):
         self.registered = registered
 
     def __repr__(self):
-        return '<Applicant %r %r>' % (self.mail, self.tag)
+        return '<Applicant %r %r>' % (self.mail, self.tag, self.first_name, self.last_name)
 
     def add_course_attendance(self, course, status):
         attendance = Attendance(course, status)

@@ -1,0 +1,29 @@
+{% extends 'internal/internal.html' %}
+
+{% block internal_heading %}
+{% endblock internal_heading %}
+
+{% block internal_body %}
+<h3>Alle Kurse (Roman)</h3>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td><a href="{{ url_for('course_attendances', id=course.id) }}"> {{ course.language.name }} {{ course.level }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

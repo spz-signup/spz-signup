@@ -187,6 +187,20 @@ def notifications():
 
 @upheaders
 @auth_required
+@templated('internal/all_courses.html')
+def all_courses():
+    return dict(courses=models.Course.query.order_by(models.Course.id.asc()).all())
+
+
+@upheaders
+@auth_required
+@templated('internal/course_attendances.html')
+def course_attendances(id):
+    return dict(attendances=models.Attendance.query.get_or_404(id))
+##  db.session.query(Applicant, Attendance).filter(Applicant.id ==Attendance.applicant_id).filter(Attendance.course_id==7).all()
+
+@upheaders
+@auth_required
 @templated('internal/lists.html')
 def lists():
     return dict(languages=models.Language.query.all())
@@ -194,16 +208,16 @@ def lists():
 
 @upheaders
 @auth_required
-@templated('internal/course.html')
-def course(id):
-    return dict(course=models.Course.query.get_or_404(id))
+@templated('internal/language.html')
+def language(id):
+    return dict(language=models.Language.query.get_or_404(id))
 
 
 @upheaders
 @auth_required
-@templated('internal/language.html')
-def language(id):
-    return dict(language=models.Language.query.get_or_404(id))
+@templated('internal/course.html')
+def course(id):
+    return dict(course=models.Course.query.get_or_404(id))
 
 
 @upheaders
