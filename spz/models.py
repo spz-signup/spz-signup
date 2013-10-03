@@ -103,7 +103,7 @@ class Applicant(db.Model):
         self.registered = registered
 
     def __repr__(self):
-        return '<Applicant %r %r>' % (self.mail, self.tag, self.first_name, self.last_name)
+        return '<Applicant %r %r %r %r>' % (self.mail, self.tag, self.first_name, self.last_name)
 
     def add_course_attendance(self, course, status):
         attendance = Attendance(course, status)
