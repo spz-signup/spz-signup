@@ -1,7 +1,7 @@
 {% extends 'internal/internal.html' %}
 
 {% block internal_heading %}
-<a href="{{ url_for('applicant', id=applicant.id) }}"> Bewerber: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
+<a href="{{ url_for('applicant', id=applicant.id) }}"> Teilnehmer am Kurs: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
 {% endblock internal_heading %}
 
 
