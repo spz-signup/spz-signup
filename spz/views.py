@@ -41,10 +41,10 @@ def BerErg(form):
     approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
     bestApproval = max(approval) if approval else 0
 
-    retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
-
     c = models.Course.query.get_or_404(form.course.data)
     s = models.StateOfAtt.query.first()  ## TODO
+
+    retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
 
     if retrievedFromSystem:
         # prüfe erfolgte Belegungen (mit Status 'f')
@@ -78,18 +78,28 @@ def BerErg(form):
         db.session.add(applicant)
         db.session.commit()
 
-
-
-    who = form.first_name.data + ' ' + form.last_name.data
-    mat = form.tag.data
-    mail = form.mail.data
+    price = c.price
+    who = 'Bewerber: %s %s' % (form.first_name.data, form.last_name.data)
+    mat = 'Matrikelnummer: %s' % form.tag.data
+    mail = 'E-Mail: %s' % form.mail.data
     kurs_id = form.course.data
 
     kurs = models.Course.query.get(kurs_id)
     lang = models.Language.query.get(kurs.language_id)
-    kurs = '%s %s (lang_id=%s, kurs_id=%s)' % (lang.name, kurs.level, kurs.language_id, kurs.id)
+    kurs = 'Kurs: %s %s (kurs_id=%s)' % (lang.name, kurs.level, kurs.id)
+    isEnglish = 'Englisch? %s' % True if lang.name == 'English' else False
+    
+    stud = 'Auf der Matrikelliste: %s' % isStudent
 
-    erg = dict(a=who, b=mat, c=mail, d=kurs, e=isStudent, f=bestApproval, g=numberOfAtt)
+    englishApproval = 'Zulassung fuer Englisch %s (Prozent)' % bestApproval
+    NOA = 'Belegte Kurse: %s' % numberOfAtt 
+
+    occupancy = models.Attendance.query.filter_by(course_id = form.course.data).count()
+    c = models.Course.query.filter_by(id = form.course.data).first()
+    regularOffer = c.limit
+    howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
+
+    erg = dict(a=who, b=mat, c=mail, d=kurs, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish)
     return erg
 
 @upheaders
