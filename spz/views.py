@@ -42,19 +42,20 @@ def BerErg(form):
     course = models.Course.query.get(form.course.data)
     language = models.Language.query.get(course.language_id)
 
-    history = 'Kurs: %s %s (kurs_id=%s) ' % (language.name, course.level, course.id)
+    kurs = 'Kurs: %s %s (kurs_id=%s) ' % (language.name, course.level, course.id)
+    history = [kurs]
 
     if language.name == 'English':
         isEnglish = 'Englisch'
         approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
         if len(approval) == 0:
-            history += 'fuer Englisch nicht zugelassen (link zur Anmeldemaske ohne Englischkurse) '
-            return history
+            history.append(u'für Englisch nicht zugelassen (link zur Anmeldemaske ohne Englischkurse) ')
+            return dict (history=history)
         
         bestApproval = max(approval) if approval else 0
         if bestApproval < 50: # dummy value
-            history += 'fuer Englisch dieser Stufe nicht zugelassen (link zur Anmeldemaske mit eingeschraenkten Englischkursen) '
-            return  history ## TODO Tabelle mit Kursen um Grenzen erweitern
+            history.append('fuer Englisch dieser Stufe nicht zugelassen (link zur Anmeldemaske mit eingeschraenkten Englischkursen) ')
+            return  dict (history=history) ## TODO Tabelle mit Kursen um Grenzen erweitern
     else:
         isEnglish = 'nicht Englisch'
          
@@ -65,11 +66,13 @@ def BerErg(form):
     howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
     if occupancy > regularOffer:
         s = models.StateOfAtt.query.filter_by(name = 'Warteliste')
+        history.append('Warteliste')
 #        insertAttendance(c,s)
 
     isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
     if not isStudent:
         s = models.StateOfAtt.query.filter_by(name = 'Bar zu bezahlen')
+        history.append(u'Gebührenpflichtig')
 
 
 
@@ -126,7 +129,8 @@ def BerErg(form):
 
 
     erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
-    return history
+    return dict (history=history)
+    return erg
 
 @upheaders
 @templated('licenses.html')
@@ -233,17 +237,8 @@ def all_courses():
 @templated('internal/course_attendances.html')
 def course_attendances(id):
     course = models.Course.query.get_or_404(id)
-    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id ==models.Attendance.applicant_id).filter(models.Attendance.course_id==id).all()
+    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id==models.Attendance.applicant_id).filter(models.Attendance.course_id==id).all()
     return dict(c=course, a=attendances)
-
-
-@upheaders
-@auth_required
-@templated('internal/applicant.html')
-def applicant(id):
-    applicant = models.Applicant.query.get_or_404(id)
-    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id==models.Attendance.applicant_id).filter(models.Applicant.id==id).all()
-    return dict(b=applicant, c=attendances)
 
 
 @upheaders
@@ -251,6 +246,13 @@ def applicant(id):
 @templated('internal/lists.html')
 def lists():
     return dict(languages=models.Language.query.all())
+
+
+@upheaders
+@auth_required
+@templated('internal/applicant.html')
+def applicant(id):
+    return dict(applicant = models.Applicant.query.get_or_404(id))
 
 
 @upheaders

@@ -20,7 +20,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% for applicant in course.applicants %}
+                {% for attendance in course.applicant_attendances %}
+				{% set applicant = attendance.applicant %}
                 <tr>
                     <td><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.id }}</a></td>
                     <td>{{ 'Männlich' if applicant.sex else 'Weiblich' }}</td>
