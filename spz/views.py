@@ -66,13 +66,18 @@ def BerErg(form):
     howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
     if occupancy > regularOffer:
         s = models.StateOfAtt.query.filter_by(name = 'Warteliste')
-        history.append('Warteliste')
+        history.append(u'Warteliste')
 #        insertAttendance(c,s)
+    else:
+        history.append(u'Fester Platz')
+    
 
     isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
     if not isStudent:
         s = models.StateOfAtt.query.filter_by(name = 'Bar zu bezahlen')
         history.append(u'Gebührenpflichtig')
+    else:
+        history.append(u'Auf der Matrikelliste')
 
 
 
@@ -130,7 +135,7 @@ def BerErg(form):
 
 
     erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
-    return dict (history=history)
+    return history
     return erg
 
 @upheaders
@@ -246,7 +251,7 @@ def course_attendances(id):
 @auth_required
 @templated('internal/lists.html')
 def lists():
-    return dict(languages=models.Language.query.all())
+    return dict(languages=models.Language.query.order_by(models.Language.name).all())
 
 
 @upheaders

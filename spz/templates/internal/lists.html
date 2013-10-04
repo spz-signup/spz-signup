@@ -11,15 +11,15 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Sprach Id</th>
-                    <th>Name</th>
+                    <th>Sprache</th>
+                    <th>Anzahl der Kurse</th>
                 </tr>
             </thead>
             <tbody>
                 {% for language in languages %}
                 <tr>
-                    <td><a href="{{ url_for('language', id=language.id) }}">{{ language.id }}</a></td>
-                    <td>{{ language.name }}</td>
+                    <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
+                    <td>{{ language.courses.count() }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -27,4 +27,5 @@
     </div>
 </div>
 {% endblock internal_body %}
+
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

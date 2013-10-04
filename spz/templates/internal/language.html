@@ -21,16 +21,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Kurs Id</th>
-                    <th>Level</th>
-                    <th>Limit</th>
+                    <th>Kurs </th>
+                    <th>Teilnehmer</th>
+                    <th>Max. Teilnehmer</th>
                     <th>Preis</th>
                 </tr>
             </thead>
             <tbody>
                 {% for course in language.courses.all() %}
                 <tr>
-                    <td><a href="{{ url_for('course', id=course.id) }}">{{ course.id }}</a></td>
+                    <td><a href="{{ url_for('course', id=course.id) }}">{{ language.name }} {{ course.level }}</a></td>
                     <td>{{ course.level }}</td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.price }}</td>
@@ -41,4 +41,5 @@
     </div>
 </div>
 {% endblock internal_body %}
+
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
