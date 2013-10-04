@@ -27,7 +27,7 @@ class Attendance(db.Model):
     __tablename__ = 'attendance'
 
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
-    
+
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
     course = db.relationship("Course", backref="applicant_attendances")
 
@@ -86,7 +86,8 @@ class Applicant(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
 
-    course = db.relationship("Attendance", backref="applicant") # See {add,remove}_course_attendance member functions below
+    # See {add,remove}_course_attendance member functions below
+    course = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan')
 
     registered = db.Column(db.DateTime())
 
@@ -111,6 +112,15 @@ class Applicant(db.Model):
 
     def remove_course_attendance(self, course):
         self.course = filter(lambda attendance: attendance.course != course, self.course)
+
+    def is_student(self):
+        registered = Registration.query.filter_by(rnumber=self.tag).first()
+        return True if registered else False
+
+    def best_english_result(self):
+        results = [app.percent for app in Approval.query.filter_by(tag=self.tag).all()]
+        best = max(results) if results else 0
+        return best
 
 
 class Course(db.Model):
@@ -278,7 +288,7 @@ class Approval(db.Model):
     __tablename__ = 'approval'
 
     id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String(10), unique=True, nullable=False)
+    tag = db.Column(db.String(10), nullable=False)  # tag may be not unique, multiple tests taken
     percent = db.Column(db.Integer, nullable=False)
 
     def __init__(self, tag, percent):
