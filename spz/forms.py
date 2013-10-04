@@ -5,6 +5,7 @@
    Manages the mapping between database models and HTML forms.
 """
 
+from sqlalchemy import func
 from flask.ext.wtf import Form
 from wtforms import TextField, SelectField, IntegerField, TextAreaField, validators
 
@@ -77,6 +78,54 @@ class SignupForm(Form):
         self.graduation.choices = graduations_to_choicelist()
         self.origin.choices = origins_to_choicelist()
         self.course.choices = course_to_choicelist()
+
+    # Accessors, to encapsulate the way the form represents and retrieves objects
+    # This especially ensures that optional fields only get queried if a value is present
+
+    def get_sex(self):
+        return True if self.sex.data == 1 else False
+
+    def get_first_name(self):
+        return self.first_name.data
+
+    def get_last_name(self):
+        return self.last_name.data
+
+    def get_phone(self):
+        return self.phone.data
+
+    def get_mail(self):
+        return self.mail.data
+
+    def get_origin(self):
+        return models.Origin.query.get(self.origin.data)
+
+    def get_tag(self):
+        return self.tag.data if self.tag.data else None  # XXX: Why is tag optional?
+
+    def get_degree(self):
+        return models.Degree.query.get(self.degree.data) if self.degree.data else None
+
+    def get_graduation(self):
+        return models.Graduation.query.get(self.graduation.data) if self.graduation.data else None
+
+    def get_semester(self):
+        return self.semester.data if self.semester.data else None
+
+    def get_course(self):
+        return models.Course.query.get(self.course.data)
+
+    # Creates an applicant or returns it from the system, if already registered.
+    def get_applicant(self):
+        existing = models.Applicant.query.filter(func.lower(models.Applicant.tag) == func.lower(self.get_tag())).first()
+
+        if existing and existing.mail == self.get_mail():  # XXX: Is this good enough re. duplicate but different form data?
+            return existing
+
+        return models.Applicant(self.get_mail(), self.get_tag(), self.get_sex(),
+                                self.get_first_name(), self.get_last_name(),
+                                self.get_phone(), self.get_degree(),
+                                self.get_semester(), self.get_origin())
 
 
 class NotificationForm(Form):

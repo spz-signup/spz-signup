@@ -6,12 +6,10 @@
 """
 
 import socket
-import os
 import csv
 
 from flask import request, redirect, render_template, url_for, flash
 from flask.ext.mail import Message
-from werkzeug import secure_filename
 from sqlalchemy.orm.exc import FlushError
 
 
@@ -26,112 +24,44 @@ from spz.forms import SignupForm, NotificationForm
 def index():
     form = SignupForm()
 
+    evaluated = []  # XXX: remove this
+
     if form.validate_on_submit():
-        erg = BerErg(form)
-        flash(u'Ihre Angaben waren plausibel', 'success')
-        return render_template('confirm.html', erg=erg)
+        applicant = form.get_applicant()
+        course = form.get_course()
+
+        if course.is_english() and not course.is_allowed(applicant):
+            flash(u'Sie haben nicht die vorausgesetzten Englischtest Ergebnisse um diesen Kurs zu wählen', 'danger')
+            return dict(form=form)
+
+        # TODO:
+        #if course.full():
+            #waiting
+        #else:
+            #attends
+        status = models.StateOfAtt.query.first()
+
+
+        if applicant.has_to_pay():
+            evaluated.append(">>> has to pay")
+
+        # Run the final insert isolated in a transaction, with rollback semantics
+        try:
+            # TODO: check if already in this course
+            applicant.add_course_attendance(course, status, form.get_graduation())
+            db.session.add(applicant)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'danger')
+            return dict(form=form)
+
+        # TODO: send mail now
+
+        return render_template('confirm.html', evaluated=evaluated)
 
     return dict(form=form)
 
-
-#hier werden die Teilnahmebedingunen geprüft 
-def BerErg(form):
-    
-
-    bestApproval = 0
-    course = models.Course.query.get(form.course.data)
-    language = models.Language.query.get(course.language_id)
-
-    kurs = 'Kurs: %s %s (kurs_id=%s) ' % (language.name, course.level, course.id)
-    history = [kurs]
-
-    if language.name == 'English':
-        isEnglish = 'Englisch'
-        approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
-        if len(approval) == 0:
-            history.append(u'für Englisch nicht zugelassen (link zur Anmeldemaske ohne Englischkurse) ')
-            return dict (history=history)
-        
-        bestApproval = max(approval) if approval else 0
-        if bestApproval < 50: # dummy value
-            history.append('fuer Englisch dieser Stufe nicht zugelassen (link zur Anmeldemaske mit eingeschraenkten Englischkursen) ')
-            return  dict (history=history) ## TODO Tabelle mit Kursen um Grenzen erweitern
-    else:
-        isEnglish = 'nicht Englisch'
-         
-
-    occupancy = models.Attendance.query.filter_by(course_id = form.course.data).count()
-    c = models.Course.query.filter_by(id = form.course.data).first()
-    regularOffer = c.limit
-    howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
-    if occupancy > regularOffer:
-        s = models.StateOfAtt.query.filter_by(name = 'Warteliste')
-        history.append('Warteliste')
-#        insertAttendance(c,s)
-
-    isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
-    if not isStudent:
-        s = models.StateOfAtt.query.filter_by(name = 'Bar zu bezahlen')
-        history.append(u'Gebührenpflichtig')
-
-
-
-    c = models.Course.query.get_or_404(form.course.data)
-    s = models.StateOfAtt.query.first()  ## TODO
-
-    price = 'Kurspreis %s Euro' % c.price
-    who = 'Bewerber: %s %s' % (form.first_name.data, form.last_name.data)
-    mat = 'Matrikelnummer: %s' % form.tag.data
-    mail = 'E-Mail: %s' % form.mail.data
-
-    
-    stud = 'Auf der Matrikelliste: %s' % isStudent
-
-    englishApproval = 'Zulassung fuer Englisch %s (Prozent)' % bestApproval
-#    NOA = 'Belegte Kurse: %s' % numberOfAtt #######################################################
-    NOA = 0
-
-
-    g = models.Graduation.query.first()  # dummy -- fix this
-
-    retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
-
-    if retrievedFromSystem:
-        # prüfe erfolgte Belegungen (mit Status 'f') #############
-        numberOfAtt = models.Attendance.query.filter_by(applicant_id = models.Applicant.query.filter_by(mail = form.mail.data).first().id).count()
-
-
-        # belege Kurs
-        try:
-            retrievedFromSystem.add_course_attendance(c, s, g)
-            db.session.commit()
-        except (FlushError) as e:
-            db.session.rollback()
-            flash(u'Diesen Kurs haben Sie bereits belegt): {0}'.format(e), 'danger')                
-    else:
-        numberOfAtt = 0
-        mail = form.mail.data
-        tag = form.tag.data
-        sex = True if form.sex.data == 1 else False
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        phone = form.phone.data
-
-        # for KIT students only
-        degree = models.Degree.query.get_or_404(form.degree.data) if form.degree.data else None
-        semester = form.semester.data if form.semester.data else None
-        origin  = models.Origin.query.get_or_404(form.origin.data) if form.origin.data else None
-            
-        applicant = models.Applicant(mail, tag, sex, first_name, last_name, phone, degree, semester, origin)
-        applicant.add_course_attendance(c, s, g)
-        
-        db.session.add(applicant)
-        db.session.commit()
-
-
-    erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
-    return dict (history=history)
-    return erg
 
 @upheaders
 @templated('licenses.html')

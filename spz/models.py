@@ -5,6 +5,7 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
+from sqlalchemy import func
 from datetime import datetime
 
 from spz import db
@@ -48,6 +49,9 @@ class Attendance(db.Model):
 
     def __repr__(self):
         return '<Attendance %r %r %r>' % (self.applicant, self.course, self.status)
+
+    def is_waiting(self):  # XXX: Is there a better way to ckeck this?
+        return 'warte' in self.status.name.lower()
 
 
 class Applicant(db.Model):
@@ -119,28 +123,35 @@ class Applicant(db.Model):
         self.course = filter(lambda attendance: attendance.course != course, self.course)
 
     def is_student(self):
-        registered = Registration.query.filter_by(rnumber=self.tag).first()
+        registered = Registration.query.filter(func.lower(Registration.rnumber) == func.lower(self.tag)).first()
         return True if registered else False
 
     def best_english_result(self):
-        results = [app.percent for app in Approval.query.filter_by(tag=self.tag).all()]
+        results = [app.percent for app in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag)).all()]
         best = max(results) if results else 0
         return best
+
+    def has_to_pay(self):  # XXX: Better way to check for waiting?
+        attends = len(filter(lambda attendance: not attendance.is_waiting(), self.course))
+        return not self.is_student() or attends > 0
 
 
 class Course(db.Model):
     """Represents a course that has a :py:class:`Language` and gets attended by multiple :py:class:`Applicant`.
 
+       :param language: The :py:class:`Language` for this course
        :param level: The course's level
        :param limit: The max. number of :py:class:`Applicant` that can attend this course.
        :param price: The course's price.
-       :param language: The :py:class:`Language` for this course
+       :param rating_highest: The course's upper bound of required rating.
+       :param rating_lowest: The course's lower bound of required rating.
 
        .. seealso:: the :py:data:`attendances` relationship
     """
 
     __tablename__ = 'course'
-    __table_args__ = (db.UniqueConstraint('language_id', 'level'),)
+    __table_args__ = (db.UniqueConstraint('language_id', 'level'),
+                      db.CheckConstraint('rating_highest >= rating_lowest'))
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
@@ -148,14 +159,25 @@ class Course(db.Model):
     limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
 
-    def __init__(self, language, level, limit, price):
+    rating_highest = db.Column(db.Integer, db.CheckConstraint('rating_highest >= 0'), nullable=False)
+    rating_lowest = db.Column(db.Integer, db.CheckConstraint('rating_lowest >= 0'), nullable=False)
+
+    def __init__(self, language, level, limit, price, rating_highest, rating_lowest):
         self.language = language
         self.level = level
         self.limit = limit
         self.price = price
+        self.rating_highest = rating_highest
+        self.rating_lowest = rating_lowest
 
     def __repr__(self):
         return '<Course %r %r>' % (self.language, self.level)
+
+    def is_english(self):  # XXX: Can this be accomplished in a better way?
+        return "english" in self.language.name.lower()
+
+    def is_allowed(self, applicant):
+        return self.rating_lowest <= applicant.best_english_result() <= self.rating_highest
 
 
 class Language(db.Model):
