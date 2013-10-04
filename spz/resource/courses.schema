@@ -18,9 +18,21 @@
 								"properties": {
 									"level": {
 										"type": "string"
+									},
+									"limit": {
+										"type": "integer"
+									},
+									"price": {
+										"type": "integer"
+									},
+									"rating_lowest": {
+										"type": "integer"
+									},
+									"rating_highest": {
+										"type": "integer"
 									}
 								},
-								"required": [ "level" ]
+								"required": [ "level", "limit", "price", "rating_lowest", "rating_highest" ]
 							},
 							"uniqueItems": true
 						}

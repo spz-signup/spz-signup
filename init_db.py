@@ -52,7 +52,7 @@ def insert_resources():
             ref_lang = Language(language["name"], datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
 
             for course in language["courses"]:
-                db.session.add(Course(ref_lang, course["level"], limit=20, price=60))
+                db.session.add(Course(ref_lang, course["level"], limit=course["limit"], price=course["price"], rating_lowest=course["rating_lowest"], rating_highest=course["rating_highest"]))
 
     db.session.commit()
 

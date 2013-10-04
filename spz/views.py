@@ -6,12 +6,10 @@
 """
 
 import socket
-import os
 import csv
 
 from flask import request, redirect, render_template, url_for, flash
 from flask.ext.mail import Message
-from werkzeug import secure_filename
 from sqlalchemy.orm.exc import FlushError
 
 
@@ -26,6 +24,7 @@ from spz.forms import SignupForm, NotificationForm
 def index():
     form = SignupForm()
 
+<<<<<<< HEAD
     if form.validate_on_submit():
         erg = BerErg(form)
         flash(u'Ihre Angaben waren plausibel', 'success')
@@ -78,34 +77,47 @@ def BerErg(form):
         history.append(u'Gebührenpflichtig')
     else:
         history.append(u'Auf der Matrikelliste')
+=======
+    evaluated = []  # XXX: remove this
+>>>>>>> d005e0ce2a62d0bc4970d4ae75a34746188c6b2d
+
+    if form.validate_on_submit():
+        applicant = form.get_applicant()
+        course = form.get_course()
+
+        if course.is_english() and not course.is_allowed(applicant):
+            flash(u'Sie haben nicht die vorausgesetzten Englischtest Ergebnisse um diesen Kurs zu wählen', 'danger')
+            return dict(form=form)
+
+        # TODO:
+        #if course.full():
+            #waiting
+        #else:
+            #attends
+        status = models.StateOfAtt.query.first()
 
 
+        if applicant.has_to_pay():
+            evaluated.append(">>> has to pay")
 
-    c = models.Course.query.get_or_404(form.course.data)
-    s = models.StateOfAtt.query.first()  ## TODO
+        # Run the final insert isolated in a transaction, with rollback semantics
+        try:
+            # TODO: check if already in this course
+            applicant.add_course_attendance(course, status, form.get_graduation())
+            db.session.add(applicant)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'danger')
+            return dict(form=form)
 
-    price = 'Kurspreis %s Euro' % c.price
-    who = 'Bewerber: %s %s' % (form.first_name.data, form.last_name.data)
-    mat = 'Matrikelnummer: %s' % form.tag.data
-    mail = 'E-Mail: %s' % form.mail.data
+        # TODO: send mail now
 
-    
-    stud = 'Auf der Matrikelliste: %s' % isStudent
+        return render_template('confirm.html', evaluated=evaluated)
 
-    englishApproval = 'Zulassung fuer Englisch %s (Prozent)' % bestApproval
-#    NOA = 'Belegte Kurse: %s' % numberOfAtt #######################################################
-    NOA = 0
+    return dict(form=form)
 
-
-    g = models.Graduation.query.first()  # dummy -- fix this
-
-    retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
-
-    if retrievedFromSystem:
-        # prüfe erfolgte Belegungen (mit Status 'f') #############
-        numberOfAtt = models.Attendance.query.filter_by(applicant_id = models.Applicant.query.filter_by(mail = form.mail.data).first().id).count()
-
-
+<<<<<<< HEAD
         # belege Kurs
         try:
             retrievedFromSystem.add_course_attendance(c, s, g)
@@ -137,6 +149,8 @@ def BerErg(form):
     erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
     return history
     return erg
+=======
+>>>>>>> d005e0ce2a62d0bc4970d4ae75a34746188c6b2d
 
 @upheaders
 @templated('licenses.html')
