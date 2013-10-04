@@ -37,17 +37,63 @@ def index():
 #hier werden die Teilnahmebedingunen geprüft 
 def BerErg(form):
     
+
+    bestApproval = 0
+    course = models.Course.query.get(form.course.data)
+    language = models.Language.query.get(course.language_id)
+
+    history = 'Kurs: %s %s (kurs_id=%s) ' % (language.name, course.level, course.id)
+
+    if language.name == 'English':
+        isEnglish = 'Englisch'
+        approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
+        if len(approval) == 0:
+            history += 'fuer Englisch nicht zugelassen (link zur Anmeldemaske ohne Englischkurse) '
+            return history
+        
+        bestApproval = max(approval) if approval else 0
+        if bestApproval < 50: # dummy value
+            history += 'fuer Englisch dieser Stufe nicht zugelassen (link zur Anmeldemaske mit eingeschraenkten Englischkursen) '
+            return  history ## TODO Tabelle mit Kursen um Grenzen erweitern
+    else:
+        isEnglish = 'nicht Englisch'
+         
+
+    occupancy = models.Attendance.query.filter_by(course_id = form.course.data).count()
+    c = models.Course.query.filter_by(id = form.course.data).first()
+    regularOffer = c.limit
+    howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
+    if occupancy > regularOffer:
+        s = models.StateOfAtt.query.filter_by(name = 'Warteliste')
+#        insertAttendance(c,s)
+
     isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
-    approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
-    bestApproval = max(approval) if approval else 0
+    if not isStudent:
+        s = models.StateOfAtt.query.filter_by(name = 'Bar zu bezahlen')
+
+
 
     c = models.Course.query.get_or_404(form.course.data)
     s = models.StateOfAtt.query.first()  ## TODO
 
+    price = 'Kurspreis %s Euro' % c.price
+    who = 'Bewerber: %s %s' % (form.first_name.data, form.last_name.data)
+    mat = 'Matrikelnummer: %s' % form.tag.data
+    mail = 'E-Mail: %s' % form.mail.data
+
+    
+    stud = 'Auf der Matrikelliste: %s' % isStudent
+
+    englishApproval = 'Zulassung fuer Englisch %s (Prozent)' % bestApproval
+#    NOA = 'Belegte Kurse: %s' % numberOfAtt #######################################################
+    NOA = 0
+
+
+
     retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
 
     if retrievedFromSystem:
-        # prüfe erfolgte Belegungen (mit Status 'f')
+        # prüfe erfolgte Belegungen (mit Status 'f') #############
         numberOfAtt = models.Attendance.query.filter_by(applicant_id = models.Applicant.query.filter_by(mail = form.mail.data).first().id).count()
 
 
@@ -78,29 +124,9 @@ def BerErg(form):
         db.session.add(applicant)
         db.session.commit()
 
-    price = c.price
-    who = 'Bewerber: %s %s' % (form.first_name.data, form.last_name.data)
-    mat = 'Matrikelnummer: %s' % form.tag.data
-    mail = 'E-Mail: %s' % form.mail.data
-    kurs_id = form.course.data
 
-    kurs = models.Course.query.get(kurs_id)
-    lang = models.Language.query.get(kurs.language_id)
-    kurs = 'Kurs: %s %s (kurs_id=%s)' % (lang.name, kurs.level, kurs.id)
-    isEnglish = 'Englisch? %s' % True if lang.name == 'English' else False
-    
-    stud = 'Auf der Matrikelliste: %s' % isStudent
-
-    englishApproval = 'Zulassung fuer Englisch %s (Prozent)' % bestApproval
-    NOA = 'Belegte Kurse: %s' % numberOfAtt 
-
-    occupancy = models.Attendance.query.filter_by(course_id = form.course.data).count()
-    c = models.Course.query.filter_by(id = form.course.data).first()
-    regularOffer = c.limit
-    howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
-
-    erg = dict(a=who, b=mat, c=mail, d=kurs, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish)
-    return erg
+    erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
+    return history
 
 @upheaders
 @templated('licenses.html')
