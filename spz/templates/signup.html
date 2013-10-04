@@ -1,15 +1,53 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import render_input, render_option, render_optgroup %}
+{% from 'formhelpers.html' import render_input, render_option %}
+
+{% block caption %}
+Anmeldung
+{% endblock caption %}
 
 
 {% block body %}
 <div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1>Anmeldung</h1>
+    <div class="col-md-8 col-md-offset-2">
+        <div class="well">
+            <form class="form-horizontal" method="post" data-persist="garlic" data-validate="parsley">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    <legend>Persönliche Angaben</legend>
+                    {{ render_option(form.sex) }}
+                    {{ render_input(form.first_name, placeholder='Max') }}
+                    {{ render_input(form.last_name, placeholder='Mustermann') }}
+                    {{ render_input(form.phone) }}
+                    {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
+                    {{ render_option(form.origin) }}
+                    {{ render_input(form.tag) }}
+                </fieldset>
+                <fieldset class="kit-only">
+                    <legend>Angaben für Studierende des KIT</legend>
+                    {{ render_option(form.degree, required=False) }}
+                    {{ render_input(form.semester, placeholder='1', type='number', required=False, required_extras='step="1" type="range" min="1" max="26"') }}
+                    {{ render_option(form.graduation, required=False) }}
+                </fieldset>
+                <fieldset>
+                    <legend>Kurswahl</legend>
+                    {{ render_option(form.course) }}
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <button type="submit" class="btn btn-primary">Anmelden</button>
+                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>
+{% endblock body %}
+
+
+{% block body2 %}
 <div class="row">
     <div class="col-md-12">
         <form data-persist="garlic" data-validate="parsley" method="post">
@@ -45,7 +83,7 @@
         </form>
     </div>
 </div>
-{% endblock body %}
+{% endblock body2 %}
 
 
 {% block scripts %}
@@ -59,7 +97,7 @@
     $('#origin').change(function() {
         if ($(this).find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').show();
-        } else {
+            } else {
             $('.kit-only').hide();
         }
     });

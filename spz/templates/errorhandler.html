@@ -1,11 +1,13 @@
 {% extends 'baselayout.html' %}
 
+{% block caption %}
+Ooops
+{% endblock caption %}
+
+
 {% block body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="page-header">
-            <h1>Ooops</h1>
-        </div>
+    <div class="col-md-12">
         <h2><strong>{{ errorcode }}:</strong> {{ errormessage }}</h2>
     </div>
 </div>

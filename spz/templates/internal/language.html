@@ -1,8 +1,8 @@
 {% extends 'internal/internal.html' %}
 
-{% block internal_heading %}
-<a href="{{ url_for('language', id=language.id) }}"> Sprache: {{ language.name }}</a>
-{% endblock internal_heading %}
+{% block caption %}
+<a href="{{ url_for('language', id=language.id) }}">Sprache: {{ language.name }}</a>
+{% endblock caption %}
 
 
 {% block internal_body %}

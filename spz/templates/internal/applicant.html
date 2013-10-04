@@ -1,56 +1,54 @@
 {% extends 'internal/internal.html' %}
 
-{% block internal_heading %}
-<a href="{{ url_for('applicant', id=applicant.id) }}"> Bewerber: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
-{% endblock internal_heading %}
+{% block caption %}
+<a href="{{ url_for('applicant', id=applicant.id) }}">Bewerber: {{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
+{% endblock caption %}
 
 
 {% block internal_body %}
-
 <form class="form-horizontal" role="form">
     <div class="form-group">
-		<label for="input_first_name" class="col-lg-2 control-label">Vorname</label>
-		<div class="col-lg-10">
-			<input type="first_name" class="form-control" id="input_first_name" value="{{ applicant.first_name }}">
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input_last_name" class="col-lg-2 control-label">Nachname</label>
-			<div class="col-lg-10">
-			<input type="last_name" class="form-control" id="input_last_name" value="{{ applicant.last_name }}">
-		</div>
-	</div>
+        <label for="input_first_name" class="col-lg-2 control-label">Vorname</label>
+        <div class="col-lg-10">
+            <input type="first_name" class="form-control" id="input_first_name" value="{{ applicant.first_name }}">
+        </div>
+    </div>
     <div class="form-group">
-		<label for="input_mail" class="col-lg-2 control-label">E-Mail</label>
-		<div class="col-lg-10">
-			<input type="mail" class="form-control" id="input_mail" value="{{ applicant.mail }}">
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input_phone" class="col-lg-2 control-label">Telefon</label>
-			<div class="col-lg-10">
-			<input type="phone" class="form-control" id="input_phone" value="{{ applicant.phone }}">
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input_tag" class="col-lg-2 control-label">Identifikation</label>
-			<div class="col-lg-10">
-			<input type="tag" class="form-control" id="input_tag" value="{{ applicant.tag }}">
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<button type="submit" class="btn btn-default">Änderungen speichern</button>
-		</div>
-	</div>
+        <label for="input_last_name" class="col-lg-2 control-label">Nachname</label>
+        <div class="col-lg-10">
+            <input type="last_name" class="form-control" id="input_last_name" value="{{ applicant.last_name }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_mail" class="col-lg-2 control-label">E-Mail</label>
+        <div class="col-lg-10">
+            <input type="mail" class="form-control" id="input_mail" value="{{ applicant.mail }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_phone" class="col-lg-2 control-label">Telefon</label>
+        <div class="col-lg-10">
+            <input type="phone" class="form-control" id="input_phone" value="{{ applicant.phone }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_tag" class="col-lg-2 control-label">Identifikation</label>
+        <div class="col-lg-10">
+            <input type="tag" class="form-control" id="input_tag" value="{{ applicant.tag }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="submit" class="btn btn-default">Änderungen speichern</button>
+        </div>
+    </div>
 </form>
 
 {% for attendance in applicant.course %}
 <p>
-	<a href="{{ url_for('course_attendances', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
-	{{attendance.status.name}}
+<a href="{{ url_for('course_attendances', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+{{attendance.status.name}}
 </p>
 {% endfor %}
 {% endblock internal_body %}
-
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

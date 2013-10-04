@@ -1,26 +1,43 @@
 {% extends 'baselayout.html' %}
 
-{% block body %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1><a href="{{ url_for('internal') }}">Interner Bereich</a> <small>{% block internal_heading %}{% endblock internal_heading %}</small></h1>
-            {% if g.user %}
-            Angemeldet als <strong>{{ g.user }}</strong>
-            (<a href="#" class="signout">Abmelden</a>)
-            {% else %}
-            Nicht angemeldet. <a href="#" class="signin">Anmelden</a>
-            {% endif %}
-        </div>
-    </div>
-</div>
+{% block navbar %}
+<li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
-{% block internal_body %}{% endblock %}
+<li><a href="{{ url_for('datainput') }}"><span class="glyphicon glyphicon-import"></span> Dateneingabe</a></li>
+<li><a href="{{ url_for('all_courses') }}"><span class="glyphicon glyphicon-list"></span> Alle Kurse</a></li>
+<li><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
+<li><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
+<li><a href="{{ url_for('internal', todo='todo') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
+<li><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-list-alt"></span> Statistiken</a></li>
+<li><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
+{% endif %}
+{% endblock navbar %}
+
+
+{% block caption %}
+Interner Bereich
+{% endblock caption %}
+
+
+{% block subcaption %}
+{% if g.user %}
+<div class="pull-right">Angemeldet als <strong>{{ g.user }}</strong>
+(<a href="#" class="signout">Abmelden</a>)</div>
+{% else %}
+<div class="pull-right">Nicht angemeldet. <a href="#" class="signin">Anmelden</a></div>
+{% endif %}
+{% endblock subcaption %}
+
+
+{% block body %}
+{% if g.user and g.access %}
+{% block internal_body %}{% endblock internal_body %}
 {% endif %}
 {% endblock body %}
 
 
 {% block scripts %}
+{{ super() }}
 <script src="{{ config.PERSONA_JS }}"></script>
 <script>
     var $URL_ROOT = {{ request.url_root|tojson }};
