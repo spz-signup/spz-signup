@@ -89,6 +89,7 @@ def BerErg(form):
     NOA = 0
 
 
+    g = models.Graduation.query.first()  # dummy -- fix this
 
     retrievedFromSystem = models.Applicant.query.filter_by(tag = form.tag.data).first()
 
@@ -99,7 +100,7 @@ def BerErg(form):
 
         # belege Kurs
         try:
-            retrievedFromSystem.add_course_attendance(c, s)
+            retrievedFromSystem.add_course_attendance(c, s, g)
             db.session.commit()
         except (FlushError) as e:
             db.session.rollback()
@@ -119,7 +120,7 @@ def BerErg(form):
         origin  = models.Origin.query.get_or_404(form.origin.data) if form.origin.data else None
             
         applicant = models.Applicant(mail, tag, sex, first_name, last_name, phone, degree, semester, origin)
-        applicant.add_course_attendance(c, s)
+        applicant.add_course_attendance(c, s, g)
         
         db.session.add(applicant)
         db.session.commit()

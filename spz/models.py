@@ -20,6 +20,7 @@ class Attendance(db.Model):
 
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
        :param status: The :py:class:`StateOfAtt` of the :py:`Attendance`.
+       :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
@@ -34,15 +35,19 @@ class Attendance(db.Model):
     status_id = db.Column(db.Integer, db.ForeignKey('stateofatt.id'))
     status = db.relationship("StateOfAtt", backref="attendances")
 
+    graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
+    graduation = db.relationship("Graduation", backref="attendances")
+
     registered = db.Column(db.DateTime())
 
-    def __init__(self, course, status, registered=datetime.utcnow()):
+    def __init__(self, course, status, graduation, registered=datetime.utcnow()):
         self.course = course
         self.status = status
+        self.graduation = graduation
         self.registered = registered
 
     def __repr__(self):
-        return '<Attendance %r %r>' % (self.applicant, self.course)
+        return '<Attendance %r %r %r>' % (self.applicant, self.course, self.status)
 
 
 class Applicant(db.Model):
@@ -104,10 +109,10 @@ class Applicant(db.Model):
         self.registered = registered
 
     def __repr__(self):
-        return '<Applicant %r %r %r %r>' % (self.mail, self.tag, self.first_name, self.last_name)
+        return '<Applicant %r %r>' % (self.mail, self.tag)
 
-    def add_course_attendance(self, course, status):
-        attendance = Attendance(course, status)
+    def add_course_attendance(self, course, status, graduation):
+        attendance = Attendance(course, status, graduation)
         self.course.append(attendance)
 
     def remove_course_attendance(self, course):
