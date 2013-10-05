@@ -2,7 +2,7 @@
 {# Independent short macros, to allow for greater flexibility #}
 
 
-{% macro render_input(field, width=12, placeholder=None, required=True, required_extras=None, type="text") %}
+{% macro render_input(field, width=12, placeholder=None, required=True, required_extras=None, type="text", help=None) %}
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 2 }}">
@@ -10,25 +10,28 @@
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
         {% endfor %}
+        {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
     </div>
 </div>
 {% endmacro %}
 
 
-{% macro render_textarea(field, width=12, placeholder=None, required=True, required_extras=None) %}
+{% macro render_textarea(field, width=12, placeholder=None, required=True, required_extras=None, help=None) %}
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 2 }}">
         <textarea class="form-control" rows="10" id="{{ field.id }}" name="{{ field.id }}" placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>{% if field.data %}{{ field.data }}{% endif %}</textarea>
+        {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
         {% endfor %}
+        {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
     </div>
 </div>
 {% endmacro %}
 
 
-{% macro render_option(field, width=12, placeholder=None, required=True, required_extras=None) %}
+{% macro render_option(field, width=12, placeholder=None, required=True, required_extras=None, help=None) %}
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 2 }}">
@@ -41,6 +44,7 @@
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
         {% endfor %}
+        {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
     </div>
 </div>
 {% endmacro %}

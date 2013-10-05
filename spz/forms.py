@@ -56,7 +56,7 @@ class SignupForm(Form):
     """
 
     # This should be a BooleanField, because of select-between-two semantics
-    sex = SelectField(u'Geschlecht', [validators.Required(u'Geschlecht muss angegeben werden')], choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')], choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
 
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])

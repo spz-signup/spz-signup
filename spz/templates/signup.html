@@ -10,7 +10,7 @@ Anmeldung
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <div class="well">
-            <form class="form-horizontal" method="post" data-persist="garlic" data-validate="parsley">
+            <form id="signup" class="form-horizontal" method="post" data-persist="garlic">
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Persönliche Angaben</legend>
@@ -20,7 +20,7 @@ Anmeldung
                     {{ render_input(form.phone) }}
                     {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
                     {{ render_option(form.origin) }}
-                    {{ render_input(form.tag) }}
+                    {{ render_input(form.tag, help='Falls vorhanden Matrikelnummer oder vom Sprachenzentrum ausgestellte ID') }}
                 </fieldset>
                 <fieldset class="kit-only">
                     <legend>Angaben für Studierende des KIT</legend>
@@ -30,7 +30,7 @@ Anmeldung
                 </fieldset>
                 <fieldset>
                     <legend>Kurswahl</legend>
-                    {{ render_option(form.course) }}
+                    {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
@@ -51,6 +51,12 @@ Anmeldung
 {{ super() }}
 <script>
     "use strict";
+
+    $('#signup').parsley({
+        errors: {
+            errorsWrapper: '<ul class="list-unstyled"></ul>'
+        }
+    });
 
     /* TODO: this hides them, when we come back, too -- should trigger only on first run */
     $('.kit-only').hide();
