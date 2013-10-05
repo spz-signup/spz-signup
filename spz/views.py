@@ -167,9 +167,7 @@ def all_courses():
 @auth_required
 @templated('internal/course_attendances.html')
 def course_attendances(id):
-    course = models.Course.query.get_or_404(id)
-    attendances = db.session.query(models.Applicant, models.Attendance).filter(models.Applicant.id==models.Attendance.applicant_id).filter(models.Attendance.course_id==id).all()
-    return dict(c=course, a=attendances)
+    return dict(course=models.Course.query.get_or_404(id))
 
 
 @upheaders
