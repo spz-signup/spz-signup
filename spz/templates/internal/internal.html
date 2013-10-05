@@ -3,12 +3,13 @@
 {% block navbar %}
 <li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
-<li><a href="{{ url_for('datainput') }}"><span class="glyphicon glyphicon-import"></span> Dateneingabe</a></li>
-<li><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
-<li><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
-<li><a href="{{ url_for('internal', todo='todo') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
-<li><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-list-alt"></span> Statistiken</a></li>
-<li><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
+<li data-intro='Startet den Rundgang durch die Funktionen des internen Bereichs' data-step='2'><a id="intro-start"><span class="glyphicon glyphicon-picture"></span> Rundgang</a></li>
+<li data-intro='Import von Daten. Beispielsweise Matrikelnummern oder Ergebnisse der ILIAS Englischtests' data-step='2'><a href="{{ url_for('datainput') }}" ><span class="glyphicon glyphicon-import"></span> Dateneingabe</a></li>
+<li data-intro='Auflistung aller vorhandenen Kurse und deren Teilnehmer' data-step='3'><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
+<li data-intro='Verschicke Mails an Kursteilnehmer' data-step='4'><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
+<li data-intro='Zur Bearbeitung einzelner Kursteilnehmer' data-step='5'><a href="{{ url_for('internal', todo='todo') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
+<li data-intro='Informative Statistiken zur Kursbelegung' data-step='6'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-list-alt"></span> Statistiken</a></li>
+<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='7'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
 {% endif %}
 {% endblock navbar %}
 
@@ -20,7 +21,7 @@ Interner Bereich
 
 {% block subcaption %}
 {% if g.user %}
-<div class="pull-right">Angemeldet als <strong>{{ g.user }}</strong>
+<div class="pull-right" data-intro='Für den internen Bereich musst du authentifiziert sein.' data-step='1' data-position='bottom'>Angemeldet als <strong>{{ g.user }}</strong>
 (<a href="#" class="signout">Abmelden</a>)</div>
 {% else %}
 <div class="pull-right">Nicht angemeldet. <a href="#" class="signin">Anmelden</a></div>
@@ -43,5 +44,25 @@ Interner Bereich
     var $CURRENT_USER = {{ g.user|tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/persona.js') }}"></script>
+
+<script>
+    "use strict";
+    var intro = introJs();
+
+    intro.setOptions({
+        nextLabel: "Weiter",
+        prevLabel: "Zurück",
+        skipLabel: "Überspringen",
+        doneLabel: "Fertig",
+        tooltipPosition: "bottom",
+        exitOnEsc: true,
+        exitOnOverlayClick: true,
+        showStepNumbers: false,
+    });
+
+    $("#intro-start").click(function(e) {
+        intro.start();
+    });
+</script>
 {% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
