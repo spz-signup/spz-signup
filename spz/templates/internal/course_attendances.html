@@ -1,13 +1,14 @@
 {% extends 'internal/internal.html' %}
 
 {% block caption %}
-Liste aller Kurse
+Kurs: {{ course.language.name }} {{ course.level }}
 {% endblock caption %}
 
 
 {% block internal_body %}
-<h3><a href="{ url_for('notifications') }}">Mail an alle Kursteilnehmer</a></h3>
-<h2>Kurs: {{ c.language.name }} {{ c.level }}</h2>
+<h3><a href="{{ url_for('lists') }}">Liste aller Sprachen</a></h3>
+<h2><a href="{{ url_for('language', id=course.language.id) }}">Liste aller {{ course.language.name }}-Kurse </a></h2>
+<h3><a href="{{ url_for('notifications') }}">Mail an alle Kursteilnehmer</a></h3>
 
 <div class="row">
     <div class="col-md-12">
@@ -15,32 +16,35 @@ Liste aller Kurse
             <thead>
                 <tr>
                     <th>Teilnehmer</th>
-                    <th>E-mail</th>
+                    <th>E-Mail</th>
                     <th>Telefon</th>
                     <th>Status</th>
                     <th>Herkunft</th>
                     <th>Semester</th>
                     <th>Studiengang</th>
                     <th>Identifikation</th>
-                    <th>id</th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
-                {% for applicant in a %}
+                {% for attendance in course.applicant_attendances %}
+                {% set applicant = attendance.applicant %}
                 <tr>
-                    <td>{{ 'Herr' if applicant.Applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=applicant.Applicant.id)}}">{{ applicant.Applicant.first_name }} {{ applicant.Applicant.last_name }}</a></td>
-                    <td><a>{{ applicant.Applicant.mail }}</a></td>
-                    <td>{{ applicant.Applicant.phone }}</td>
-                    <td>{{ applicant.Attendance.status.name }}</td>
-                    <td>{{ applicant.Applicant.origin.name }}</td>
-                    <td>{{ applicant.Applicant.semester }}</td>
-                    <td>{{ applicant.Applicant.degree.name }}</td>
-                    <td>{{ applicant.Applicant.tag }}</td>
-                    <td>{{ applicant.Applicant.id }}</td>
+                    <td>{{ 'Herr' if applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }} {{ applicant.last_name }}</a></td>
+                    <td><a>{{ applicant.mail }}</a></td>
+                    <td>{{ applicant.phone }}</td>
+                    <td>xxx</td>
+                    <td>{{ applicant.origin.name }}</td>
+                    <td>{{ applicant.semester }}</td>
+                    <td>{{ applicant.degree.name }}</td>
+                    <td>{{ applicant.tag }}</td>
+                    <td><a>Entfernen</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+		<h3><a href="">Neuen Teilnehmer hinzufügen</a></h3>
+		<p>(Prioritäre Anmeldungen)</p>
     </div>
 </div>
 {% endblock internal_body %}
