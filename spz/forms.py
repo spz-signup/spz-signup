@@ -40,6 +40,12 @@ def course_to_choicelist():
             for course in models.Course.query.order_by(models.Course.id.asc()).all()]
 
 
+@cache.cached(key_prefix='status')
+def status_to_choicelist():
+    return [(x.id, x.name)
+            for x in models.StateOfAtt.query.order_by(models.StateOfAtt.id.asc()).all()]
+
+
 class SignupForm(Form):
     """Represents the main sign up form.
 
@@ -138,6 +144,14 @@ class NotificationForm(Form):
     mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
     mail_cc = TextField('CC', [validators.Optional()])
     mail_bcc = TextField('BCC', [validators.Optional()])
+
+
+class ApplicantForm(Form):
+    """Represents the form for editing an applicant and his/her attendances.
+
+    """
+
+    status = SelectField(u'Status', [validators.Required(u'Status muss angegeben werden')], coerce=int)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
