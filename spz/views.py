@@ -8,10 +8,8 @@
 import socket
 import csv
 
-from flask import request, redirect, render_template, url_for, flash
+from flask import request, redirect, render_template, url_for, flash, g
 from flask.ext.mail import Message
-from sqlalchemy.orm.exc import FlushError
-
 
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
@@ -149,8 +147,8 @@ def notifications():
 
     if form.validate_on_submit():
         try:
-            # TODO(daniel): extract recipients from courses; sender from config
-            msg = Message(subject=form.mail_subject.data, body=form.mail_body.data, recipients=None, sender=None)
+            # TODO: send only to users that attend form.get_course()
+            msg = Message(sender=g.user, subject=form.mail_subject.data, body=form.mail_body.data, recipients=None)
             mail.send(msg)
             flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))

@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_textarea %}
+{% from 'formhelpers.html' import render_input, render_textarea, render_option %}
 
 {% block caption %}
 Mail Zentrale
@@ -9,22 +9,33 @@ Mail Zentrale
 {% block internal_body %}
 {% if g.access == 'unrestricted' %}
 <div class="row">
-    <div class="col-md-12">
-        <form method="post" id="confirm">
-            {{ form.hidden_tag() }}
-            <fieldset>
-                <legend>Inhalt der Mail</legend>
-                {{ render_input(form.mail_cc) }}
-                {{ render_input(form.mail_bcc) }}
-                <hr>
-                {{ render_input(form.mail_subject) }}
-                {{ render_textarea(form.mail_body) }}
-            </fieldset>
-            <fieldset>
-                <button type="submit" class="btn btn-default btn-large">Abschicken</button>
-                <button type="reset" class="btn btn-default btn-large">Zurücksetzen</button>
-            </fieldset>
-        </form>
+    <div class="col-md-8 col-md-offset-2">
+        <div class="well">
+            <form class="form-horizontal" method="post" id="confirm">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    <legend>Optionale Angaben</legend>
+                    {{ render_input(form.mail_cc) }}
+                    {{ render_input(form.mail_bcc) }}
+                </fieldset>
+                <fieldset>
+                    <legend>Benötigte Angaben</legend>
+                    {{ render_input(form.mail_subject) }}
+                    {{ render_textarea(form.mail_body) }}
+                </fieldset>
+                    <legend>Empfänger der Mail</legend>
+                    {{ render_option(form.mail_course) }}
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <button type="submit" class="btn btn-primary">Abschicken</button>
+                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
 </div>
 {% endif %}

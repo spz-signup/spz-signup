@@ -144,7 +144,14 @@ class NotificationForm(Form):
     mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
     mail_cc = TextField('CC', [validators.Optional()])
     mail_bcc = TextField('BCC', [validators.Optional()])
+    mail_course = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
 
+    def __init__(self, *args, **kwargs):
+        super(NotificationForm, self).__init__(*args, **kwargs)
+        self.mail_course.choices = course_to_choicelist()  # See SignupForm for this "trick"
+
+    def get_course(self):
+        return models.Course.query.get(self.mail_course.data)
 
 class ApplicantForm(Form): #TODO mail, phone
     """Represents the form for editing an applicant and his/her attendances.
