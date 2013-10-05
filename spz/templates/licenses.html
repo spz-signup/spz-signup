@@ -1,15 +1,13 @@
 {% extends 'baselayout.html' %}
 
+{% block caption %}
+Lizenzen
+{% endblock caption %}
+
+
 {% block body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="page-header">
-            <h1>Lizenzen</h1>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
         <div class="list-group">
             <a href="{{ url_for('static', filename='licenses/bootstrap.txt') }}" class="list-group-item">
                 <h4 class="list-group-item-heading">Bootstrap 3</h4>
@@ -38,6 +36,5 @@
         </div>
     </div>
 </div>
-
 {% endblock body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

@@ -1,8 +1,8 @@
 {% extends 'internal/internal.html' %}
 
-{% block internal_heading %}
-<a href="{{ url_for('language', id=course.language.id) }}"> Kurs: {{ course.language.name }} {{ course.level }}</a>
-{% endblock internal_heading %}
+{% block caption %}
+<a href="{{ url_for('language', id=course.language.id) }}">Kurs: {{ course.language.name }} {{ course.level }}</a>
+{% endblock caption %}
 
 
 {% block internal_body %}
@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 {% for attendance in course.applicant_attendances %}
-				{% set applicant = attendance.applicant %}
+                {% set applicant = attendance.applicant %}
                 <tr>
                     <td><a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.id }}</a></td>
                     <td>{{ 'Männlich' if applicant.sex else 'Weiblich' }}</td>

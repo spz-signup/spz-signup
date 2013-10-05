@@ -54,6 +54,8 @@ tools_js = Bundle('js/persona.js',
 # Stylesheet bundles:
 
 all_css = Bundle('css/bootstrap.min.css',
+                 'css/sidebar.css',
+                 'css/scrollbars.css',
                  filters='rcssmin', output='css/packed.css')
 
 

@@ -22,28 +22,55 @@
         {% endblock head %}
     </head>
     <body>
-        {% block navbar %}
-        {% endblock navbar %}
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {% block alert %}
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                    {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>{{ category|capitalize }}:</strong> {{ message }}
+        <div id="wrapper">
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    {% block navbar %}
+                    <li class="sidebar-brand"><a href="{{ url_for('index') }}">Anmeldung</a></li>
+                    <li><a href="http://www.spz.kit.edu/"><span class="glyphicon glyphicon-home"></span> Sprachenzentrum</a></li>
+                    <li><a href="http://www.spz.kit.edu/angebot.php"><span class="glyphicon glyphicon-globe"></span> Kursangebot</a></li>
+                    <li><a href="http://www.spz.kit.edu/gebuehren.php"><span class="glyphicon glyphicon-euro"></span> Gebühren</a></li>
+                    <li><a href="http://www.spz.kit.edu/257.php"><span class="glyphicon glyphicon-calendar"></span> Barzahlungstermine</a></li>
+                    <li><a href="http://www.spz.kit.edu/253.php"><span class="glyphicon glyphicon-info-sign"></span> Informationen</a></li>
+                    <li><a href="{{ url_for('licenses') }}"><span class="glyphicon glyphicon-copyright-mark"></span> Lizenzen</a></li>
+                    {% endblock navbar %}
+                </ul>
+            </div>
+            <div id="page-content-wrapper">
+                <div class="content-header">
+                    <h1>
+                        <a id="menu-toggle" href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>
+                        {% block caption %}
+                        Anmeldung
+                        {% endblock caption %}
+                    </h1>
+                    {% block subcaption %}
+                    {% endblock subcaption %}
+                </div>
+                <div class="page-content inset">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% block alert %}
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>{{ category|capitalize }}:</strong> {{ message }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                                {% endblock alert %}
+                            </div>
+                        </div>
+                        <hr>
+                        {% block body %}
+                        {% endblock body %}
                     </div>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                    {% endblock alert %}
                 </div>
             </div>
-            {% block body %}
-            {% endblock body %}
         </div>
     </body>
 
@@ -52,6 +79,14 @@
     {% endassets %}
 
     {% block scripts %}
+    <script>
+        "use strict";
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("active");
+        });
+    </script>
+
     <script>
         "use strict";
 

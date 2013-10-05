@@ -1,13 +1,12 @@
 {% extends 'internal/internal.html' %}
 
-{% block internal_heading %}
-<a href="{{ url_for('all_courses') }}"> Liste aller Kurse</a>
+{% block caption %}
+Liste aller Kurse
+{% endblock caption %}
 
-{% endblock internal_heading %}
 
 {% block internal_body %}
-
-<h3><a href="{ url_for('notifications') }}"> Mail an alle Kursteilnehmer</a></h3>
+<h3><a href="{ url_for('notifications') }}">Mail an alle Kursteilnehmer</a></h3>
 <h2>Kurs: {{ c.language.name }} {{ c.level }}</h2>
 
 <div class="row">
@@ -45,5 +44,4 @@
     </div>
 </div>
 {% endblock internal_body %}
-
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

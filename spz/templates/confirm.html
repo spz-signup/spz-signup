@@ -1,15 +1,12 @@
 {% extends 'baselayout.html' %}
 
+{% block caption %}
+Ihre Registrierung war erfolgreich
+{% endblock caption %}
+
+
 {% block body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="page-header">
-            <h4>Ihre Registrierung war erfolgreich!</h4>
-        </div>
-    </div>
-</div>
-<div class="row">
-<<<<<<< HEAD
 <p>{{ history }}</p>
 <p>{{ erg }}</p>
 {% for h in history %} 
@@ -36,9 +33,8 @@
 
 
 =======
+=======
     <p>{{ evaluated }}</p>
->>>>>>> d005e0ce2a62d0bc4970d4ae75a34746188c6b2d
 </div>
-
 {% endblock body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

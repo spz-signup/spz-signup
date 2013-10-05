@@ -24,62 +24,7 @@ from spz.forms import SignupForm, NotificationForm
 def index():
     form = SignupForm()
 
-<<<<<<< HEAD
-    if form.validate_on_submit():
-        erg = BerErg(form)
-        flash(u'Ihre Angaben waren plausibel', 'success')
-        return render_template('confirm.html', erg=erg)
-
-    return dict(form=form)
-
-
-#hier werden die Teilnahmebedingunen geprüft 
-def BerErg(form):
-    
-
-    bestApproval = 0
-    course = models.Course.query.get(form.course.data)
-    language = models.Language.query.get(course.language_id)
-
-    kurs = 'Kurs: %s %s (kurs_id=%s) ' % (language.name, course.level, course.id)
-    history = [kurs]
-
-    if language.name == 'English':
-        isEnglish = 'Englisch'
-        approval = [a.percent for a in models.Approval.query.filter_by(tag = form.tag.data).all()]
-        if len(approval) == 0:
-            history.append(u'für Englisch nicht zugelassen (link zur Anmeldemaske ohne Englischkurse) ')
-            return dict (history=history)
-        
-        bestApproval = max(approval) if approval else 0
-        if bestApproval < 50: # dummy value
-            history.append('fuer Englisch dieser Stufe nicht zugelassen (link zur Anmeldemaske mit eingeschraenkten Englischkursen) ')
-            return  dict (history=history) ## TODO Tabelle mit Kursen um Grenzen erweitern
-    else:
-        isEnglish = 'nicht Englisch'
-         
-
-    occupancy = models.Attendance.query.filter_by(course_id = form.course.data).count()
-    c = models.Course.query.filter_by(id = form.course.data).first()
-    regularOffer = c.limit
-    howFull = 'Ihr Platz %s von %s' % (occupancy, regularOffer)
-    if occupancy > regularOffer:
-        s = models.StateOfAtt.query.filter_by(name = 'Warteliste')
-        history.append(u'Warteliste')
-#        insertAttendance(c,s)
-    else:
-        history.append(u'Fester Platz')
-    
-
-    isStudent = True if models.Registration.query.filter_by(rnumber = form.tag.data).first() else False
-    if not isStudent:
-        s = models.StateOfAtt.query.filter_by(name = 'Bar zu bezahlen')
-        history.append(u'Gebührenpflichtig')
-    else:
-        history.append(u'Auf der Matrikelliste')
-=======
-    evaluated = []  # XXX: remove this
->>>>>>> d005e0ce2a62d0bc4970d4ae75a34746188c6b2d
+    evaluated = []  # XXX: remove this later
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
@@ -117,40 +62,6 @@ def BerErg(form):
 
     return dict(form=form)
 
-<<<<<<< HEAD
-        # belege Kurs
-        try:
-            retrievedFromSystem.add_course_attendance(c, s, g)
-            db.session.commit()
-        except (FlushError) as e:
-            db.session.rollback()
-            flash(u'Diesen Kurs haben Sie bereits belegt): {0}'.format(e), 'danger')                
-    else:
-        numberOfAtt = 0
-        mail = form.mail.data
-        tag = form.tag.data
-        sex = True if form.sex.data == 1 else False
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        phone = form.phone.data
-
-        # for KIT students only
-        degree = models.Degree.query.get_or_404(form.degree.data) if form.degree.data else None
-        semester = form.semester.data if form.semester.data else None
-        origin  = models.Origin.query.get_or_404(form.origin.data) if form.origin.data else None
-            
-        applicant = models.Applicant(mail, tag, sex, first_name, last_name, phone, degree, semester, origin)
-        applicant.add_course_attendance(c, s, g)
-        
-        db.session.add(applicant)
-        db.session.commit()
-
-
-    erg = dict(a=who, b=mat, c=mail, d=course, e=stud, f=englishApproval, g=NOA, h=howFull, i=isEnglish, j=price)
-    return history
-    return erg
-=======
->>>>>>> d005e0ce2a62d0bc4970d4ae75a34746188c6b2d
 
 @upheaders
 @templated('licenses.html')

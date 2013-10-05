@@ -59,7 +59,7 @@ class SignupForm(Form):
                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
     origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
-    tag = TextField(u'Matrikelnummer', [validators.Optional(),
+    tag = TextField(u'Identifikation', [validators.Optional(),
                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
     degree = SelectField(u'Studiengang', [validators.Optional()], coerce=int)
