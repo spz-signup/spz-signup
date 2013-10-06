@@ -147,8 +147,8 @@ def notifications():
 
     if form.validate_on_submit():
         try:
-            # TODO: send only to users that attend form.get_course()
-            msg = Message(sender=g.user, subject=form.mail_subject.data, body=form.mail_body.data, recipients=None)
+            # TODO: CC, BCC
+            msg = Message(sender=g.user, subject=form.mail_subject.data, body=form.mail_body.data, recipients=form.get_recipients())
             mail.send(msg)
             flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))

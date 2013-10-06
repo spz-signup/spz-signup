@@ -15,8 +15,8 @@ Mail Zentrale
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Optionale Angaben</legend>
-                    {{ render_input(form.mail_cc) }}
-                    {{ render_input(form.mail_bcc) }}
+                    {{ render_input(form.mail_cc, required=False) }}
+                    {{ render_input(form.mail_bcc, required=False) }}
                 </fieldset>
                 <fieldset>
                     <legend>Benötigte Angaben</legend>
@@ -24,7 +24,7 @@ Mail Zentrale
                     {{ render_textarea(form.mail_body) }}
                 </fieldset>
                     <legend>Empfänger der Mail</legend>
-                    {{ render_option(form.mail_course) }}
+                    {{ render_option(form.mail_courses, multiple=True) }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
