@@ -177,13 +177,6 @@ def language(id):
 
 @upheaders
 @auth_required
-@templated('internal/all_courses.html')
-def all_courses():
-    return dict(courses=models.Course.query.order_by(models.Course.id.asc()).all())
-
-
-@upheaders
-@auth_required
 @templated('internal/course_attendances.html')
 def course_attendances(id):
     return dict(course=models.Course.query.get_or_404(id))

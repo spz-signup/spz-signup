@@ -13,6 +13,7 @@ Kurslisten
                 <tr>
                     <th>Sprache</th>
                     <th>Anzahl der Kurse</th>
+                    <th>Anzahl der Plätze (!)</th>
                     <th>Anzahl der Teilnehmer (!)</th>
                 </tr>
             </thead>
@@ -21,6 +22,7 @@ Kurslisten
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
                     <td>{{ language.courses.count() }}</td>
+                    <td>?</td>
                     <td>?</td>
                 </tr>
                 {% endfor %}

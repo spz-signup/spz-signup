@@ -4,7 +4,6 @@
 <li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
 <li><a href="{{ url_for('datainput') }}"><span class="glyphicon glyphicon-import"></span> Dateneingabe</a></li>
-<li><a href="{{ url_for('all_courses') }}"><span class="glyphicon glyphicon-list"></span> Alle Kurse</a></li>
 <li><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
 <li><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
 <li><a href="{{ url_for('internal', todo='todo') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
