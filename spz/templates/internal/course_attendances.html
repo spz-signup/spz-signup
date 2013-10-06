@@ -28,16 +28,15 @@ Kurs: {{ course.language.name }} {{ course.level }}
             </thead>
             <tbody>
                 {% for attendance in course.applicant_attendances %}
-                {% set applicant = attendance.applicant %}
                 <tr>
-                    <td>{{ 'Herr' if applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }} {{ applicant.last_name }}</a></td>
-                    <td><a>{{ applicant.mail }}</a></td>
-                    <td>{{ applicant.phone }}</td>
-                    <td>xxx</td>
-                    <td>{{ applicant.origin.name }}</td>
-                    <td>{{ applicant.semester }}</td>
-                    <td>{{ applicant.degree.name }}</td>
-                    <td>{{ applicant.tag }}</td>
+                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }} {{ attendance.applicant.last_name }}</a></td>
+                    <td><a>{{ attendance.applicant.mail }}</a></td>
+                    <td>{{ attendance.applicant.phone }}</td>
+                    <td>{{ attendance.status.name }}</td>
+                    <td>{{ attendance.applicant.origin.name }}</td>
+                    <td>{{ attendance.applicant.semester }}</td>
+                    <td>{{ attendance.applicant.degree.name }}</td>
+                    <td>{{ attendance.applicant.tag }}</td>
                     <td><a>Entfernen</a></td>
                 </tr>
                 {% endfor %}

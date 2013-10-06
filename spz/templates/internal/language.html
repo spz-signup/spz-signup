@@ -12,7 +12,7 @@ Sprache: {{ language.name }}
         <dl>
             <dt>Anmeldebegin</dt>
             <dd class="fmt-datetime">{{ language.signup_begin }}</dd>
-            <dt>Anmeldeende</dt>
+            <dt>Anmeldeschluss</dt>
             <dd class="fmt-datetime">{{ language.signup_end }}</dd>
         </dl>
     </div>
@@ -34,7 +34,7 @@ Sprache: {{ language.name }}
                 {% for course in language.courses.all() %}
                 <tr>
                     <td><a href="{{ url_for('course_attendances', id=course.id) }}">{{ language.name }} {{ course.level }}</a></td>
-                    <td>{{ course.level }}</td>
+                    <td>{{ course.applicant_attendances|count }}</td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.price }}</td>
                     <td><a href="">Drucken</a></td>
