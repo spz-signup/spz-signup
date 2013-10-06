@@ -179,6 +179,10 @@ class Course(db.Model):
     def is_allowed(self, applicant):
         return self.rating_lowest <= applicant.best_english_result() <= self.rating_highest
 
+    # TODO:
+    def is_full(self):
+        return False
+
 
 class Language(db.Model):
     """Represents a language for a :py:class:`course`.

@@ -34,12 +34,13 @@ def index():
             flash(u'Sie haben nicht die vorausgesetzten Englischtest Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
-        # TODO:
-        #if course.full():
-            #waiting
-        #else:
-            #attends
-        status = models.StateOfAtt.query.first()
+        if course.is_full():
+            evaluated.append(">>> waiting")
+            status = models.StateOfAtt.query.filter_by(id=1).first()
+        else:
+            evaluated.append(">>> attends")
+            status = models.StateOfAtt.query.filter_by(id=2).first()
+        evaluated.append(status.name)
 
 
         if applicant.has_to_pay():
@@ -158,6 +159,20 @@ def notifications():
 
 @upheaders
 @auth_required
+@templated('internal/lists.html')
+def lists():
+    return dict(languages=models.Language.query.order_by(models.Language.name).all())
+
+
+@upheaders
+@auth_required
+@templated('internal/language.html')
+def language(id):
+    return dict(language=models.Language.query.get_or_404(id))
+
+
+@upheaders
+@auth_required
 @templated('internal/all_courses.html')
 def all_courses():
     return dict(courses=models.Course.query.order_by(models.Course.id.asc()).all())
@@ -172,23 +187,9 @@ def course_attendances(id):
 
 @upheaders
 @auth_required
-@templated('internal/lists.html')
-def lists():
-    return dict(languages=models.Language.query.order_by(models.Language.name).all())
-
-
-@upheaders
-@auth_required
 @templated('internal/applicant.html')
 def applicant(id):
     return dict(applicant = models.Applicant.query.get_or_404(id))
-
-
-@upheaders
-@auth_required
-@templated('internal/language.html')
-def language(id):
-    return dict(language=models.Language.query.get_or_404(id))
 
 
 @upheaders
