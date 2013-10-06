@@ -18,7 +18,8 @@ Anmeldung
                     {{ render_input(form.first_name, placeholder='Max') }}
                     {{ render_input(form.last_name, placeholder='Mustermann') }}
                     {{ render_input(form.phone) }}
-                    {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"') }}
+                    {# mail needs an help-block because we write the suggestion in it #}
+                    {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"', help=' ') }}
                     {{ render_option(form.origin) }}
                     {{ render_input(form.tag, help='Falls vorhanden Matrikelnummer oder vom Sprachenzentrum ausgestellte ID') }}
                 </fieldset>
@@ -75,11 +76,16 @@ Anmeldung
             topLevelDomains: mailcheckDomains['topLevelDomains'],
 
             suggested: function(element, suggestion) {
-                console.log(suggestion)
+                $('#mail').parent().children('.help-block').html('Meinten Sie <em><a id=\'suggestion\'>' + suggestion['full'] + '</a></em>?');
+
+                $('#suggestion').click(function(e) {
+                    $('#mail').val($('#suggestion').text());
+                    $('#mail').parent().children('.help-block').empty();
+                });
             },
 
             empty: function(element) {
-                // nop
+                $('#mail').parent().children('.help-block').empty();
             }
         });
     });
