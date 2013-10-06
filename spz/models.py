@@ -180,8 +180,17 @@ class Course(db.Model):
         return self.rating_lowest <= applicant.best_english_result() <= self.rating_highest
 
     # TODO:
+    def number_of_attendances(self):
+        ca = self.applicant_attendances
+        anz = 0
+        for x in ca:
+            if x.status.id == 2 or x.status.id == 4:
+                anz += 1
+        return anz
+
     def is_full(self):
-        return False
+        return False if self.number_of_attendances() < self.limit else True
+
 
 
 class Language(db.Model):

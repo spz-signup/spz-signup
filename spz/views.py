@@ -34,17 +34,21 @@ def index():
             flash(u'Sie haben nicht die vorausgesetzten Englischtest Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
+        evaluated.append(course.number_of_attendances())
+        evaluated.append(course.is_full())
+
         if course.is_full():
             evaluated.append(">>> waiting")
             status = models.StateOfAtt.query.filter_by(id=1).first()
         else:
             evaluated.append(">>> attends")
             status = models.StateOfAtt.query.filter_by(id=2).first()
-        evaluated.append(status.name)
-
 
         if applicant.has_to_pay():
+            status = models.StateOfAtt.query.filter_by(id=4).first()
             evaluated.append(">>> has to pay")
+
+        evaluated.append(status.name)
 
         # Run the final insert isolated in a transaction, with rollback semantics
         try:
