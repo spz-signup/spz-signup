@@ -146,12 +146,38 @@ class NotificationForm(Form):
     mail_bcc = TextField('BCC', [validators.Optional()])
 
 
-class ApplicantForm(Form):
+class ApplicantForm(Form): #TODO mail, phone
     """Represents the form for editing an applicant and his/her attendances.
 
     """
+    applicant = None
+    first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
+    last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
+    phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'), validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
+    tag = TextField(u'Identifikation', [validators.Optional(), validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    status = SelectField(u'Status', [validators.Required(u'Status muss angegeben werden')], coerce=int)
+    origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(ApplicantForm, self).__init__(*args, **kwargs)
+        self.origin.choices = origins_to_choicelist()
+
+    def populate(self, applicant):
+        self.applicant = applicant
+        self.first_name.data = self.applicant.first_name
+        self.last_name.data = self.applicant.last_name
+        self.mail.data = self.applicant.mail
+        self.phone.data = self.applicant.phone
+        self.tag.data = self.applicant.tag
+        
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_courses(self):
+        return self.applicant.course if self.applicant else None
+
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

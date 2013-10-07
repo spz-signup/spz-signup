@@ -16,7 +16,7 @@ from sqlalchemy.orm.exc import FlushError
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
-from spz.forms import SignupForm, NotificationForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm
 
 
 @upheaders
@@ -31,7 +31,7 @@ def index():
         course = form.get_course()
 
         if course.is_english() and not course.is_allowed(applicant):
-            flash(u'Sie haben nicht die vorausgesetzten Englischtest Ergebnisse um diesen Kurs zu wählen', 'danger')
+            flash(u'Sie haben nicht die vorausgesetzten Englischtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
         evaluated.append(course.occupancy())
@@ -186,7 +186,29 @@ def course_attendances(id):
 @auth_required
 @templated('internal/applicant.html')
 def applicant(id):
-    return dict(applicant = models.Applicant.query.get_or_404(id))
+
+    applicant = models.Applicant.query.get_or_404(id)
+    form = ApplicantForm()
+
+    if form.validate_on_submit():
+
+        try:
+
+            applicant.first_name = form.first_name.data
+            applicant.last_name = form.last_name.data
+            applicant.mail = form.mail.data
+            applicant.phone = form.phone.data
+            applicant.tag = form.tag.data
+
+            db.session.commit()
+            flash(u'Der Bewerber konnte aktualisiert werden ', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Der Bewerber konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
+            return dict(form=form)
+
+    form.populate(applicant)
+    return dict(form=form)
 
 
 @upheaders

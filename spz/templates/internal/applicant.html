@@ -2,63 +2,52 @@
 {% from 'formhelpers.html' import render_input, render_option %}
 
 {% block caption %}
-Bewerber: {{ applicant.first_name ~ " " ~ applicant.last_name }}
+Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 {% endblock caption %}
 
 
 {% block internal_body %}
 <div class="row">
     <div class="col-md-12">
-		<form class="form-horizontal" role="form">
-			<div class="form-group">
-				<label for="input_first_name" class="col-lg-2 control-label">Vorname</label>
-				<div class="col-lg-10">
-					<input type="first_name" class="form-control" id="input_first_name" value="{{ applicant.first_name }}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="input_last_name" class="col-lg-2 control-label">Nachname</label>
-				<div class="col-lg-10">
-					<input type="last_name" class="form-control" id="input_last_name" value="{{ applicant.last_name }}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="input_mail" class="col-lg-2 control-label">E-Mail</label>
-				<div class="col-lg-10">
-					<input type="mail" class="form-control" id="input_mail" value="{{ applicant.mail }}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="input_phone" class="col-lg-2 control-label">Telefon</label>
-				<div class="col-lg-10">
-					<input type="phone" class="form-control" id="input_phone" value="{{ applicant.phone }}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="input_tag" class="col-lg-2 control-label">Identifikation</label>
-				<div class="col-lg-10">
-					<input type="tag" class="form-control" id="input_tag" value="{{ applicant.tag }}">
-				</div>
-			</div>
+		<form class="form-horizontal" method="post">
+			{{ form.hidden_tag() }}
+			<fieldset>
+				<legend>Persönliche Angaben</legend>
+				{{ render_input(form.first_name, required=False) }}
+				{{ render_input(form.last_name, required=False) }}
+				{{ render_input(form.phone, required=False) }}
+				{{ render_input(form.mail, required=False) }}
+				{{ render_input(form.tag, required=False) }}
+				{{ render_option(form.origin) }}
+			</fieldset>
 
-			{% for attendance in applicant.course %}
+			<fieldset>
+				<legend>Kurswünsche</legend>
+				{% for attendance in form.get_courses() %}
+					<div class="form-group">
+						<label for="input_course" class="col-lg-2 control-label">
+							<a href="{{ url_for('course_attendances', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+						</label>
+						<div class="col-lg-10">
+							<input type="course" class="form-control" id="input_course" value="{{attendance.status.name}}">
+						</div>
+					</div>
+				{% endfor %}
+			</fieldset>
+
+			<fieldset>
 				<div class="form-group">
-					<label for="input_tag" class="col-lg-2 control-label">
-						<a href="{{ url_for('course_attendances', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
-					</label>
-					<div class="col-lg-10">
-						<input type="tag" class="form-control" id="input_tag" value="{{attendance.status.name}}">
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">Änderungen speichern</button>
 					</div>
 				</div>
-			{% endfor %}
-
-			<div class="form-group">
-				<div class="col-lg-offset-2 col-lg-10">
-					<button type="submit" class="btn btn-default">Änderungen speichern</button>
-				</div>
-			</div>
+			</fieldset>
+			
 		</form>
     </div>
+=======
+=======
+    <p>{{ form.data }}</p>
 </div>
 
 {% endblock internal_body %}

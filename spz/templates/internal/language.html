@@ -24,10 +24,10 @@ Sprache: {{ language.name }}
                 <tr>
                     <th>Kurs </th>
                     <th>Teilnehmer<br>gesamt</th>
-                    <th>Teilnehmer<br>fester Platz</th>
-                    <th>Teilnehmer<br>gebührenfrei</th>
+                    <th>Teilnehmer<br>Warteliste (!)</th>
+                    <th>Teilnehmer<br>gebührenfrei (!)</th>
                     <th>Maximale<br>Teilnehmer</th>
-                    <th>Preisbr<br>in &euro;</th>
+                    <th>Preis<br>in &euro;</th>
                     <th>Anwesenheits-<br>liste</th>
                     <th>Teilnehmer-<br>liste</th>
                 </tr>
@@ -37,8 +37,8 @@ Sprache: {{ language.name }}
                 <tr>
                     <td><a href="{{ url_for('course_attendances', id=course.id) }}">{{ language.name }} {{ course.level }}</a></td>
                     <td>{{ course.applicant_attendances|count }}</td>
-                    <td>xxx</td>
-                    <td>xxx</td>
+                    <td>{{ course.applicant_attendances|count }}</td>
+                    <td>{{ course.applicant_attendances|count }}</td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.price }}</td>
                     <td><a href="">Drucken</a></td>
