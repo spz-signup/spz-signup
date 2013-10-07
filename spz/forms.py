@@ -174,6 +174,8 @@ class ApplicantForm(Form): #TODO mail, phone
 
     origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
+    semester = IntegerField(u'Fachsemester', [validators.Optional()])
+
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
         self.origin.choices = origins_to_choicelist()
@@ -185,6 +187,7 @@ class ApplicantForm(Form): #TODO mail, phone
         self.mail.data = self.applicant.mail
         self.phone.data = self.applicant.phone
         self.tag.data = self.applicant.tag
+        self.origin.data = self.applicant.origin_id
 
     def get_applicant(self):
         return self.applicant
