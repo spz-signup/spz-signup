@@ -156,7 +156,7 @@ class NotificationForm(Form):
     def get_recipients(self):
         attendances = [course.applicant_attendances for course in self.get_courses()]
         merged = sum(attendances, [])  # merge list of attendances per course [[], [], ..] into one list
-        recipients = [attendance.applicant.mail for attendance in merged if not attendance.is_waiting()]
+        recipients = [attendance.applicant.mail for attendance in merged if not attendance.status.is_waiting()]
 
         return recipients
 

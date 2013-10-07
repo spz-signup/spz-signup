@@ -26,7 +26,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{% for attendance in form.get_courses() %}
 					<div class="form-group">
 						<label for="input_course" class="col-lg-2 control-label">
-							<a href="{{ url_for('course_attendances', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
 						</label>
 						<div class="col-lg-10">
 							<input type="course" class="form-control" id="input_course" value="{{attendance.status.name}}">

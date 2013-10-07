@@ -50,9 +50,6 @@ class Attendance(db.Model):
     def __repr__(self):
         return '<Attendance %r %r %r>' % (self.applicant, self.course, self.status)
 
-    def is_waiting(self):  # XXX: Is there a better way to ckeck this?
-        return 'warte' in self.status.name.lower()
-
 
 class Applicant(db.Model):
     """Represents a person, applying for one or more :py:class:`Course`.
@@ -132,7 +129,7 @@ class Applicant(db.Model):
         return best
 
     def has_to_pay(self):  # XXX: Better way to check for waiting?
-        attends = len(filter(lambda attendance: not attendance.is_waiting(), self.course))
+        attends = len(filter(lambda attendance: not attendance.status.is_waiting(), self.course))
         return not self.is_student() or attends > 0
 
 
@@ -179,12 +176,20 @@ class Course(db.Model):
     def is_allowed(self, applicant):
         return self.rating_lowest <= applicant.best_english_result() <= self.rating_highest
 
-    # TODO:
-    def occupancy(self):
-        return len(filter(lambda attendance: not attendance.is_waiting(), self.applicant_attendances))
+    def number_of_waiting_applicants(self):
+        return len(filter(lambda attendance: attendance.status.is_waiting(), self.applicant_attendances))
+
+    def number_of_active_applicants(self):
+        return len(self.applicant_attendances) - self.number_of_waiting_applicants()
 
     def is_full(self):
-        return False if self.occupancy() < self.limit else True
+        return self.number_of_waiting_applicants() >= self.limit 
+
+    def number_of_paying_applicants(self):
+        return len(filter(lambda attendance: not attendance.status.is_waiting() and attendance.status.is_paying(), self.applicant_attendances))
+
+    def number_of_free_applicants(self):
+        return len(filter(lambda attendance: not attendance.status.is_waiting() and not attendance.status.is_paying(), self.applicant_attendances))
 
 
 
@@ -269,6 +274,13 @@ class StateOfAtt(db.Model):
 
     def __repr__(self):
         return '<StateOfAtt %r>' % self.name
+
+    ## TODO
+    def is_waiting(self):
+        return self.id in [1]
+        
+    def is_paying(self):
+        return self.id in [3,4,5]
 
 
 class Origin(db.Model):
