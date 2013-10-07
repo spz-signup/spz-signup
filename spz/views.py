@@ -34,7 +34,6 @@ def index():
             flash(u'Sie haben nicht die vorausgesetzten Englischtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
-        evaluated.append(course.occupancy())
         evaluated.append(course.is_full())
 
         if course.is_full():
