@@ -185,7 +185,6 @@ class ApplicantForm(Form): #TODO mail, phone
         self.mail.data = self.applicant.mail
         self.phone.data = self.applicant.phone
         self.tag.data = self.applicant.tag
-        
 
     def get_applicant(self):
         return self.applicant

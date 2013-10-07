@@ -47,7 +47,9 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
     </div>
 =======
 =======
-    <p>{{ form.data }}</p>
+    <p>form.data: {{ form.data }}</p>
+    <p>form.origin.data: {{ form.origin.data }}</p>
+    <p>form.origin: {{ form.origin }}</p>
 </div>
 
 {% endblock internal_body %}

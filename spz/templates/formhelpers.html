@@ -38,7 +38,7 @@
         <select{% if multiple %} multiple{% endif %} class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
             <option>{{ placeholder|default('', true) }}</option>
             {% for id, name in field.choices %}
-            <option value="{{ id }}">{{ name }}</option>
+			<option value="{{ id }}" >{{ name }}</option>
             {% endfor %}
         </select>
         {% for error in field.errors %}

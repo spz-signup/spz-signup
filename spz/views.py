@@ -192,13 +192,6 @@ def applicant(id):
     if form.validate_on_submit():
 
         try:
-
-            applicant.first_name = form.first_name.data
-            applicant.last_name = form.last_name.data
-            applicant.mail = form.mail.data
-            applicant.phone = form.phone.data
-            applicant.tag = form.tag.data
-
             db.session.commit()
             flash(u'Der Bewerber konnte aktualisiert werden ', 'success')
         except Exception as e:
