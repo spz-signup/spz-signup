@@ -267,7 +267,7 @@ class StateOfAtt(db.Model):
     __tablename__ = 'stateofatt'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(25), unique=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
 
     def __init__(self, name):
         self.name = name

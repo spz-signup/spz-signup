@@ -118,6 +118,29 @@ def matrikelnummer():
 
 @upheaders
 @auth_required
+@templated('internal/datainput/status.html')
+def status():
+    if request.method == 'POST':
+        fp = request.files['file_name']
+        if fp:
+            try: 
+                lst = (models.StateOfAtt(line.rstrip('\r\n')) for line in fp)
+                gel = models.StateOfAtt.query.delete()
+                db.session.add_all(lst)
+                db.session.commit()
+                anz = models.StateOfAtt.query.count()
+                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen' % (gel, anz, fp.filename), 'success')
+            except (IndexError, csv.Error) as e:
+                flash(u'Status konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
+
+            return redirect(url_for('internal'))
+        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
+        return redirect(url_for('zulassungen'))
+    return None
+
+
+@upheaders
+@auth_required
 @templated('internal/datainput/zulassungen.html')
 def zulassungen():
     if request.method == 'POST':
