@@ -192,8 +192,14 @@ def applicant(id):
     if form.validate_on_submit():
 
         try:
+            applicant.first_name = form.first_name.data
+            applicant.last_name = form.last_name.data
+            applicant.phone = form.phone.data
+            applicant.mail = form.mail.data
+            applicant.tag = form.tag.data
+##            applicant.origin = form.origin.data
             db.session.commit()
-            flash(u'Der Bewerber konnte aktualisiert werden ', 'success')
+            flash(u'Der Bewerber wurde aktualisiert', 'success')
         except Exception as e:
             db.session.rollback()
             flash(u'Der Bewerber konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
