@@ -37,15 +37,16 @@ def index():
         evaluated.append(course.is_full())
 
         if course.is_full():
-            evaluated.append(">>> waiting")
             status = models.StateOfAtt.query.filter_by(id=1).first()
+            evaluated.append(">>> waiting")
         else:
-            evaluated.append(">>> attends")
-            status = models.StateOfAtt.query.filter_by(id=2).first()
+            if applicant.has_to_pay():
+                status = models.StateOfAtt.query.filter_by(id=3).first()
+                evaluated.append(">>> has to pay")
+            else:
+                status = models.StateOfAtt.query.filter_by(id=2).first()
+                evaluated.append(">>> attends")
 
-        if applicant.has_to_pay():
-            status = models.StateOfAtt.query.filter_by(id=4).first()
-            evaluated.append(">>> has to pay")
 
         evaluated.append(status.name)
 

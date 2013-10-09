@@ -275,12 +275,14 @@ class StateOfAtt(db.Model):
     def __repr__(self):
         return '<StateOfAtt %r>' % self.name
 
-    ## TODO
+    def is_attending(self):
+        return 'frei' in self.name.lower()
+
     def is_waiting(self):
-        return self.id in [1]
+        return 'warte' in self.name.lower()
         
     def is_paying(self):
-        return self.id in [3,4,5]
+        return 'pflicht' in self.name.lower()
 
 
 class Origin(db.Model):
