@@ -221,7 +221,7 @@ def applicant(id):
             applicant.phone = form.phone.data
             applicant.mail = form.mail.data
             applicant.tag = form.tag.data
-##            applicant.origin = form.origin.data
+            applicant.origin = models.Origin.query.get(form.origin.data) 
             db.session.commit()
             flash(u'Der Bewerber wurde aktualisiert', 'success')
         except Exception as e:

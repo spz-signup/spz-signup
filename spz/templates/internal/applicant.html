@@ -18,6 +18,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{{ render_input(form.phone, required=False) }}
 				{{ render_input(form.mail, required=False) }}
 				{{ render_input(form.tag, required=False) }}
+				<p>form.origin: {{ form.origin }}</p>
 				{{ render_option(form.origin) }}
 			</fieldset>
 
@@ -49,7 +50,6 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 =======
     <p>form.data: {{ form.data }}</p>
     <p>form.origin.data: {{ form.origin.data }}</p>
-    <p>form.origin: {{ form.origin }}</p>
 </div>
 
 {% endblock internal_body %}
