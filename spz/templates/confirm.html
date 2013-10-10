@@ -8,7 +8,14 @@ Ihre Registrierung war erfolgreich
 {% block body %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <p>{{ evaluated }}</p>
+        <p>{{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich angemeldet.</p>
+
+        <p>Ihre Kurse:</p>
+        {% for attendance in applicant.course %}
+        <ol>
+            <li>{{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}{% if attendance.waiting %} (Warteliste){% elif attendance.has_to_pay %} (Zu zahlen: {{ attendance.course.price }} Euro){% endif %}</li>
+        </ol>
+        {% endfor %}
     </div>
 </div>
 {% endblock body %}

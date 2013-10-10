@@ -22,8 +22,6 @@ from spz.forms import SignupForm, NotificationForm, ApplicantForm
 def index():
     form = SignupForm()
 
-    evaluated = []
-
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
@@ -52,7 +50,7 @@ def index():
 
         # TODO: send mail now
 
-        return render_template('confirm.html', evaluated=evaluated)  # XXX
+        return render_template('confirm.html', applicant=applicant, course=course)
 
     return dict(form=form)
 
