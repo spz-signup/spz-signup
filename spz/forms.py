@@ -153,7 +153,18 @@ class NotificationForm(Form):
         merged = sum(attendances, [])  # merge list of attendances per course [[], [], ..] into one list
         recipients = [attendance.applicant.mail for attendance in merged if not attendance.waiting]
 
-        return recipients
+        return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
+
+    @staticmethod
+    def _unique_mails_from_str(s):
+        return list(set([mail.strip() for mail in s.split(',') if '@' in mail]))  # XXX
+
+    def get_cc(self):
+        return self._unique_mails_from_str(self.mail_cc.data)
+
+    def get_bcc(self):
+        return self._unique_mails_from_str(self.mail_bcc.data)
+
 
 
 class ApplicantForm(Form): #TODO mail, phone
