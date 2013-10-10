@@ -39,12 +39,6 @@ def insert_resources():
         for origin in res["origins"]:
             db.session.add(Origin(origin))
 
-    with app.open_resource('resource/stateofatts.json') as fd:
-        res = json.load(fd)
-
-        for stateofatt in res["stateofatts"]:
-            db.session.add(StateOfAtt(stateofatt))
-
     with app.open_resource('resource/courses.json') as fd:
         res = json.load(fd)
 

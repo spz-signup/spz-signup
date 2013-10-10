@@ -22,36 +22,27 @@ from spz.forms import SignupForm, NotificationForm, ApplicantForm
 def index():
     form = SignupForm()
 
-    evaluated = []  # XXX: remove this later
+    evaluated = []
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
 
-        if course.is_english() and not course.is_allowed(applicant):
-            flash(u'Sie haben nicht die vorausgesetzten Englischtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
+        if not course.is_allowed(applicant):
+            flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
-        evaluated.append(course.is_full())
-
-        if course.is_full():
-            status = models.StateOfAtt.query.filter_by(id=1).first()
-            evaluated.append(">>> waiting")
-        else:
-            if applicant.has_to_pay():
-                status = models.StateOfAtt.query.filter_by(id=3).first()
-                evaluated.append(">>> has to pay")
-            else:
-                status = models.StateOfAtt.query.filter_by(id=2).first()
-                evaluated.append(">>> attends")
-
-
-        evaluated.append(status.name)
+        if applicant.in_course(course):
+            flash(u'Sie nehmen bereits am Kurs teil', 'danger')
+            return dict(form=form)
 
         # Run the final insert isolated in a transaction, with rollback semantics
         try:
-            # TODO: check if already in this course
-            applicant.add_course_attendance(course, status, form.get_graduation())
+            applicant.add_course_attendance(course, form.get_graduation(),
+                                            waiting=course.is_full(),
+                                            has_to_pay=applicant.has_to_pay(),
+                                            discounted=False)
+
             db.session.add(applicant)
             db.session.commit()
         except Exception as e:
@@ -61,7 +52,7 @@ def index():
 
         # TODO: send mail now
 
-        return render_template('confirm.html', evaluated=evaluated)
+        return render_template('confirm.html', evaluated=evaluated)  # XXX
 
     return dict(form=form)
 
@@ -112,29 +103,6 @@ def matrikelnummer():
             return redirect(url_for('internal'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
         return redirect(url_for('matrikelnummer'))
-    return None
-
-
-@upheaders
-@auth_required
-@templated('internal/datainput/status.html')
-def status():
-    if request.method == 'POST':
-        fp = request.files['file_name']
-        if fp:
-            try: 
-                lst = (models.StateOfAtt(line.rstrip('\r\n')) for line in fp)
-                gel = models.StateOfAtt.query.delete()
-                db.session.add_all(lst)
-                db.session.commit()
-                anz = models.StateOfAtt.query.count()
-                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen' % (gel, anz, fp.filename), 'success')
-            except (IndexError, csv.Error) as e:
-                flash(u'Status konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
-
-            return redirect(url_for('internal'))
-        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('zulassungen'))
     return None
 
 

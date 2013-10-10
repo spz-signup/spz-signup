@@ -40,12 +40,6 @@ def course_to_choicelist():
             for course in models.Course.query.order_by(models.Course.id.asc()).all()]
 
 
-@cache.cached(key_prefix='status')
-def status_to_choicelist():
-    return [(x.id, x.name)
-            for x in models.StateOfAtt.query.order_by(models.StateOfAtt.id.asc()).all()]
-
-
 class SignupForm(Form):
     """Represents the main sign up form.
 
@@ -62,11 +56,11 @@ class SignupForm(Form):
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
     mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
-                                validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
+                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
     origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
     tag = TextField(u'Identifikation', [validators.Optional(),
-                                       validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
     degree = SelectField(u'Studiengang', [validators.Optional()], coerce=int)
     graduation = SelectField(u'Angestrebter Kursabschluss', [validators.Optional()], coerce=int)
@@ -107,7 +101,7 @@ class SignupForm(Form):
         return models.Origin.query.get(self.origin.data)
 
     def get_tag(self):
-        return self.tag.data if self.tag.data else None  # XXX: Why is tag optional?
+        return self.tag.data.strip() if self.tag.data and len(self.tag.data.strip()) > 0 else None  # Empty String to None
 
     def get_degree(self):
         return models.Degree.query.get(self.degree.data) if self.degree.data else None
@@ -123,9 +117,9 @@ class SignupForm(Form):
 
     # Creates an applicant or returns it from the system, if already registered.
     def get_applicant(self):
-        existing = models.Applicant.query.filter(func.lower(models.Applicant.tag) == func.lower(self.get_tag())).first()
+        existing = models.Applicant.query.filter(func.lower(models.Applicant.mail) == func.lower(self.get_mail())).first()
 
-        if existing and existing.mail == self.get_mail():  # XXX: Is this good enough re. duplicate but different form data?
+        if existing:  # XXX
             return existing
 
         return models.Applicant(self.get_mail(), self.get_tag(), self.get_sex(),
@@ -156,7 +150,7 @@ class NotificationForm(Form):
     def get_recipients(self):
         attendances = [course.applicant_attendances for course in self.get_courses()]
         merged = sum(attendances, [])  # merge list of attendances per course [[], [], ..] into one list
-        recipients = [attendance.applicant.mail for attendance in merged if not attendance.status.is_waiting()]
+        recipients = [attendance.applicant.mail for attendance in merged if not attendance.waiting]
 
         return recipients
 

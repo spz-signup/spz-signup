@@ -20,8 +20,10 @@ class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
-       :param status: The :py:class:`StateOfAtt` of the :py:`Attendance`.
        :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
+       :param waiting: Represents the waiting status of this :py:class`Attendance`.
+       :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
+       :param discounted: If this :py:class:`Attendance` is discounted in price.
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
@@ -33,22 +35,27 @@ class Attendance(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
     course = db.relationship("Course", backref="applicant_attendances")
 
-    status_id = db.Column(db.Integer, db.ForeignKey('stateofatt.id'))
-    status = db.relationship("StateOfAtt", backref="attendances")
-
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
     graduation = db.relationship("Graduation", backref="attendances")
 
-    registered = db.Column(db.DateTime())
+    waiting = db.Column(db.Boolean)
+    has_to_pay = db.Column(db.Boolean)
+    discounted = db.Column(db.Boolean)
 
-    def __init__(self, course, status, graduation, registered=datetime.utcnow()):
+    registered = db.Column(db.DateTime())
+    payingdate = db.Column(db.DateTime())
+
+    def __init__(self, course, graduation, waiting, has_to_pay, discounted, registered=datetime.utcnow()):
         self.course = course
-        self.status = status
         self.graduation = graduation
+        self.waiting = waiting
+        self.has_to_pay = has_to_pay
+        self.discounted = discounted
         self.registered = registered
+        self.payingdate = None
 
     def __repr__(self):
-        return '<Attendance %r %r %r>' % (self.applicant, self.course, self.status)
+        return '<Attendance %r %r>' % (self.applicant, self.course)
 
 
 class Applicant(db.Model):
@@ -112,8 +119,8 @@ class Applicant(db.Model):
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
 
-    def add_course_attendance(self, course, status, graduation):
-        attendance = Attendance(course, status, graduation)
+    def add_course_attendance(self, *args, **kwargs):
+        attendance = Attendance(*args, **kwargs)
         self.course.append(attendance)
 
     def remove_course_attendance(self, course):
@@ -123,14 +130,17 @@ class Applicant(db.Model):
         registered = Registration.query.filter(func.lower(Registration.rnumber) == func.lower(self.tag)).first()
         return True if registered else False
 
-    def best_english_result(self):
+    def best_rating(self):
         results = [app.percent for app in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag)).all()]
         best = max(results) if results else 0
         return best
 
-    def has_to_pay(self):  # XXX: Better way to check for waiting?
-        attends = len(filter(lambda attendance: not attendance.status.is_waiting(), self.course))
+    def has_to_pay(self):
+        attends = len(filter(lambda attendance: not attendance.waiting, self.course))
         return not self.is_student() or attends > 0
+
+    def in_course(self, course):
+        return course in [attendance.course for attendance in self.course]
 
 
 class Course(db.Model):
@@ -152,7 +162,7 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
-    level = db.Column(db.String(20))
+    level = db.Column(db.String(120))
     limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
 
@@ -170,26 +180,23 @@ class Course(db.Model):
     def __repr__(self):
         return '<Course %r %r>' % (self.language, self.level)
 
-    def is_english(self):  # XXX: Can this be accomplished in a better way?
-        return "english" in self.language.name.lower()
-
     def is_allowed(self, applicant):
-        return self.rating_lowest <= applicant.best_english_result() <= self.rating_highest
+        return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
     def number_of_waiting_applicants(self):
-        return len(filter(lambda attendance: attendance.status.is_waiting(), self.applicant_attendances))
+        return len(filter(lambda attendance: attendance.waiting, self.applicant_attendances))
 
     def number_of_active_applicants(self):
         return len(self.applicant_attendances) - self.number_of_waiting_applicants()
 
     def is_full(self):
-        return self.number_of_waiting_applicants() >= self.limit 
+        return len(self.applicant_attendances) >= self.limit
 
     def number_of_paying_applicants(self):
-        return len(filter(lambda attendance: not attendance.status.is_waiting() and attendance.status.is_paying(), self.applicant_attendances))
+        return len(filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances))
 
     def number_of_free_applicants(self):
-        return len(filter(lambda attendance: not attendance.status.is_waiting() and not attendance.status.is_paying(), self.applicant_attendances))
+        return len(filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances))
 
 
 
@@ -205,7 +212,7 @@ class Language(db.Model):
     __table_args__ = (db.CheckConstraint('signup_end > signup_begin'),)
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True, nullable=False)
+    name = db.Column(db.String(120), unique=True, nullable=False)
     courses = db.relationship('Course', backref='language', lazy='dynamic')
 
     # Not using db.Interval here, because it needs native db support
@@ -249,40 +256,13 @@ class Graduation(db.Model):
     __tablename__ = 'graduation'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(25), unique=True, nullable=False)
+    name = db.Column(db.String(30), unique=True, nullable=False)
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
         return '<Graduation %r>' % self.name
-
-
-class StateOfAtt(db.Model):
-    """Represents the state of attendance a :py:class:`Applicant` aims for.
-
-       :param name: The state's name
-    """
-
-    __tablename__ = 'stateofatt'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<StateOfAtt %r>' % self.name
-
-    def is_attending(self):
-        return 'frei' in self.name.lower()
-
-    def is_waiting(self):
-        return 'warte' in self.name.lower()
-        
-    def is_paying(self):
-        return 'pflicht' in self.name.lower()
 
 
 class Origin(db.Model):

@@ -80,7 +80,6 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/datainput', views.datainput, ['GET', 'POST']),
           ('/internal/datainput/matrikelnummer', views.matrikelnummer, ['GET', 'POST']),
           ('/internal/datainput/zulassungen', views.zulassungen, ['GET', 'POST']),
-          ('/internal/datainput/status', views.status, ['GET', 'POST']),
 
           ('/internal/notifications', views.notifications, ['GET', 'POST']),
 
