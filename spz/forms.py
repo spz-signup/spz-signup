@@ -50,7 +50,8 @@ class SignupForm(Form):
     """
 
     # This should be a BooleanField, because of select-between-two semantics
-    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')], choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')],
+                      choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
 
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
@@ -101,7 +102,7 @@ class SignupForm(Form):
         return models.Origin.query.get(self.origin.data)
 
     def get_tag(self):
-        return self.tag.data.strip() if self.tag.data and len(self.tag.data.strip()) > 0 else None  # Empty String to None
+        return self.tag.data.strip() if self.tag.data and len(self.tag.data.strip()) > 0 else None  # Empty to None
 
     def get_degree(self):
         return models.Degree.query.get(self.degree.data) if self.degree.data else None
@@ -119,7 +120,7 @@ class SignupForm(Form):
     def get_applicant(self):
         existing = models.Applicant.query.filter(func.lower(models.Applicant.mail) == func.lower(self.get_mail())).first()
 
-        if existing:  # XXX
+        if existing:  # XXX: Return the applicant based on the assumption that the mail _address_ alone is an identidy
             return existing
 
         return models.Applicant(self.get_mail(), self.get_tag(), self.get_sex(),

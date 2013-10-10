@@ -11,7 +11,7 @@ import csv
 from flask import request, redirect, render_template, url_for, flash, g
 from flask.ext.mail import Message
 
-from spz import app, models, mail, db
+from spz import models, mail, db
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
 from spz.forms import SignupForm, NotificationForm, ApplicantForm
@@ -83,10 +83,6 @@ def statistics():
 @templated('internal/datainput.html')
 def datainput():
     return None
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
 @upheaders
@@ -199,13 +195,6 @@ def applicant(id):
 
     form.populate(applicant)
     return dict(form=form)
-
-
-@upheaders
-@auth_required
-@templated('internal/course.html')
-def course(id):
-    return dict(course=models.Course.query.get_or_404(id))
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

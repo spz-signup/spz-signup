@@ -202,7 +202,6 @@ class Course(db.Model):
         return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances)
 
 
-
 class Language(db.Model):
     """Represents a language for a :py:class:`course`.
 
