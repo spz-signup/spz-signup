@@ -183,20 +183,20 @@ class Course(db.Model):
     def is_allowed(self, applicant):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
-    def number_of_waiting_applicants(self):
-        return len(filter(lambda attendance: attendance.waiting, self.applicant_attendances))
-
-    def number_of_active_applicants(self):
-        return len(self.applicant_attendances) - self.number_of_waiting_applicants()
-
     def is_full(self):
         return len(self.applicant_attendances) >= self.limit
 
-    def number_of_paying_applicants(self):
-        return len(filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.applicant_attendances))
+    def get_waiting_applicants(self):
+        return filter(lambda attendance: attendance.waiting, self.applicant_attendances)
 
-    def number_of_free_applicants(self):
-        return len(filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances))
+    def get_active_applicants(self):
+        return filter(lambda attendance: not attendance.waiting, self.applicant_attendances)
+
+    def get_paying_applicants(self):
+        return filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.applicant_attendances)
+
+    def get_free_applicants(self):
+        return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances)
 
 
 
