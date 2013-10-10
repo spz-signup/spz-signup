@@ -30,6 +30,10 @@ def index():
             flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
+        if course.is_overbooked():
+            flash(u'Der gewünschte Kurs inklusive Warteliste ist bereits ausgebucht', 'danger')
+            return dict(form=form)
+
         if applicant.in_course(course):
             flash(u'Sie nehmen bereits am Kurs teil', 'danger')
             return dict(form=form)

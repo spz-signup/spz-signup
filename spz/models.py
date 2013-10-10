@@ -186,6 +186,9 @@ class Course(db.Model):
     def is_full(self):
         return len(self.applicant_attendances) >= self.limit
 
+    def is_overbooked(self):
+        return len(self.applicant_attendances) >= (self.limit * 3)  # Three times the course limit is more than enough
+
     def get_waiting_applicants(self):
         return filter(lambda attendance: attendance.waiting, self.applicant_attendances)
 
