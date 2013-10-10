@@ -193,7 +193,7 @@ class Course(db.Model):
         return len(self.applicant_attendances) >= self.limit
 
     def number_of_paying_applicants(self):
-        return len(filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances))
+        return len(filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.applicant_attendances))
 
     def number_of_free_applicants(self):
         return len(filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances))
