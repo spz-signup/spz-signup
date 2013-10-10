@@ -7,34 +7,9 @@ Ihre Registrierung war erfolgreich
 
 {% block body %}
 <div class="row">
-<p>{{ history }}</p>
-<p>{{ erg }}</p>
-{% for h in history %} 
-<p>{% print h %}</p>
-{% endfor %}
-
-
-<h3>Bereits geprüft : </h3>
-<ul>
-<li>Bei einem Englischkurs Zulässigkeit der Ebene <br>Wenn unzulässig Button zur Anmeldemaske mit gefilterten Kursen</li>
-<li>Festerplatz, Warteliste oder gar nicht anhand der Platznummer </li>
-<li>Gebührenfreiheit für KIT-Studeirende (gültige Matrikelnummer)</li>
-<li>Doppelte Anmeldung zu einem Kurs verhindern</li>
-</ul>
-<h3>Hier muss noch geprüft werden: </h3>
-<ul>
-<li>Gebührenfreiheit für den ersten Kurs (anhand der Anzahl der belegten Kurse)</li>
-<li>Status in die Tabelle Wünsche (attendances) eintragen.</li>
-<li>E-Mail versenden</li>
-<li>Hinweis auf Benachrichtigung per E-Mail </li>
-<li>Button für Drucken des Bilschirmsinhalts </li>
-<li>Link zu einem weiteren Kurs bzw. Hinweis auf Button <b>Zurück</b></li>
-</ul>
-
-
-=======
-=======
-    <p>{{ evaluated }}</p>
+    <div class="col-md-8 col-md-offset-2">
+        <p>{{ evaluated }}</p>
+    </div>
 </div>
 {% endblock body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
