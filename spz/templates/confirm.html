@@ -11,7 +11,7 @@ Ihre Registrierung war erfolgreich
         <p>{{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben. Bei einem Platz auf der Warteliste werden Sie beim eventuellen Nachrücken benachrichtigt.</p>
 
         <p>Ihre Kurse:</p>
-        {% for attendance in applicant.course %}
+        {% for attendance in applicant.attendances %}
         <ol>
             <li>{{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}{% if attendance.waiting %} <strong>(Warteliste)</strong>{% elif attendance.has_to_pay %} <strong>(Zu zahlen: {{ attendance.course.price }} Euro)</strong>{% endif %}</li>
         </ol>

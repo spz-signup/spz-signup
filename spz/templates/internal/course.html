@@ -27,7 +27,7 @@ Kurs: {{ course.language.name }} {{ course.level }}
                 </tr>
             </thead>
             <tbody>
-                {% for attendance in course.applicant_attendances %}
+                {% for attendance in course.attendances %}
                 <tr>
                     <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }} {{ attendance.applicant.last_name }}</a></td>
                     <td><a>{{ attendance.applicant.mail }}</a></td>

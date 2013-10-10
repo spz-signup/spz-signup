@@ -33,7 +33,7 @@ class Attendance(db.Model):
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
 
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
-    course = db.relationship("Course", backref="applicant_attendances")
+    course = db.relationship("Course", backref="attendances")
 
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
     graduation = db.relationship("Graduation", backref="attendances")
@@ -100,7 +100,7 @@ class Applicant(db.Model):
     origin = db.relationship("Origin", backref="applicants")
 
     # See {add,remove}_course_attendance member functions below
-    course = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan')
+    attendances = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan')
 
     registered = db.Column(db.DateTime())
 
@@ -121,13 +121,13 @@ class Applicant(db.Model):
 
     def add_course_attendance(self, *args, **kwargs):
         attendance = Attendance(*args, **kwargs)
-        self.course.append(attendance)
+        self.attendances.append(attendance)
 
     def remove_course_attendance(self, course):
-        self.course = filter(lambda attendance: attendance.course != course, self.course)
+        self.attendances = filter(lambda attendance: attendance.course != course, self.attendances)
 
     def is_student(self):
-        registered = Registration.query.filter(func.lower(Registration.rnumber) == func.lower(self.tag)).first()
+        registered = Registration.query.filter(func.lower(Registration.number) == func.lower(self.tag)).first()
         return True if registered else False
 
     def best_rating(self):
@@ -136,11 +136,11 @@ class Applicant(db.Model):
         return best
 
     def has_to_pay(self):
-        attends = len(filter(lambda attendance: not attendance.waiting, self.course))
+        attends = len(filter(lambda attendance: not attendance.waiting, self.attendances))
         return not self.is_student() or attends > 0
 
     def in_course(self, course):
-        return course in [attendance.course for attendance in self.course]
+        return course in [attendance.course for attendance in self.attendances]
 
 
 class Course(db.Model):
@@ -184,22 +184,22 @@ class Course(db.Model):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
     def is_full(self):
-        return len(self.applicant_attendances) >= self.limit
+        return len(self.attendances) >= self.limit
 
     def is_overbooked(self):
-        return len(self.applicant_attendances) >= (self.limit * 3)  # Three times the course limit is more than enough
+        return len(self.attendances) >= (self.limit * 3)  # Three times the course limit is more than enough
 
     def get_waiting_applicants(self):
-        return filter(lambda attendance: attendance.waiting, self.applicant_attendances)
+        return filter(lambda attendance: attendance.waiting, self.attendances)
 
     def get_active_applicants(self):
-        return filter(lambda attendance: not attendance.waiting, self.applicant_attendances)
+        return filter(lambda attendance: not attendance.waiting, self.attendances)
 
     def get_paying_applicants(self):
-        return filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.applicant_attendances)
+        return filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.attendances)
 
     def get_free_applicants(self):
-        return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.applicant_attendances)
+        return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.attendances)
 
 
 class Language(db.Model):
@@ -286,31 +286,33 @@ class Origin(db.Model):
 
 
 class Registration(db.Model):
-    """Represents the registration a :py:class:`Applicant` aims for.
+    """Registration number for a :py:class:`Applicant` that is a student.
 
-       :param rnumber: The registration number
+       :param number: The registration number
     """
 
     __tablename__ = 'registration'
 
     id = db.Column(db.Integer, primary_key=True)
-    rnumber = db.Column(db.String(10), unique=True, nullable=False)
+    number = db.Column(db.String(10), unique=True, nullable=False)
 
-    def __init__(self, rnumber):
-        self.rnumber = rnumber
+    def __init__(self, number):
+        self.number = number
 
     def __eq__(self, other):
-        return self.rnumber == other.rnumber
+        return self.number == other.number
 
     def __hash__(self):
         return hash(self.__repr__())
 
     def __repr__(self):
-        return '<Registration %r>' % self.rnumber
+        return '<Registration %r>' % self.number
 
 
+# XXX: This should hole a ref to the specific language the rating is for
+#      it's ok as of now, because we only got english test results.
 class Approval(db.Model):
-    """Represents the approval for English cours a :py:class:`Applicant` aims for.
+    """Represents the approval for English courses a :py:class:`Applicant` aims for.
 
        :param tag: The registration number or other identification
        :param percent: applicant's level for English course

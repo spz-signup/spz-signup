@@ -38,7 +38,7 @@ Sprache: {{ language.name }}
                 {% for course in language.courses.all() %}
                 <tr>
                     <td><a href="{{ url_for('course', id=course.id) }}">{{ language.name }} {{ course.level }}</a></td>
-                    <td>{{ course.applicant_attendances|count }}</td>
+                    <td>{{ course.attendances|count }}</td>
                     <td>{{ course.get_waiting_applicants()|count }}</td>
                     <td>{{ course.get_active_applicants()|count }}</td>
                     <td>{{ course.get_paying_applicants()|count }}</td>

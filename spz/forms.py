@@ -72,9 +72,9 @@ class SignupForm(Form):
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
-        self.populate()
+        self._populate()
 
-    def populate(self):
+    def _populate(self):
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
         self.origin.choices = origins_to_choicelist()
@@ -149,7 +149,7 @@ class NotificationForm(Form):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
 
     def get_recipients(self):
-        attendances = [course.applicant_attendances for course in self.get_courses()]
+        attendances = [course.attendances for course in self.get_courses()]
         merged = sum(attendances, [])  # merge list of attendances per course [[], [], ..] into one list
         recipients = [attendance.applicant.mail for attendance in merged if not attendance.waiting]
 
@@ -198,8 +198,8 @@ class ApplicantForm(Form): #TODO mail, phone
     def get_applicant(self):
         return self.applicant
 
-    def get_courses(self):
-        return self.applicant.course if self.applicant else None
+    def get_attendances(self):
+        return self.applicant.attendances if self.applicant else None
 
 
 
