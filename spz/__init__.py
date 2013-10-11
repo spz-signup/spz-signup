@@ -41,6 +41,14 @@ for name, bundle in bundles.iteritems():
 app.config.from_pyfile('development.cfg')
 #app.config.from_pyfile('production.cfg')
 
+
+# Set up logging before anything else, in order to catch early errors
+if not app.debug:
+    from logging import FileHandler
+    file_handler = FileHandler(app.config['LOGFILE'])
+    app.logger.addHandler(file_handler)
+
+
 # Database handling
 db = SQLAlchemy(app)
 
