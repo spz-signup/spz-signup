@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # This files is only needed for deploying the project with
 # Apache's mod_wsgi. You do not need it while developing.
 
