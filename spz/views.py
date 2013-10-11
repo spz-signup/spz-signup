@@ -26,12 +26,12 @@ def index():
         applicant = form.get_applicant()
         course = form.get_course()
 
-        if not course.is_allowed(applicant):
-            flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
-            return dict(form=form)
-
         if course.is_overbooked():
             flash(u'Der gewünschte Kurs inklusive Warteliste ist bereits ausgebucht', 'danger')
+            return dict(form=form)
+
+        if not course.is_allowed(applicant):
+            flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
         if applicant.in_course(course):
