@@ -37,7 +37,7 @@ def origins_to_choicelist():
 @cache.cached(key_prefix='course')
 def course_to_choicelist():
     return [(course.id, u'{0} {1}{2}'.format(course.language.name, course.level, u' (voll)' if course.is_full() else u''))
-            for course in models.Course.query.order_by(models.Course.id.asc()).all()]
+            for course in models.Course.query.join(models.Language.courses).order_by(models.Language.name).all()]
 
 
 class SignupForm(Form):
