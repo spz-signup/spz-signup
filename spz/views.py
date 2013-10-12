@@ -197,4 +197,11 @@ def applicant(id):
     return dict(form=form)
 
 
+@upheaders
+@auth_required
+@templated('internal/payments.html')
+def payments():
+    return None
+
+
 # vim: set tabstop=4 shiftwidth=4 expandtab:

@@ -96,6 +96,8 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/language/<int:id>', views.language, ['GET']),
           ('/internal/course/<int:id>', views.course, ['GET']),
 
+          ('/internal/payments', views.payments, ['GET']),
+
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]
 
