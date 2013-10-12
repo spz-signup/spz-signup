@@ -1,0 +1,42 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input, render_option %}
+
+{% block caption %}
+Kurswünsche des Bewerbers: 
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-md-12">
+		<form class="form-horizontal" method="post">
+
+		<fieldset>
+				<legend>Kurswünsche</legend>
+				{% for attendance in applicant.get_courses() %}
+					<div class="form-group">
+						<label for="input_course" class="col-lg-2 control-label">
+							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+						</label>
+					</div>
+				{% endfor %}
+			</fieldset>
+
+			<fieldset>
+				<div class="form-group">
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">Änderungen speichern</button>
+					</div>
+				</div>
+			</fieldset>
+			
+		</form>
+    </div>
+=======
+=======
+    <p>applicant.data: {{ applicant.data }}</p>
+</div>
+
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
