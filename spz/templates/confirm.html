@@ -9,7 +9,7 @@ Ihre Registrierung war erfolgreich
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <p>{{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben. Bei einem Platz auf der Warteliste werden Sie beim eventuellen Nachrücken benachrichtigt.</p>
-
+		<p>{{ (applicant.id, course.id) }}</p>
         <p>Ihre Kurse:</p>
         <ol>
         {% for attendance in applicant.attendances %}

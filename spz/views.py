@@ -14,7 +14,7 @@ from flask.ext.mail import Message
 from spz import models, mail, db
 from spz.decorators import templated, auth_required
 from spz.headers import upheaders
-from spz.forms import SignupForm, NotificationForm, ApplicantForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm
 
 
 @upheaders
@@ -42,8 +42,7 @@ def index():
         try:
             applicant.add_course_attendance(course, form.get_graduation(),
                                             waiting=course.is_full(),
-                                            has_to_pay=applicant.has_to_pay(),
-                                            discounted=False)
+                                            has_to_pay=applicant.has_to_pay())
 
             db.session.add(applicant)
             db.session.commit()
@@ -173,7 +172,6 @@ def course(id):
 @auth_required
 @templated('internal/applicant.html')
 def applicant(id):
-
     applicant = models.Applicant.query.get_or_404(id)
     form = ApplicantForm()
 
@@ -202,6 +200,31 @@ def applicant(id):
 @templated('internal/payments.html')
 def payments():
     return None
+
+
+@upheaders
+@auth_required
+@templated('internal/status.html')
+def status(applicant_id, course_id):
+    attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
+    form = StatusForm()
+    
+    if form.validate_on_submit():
+        try:
+            attendance.waiting =    form.waiting.data
+            attendance.has_to_pay = form.has_to_pay.data
+            attendance.discounted = form.discounted.data
+            attendance.paidbycash = form.paidbycash.data
+            attendance.amountpaid = form.amountpaid.data 
+            db.session.commit()
+            flash(u'Der Status wurde aktualisiert', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Der Status konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
+            return dict(form=form, attendance=attendance)
+            
+    form.populate(attendance)
+    return dict(form=form, attendance=attendance)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

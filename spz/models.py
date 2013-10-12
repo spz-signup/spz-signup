@@ -23,7 +23,6 @@ class Attendance(db.Model):
        :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
        :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
-       :param discounted: If this :py:class:`Attendance` is discounted in price.
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
@@ -41,16 +40,20 @@ class Attendance(db.Model):
     waiting = db.Column(db.Boolean)
     has_to_pay = db.Column(db.Boolean)
     discounted = db.Column(db.Boolean)
+    paidbycash = db.Column(db.Boolean)
+    amountpaid = db.Column(db.Integer, db.CheckConstraint('amountpaid >= 0'), nullable=False)
 
     registered = db.Column(db.DateTime())
     payingdate = db.Column(db.DateTime())
 
-    def __init__(self, course, graduation, waiting, has_to_pay, discounted, registered=datetime.utcnow()):
+    def __init__(self, course, graduation, waiting, has_to_pay, registered=datetime.utcnow()):
         self.course = course
         self.graduation = graduation
         self.waiting = waiting
         self.has_to_pay = has_to_pay
-        self.discounted = discounted
+        self.discounted = False
+        self.paidbycash = False
+        self.amountpaid = 0
         self.registered = registered
         self.payingdate = None
 

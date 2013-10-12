@@ -7,7 +7,7 @@
 
 from sqlalchemy import func
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, validators
+from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, validators
 
 from spz import models, cache
 
@@ -171,7 +171,7 @@ class ApplicantForm(Form): #TODO mail, phone
     """Represents the form for editing an applicant and his/her attendances.
 
     """
-    applicant = None
+    applicant = None # really needed?
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
@@ -202,5 +202,22 @@ class ApplicantForm(Form): #TODO mail, phone
         return self.applicant.attendances if self.applicant else None
 
 
+class StatusForm(Form): #TODO mail, phone
+    """Represents the form for applicants attendances and payments.
+
+    """
+    waiting    = BooleanField(u'Auf Warteliste')
+    has_to_pay = BooleanField(u'Muss bezahlen')
+    discounted = BooleanField(u'Ermäßigt')
+    paidbycash = BooleanField(u'Bar bezahlt')
+    amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
+    
+    def populate(self, attendance):
+        self.waiting.data    = attendance.waiting
+        self.has_to_pay.data = attendance.has_to_pay
+        self.discounted.data = attendance.discounted
+        self.paidbycash.data = attendance.paidbycash
+        self.amountpaid.data = attendance.amountpaid
+    
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

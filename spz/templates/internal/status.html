@@ -1,0 +1,45 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input, render_boolean %}
+
+{% block caption %}
+Status: {{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }} {{ attendance.course.language.name ~ " " ~ attendance.course.level }}
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-md-12">
+		<form class="form-horizontal" method="post">
+			{{ form.hidden_tag() }}
+			<fieldset>
+				<legend>Teilnahmestatus</legend>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="{{form.waiting.data}}">
+                        Waiting
+                    </label>
+                </div>
+                {{ render_input(form.waiting,    type="checkbox") }}
+                {{ render_input(form.has_to_pay, type="checkbox") }}
+                {{ render_input(form.discounted, type="checkbox") }}
+                {{ render_input(form.paidbycash, type="checkbox") }}
+                {{ render_input(form.amountpaid, type='number') }}
+			</fieldset>
+
+
+			<fieldset>
+				<div class="form-group">
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">Änderungen speichern</button>
+						<button type="reset" class="btn btn-default">Zurücksetzen</button>
+					</div>
+				</div>
+			</fieldset>
+			
+		</form>
+    </div>
+</div>
+
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
