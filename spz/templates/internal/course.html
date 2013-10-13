@@ -18,11 +18,9 @@ Kurs: {{ course.language.name }} {{ course.level }}
                     <th>Teilnehmer</th>
                     <th>E-Mail</th>
                     <th>Telefon</th>
-                    <th>Status</th>
                     <th>Herkunft</th>
-                    <th>Semester</th>
-                    <th>Studiengang</th>
                     <th>Identifikation</th>
+                    <th>Status</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
@@ -32,12 +30,10 @@ Kurs: {{ course.language.name }} {{ course.level }}
                     <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }} {{ attendance.applicant.last_name }}</a></td>
                     <td><a>{{ attendance.applicant.mail }}</a></td>
                     <td>{{ attendance.applicant.phone }}</td>
-                    <td>TODO</td>
                     <td>{{ attendance.applicant.origin.name }}</td>
-                    <td>{{ attendance.applicant.semester }}</td>
-                    <td>{{ attendance.applicant.degree.name }}</td>
                     <td>{{ attendance.applicant.tag }}</td>
-                    <td><a>Entfernen</a></td>
+                    <td>{{ 'Warteliste' if attendance.waiting else 'Fester Platz'}}{% if not attendance.waiting %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei'}} {% endif %}</td>
+                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id)}}">ändern...</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
