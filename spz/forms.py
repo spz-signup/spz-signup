@@ -202,22 +202,23 @@ class ApplicantForm(Form): #TODO mail, phone
         return self.applicant.attendances if self.applicant else None
 
 
-class StatusForm(Form): #TODO mail, phone
+class StatusForm(Form):
     """Represents the form for applicants attendances and payments.
 
     """
-    waiting    = BooleanField(u'Auf Warteliste')
-    has_to_pay = BooleanField(u'Muss bezahlen')
+
+    waiting = BooleanField(u'Warteliste')
+    has_to_pay = BooleanField(u'Zahlend')
     discounted = BooleanField(u'Ermäßigt')
     paidbycash = BooleanField(u'Bar bezahlt')
     amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
-    
+
     def populate(self, attendance):
-        self.waiting.data    = attendance.waiting
+        self.waiting.data = attendance.waiting
         self.has_to_pay.data = attendance.has_to_pay
         self.discounted.data = attendance.discounted
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
-    
+
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
