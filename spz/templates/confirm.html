@@ -8,15 +8,46 @@ Ihre Registrierung war erfolgreich
 {% block body %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <p>{{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben. Bei einem Platz auf der Warteliste werden Sie beim eventuellen Nachrücken benachrichtigt.</p>
-		<p>{{ (applicant.id, course.id) }}</p>
-        <p>Ihre Kurse:</p>
-        <ol>
+        <p>
+        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben.
+        Bei einem Platz auf der Warteliste werden Sie beim eventuellen Nachrücken benachrichtigt.
+        Bitte notieren Sie sich die <strong>Belegungsnummer</strong> und referenzieren Sie diese bei der Bezahlung.
+        </p>
+
         {% for attendance in applicant.attendances %}
-            <li>{{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}{% if attendance.waiting %} <strong>(Warteliste)</strong>{% elif attendance.has_to_pay %} <strong>(Zu zahlen: {{ attendance.course.price }} Euro)</strong>{% endif %}</li>
+        <div class="panel panel-{{ 'primary' if not attendance.waiting else 'default' }}">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-unstyled">
+                    <li>Belegungsnummer: <strong>A{{ attendance.applicant.id }}C{{ attendance.course.id }}</strong></li>
+                    {% if attendance.waiting %}
+                    <li>Auf Warteliste</li>
+                    {% else %}
+                    <li>Fester Platz</li>
+                    {% if attendance.has_to_pay %}
+                    {% set amount = attendance.course.price if not attendance.discounted else attendance.course.price / 2 %}
+                    <li>Zu zahlen sind: <strong>{{ amount }} Euro</strong></li>
+                    {% endif%}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
         {% endfor %}
-        </ol>
     </div>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    "use strict";
+
+    /* Oh well, what else can we do.. */
+    window.onbeforeunload = function() {
+        return "Belegungsnummer notiert?";
+    }
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
