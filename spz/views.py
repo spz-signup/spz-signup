@@ -129,9 +129,13 @@ def notifications():
 
     if form.validate_on_submit():
         try:
-            msg = Message(sender=g.user, subject=form.mail_subject.data, body=form.mail_body.data,
-                          recipients=form.get_recipients(), cc=form.get_cc(), bcc=form.get_bcc())
+            # Do not leak mail addresses -- bcc, because the message is unique anyway
+            bcc = form.get_bcc() + form.get_recipients()
+
+            msg = Message(sender=g.user, recipients=[g.user], subject=form.mail_subject.data, body=form.mail_body.data,
+                          cc=form.get_cc(), bcc=bcc, reply_to=form.get_reply_to())
             mail.send(msg)
+
             flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
 

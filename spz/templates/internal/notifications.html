@@ -20,6 +20,7 @@ Mail Zentrale
                 </fieldset>
                 <fieldset>
                     <legend>Benötigte Angaben</legend>
+                    {{ render_option(form.mail_reply_to) }}
                     {{ render_input(form.mail_subject) }}
                     {{ render_textarea(form.mail_body) }}
                 </fieldset>

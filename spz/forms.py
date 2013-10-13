@@ -9,7 +9,7 @@ from sqlalchemy import func
 from flask.ext.wtf import Form
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, validators
 
-from spz import models, cache
+from spz import app, models, cache
 
 
 # Cacheable helpers for database fields that are not supposed to change often or quickly
@@ -140,6 +140,8 @@ class NotificationForm(Form):
     mail_cc = TextField('CC', [validators.Optional()])
     mail_bcc = TextField('BCC', [validators.Optional()])
     mail_courses = SelectMultipleField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
+    mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int,
+                                choices=[(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'])])
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
@@ -149,10 +151,9 @@ class NotificationForm(Form):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
 
     def get_recipients(self):
-        attendances = [course.attendances for course in self.get_courses()]
-        merged = sum(attendances, [])  # merge list of attendances per course [[], [], ..] into one list
-        recipients = [attendance.applicant.mail for attendance in merged if not attendance.waiting]
-
+        flatten = lambda x: sum(x, [])
+        attendances = flatten([course.attendances for course in self.get_courses()]) # single list of attendances
+        recipients = [attendance.applicant.mail for attendance in attendances if not attendance.waiting]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
 
     @staticmethod
@@ -165,6 +166,8 @@ class NotificationForm(Form):
     def get_bcc(self):
         return self._unique_mails_from_str(self.mail_bcc.data)
 
+    def get_reply_to(self):
+        return dict([(idx, mail) for (idx, mail) in enumerate(app.config["REPLY_TO"])]).get(self.mail_reply_to.data)
 
 
 class ApplicantForm(Form): #TODO mail, phone
