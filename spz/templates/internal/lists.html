@@ -1,7 +1,7 @@
 {% extends 'internal/internal.html' %}
 
 {% block caption %}
-Kurslisten
+Sprachen:
 {% endblock caption %}
 
 
@@ -13,17 +13,15 @@ Kurslisten
                 <tr>
                     <th>Sprache</th>
                     <th>Anzahl der Kurse</th>
-                    <th>Anzahl der Plätze (!)</th>
-                    <th>Anzahl der Teilnehmer (!)</th>
+                    <th>Anzahl der Plätze</th>
                 </tr>
             </thead>
             <tbody>
-                {% for language in languages %}
+                {% for language, num_courses, num_seats in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
-                    <td>{{ language.courses.count() }}</td>
-                    <td>?</td>
-                    <td>?</td>
+                    <td>{{ num_courses }}</td>
+                    <td>{{ num_seats }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

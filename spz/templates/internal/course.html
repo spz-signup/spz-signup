@@ -1,15 +1,11 @@
 {% extends 'internal/internal.html' %}
 
 {% block caption %}
-Kurs: {{ course.language.name }} {{ course.level }}
+Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.language.name }}</a> {{ course.level }}
 {% endblock caption %}
 
 
 {% block internal_body %}
-<h3><a href="{{ url_for('lists') }}">Liste aller Sprachen</a></h3>
-<h2><a href="{{ url_for('language', id=course.language.id) }}">Liste aller {{ course.language.name }}-Kurse </a></h2>
-<h3><a href="{{ url_for('notifications') }}">Mail an alle Kursteilnehmer</a></h3>
-
 <div class="row">
     <div class="col-md-12">
         <table class="table table-striped">
@@ -21,25 +17,21 @@ Kurs: {{ course.language.name }} {{ course.level }}
                     <th>Herkunft</th>
                     <th>Identifikation</th>
                     <th>Status</th>
-                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
                 {% for attendance in course.attendances %}
                 <tr>
-                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }} {{ attendance.applicant.last_name }}</a></td>
-                    <td><a>{{ attendance.applicant.mail }}</a></td>
+                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }}</a></td>
+                    <td>{{ attendance.applicant.mail }}</td>
                     <td>{{ attendance.applicant.phone }}</td>
                     <td>{{ attendance.applicant.origin.name }}</td>
                     <td>{{ attendance.applicant.tag }}</td>
-                    <td>{{ 'Warteliste' if attendance.waiting else 'Fester Platz'}}{% if not attendance.waiting %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei'}} {% endif %}</td>
-                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id)}}">ändern...</a></td>
+                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}{% if not attendance.waiting %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-		<h3><a href="">Neuen Teilnehmer hinzufügen</a></h3>
-		<p>(Prioritäre Anmeldungen)</p>
     </div>
 </div>
 {% endblock internal_body %}

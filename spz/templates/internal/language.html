@@ -6,7 +6,6 @@ Sprache: {{ language.name }}
 
 
 {% block internal_body %}
-<h3><a href="{{ url_for('lists') }}">Liste aller Sprachen</a></h3>
 <div class="row">
     <div class="col-md-12">
         <dl>
@@ -23,21 +22,21 @@ Sprache: {{ language.name }}
             <thead>
                 <tr>
                     <th>Kurs </th>
-                    <th>Teilnehmer<br>gesamt</th>
-                    <th>Teilnehmer<br>Warteliste</th>
-                    <th>Teilnehmer<br>fester Platz</th>
-                    <th>Teilnehmer<br>geb.-pflicht.</th>
-                    <th>Teilnehmer<br>gebührenfrei</th>
-                    <th>Maximale<br>Teilnehmer</th>
-                    <th>Preis<br>in &euro;</th>
-                    <th>Anwesenheits-<br>liste</th>
-                    <th>Teilnehmer-<br>liste</th>
+                    <th>Teilnehmer gesamt</th>
+                    <th>Teilnehmer Warteliste</th>
+                    <th>Teilnehmer fester Platz</th>
+                    <th>Teilnehmer geb.-pflicht.</th>
+                    <th>Teilnehmer gebührenfrei</th>
+                    <th>Maximale Teilnehmer</th>
+                    <th>Preis in Euro</th>
+                    {# <th>Anwesenheitsliste</th> #}
+                    {# <th>Teilnehmerliste</th> #}
                 </tr>
             </thead>
             <tbody>
                 {% for course in language.courses.all() %}
-                <tr>
-                    <td><a href="{{ url_for('course', id=course.id) }}">{{ language.name }} {{ course.level }}</a></td>
+                <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
+                    <td><a href="{{ url_for('course', id=course.id) }}">{{ course.level }}</a></td>
                     <td>{{ course.attendances|count }}</td>
                     <td>{{ course.get_waiting_applicants()|count }}</td>
                     <td>{{ course.get_active_applicants()|count }}</td>
@@ -45,8 +44,8 @@ Sprache: {{ language.name }}
                     <td>{{ course.get_free_applicants()|count }}</td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.price }}</td>
-                    <td><a href="">Drucken</a></td>
-                    <td><a href="">Drucken</a></td>
+                    {# <td><a href="">Drucken</a></td> #}
+                    {# <td><a href="">Drucken</a></td> #}
                 </tr>
                 {% endfor %}
             </tbody>

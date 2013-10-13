@@ -8,6 +8,8 @@
 import socket
 import csv
 
+from sqlalchemy import func
+
 from flask import request, redirect, render_template, url_for, flash, g
 from flask.ext.mail import Message
 
@@ -183,7 +185,14 @@ def notifications():
 @auth_required
 @templated('internal/lists.html')
 def lists():
-    return dict(languages=models.Language.query.order_by(models.Language.name).all())
+    # list of tuple (lang, aggregated number of courses, aggregated number of seats)
+    lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
+                          .join(models.Course, models.Language.courses) \
+                          .group_by(models.Language) \
+                          .order_by(models.Language.name) \
+                          .all()
+
+    return dict(lang_misc=lang_misc)
 
 
 @auth_required
