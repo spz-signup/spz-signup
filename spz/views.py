@@ -99,7 +99,7 @@ def matrikelnummer():
 
             return redirect(url_for('datainput'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('datainput'))
+        return redirect(url_for('matrikelnummer'))
     return None
 
 
@@ -112,18 +112,21 @@ def zulassungen():
         if fp:
             filecontent = csv.reader(fp, delimiter=';')
             try: 
+                gel = 0
+                if request.form.getlist("delete_old"):
+                    gel = models.Approval.query.delete()
                 lst = [models.Approval(line[0], line[1]) for line in filecontent]
-                gel = models.Approval.query.delete()
                 db.session.add_all(lst)
                 db.session.commit()
-#                anz = models.Approval.query.count()
-                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen' % (gel, len(lst), fp.filename), 'success')
+                anz = models.Approval.query.count()
+                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen, insgesamt %s Einträge' % (gel, len(lst), fp.filename, anz), 'success')
             except (IndexError, csv.Error) as e:
                 flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
+                return redirect(url_for('zulassungen'))
 
             return redirect(url_for('datainput'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('datainput'))
+        return redirect(url_for('zulassungen'))
     return None
 
 
