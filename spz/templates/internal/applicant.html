@@ -22,7 +22,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 			</fieldset>
 
 			<fieldset>
-				<legend>Kurswünsche</legend>
+                <legend>Kurswünsche</legend>
 				{% for attendance in form.get_attendances() %}
 					<div class="form-group">
 						<label for="input_course" class="col-lg-2 control-label">

@@ -13,6 +13,7 @@ Bewerbersuche
                 <tr>
                     <th>Vorname Nachname</th>
                     <th>E-Mail</th>
+                    <th>Herkunft</th>
                     <th>Ident</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -22,6 +23,7 @@ Bewerbersuche
                 <tr>
                     <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }} {{ applicant.last_name }}</a></td>
                     <td>{{ applicant.mail }}</td>
+                    <td>{{ applicant.origin.name }}</td>
                     <td>{{ applicant.tag }}</td>
                     <td><a href="{{ url_for('applicant_attendances', id=applicant.id)}}">Kurswünsche</a></td>
                 </tr>

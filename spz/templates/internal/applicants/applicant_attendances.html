@@ -2,7 +2,7 @@
 {% from 'formhelpers.html' import render_input, render_option %}
 
 {% block caption %}
-Kurswünsche des Bewerbers: 
+Kurswünsche von {{ applicant.first_name ~ " " ~ applicant.last_name }}
 {% endblock caption %}
 
 
@@ -13,7 +13,7 @@ Kurswünsche des Bewerbers:
 
 		<fieldset>
 				<legend>Kurswünsche</legend>
-				{% for attendance in applicant.get_courses() %}
+				{% for attendance in applicant.attendances %}
 					<div class="form-group">
 						<label for="input_course" class="col-lg-2 control-label">
 							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
@@ -22,19 +22,8 @@ Kurswünsche des Bewerbers:
 				{% endfor %}
 			</fieldset>
 
-			<fieldset>
-				<div class="form-group">
-					<div class="col-lg-10 col-lg-offset-2">
-						<button type="submit" class="btn btn-primary">Änderungen speichern</button>
-					</div>
-				</div>
-			</fieldset>
-			
 		</form>
     </div>
-=======
-=======
-    <p>applicant.data: {{ applicant.data }}</p>
 </div>
 
 {% endblock internal_body %}
