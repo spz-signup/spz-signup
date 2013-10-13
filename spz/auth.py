@@ -11,10 +11,8 @@ import requests
 from flask import session, request, json, abort
 
 from spz import app
-from spz.headers import upheaders
 
 
-@upheaders
 def login_handler():
     """Dispatches the authentication; sends the browser's identity assertion.
 
@@ -34,7 +32,6 @@ def login_handler():
     abort(400)
 
 
-@upheaders
 def logout_handler():
     """Logout handling.
 
