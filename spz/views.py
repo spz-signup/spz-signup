@@ -13,11 +13,9 @@ from flask.ext.mail import Message
 
 from spz import models, mail, db
 from spz.decorators import templated, auth_required
-from spz.headers import upheaders
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm
 
 
-@upheaders
 @templated('signup.html')
 def index():
     form = SignupForm()
@@ -58,33 +56,28 @@ def index():
     return dict(form=form)
 
 
-@upheaders
 @templated('licenses.html')
 def licenses():
     return None
 
 
-@upheaders
 @templated('internal/overview.html')
 def internal():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/statistics.html')
 def statistics():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/datainput.html')
 def datainput():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/datainput/matrikelnummer.html')
 def matrikelnummer():
@@ -103,7 +96,6 @@ def matrikelnummer():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/datainput/zulassungen.html')
 def zulassungen():
@@ -127,7 +119,6 @@ def zulassungen():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/notifications.html')
 def notifications():
@@ -147,28 +138,24 @@ def notifications():
     return dict(form=form)
 
 
-@upheaders
 @auth_required
 @templated('internal/lists.html')
 def lists():
     return dict(languages=models.Language.query.order_by(models.Language.name).all())
 
 
-@upheaders
 @auth_required
 @templated('internal/language.html')
 def language(id):
     return dict(language=models.Language.query.get_or_404(id))
 
 
-@upheaders
 @auth_required
 @templated('internal/course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
 
 
-@upheaders
 @auth_required
 @templated('internal/applicant.html')
 def applicant(id):
@@ -195,14 +182,12 @@ def applicant(id):
     return dict(form=form)
 
 
-@upheaders
 @auth_required
 @templated('internal/payments.html')
 def payments():
     return None
 
 
-@upheaders
 @auth_required
 @templated('internal/status.html')
 def status(applicant_id, course_id):
