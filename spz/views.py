@@ -132,6 +132,32 @@ def zulassungen():
 
 
 @auth_required
+@templated('internal/datainput/priority.html')
+def priority():
+    if request.method == 'POST':
+        fp = request.files['file_name']
+        if fp:
+            filecontent = csv.reader(fp, delimiter=';')
+            try: 
+                gel = 0
+                if request.form.getlist("delete_old"):
+                    gel = models.Approval.query.delete()
+                lst = [models.Approval(line[0], line[1]) for line in filecontent]
+                db.session.add_all(lst)
+                db.session.commit()
+                anz = models.Approval.query.count()
+                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen, insgesamt %s Einträge' % (gel, len(lst), fp.filename, anz), 'success')
+            except (IndexError, csv.Error) as e:
+                flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
+                return redirect(url_for('priority'))
+
+            return redirect(url_for('datainput'))
+        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
+        return redirect(url_for('priority'))
+    return None
+
+
+@auth_required
 @templated('internal/notifications.html')
 def notifications():
     form = NotificationForm()

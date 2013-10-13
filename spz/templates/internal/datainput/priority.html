@@ -1,0 +1,19 @@
+{% extends 'internal/internal.html' %}
+
+{% block caption %}
+Prioritäre Anmeldungen
+{% endblock caption %}
+
+
+{% block internal_body %}
+<form method="post" enctype="multipart/form-data">
+    <p>
+    <input type="file" name="file_name"><br>
+    <input type="checkbox" name="delete_old">Bisherige Einträge löschen<br>
+    <input type="submit" value="Einlesen">
+    </p>
+</form>
+
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
