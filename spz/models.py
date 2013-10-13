@@ -8,7 +8,7 @@
 from sqlalchemy import func
 from datetime import datetime
 
-from spz import db
+from spz import app, db
 
 
 # Ressources:
@@ -190,7 +190,7 @@ class Course(db.Model):
         return len(self.attendances) >= self.limit
 
     def is_overbooked(self):
-        return len(self.attendances) >= (self.limit * 3)  # Three times the course limit is more than enough
+        return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
 
     def get_waiting_applicants(self):
         return filter(lambda attendance: attendance.waiting, self.attendances)
