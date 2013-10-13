@@ -97,9 +97,9 @@ def matrikelnummer():
             db.session.commit()
             flash(u'Dateiname war OK %s Zeilen gelöscht %s Zeilen gelesen' % (gel, len(lst)), 'success')
 
-            return redirect(url_for('internal'))
+            return redirect(url_for('datainput'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('matrikelnummer'))
+        return redirect(url_for('datainput'))
     return None
 
 
@@ -121,9 +121,9 @@ def zulassungen():
             except (IndexError, csv.Error) as e:
                 flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
 
-            return redirect(url_for('internal'))
+            return redirect(url_for('datainput'))
         flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('zulassungen'))
+        return redirect(url_for('datainput'))
     return None
 
 
