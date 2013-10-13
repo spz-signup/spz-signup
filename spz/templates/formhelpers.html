@@ -6,7 +6,25 @@
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 2 }}">
-        <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+        <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data != None %} value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+        {% for error in field.errors %}
+        <span class="label label-danger">{{ error }}</span>
+        {% endfor %}
+        {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+
+{% macro render_boolean(field, width=12,help=None) %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
+    <div class="col-lg-{{ width - 2 }}">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} checked="checked"{% endif %}>
+            </label>
+        </div>
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
         {% endfor %}
@@ -20,7 +38,7 @@
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 2 }}">
-        <textarea class="form-control" rows="10" id="{{ field.id }}" name="{{ field.id }}" placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>{% if field.data %}{{ field.data }}{% endif %}</textarea>
+        <textarea class="form-control" rows="10" id="{{ field.id }}" name="{{ field.id }}" placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>{% if field.data != None %}{{ field.data }}{% endif %}</textarea>
         {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
@@ -38,6 +56,7 @@
         <select{% if multiple %} multiple{% endif %} size="{{ size }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
             <option>{{ placeholder|default('', true) }}</option>
             {% for id, name in field.choices %}
+            {# TODO: selection is not remembered with multiple=True, field.data is collection then #}}
             <option value="{{ id }}"{% if id == field.data %} selected="selected"{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
