@@ -11,7 +11,7 @@ import csv
 from flask import request, redirect, render_template, url_for, flash, g
 from flask.ext.mail import Message
 
-from spz import models, mail, db
+from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm
 
@@ -49,8 +49,17 @@ def index():
             flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'danger')
             return dict(form=form)
 
-        # TODO: send mail now
+        # Send confirmation mail now
+        try:
+            msg = Message(sender=app.config['PRIMARY_MAIL'], recipients=[applicant.mail],
+                          subject=u'[Sprachenzentrum] Kurs {0} {1}'.format(course.language.name, course.level),
+                          body=u'Bewerbernummer: A{0}C{1}'.format(applicant.id, course.id))
+            mail.send(msg)
+            flash(u'Eine Bestätigungsmail wurde an {0} verschickt'.format(applicant.mail), 'success')
+        except (AssertionError, socket.error) as e:
+            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
+        # Finally redirect the user to an confirmation page, too
         return render_template('confirm.html', applicant=applicant, course=course)
 
     return dict(form=form)
