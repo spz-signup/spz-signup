@@ -8,6 +8,7 @@
 import socket
 import csv
 import re
+from datetime import datetime
 
 from sqlalchemy import func
 
@@ -272,6 +273,7 @@ def status(applicant_id, course_id):
     
     if form.validate_on_submit():
         try:
+            attendance.payingdate = datetime.now()
             attendance.waiting =    form.waiting.data
             attendance.has_to_pay = form.has_to_pay.data
             attendance.discounted = form.discounted.data

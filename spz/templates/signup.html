@@ -8,7 +8,7 @@ Anmeldung
 
 {% block body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         <div class="well">
             <form id="signup" class="form-horizontal" method="post" data-persist="garlic">
                 {{ form.hidden_tag() }}
@@ -21,7 +21,7 @@ Anmeldung
                     {# mail needs an help-block because we write the suggestion in it #}
                     {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"', help=' ') }}
                     {{ render_option(form.origin) }}
-                    {{ render_input(form.tag, required=False, help='Falls vorhanden Matrikelnummer oder vom Sprachenzentrum ausgestellte ID') }}
+                    {{ render_input(form.tag, required=False, help='Falls Sie kein KIT-Studierender sind und einen Englischkurs belegen wollen, tragen Sie hier die Ihnen vom Sprachenzentrum erteilte ID ein.') }}
                 </fieldset>
                 <fieldset class="kit-only">
                     <legend>Angaben für Studierende des KIT</legend>

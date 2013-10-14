@@ -2,22 +2,24 @@
 {% from 'formhelpers.html' import render_input, render_boolean %}
 
 {% block caption %}
-Status: <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.language.name ~ " " ~ attendance.course.level }}</a>
+<a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.language.name ~ " " ~ attendance.course.level }}</a>
 {% endblock caption %}
 
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         <div class="well">
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Teilnahmestatus</legend>
-                    {{ render_boolean(form.waiting) }}
-                    {{ render_boolean(form.has_to_pay) }}
-                    {{ render_boolean(form.discounted) }}
-                    {{ render_boolean(form.paidbycash) }}
+                    {{ render_input(form.registered) }}
+                    {{ render_input(form.payingdate) }}
+                    {{ render_boolean(form.waiting) }} 
+                    {{ render_boolean(form.has_to_pay) }} 
+                    {{ render_boolean(form.discounted) }} 
+                    {{ render_boolean(form.paidbycash) }} 
                     {{ render_input(form.amountpaid, type='number') }}
                 </fieldset>
                 <fieldset>
@@ -26,6 +28,12 @@ Status: <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ atten
                             <button type="submit" class="btn btn-primary">Änderungen speichern</button>
                             <button type="reset" class="btn btn-default">Zurücksetzen</button>
                         </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <h4><a href="">Quittung drucken</a></h4>
+                        <h4><a href="">Teilnahme löschen</a></h4>
                     </div>
                 </fieldset>
             </form>

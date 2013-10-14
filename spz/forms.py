@@ -58,13 +58,13 @@ class SignupForm(Form):
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
     mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
                                  validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
-    origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+    origin = SelectField(u'Bewerberkreis', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
-    tag = TextField(u'Identifikation', [validators.Optional(),
+    tag = TextField(u'Matrikelnummer', [validators.Optional(),
                                         validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField(u'Studiengang', [validators.Optional()], coerce=int)
-    graduation = SelectField(u'Angestrebter Kursabschluss', [validators.Optional()], coerce=int)
+    degree = SelectField(u'Studienabschluss', [validators.Optional()], coerce=int)
+    graduation = SelectField(u'Kursabschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
     course = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
 
@@ -210,6 +210,8 @@ class StatusForm(Form):
 
     """
 
+    registered = TextField(u'Registrierungsdatum')
+    payingdate = TextField(u'Zahlungsdatum')
     waiting = BooleanField(u'Warteliste')
     has_to_pay = BooleanField(u'Zahlend')
     discounted = BooleanField(u'Ermäßigt')
@@ -217,6 +219,8 @@ class StatusForm(Form):
     amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
 
     def populate(self, attendance):
+        self.registered.data = attendance.registered
+        self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
         self.has_to_pay.data = attendance.has_to_pay
         self.discounted.data = attendance.discounted
