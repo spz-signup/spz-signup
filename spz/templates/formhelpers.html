@@ -56,7 +56,7 @@
         <select{% if multiple %} multiple{% endif %} size="{{ size }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
             <option>{{ placeholder|default('', true) }}</option>
             {% for id, name in field.choices %}
-            {# TODO: selection is not remembered with multiple=True, field.data is collection then #}}
+            {# TODO: selection is not remembered with multiple=True, field.data is collection then #}
             <option value="{{ id }}"{% if id == field.data %} selected="selected"{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
