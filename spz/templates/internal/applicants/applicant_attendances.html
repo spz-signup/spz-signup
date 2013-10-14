@@ -9,20 +9,33 @@ Kurswünsche von {{ applicant.first_name ~ " " ~ applicant.last_name }}
 {% block internal_body %}
 <div class="row">
     <div class="col-md-12">
-		<form class="form-horizontal" method="post">
+        <table class="table table-striped">
+            <fieldset>
+                <legend>Kurswünsche</legend>
+                <thead>
+                    <tr>
+                        <th>Kurs</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in applicant.attendances %}
+                    <tr>
+                        <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a></td>
+                        <td>
+<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }} 
+{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
+{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.discounted else 'Vollzahler' }} {% endif %}
+{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
+</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </fieldset>
 
-		<fieldset>
-				<legend>Kurswünsche</legend>
-				{% for attendance in applicant.attendances %}
-					<div class="form-group">
-						<label for="input_course" class="col-lg-2 control-label">
-							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
-						</label>
-					</div>
-				{% endfor %}
-			</fieldset>
-
-		</form>
+        </table>
     </div>
 </div>
 
