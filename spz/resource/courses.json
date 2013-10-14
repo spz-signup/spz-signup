@@ -82,7 +82,6 @@
 		{
 			"name": "Französisch",
 			"courses": [
-				{"level": "1 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 C", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
