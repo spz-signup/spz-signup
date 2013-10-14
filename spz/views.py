@@ -7,6 +7,7 @@
 
 import socket
 import csv
+import re
 
 from sqlalchemy import func
 
@@ -15,7 +16,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm
 
 
 @templated('signup.html')
@@ -248,7 +249,19 @@ def applicant_attendances(id):
 @auth_required
 @templated('internal/payments.html')
 def payments():
-    return None
+    form = PaymentForm()
+
+    if form.validate_on_submit():
+        code = form.confirmation_code.data
+        match = re.search(r'^A(?P<a_id>\d{1,})C(?P<c_id>\d{1,})$', code)
+
+        if match:
+            a_id, c_id = match.group('a_id', 'c_id')
+            return redirect(url_for('status', applicant_id=a_id, course_id=c_id))
+
+        flash(u'Belegungsnummer ungültig', 'danger')
+    
+    return dict(form=form)
 
 
 @auth_required

@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input %}
 
 {% block caption %}
 Zahlungen
@@ -11,6 +12,27 @@ Zahlungen
         <p>
             Um eine Zahlung zu verbuchen eingeben .../status/bewerber_id/kurs_id
         </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="well">
+            <form class="form-horizontal" method="post">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    <legend>Belegungsnummer</legend>
+                    {{ render_input(form.confirmation_code, help='Belegungsnummer in Form von A#C#') }}
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <button type="submit" class="btn btn-primary">Weiter</button>
+                            <button type="reset" class="btn btn-default">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock internal_body %}

@@ -222,6 +222,13 @@ class StatusForm(Form):
         self.discounted.data = attendance.discounted
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
+        
+class PaymentForm(Form):
+    """Represents a PaymentForm to input the attendance
+    
+    """
+    
+    confirmation_code = TextField('Belegungsnummer', [validators.Length(min=4, message=u'Länge muss mindestens 4 Zeichen lang sein')])
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
