@@ -22,12 +22,11 @@ Sprache: {{ language.name }}
             <thead>
                 <tr>
                     <th>Kurs </th>
-                    <th>Teilnehmer gesamt</th>
-                    <th>Teilnehmer Warteliste</th>
-                    <th>Teilnehmer fester Platz</th>
-                    <th>Teilnehmer geb.-pflicht.</th>
-                    <th>Teilnehmer gebührenfrei</th>
-                    <th>Maximale Teilnehmer</th>
+                    <th>Maximal</th>
+                    <th>Restplätze</th>
+                    <th>Bewerber</th>
+                    <th>Warteliste</th>
+                    <th>Zahlende</th>
                     <th>Preis in Euro</th>
                     {# <th>Anwesenheitsliste</th> #}
                     {# <th>Teilnehmerliste</th> #}
@@ -36,13 +35,12 @@ Sprache: {{ language.name }}
             <tbody>
                 {% for course in language.courses.all() %}
                 <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
-                    <td><a href="{{ url_for('course', id=course.id) }}">{{ course.level }}</a></td>
+                    <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.level }}</strong></a></td>
+                    <td>{{ course.limit }}</td>
+                    <td>{{ course.limit - course.get_active_applicants()|count }}</td>
                     <td>{{ course.attendances|count }}</td>
                     <td>{{ course.get_waiting_applicants()|count }}</td>
-                    <td>{{ course.get_active_applicants()|count }}</td>
                     <td>{{ course.get_paying_applicants()|count }}</td>
-                    <td>{{ course.get_free_applicants()|count }}</td>
-                    <td>{{ course.limit }}</td>
                     <td>{{ course.price }}</td>
                     {# <td><a href="">Drucken</a></td> #}
                     {# <td><a href="">Drucken</a></td> #}
