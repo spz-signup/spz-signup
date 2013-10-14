@@ -7,21 +7,13 @@ Zahlungen
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-md-12">
-        <h3>In Vorbereitung</h3>
-        <p>
-            Um eine Zahlung zu verbuchen eingeben .../status/bewerber_id/kurs_id
-        </p>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-8 col-md-offset-2">
         <div class="well">
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Belegungsnummer</legend>
-                    {{ render_input(form.confirmation_code, help='Belegungsnummer in Form von A#C#') }}
+                    {{ render_input(form.confirmation_code, placeholder='A#C#', help='Vom Zahlenden zu referenzieren') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">

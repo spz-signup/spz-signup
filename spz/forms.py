@@ -228,7 +228,7 @@ class PaymentForm(Form):
     
     """
     
-    confirmation_code = TextField('Belegungsnummer', [validators.Length(min=4, message=u'Länge muss mindestens 4 Zeichen lang sein')])
+    confirmation_code = TextField('Code', [validators.Length(min=4, message=u'Länge muss mindestens 4 Zeichen lang sein')])
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
