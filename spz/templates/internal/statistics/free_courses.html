@@ -1,0 +1,33 @@
+{% extends 'internal/internal.html' %}
+
+{% block caption %}
+Restplätze
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Kurs</th>
+                    <th>Angebot</th>
+                    <th>Restplätze</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.language.name }} {{ course.level }}</a></td>
+                    <td>{{ course.limit }}</td>
+                    <td>{{ course.limit - course.get_active_applicants()|count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

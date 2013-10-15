@@ -83,7 +83,6 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/licenses', views.licenses, ['GET']),
 
           ('/internal', views.internal, ['GET']),
-          ('/internal/statistics', views.statistics, ['GET']),
 
           ('/internal/import', views.importer, ['GET']),
           ('/internal/import/registrations', views.registrations, ['GET', 'POST']),
@@ -103,6 +102,9 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/payments', views.payments, ['GET', 'POST']),
           ('/internal/status/<int:applicant_id>/<int:course_id>', views.status, ['GET', 'POST']),
+
+          ('/internal/statistics', views.statistics, ['GET']),
+          ('/internal/statistics/free_courses', views.free_courses, ['GET']),
 
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]

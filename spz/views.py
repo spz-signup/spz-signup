@@ -80,12 +80,6 @@ def internal():
 
 
 @auth_required
-@templated('internal/statistics.html')
-def statistics():
-    return None
-
-
-@auth_required
 @templated('internal/importer.html')
 def importer():
     return None
@@ -280,6 +274,18 @@ def status(applicant_id, course_id):
             
     form.populate(attendance)
     return dict(form=form, attendance=attendance)
+
+
+@auth_required
+@templated('internal/statistics.html')
+def statistics():
+    return None
+
+
+@auth_required
+@templated('internal/statistics/free_courses.html')
+def free_courses():
+    return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name).all())
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
