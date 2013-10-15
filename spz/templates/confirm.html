@@ -10,8 +10,7 @@ Ihre Registrierung war erfolgreich
     <div class="col-md-8 col-md-offset-2">
         <p>
         {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben.
-        Bei einem Platz auf der Warteliste werden Sie beim eventuellen Nachrücken benachrichtigt.
-        Bitte notieren Sie sich die <strong>Belegungsnummer</strong> und referenzieren Sie diese bei der Bezahlung.
+        Bitte notieren Sie sich die <strong>Belegungsnummer</strong> und geben Sie diese bei der Bezahlung oder bei Anfragen an.
         </p>
 
         {% for attendance in applicant.attendances %}
