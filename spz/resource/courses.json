@@ -2,6 +2,7 @@
 	"languages": [
 		{
 			"name": "Arabisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -12,6 +13,7 @@
 		},
 		{
 			"name": "Chinesisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -27,6 +29,7 @@
 		},
 		{
 			"name": "English",
+			"reply_to" : "englisch@spz.kit.edu",
 			"courses": [
 				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
 				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
@@ -81,6 +84,7 @@
 		},
 		{
 			"name": "Französisch",
+			"reply_to" : "franzoesisch@spz.kit.edu",
 			"courses": [
 				{"level": "1 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -114,6 +118,7 @@
 		},
 		{
 			"name": "Italienisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -130,6 +135,7 @@
 		},
 		{
 			"name": "Japanisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -146,6 +152,7 @@
 		},
 		{
 			"name": "Portugiesisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -158,6 +165,7 @@
 		},
 		{
 			"name": "Russisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -170,6 +178,7 @@
 		},
 		{
 			"name": "Schwedisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -183,6 +192,7 @@
 		},
 		{
 			"name": "Spanisch",
+			"reply_to" : "spanisch@spz.kit.edu",
 			"courses": [
 				{"level": "1 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -231,6 +241,7 @@
 		},
 		{
 			"name": "Polnisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -239,6 +250,7 @@
 		},
 		{
 			"name": "Niederländisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
@@ -246,6 +258,7 @@
 		},
 		{
 			"name": "Türkisch",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100}
@@ -253,6 +266,7 @@
 		},
 		{
 			"name": "Latein",
+			"reply_to" : "info@spz.kit.edu",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100}

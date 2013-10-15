@@ -11,6 +11,10 @@
 						"name": {
 							"type": "string"
 						},
+						"reply_to" : {
+							"type": "string",
+							"format": "email"
+						},
 						"courses": {
 							"type": "array",
 							"items": {
@@ -37,7 +41,7 @@
 							"uniqueItems": true
 						}
 					},
-					"required": [ "name", "courses" ]
+					"required": [ "name", "reply_to", "courses" ]
 				},
 				"uniqueItems": true
 			}

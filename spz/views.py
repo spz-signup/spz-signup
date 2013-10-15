@@ -60,6 +60,7 @@ def index():
         # Send confirmation mail now
         try:
             msg = Message(sender=app.config['PRIMARY_MAIL'],
+                          reply_to=course.language.reply_to,
                           recipients=[applicant.mail],
                           subject=u'[Sprachenzentrum] Anmeldung für Kurs {0} {1}'.
                                   format(course.language.name, course.level),

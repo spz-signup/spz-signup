@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 from datetime import datetime, timedelta
 
 from flask import json
@@ -13,7 +14,9 @@ def validate_resources():
     resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations')
 
     for fname in resources:
-        with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, app.open_resource('resource/{0}.schema'.format(fname)) as fd_schema:
+        with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, \
+             app.open_resource('resource/{0}.schema'.format(fname)) as fd_schema:
+
             res_json = json.load(fd_json)
             res_schema = json.load(fd_schema)
 
@@ -43,7 +46,8 @@ def insert_resources():
         res = json.load(fd)
 
         for language in res["languages"]:
-            ref_lang = Language(language["name"], datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
+            ref_lang = Language(language["name"], language["reply_to"],
+                                datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
 
             for course in language["courses"]:
                 db.session.add(Course(ref_lang, course["level"], limit=course["limit"], price=course["price"],
@@ -58,13 +62,18 @@ def insert_resources():
 if __name__ == '__main__':
     try:
         validate_resources()  # Strong exception safety guarantee
+    except (ValidationError, SchemaError) as e:
+        print(e)  # Stacktrace does not contain any useful information
+        sys.exit()
 
+    # Request polite confirmation
+    if raw_input('Create and drop tables? (Yes, please. / No thanks.): ').startswith('Yes, please.'):
         db.create_all()
         insert_resources()
 
-        print('Import OK')
-    except (ValidationError, SchemaError) as e:
-        print(e)  # Stacktrace does not contain any useful information
+        print('Import OK.')
+    else:
+        print('Aborting.')
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

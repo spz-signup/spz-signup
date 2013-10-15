@@ -218,6 +218,7 @@ class Language(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
+    reply_to = db.Column(db.String(120), nullable=False)
     courses = db.relationship('Course', backref='language', lazy='dynamic')
 
     # Not using db.Interval here, because it needs native db support
@@ -225,8 +226,9 @@ class Language(db.Model):
     signup_begin = db.Column(db.DateTime())
     signup_end = db.Column(db.DateTime())
 
-    def __init__(self, name, signup_begin, signup_end):
+    def __init__(self, name, reply_to, signup_begin, signup_end):
         self.name = name
+        self.reply_to = reply_to
         self.signup_begin = signup_begin
         self.signup_end = signup_end
 
