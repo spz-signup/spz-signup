@@ -7,21 +7,23 @@ Importieren
 
 {% block internal_body %}
 <div class="row">
-    <h3>Matrikelnummern</h3>
-    <form method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
-        <input type="file" name="file_name">
-        <input type="submit" value="Einlesen">
-        <span class="help-block">Zeilenweiser Aufbau: ID -- z.b. 123</span>
-    </form>
-</div>
-<div class="row">
-    <h3>Englischtest Ergebnisse</h3>
-    <form method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
-        <input type="file" name="file_name"><br>
-        <input type="checkbox" name="delete_old">Bisherige Einträge löschen<br>
-        <input type="submit" value="Einlesen">
-        <span class="help-block">Zeilenweiser Aufbau: ID;Prozent -- z.b. 123;99</span>
-    </form>
+    <div class="col-md-6">
+        <h3>Matrikelnummern</h3>
+        <form method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
+            <input type="file" name="file_name">
+            <input type="submit" value="Einlesen">
+            <span class="help-block">Zeilenweiser Aufbau: ID -- z.b. 123</span>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <h3>Englischtest Ergebnisse</h3>
+        <form method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
+            <input type="file" name="file_name"><br>
+            <input type="checkbox" name="delete_old">Bisherige Einträge löschen<br>
+            <input type="submit" value="Einlesen">
+            <span class="help-block">Zeilenweiser Aufbau: ID;Prozent -- z.b. 123;99</span>
+        </form>
+    </div>
 </div>
 {% endblock internal_body %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
