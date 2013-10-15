@@ -228,6 +228,12 @@ def search_applicant():
 
 
 @auth_required
+@templated('internal/remove_attendance.html')
+def remove_attendance(applicant_id, course_id):
+    return dict(attendance=models.Attendance.query.get_or_404((applicant_id, course_id)))
+
+
+@auth_required
 @templated('internal/applicants/applicant_attendances.html')
 def applicant_attendances(id):
     return dict(applicant=models.Applicant.query.get_or_404(id))
@@ -285,7 +291,7 @@ def statistics():
 @auth_required
 @templated('internal/statistics/free_courses.html')
 def free_courses():
-    return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name).all())
+    return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all())
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

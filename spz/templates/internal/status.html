@@ -33,7 +33,7 @@
                 <fieldset>
                     <div class="col-lg-10 col-lg-offset-2">
                         <h4><a href="">Quittung drucken</a></h4>
-                        <h4><a href="">Teilnahme löschen</a></h4>
+                        <h4><a href="{{ url_for('remove_attendance', a_id=attendance.applicant.id, c_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
                     </div>
                 </fieldset>
             </form>

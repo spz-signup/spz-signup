@@ -96,6 +96,7 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/applicant/<int:id>', views.applicant, ['GET', 'POST']),
           ('/internal/language/<int:id>', views.language, ['GET']),
           ('/internal/course/<int:id>', views.course, ['GET']),
+          ('/internal/remove_attendance/<int:applicant_id>/<int:course_id>', views.remove_attendance, ['GET']),
 
           ('/internal/applicants/search_applicant', views.search_applicant, ['GET']),
           ('/internal/applicants/applicant_attendances/<int:id>', views.applicant_attendances, ['GET']),

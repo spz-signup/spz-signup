@@ -2,7 +2,7 @@
 {% from 'formhelpers.html' import render_input, render_option %}
 
 {% block caption %}
-Kurswünsche von {{ applicant.first_name ~ " " ~ applicant.last_name }}
+Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
 {% endblock caption %}
 
 
