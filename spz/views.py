@@ -86,78 +86,64 @@ def statistics():
 
 
 @auth_required
-@templated('internal/datainput.html')
-def datainput():
+@templated('internal/importer.html')
+def importer():
     return None
 
 
 @auth_required
-@templated('internal/datainput/matrikelnummer.html')
-def matrikelnummer():
+@templated('internal/importer.html')
+def registrations():
     if request.method == 'POST':
+
         fp = request.files['file_name']
+
         if fp:
-            lst = {models.Registration(line.rstrip('\r\n')) for line in fp}
-            gel = models.Registration.query.delete()
-            db.session.add_all(lst)
-            db.session.commit()
-            flash(u'Dateiname war OK %s Zeilen gelöscht %s Zeilen gelesen' % (gel, len(lst)), 'success')
+            unique_registrations = {models.Registration(line.rstrip('\r\n')) for line in fp}
 
-            return redirect(url_for('datainput'))
-        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('matrikelnummer'))
-    return None
-
-
-@auth_required
-@templated('internal/datainput/zulassungen.html')
-def zulassungen():
-    if request.method == 'POST':
-        fp = request.files['file_name']
-        if fp:
-            filecontent = csv.reader(fp, delimiter=';')
-            try: 
-                gel = 0
-                if request.form.getlist("delete_old"):
-                    gel = models.Approval.query.delete()
-                lst = [models.Approval(line[0], line[1]) for line in filecontent]
-                db.session.add_all(lst)
+            try:
+                num_deleted = models.Registration.query.delete()
+                db.session.add_all(unique_registrations)
                 db.session.commit()
-                anz = models.Approval.query.count()
-                flash(u' %s Zeilen gelöscht %s Zeilen aus %s gelesen, insgesamt %s Einträge' % (gel, len(lst), fp.filename, anz), 'success')
-            except (IndexError, csv.Error) as e:
-                flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
-                return redirect(url_for('zulassungen'))
+                flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                      .format(num_deleted, len(unique_registrations)), 'success')
+            except Exception as e:
+                db.session.rollback()
+                flash(u'Konnte Einträge nicht speichern: {0}'.format(e), 'danger')
 
-            return redirect(url_for('datainput'))
-        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('zulassungen'))
+            return redirect(url_for('importer'))
+
+    flash(u'Datei konnte nicht gelesen werden', 'danger')
     return None
 
 
 @auth_required
-@templated('internal/datainput/priority.html')
-def priority():
+@templated('internal/importer.html')
+def approvals():
     if request.method == 'POST':
-        fp = request.files['file_name']
-        if fp:
-            filecontent = csv.reader(fp, delimiter=';')
-            flash(u'Not ready yet!', 'warning')
-            # try: 
-                # for line in filecontent:
-                    # app = models.Applicant(line[3], line[4], line[5], line[1], line[2], line[6], line[9], line[8], line[7]) 
-                    # applicant = db.session.add(app)
-                    # attendance = db.session.add(applicant, status, course)
-                # db.session.commit()
-                # anz = models.Approval.query.count()
-                # flash(u' %s Zeilen aus %s gelesen, insgesamt %s Einträge' % (len(lst), fp.filename, anz), 'success')
-            # except (IndexError, csv.Error) as e:
-                # flash(u'Zulassungen konnten nicht eingelesen werden (\';\' als Trenner verwenden): {0}'.format(e), 'danger')                
-                # return redirect(url_for('priority'))
 
-            return redirect(url_for('datainput'))
-        flash(u'%s: Wrong file name' % (fp.filename), 'warning')
-        return redirect(url_for('priority'))
+        fp = request.files['file_name']
+
+        if fp:
+            try:
+                filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
+
+                num_deleted = 0
+                if request.form.getlist("delete_old"):  # XXX: hardcoded?. Write a form!
+                    num_deleted = models.Approval.query.delete()
+
+                approvals = [models.Approval(line[0], line[1]) for line in filecontent]
+                db.session.add_all(approvals)
+                db.session.commit()
+                flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                      .format(num_deleted, len(approvals)), 'success')
+            except Exception as e:  # csv, index or db could go wrong here..
+                db.session.rollback()
+                flash(u'Konnte Einträge nicht speichern: {0}'.format(e), 'danger')
+
+            return redirect(url_for('importer'))
+
+    flash(u'Datei konnte nicht gelesen werden', 'danger')
     return None
 
 
@@ -182,6 +168,12 @@ def notifications():
             flash(u'Mail wurde nicht verschickt: {0}'.format(e), 'danger')
 
     return dict(form=form)
+
+
+@auth_required
+@templated('internal/exporter.html')
+def exporter():
+    return None
 
 
 @auth_required

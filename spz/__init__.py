@@ -85,10 +85,11 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal', views.internal, ['GET']),
           ('/internal/statistics', views.statistics, ['GET']),
 
-          ('/internal/datainput', views.datainput, ['GET']),
-          ('/internal/datainput/matrikelnummer', views.matrikelnummer, ['GET', 'POST']),
-          ('/internal/datainput/zulassungen', views.zulassungen, ['GET', 'POST']),
-          ('/internal/datainput/priority', views.priority, ['GET', 'POST']),
+          ('/internal/import', views.importer, ['GET']),
+          ('/internal/import/registrations', views.registrations, ['GET', 'POST']),
+          ('/internal/import/approvals', views.approvals, ['GET', 'POST']),
+
+          ('/internal/export', views.exporter, ['GET']),
 
           ('/internal/notifications', views.notifications, ['GET', 'POST']),
 

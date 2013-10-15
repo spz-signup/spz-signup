@@ -4,13 +4,14 @@
 <li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
 <li data-intro='Startet den Rundgang durch die Funktionen des internen Bereichs' data-step='2'><a id="intro-start"><span class="glyphicon glyphicon-picture"></span> Rundgang</a></li>
-<li data-intro='Import von Daten. Beispielsweise Matrikelnummern oder Ergebnisse der ILIAS Englischtests' data-step='2'><a href="{{ url_for('datainput') }}" ><span class="glyphicon glyphicon-import"></span> Dateneingabe</a></li>
-<li data-intro='Auflistung aller vorhandenen Kurse und deren Teilnehmer' data-step='3'><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
-<li data-intro='Verschicke Mails an Kursteilnehmer' data-step='4'><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
-<li data-intro='Zur Bearbeitung einzelner Kursteilnehmer' data-step='5'><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
-<li data-intro='Zur Bearbeitung einzelner Zahlungsvorgänge' data-step='6'><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
-<li data-intro='Informative Statistiken zur Kursbelegung' data-step='7'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-list-alt"></span> Statistiken</a></li>
-<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='8'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
+<li data-intro='Import von Daten. Beispielsweise Matrikelnummern oder Ergebnisse der ILIAS Englischtests' data-step='2'><a href="{{ url_for('importer') }}" ><span class="glyphicon glyphicon-import"></span> Importieren</a></li>
+<li data-intro='Export von Daten. Beispielsweise Kurslisten.' data-step='3'><a href="{{ url_for('exporter') }}" ><span class="glyphicon glyphicon-export"></span> Exportieren</a></li>
+<li data-intro='Auflistung aller vorhandenen Kurse und deren Teilnehmer' data-step='4'><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
+<li data-intro='Verschicke Mails an Kursteilnehmer' data-step='5'><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
+<li data-intro='Zur Bearbeitung einzelner Kursteilnehmer' data-step='6'><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-book"></span> Bewerberzentrale</a></li>
+<li data-intro='Zur Bearbeitung einzelner Zahlungsvorgänge' data-step='7'><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
+<li data-intro='Informative Statistiken zur Kursbelegung' data-step='8'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-list-alt"></span> Statistiken</a></li>
+<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='9'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
 {% endif %}
 {% endblock navbar %}
 
