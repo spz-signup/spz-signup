@@ -21,16 +21,26 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{{ render_option(form.origin) }}
 			</fieldset>
 
-			<fieldset>
-                <legend>Kurswünsche</legend>
+            <legend>Kurswünsche</legend>
+            <table class="table table-striped">
+                <tbody>
 				{% for attendance in form.get_attendances() %}
-					<div class="form-group">
-						<label for="input_course" class="col-lg-2 control-label">
+                    <tr>
+                        <td>
 							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
-						</label>
-					</div>
+                        </td>
+                        <td>
+<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
+{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
+{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.discounted else 'Vollzahler' }} {% endif %}
+{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
+</a>
+                        </td>
+                    </tr>
 				{% endfor %}
-			</fieldset>
+                </tbody>
+            </table>
 
 			<fieldset>
 				<div class="form-group">
