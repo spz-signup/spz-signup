@@ -1,0 +1,76 @@
+Sprachenzentrum des KIT
+-----------------------
+
+{{ 'Herr' if applicant.sex else 'Frau' }}: {{ applicant.first_name ~ ' ' ~ applicant.last_name }}
+Bewerberkreis: {{ applicant.origin.name }}
+E-Mail Adresse: {{ applicant.mail }}
+
+{# TODO: create strftime jinja filter #}
+Sie haben sich am {{ date.day ~ '.' ~ date.month ~ '.' ~ date.year ~ ' um ' ~ date.hour ~ ':' ~ date.minute }} Uhr erfolgreich für den folgenden Sprachkurs
+am Sprachenzentrum des KIT angemeldet:
+
+Kurs: {{ course.language.name ~ ' ' ~ course.level }}
+{# TODO: ugly hack. refactor it! #}
+Semester: {{ 'SS ' ~ date.year if (4 <= date.month < 10) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
+
+Bitte beachten Sie folgende Hinweise:
+
+
+{% if not waiting and has_to_pay %}
+Sie sind zahlungspflichtig im Kurs.
+
+Bitte bezahlen Sie die Kursgebühr an einem der auf der Homepage genannte
+Barzahlngstermine (Keine Karten!) oder überweisen Sie innerhalb der nächsten
+4 Tage den Betrag unter Angabe des folgenden Verwendungszwecks:
+
+XD2003911901 {{ applicant.last_name ~ ', ' ~ applicant.first_name ~ ', ' ~ 'A' ~ applicant.id ~ 'C' ~ course.id ~ ', ' ~ course.language.name ~ ' ' ~ course.level }}
+
+auf folgendes Konto des KIT:
+
+Deutsche Bundesbank Fil. Karlsruhe
+Kto.-Nr. 66001508
+BLZ 660 000 00
+
+Falls Sie nur aufgrund einer Verzögerung der Rückmeldung als
+zahlungspflichtig eingestuft wurden, klären Sie bitte Ihren
+Status im betreffenden Büro der jeweiligen Sprache.
+
+
+{% elif not waiting and not has_to_pay %}
+Sie sind gebührenfrei im Kurs.
+
+Gratiskursteilnehmer, die in der ersten Kurswoche unentschuldigt fehlen,
+werden durch Nachrücker ersetzt.
+
+Falls Sie nicht mehr am Kurs teilnehmen können, melden Sie sich bitte bei
+der jeweiligen Fachleitung über die unten stehende Kontaktadresse ab.
+
+
+{% else %}
+Sie sind auf der Warteliste.
+
+Falls Sie in den Kurs nachrücken, werden Sie automatisch per Mail
+benachrichtigt.
+
+Im Falle einer Zahlungspflicht bitten wir Sie im Nachrückfalle
+um Barzahlung im betreffenden Büro der jeweiligen Sprache.
+
+{% endif %}
+
+
+Die zuständigen Fachbereiche erreichen Sie unter:
+
+Englisch <englisch@spz.kit.edu>
+Französisch <franzoesisch@spz.kit.edu>
+Spanisch <spanisch@spz.kit.edu>
+andere Sprachen <info@spz.kit.edu>
+
+
+Mit freundlichen Grüßen,
+Ihr SpZ-Team
+
+
+
+
+
+Dieses Schreiben wurde maschinell erstellt und ist ohne Unterschrift gültig.

@@ -40,11 +40,15 @@ def index():
             flash(u'Sie nehmen bereits am Kurs teil', 'danger')
             return dict(form=form)
 
+        # Save the state in order to use it after the transaction is commited
+        # If we use the applicant or course state for the mail below, other transactions could have happened in between
+        waiting = course.is_full()
+        has_to_pay = applicant.has_to_pay()
+
         # Run the final insert isolated in a transaction, with rollback semantics
         try:
             applicant.add_course_attendance(course, form.get_graduation(),
-                                            waiting=course.is_full(),
-                                            has_to_pay=applicant.has_to_pay())
+                                            waiting=waiting, has_to_pay=has_to_pay)
 
             db.session.add(applicant)
             db.session.commit()
@@ -55,9 +59,14 @@ def index():
 
         # Send confirmation mail now
         try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'], recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Kurs {0} {1}'.format(course.language.name, course.level),
-                          body=u'Bewerbernummer: A{0}C{1}'.format(applicant.id, course.id))
+            msg = Message(sender=app.config['PRIMARY_MAIL'],
+                          recipients=[applicant.mail],
+                          subject=u'[Sprachenzentrum] Anmeldung für Kurs {0} {1}'.
+                                  format(course.language.name, course.level),
+                          body=render_template('mails/confirmationmail.html',
+                                               applicant=applicant, course=course, has_to_pay=has_to_pay,
+                                               waiting=waiting, date=datetime.now()))
+
             mail.send(msg)
             flash(u'Eine Bestätigungsmail wurde an {0} verschickt'.format(applicant.mail), 'success')
         except (AssertionError, socket.error) as e:

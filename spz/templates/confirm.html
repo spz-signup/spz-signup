@@ -9,7 +9,7 @@ Ihre Registrierung war erfolgreich
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <p>
-        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie wurden für den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> verbindlich eingeschrieben.
+        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie haben sich um den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> beworben.
         Bitte notieren Sie sich die <strong>Belegungsnummer</strong> und geben Sie diese bei der Bezahlung oder bei Anfragen an.
         </p>
 
@@ -28,6 +28,8 @@ Ihre Registrierung war erfolgreich
                     {% if attendance.has_to_pay %}
                     {% set amount = attendance.course.price if not attendance.discounted else attendance.course.price / 2 %}
                     <li>Zu zahlen sind: <strong>{{ amount }} Euro</strong></li>
+                    {% else %}
+                    <li>Gebührenfrei</li>
                     {% endif%}
                     {% endif %}
                 </ul>
