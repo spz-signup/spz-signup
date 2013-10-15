@@ -230,7 +230,7 @@ def applicant(id):
 @auth_required
 @templated('internal/applicants/search_applicant.html')
 def search_applicant():
-    return dict(applicants=models.Applicant.query.order_by(models.Applicant.last_name).all())
+    return dict(applicants=models.Applicant.query.order_by(models.Applicant.last_name, models.Applicant.first_name).all())
 
 
 @auth_required
