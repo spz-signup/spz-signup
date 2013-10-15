@@ -134,7 +134,7 @@ class Applicant(db.Model):
         return True if registered else False
 
     def best_rating(self):
-        results = [app.percent for app in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag)).all()]
+        results = [approval.percent for approval in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag)).all()]
         best = max(results) if results else 0
         return best
 
