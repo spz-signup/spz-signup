@@ -34,7 +34,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 {{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
 {% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
 {% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.discounted else 'Vollzahler' }} {% endif %}
-{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
+{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro; {% endif %}
 </a>
                         </td>
                     </tr>
