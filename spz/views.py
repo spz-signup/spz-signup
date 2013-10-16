@@ -117,7 +117,7 @@ def registrations():
                       .format(num_deleted, len(unique_registrations)), 'success')
             except Exception as e:
                 db.session.rollback()
-                flash(u'Konnte Einträge nicht speichern: {0}'.format(e), 'danger')
+                flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
 
             return redirect(url_for('importer'))
 
@@ -140,14 +140,14 @@ def approvals():
                 if request.form.getlist("delete_old"):  # XXX: hardcoded?. Write a form!
                     num_deleted = models.Approval.query.delete()
 
-                approvals = [models.Approval(line[0], line[1]) for line in filecontent]
+                approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
                 db.session.add_all(approvals)
                 db.session.commit()
                 flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
                       .format(num_deleted, len(approvals)), 'success')
             except Exception as e:  # csv, index or db could go wrong here..
                 db.session.rollback()
-                flash(u'Konnte Einträge nicht speichern: {0}'.format(e), 'danger')
+                flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
 
             return redirect(url_for('importer'))
 
