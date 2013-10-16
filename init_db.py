@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from flask import json
 from jsonschema import validate, ValidationError, SchemaError
@@ -47,7 +47,8 @@ def insert_resources():
 
         for language in res["languages"]:
             ref_lang = Language(language["name"], language["reply_to"],
-                                datetime.utcnow(), datetime.utcnow() + timedelta(weeks=2))
+                                datetime.strptime(language["signup_begin_iso_utc"], "%Y-%m-%dT%H:%M:%S.Z"),  # ISO 8601 -- better way to parse this?
+                                datetime.strptime(language["signup_end_iso_utc"], "%Y-%m-%dT%H:%M:%S.Z"))  # see also Jsonschema RFC, date-time
 
             for course in language["courses"]:
                 db.session.add(Course(ref_lang, course["level"], limit=course["limit"], price=course["price"],

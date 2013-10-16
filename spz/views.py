@@ -28,6 +28,10 @@ def index():
         applicant = form.get_applicant()
         course = form.get_course()
 
+        if not course.language.is_open_for_signup():
+            flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist noch nicht möglich', 'danger')
+            return dict(form=form)
+
         if course.is_overbooked():
             flash(u'Der gewünschte Kurs inklusive Warteliste ist bereits ausgebucht', 'danger')
             return dict(form=form)

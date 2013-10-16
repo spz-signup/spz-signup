@@ -5,6 +5,8 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
+from datetime import datetime
+
 from sqlalchemy import func
 from datetime import datetime
 
@@ -234,6 +236,10 @@ class Language(db.Model):
 
     def __repr__(self):
         return '<Language %r>' % self.name
+
+    def is_open_for_signup(self):
+        now = datetime.utcnow()
+        return self.signup_begin < now < self.signup_end
 
 
 class Degree(db.Model):

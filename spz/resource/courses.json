@@ -3,6 +3,8 @@
 		{
 			"name": "Arabisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -14,6 +16,8 @@
 		{
 			"name": "Chinesisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -30,6 +34,8 @@
 		{
 			"name": "English",
 			"reply_to" : "englisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
 				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
@@ -83,8 +89,23 @@
 			]
 		},
 		{
+			"name": "English Intensive",
+			"reply_to" : "englisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-14T19:00:00.Z",
+			"signup_end_iso_utc": "2013-10-15T19:00:00.Z",
+			"courses": [
+				{"level": "B2: Science and Technology Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "B2: Upper Intermediate Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "C1: Advanced Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "for Work C1 Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "in Everyday Situations Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+			]
+		},
+		{
 			"name": "Französisch",
 			"reply_to" : "franzoesisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -119,6 +140,8 @@
 		{
 			"name": "Italienisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -136,6 +159,8 @@
 		{
 			"name": "Japanisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -153,6 +178,8 @@
 		{
 			"name": "Portugiesisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -166,6 +193,8 @@
 		{
 			"name": "Russisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -179,6 +208,8 @@
 		{
 			"name": "Schwedisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -193,6 +224,8 @@
 		{
 			"name": "Spanisch",
 			"reply_to" : "spanisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "1 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -242,6 +275,8 @@
 		{
 			"name": "Polnisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
@@ -251,6 +286,8 @@
 		{
 			"name": "Niederländisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
@@ -259,6 +296,8 @@
 		{
 			"name": "Türkisch",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100}
@@ -267,6 +306,8 @@
 		{
 			"name": "Latein",
 			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
 				{"level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100}

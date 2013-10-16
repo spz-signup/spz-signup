@@ -5,6 +5,8 @@
    Manages the mapping between database models and HTML forms.
 """
 
+from datetime import datetime
+
 from sqlalchemy import func
 from flask.ext.wtf import Form
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, validators
@@ -36,8 +38,14 @@ def origins_to_choicelist():
 
 @cache.cached(key_prefix='course')
 def course_to_choicelist():
+    available = models.Course.query.join(models.Language.courses) \
+                                   .order_by(models.Language.name, models.Course.level) \
+                                   .all()
+
+    upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
+
     return [(course.id, u'{0} {1}{2}'.format(course.language.name, course.level, u' (voll)' if course.is_full() else u''))
-            for course in models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all()]
+            for course in upcoming]
 
 
 class SignupForm(Form):
