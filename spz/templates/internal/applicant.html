@@ -52,7 +52,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 			<fieldset>
 				<div class="form-group">
 					<div class="col-lg-8 col-lg-offset-2">
-						<button type="submit" class="btn btn-primary">Änderungen speichern</button>
+						<button id="confirm" type="submit" class="btn btn-primary">Änderungen speichern</button>
 					</div>
 				</div>
 			</fieldset>
@@ -62,4 +62,15 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 </div>
 {% endblock internal_body %}
 
+
+{% block scripts %}
+{{ super() }}
+<script>
+    "use strict";
+
+    $('#confirm').click(function() {
+        return confirm("Änderungen bestätigen.");
+    });
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}
