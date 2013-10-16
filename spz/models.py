@@ -88,7 +88,7 @@ class Applicant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     mail = db.Column(db.String(120), unique=True, nullable=False)
-    tag = db.Column(db.String(10), unique=True)
+    tag = db.Column(db.String(10), unique=False, nullable=True)  # XXX
 
     sex = db.Column(db.Boolean)
 
