@@ -35,7 +35,7 @@
                 <fieldset>
                     <div class="col-lg-8 col-lg-offset-2">
                         <h4><a href="">Quittung drucken</a></h4>
-                        <h4><a href="{{ url_for('remove_attendance', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
+                        <h4><a id="confirm" href="{{ url_for('remove_attendance', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
                     </div>
                 </fieldset>
             </form>
@@ -43,4 +43,16 @@
     </div>
 </div>
 {% endblock internal_body %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+    "use strict";
+
+    $('#confirm').click(function() {
+        return confirm("Unwiederrufliches Löschen bestätigen");
+    });
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

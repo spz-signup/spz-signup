@@ -242,9 +242,19 @@ def search_applicant():
 
 
 @auth_required
-@templated('internal/remove_attendance.html')
 def remove_attendance(applicant_id, course_id):
-    return dict(attendance=models.Attendance.query.get_or_404((applicant_id, course_id)))
+    attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
+
+    try:
+        attendance.applicant.remove_course_attendance(attendance.course)
+        db.session.commit()
+        flash(u'Der Bewerber wurde aus dem Kurs genommen', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(u'Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'danger')
+        return redirect(url_for('applicant', id=applicant.id))
+
+    return redirect(url_for('internal'))
 
 
 @auth_required
@@ -260,14 +270,14 @@ def payments():
 
     if form.validate_on_submit():
         code = form.confirmation_code.data
-        match = re.search(r'^A(?P<a_id>\d{1,})C(?P<c_id>\d{1,})$', code)
+        match = re.search(r'^A(?P<a_id>\d{1,})C(?P<c_id>\d{1,})$', code)  # 'A#C#'
 
         if match:
             a_id, c_id = match.group('a_id', 'c_id')
             return redirect(url_for('status', applicant_id=a_id, course_id=c_id))
 
         flash(u'Belegungsnummer ungültig', 'danger')
-    
+
     return dict(form=form)
 
 
