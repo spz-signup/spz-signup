@@ -8,7 +8,7 @@
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-lg-8 col-lg-offset-2">
         <div class="well">
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
@@ -26,14 +26,14 @@
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
-                        <div class="col-md-8 col-md-offset-2">
+                        <div class="col-lg-8 col-lg-offset-2">
                             <button type="submit" class="btn btn-primary">Änderungen speichern</button>
                             <button type="reset" class="btn btn-default">Zurücksetzen</button>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <div class="col-md-8 col-md-offset-2">
+                    <div class="col-lg-8 col-lg-offset-2">
                         <h4><a href="">Quittung drucken</a></h4>
                         <h4><a href="{{ url_for('remove_attendance', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
                     </div>

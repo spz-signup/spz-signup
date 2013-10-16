@@ -7,7 +7,7 @@ Importieren
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Matrikelnummern</h3>
         <form method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
             <input type="file" name="file_name">
@@ -15,7 +15,7 @@ Importieren
             <span class="help-block">Zeilenweiser Aufbau, bitte ohne Header: ID -- z.b. 123</span>
         </form>
     </div>
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Englischtest Ergebnisse</h3>
         <form method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
             <input type="file" name="file_name"><br>
