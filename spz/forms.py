@@ -267,4 +267,11 @@ class PaymentForm(Form):
     confirmation_code = TextField('Code', [validators.Length(min=4, message=u'Länge muss mindestens 4 Zeichen lang sein')])
 
 
+class SearchForm(Form):
+    """Represents a form to search for specific applicants.
+    """
+
+    token = TextField(u'Suchen', [validators.Required(u'Suchparameter muss angegeben werden')])
+
+
 # vim: set tabstop=4 shiftwidth=4 expandtab:

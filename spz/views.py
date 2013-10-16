@@ -17,7 +17,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm
 
 
 @templated('signup.html')
@@ -249,7 +249,17 @@ def applicant(id):
 @auth_required
 @templated('internal/applicants/search_applicant.html')
 def search_applicant():
-    return dict(applicants=models.Applicant.query.order_by(models.Applicant.last_name, models.Applicant.first_name).all())
+    form = SearchForm()
+
+    applicants = []
+
+    if form.validate_on_submit():
+        applicants = models.Applicant.query.filter(models.Applicant.first_name.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.last_name.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.mail.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.tag.like('%{0}%'.format(form.token.data)))
+
+    return dict(form=form, applicants=applicants)
 
 
 @auth_required
