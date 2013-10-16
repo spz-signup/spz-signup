@@ -21,6 +21,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{{ render_option(form.origin) }}
 			</fieldset>
 
+            {% if form.get_attendances() %}
             <legend>Kurswünsche</legend>
             <table class="table table-striped">
                 <tbody>
@@ -41,6 +42,12 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{% endfor %}
                 </tbody>
             </table>
+            {% endif %}
+
+            <fieldset>
+                {{ render_option(form.remove_from, help='Aus folgendem Kurs entfernen') }}
+                {{ render_option(form.add_to, help='Zu folgendem Kurs hinzufügen') }}
+            </fieldset>
 
 			<fieldset>
 				<div class="form-group">

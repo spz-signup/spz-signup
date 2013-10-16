@@ -199,15 +199,20 @@ class ApplicantForm(Form): #TODO mail, phone
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
     mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'), validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
-    tag = TextField(u'Identifikation', [validators.Optional(), validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+    tag = TextField(u'Matrikelnummer', [validators.Optional(), validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    origin = SelectField(u'Herkunft', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+    origin = SelectField(u'Bewerberkreis', [validators.Required(u'Bewerberkreis muss angegeben werden')], coerce=int)
 
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
+
+    add_to = SelectField(u'Neue Teilnahme', [validators.Optional()], coerce=int, choices=[])
+    remove_from = SelectField(u'Teilnahme Löschen', [validators.Optional()], coerce=int, choices=[])
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
         self.origin.choices = origins_to_choicelist()
+        self.add_to.choices = all_courses_to_choicelist()
+        self.remove_from.choices = all_courses_to_choicelist()
 
     def populate(self, applicant):
         self.applicant = applicant
@@ -223,6 +228,12 @@ class ApplicantForm(Form): #TODO mail, phone
 
     def get_attendances(self):
         return self.applicant.attendances if self.applicant else None
+
+    def get_add_to(self):
+        return models.Course.query.get(self.add_to.data) if self.add_to.data else None
+
+    def get_remove_from(self):
+        return models.Course.query.get(self.remove_from.data) if self.remove_from.data else None
 
 
 class StatusForm(Form):

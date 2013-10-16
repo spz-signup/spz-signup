@@ -223,9 +223,20 @@ def applicant(id):
             applicant.phone = form.phone.data
             applicant.mail = form.mail.data
             applicant.tag = form.tag.data
-            applicant.origin = models.Origin.query.get(form.origin.data) 
+            applicant.origin = models.Origin.query.get(form.origin.data)
             db.session.commit()
             flash(u'Der Bewerber wurde aktualisiert', 'success')
+
+            add_to = form.get_add_to()
+            remove_from = form.get_remove_from()
+
+            if add_to and remove_from:
+                flash(u'Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen', 'danger')
+            elif add_to:
+                return redirect(url_for('add_attendance', applicant_id=applicant.id, course_id=add_to.id))
+            elif remove_from:
+                return redirect(url_for('remove_attendance', applicant_id=applicant.id, course_id=remove_from.id))
+
         except Exception as e:
             db.session.rollback()
             flash(u'Der Bewerber konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
@@ -242,17 +253,47 @@ def search_applicant():
 
 
 @auth_required
-def remove_attendance(applicant_id, course_id):
+def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
+    applicant = models.Applicant.query.get_or_404(applicant_id)
+    course = models.Course.query.get_or_404(course_id)
+
+    if applicant.in_course(course):
+        flash(u'Der Teilnehmer ist bereits im Kurs eingetragen', 'danger')
+        return redirect(url_for('course', id=course.id))
+
+    try:
+        # Graduation optional, waits and pays by default
+        applicant.add_course_attendance(course, None, True, True)
+        db.session.commit()
+        flash(u'Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
+
+        if course.is_overbooked():
+            flash(u'Der Kurs ist eigentlich überbucht. Teilnehmer wurde trotzdem eingetragen.', 'warning')
+
+        if not course.is_allowed(applicant):
+            flash(u'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
+
+        return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
+    except Exception as e:
+        db.session.rollback()
+        flash(u'Der Teilnehmer konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'danger')
+
+    return redirect(url_for('applicant', id=applicant_id))
+
+
+@auth_required
+def remove_attendance(applicant_id, course_id):  # TODO: make forms, csrf
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
 
     try:
         attendance.applicant.remove_course_attendance(attendance.course)
         db.session.commit()
         flash(u'Der Bewerber wurde aus dem Kurs genommen', 'success')
+        return redirect(url_for('course', id=course_id))
     except Exception as e:
         db.session.rollback()
         flash(u'Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'danger')
-        return redirect(url_for('applicant', id=applicant.id))
+        return redirect(url_for('applicant', id=applicant_id))
 
     return redirect(url_for('internal'))
 
