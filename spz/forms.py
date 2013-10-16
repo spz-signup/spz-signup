@@ -154,12 +154,13 @@ class NotificationForm(Form):
     mail_cc = TextField('CC', [validators.Optional()])
     mail_bcc = TextField('BCC', [validators.Optional()])
     mail_courses = SelectMultipleField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
-    mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int,
-                                choices=[(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'])])
+    mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int)
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
-        self.mail_courses.choices = all_courses_to_choicelist()  # See SignupForm for this "trick"
+        # See SignupForm for this "trick"
+        self.mail_courses.choices = all_courses_to_choicelist()
+        self.mail_reply_to.choices = self._reply_to_choices()
 
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
@@ -181,7 +182,12 @@ class NotificationForm(Form):
         return self._unique_mails_from_str(self.mail_bcc.data)
 
     def get_reply_to(self):
-        return dict([(idx, mail) for (idx, mail) in enumerate(app.config["REPLY_TO"])]).get(self.mail_reply_to.data)
+        return dict(self._reply_to_choices()).get(self.mail_reply_to.data)
+
+    @staticmethod
+    def _reply_to_choices():
+        # Start index by 1 instead of 0, for the form submitting to be consistent
+        return [(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
 
 
 class ApplicantForm(Form): #TODO mail, phone

@@ -25,7 +25,7 @@ Mail Zentrale
                     {{ render_textarea(form.mail_body) }}
                 </fieldset>
                     <legend>Empfänger der Mail</legend>
-                    {{ render_option(form.mail_courses, multiple=True, size=10) }}
+                    {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an aktive Kursteilnehmer, unbeachtet ihres Bezahlstatus') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
