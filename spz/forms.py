@@ -244,9 +244,9 @@ class StatusForm(Form):
     registered = TextField(u'Registrierungsdatum')
     payingdate = TextField(u'Zahlungsdatum')
     waiting = BooleanField(u'Warteliste')
-    has_to_pay = BooleanField(u'Zahlend')
+    has_to_pay = BooleanField(u'Zahlungspflichtig')
     discounted = BooleanField(u'Ermäßigt')
-    paidbycash = BooleanField(u'Bar bezahlt')
+    paidbycash = BooleanField(u'Zahlungsart: Bar')
     amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
 
     def populate(self, attendance):
