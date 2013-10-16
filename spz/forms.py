@@ -36,8 +36,8 @@ def origins_to_choicelist():
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
 
-@cache.cached(key_prefix='course')
-def course_to_choicelist():
+@cache.cached(key_prefix='upcoming_courses')
+def upcoming_courses_to_choicelist():
     available = models.Course.query.join(models.Language.courses) \
                                    .order_by(models.Language.name, models.Course.level) \
                                    .all()
@@ -46,6 +46,12 @@ def course_to_choicelist():
 
     return [(course.id, u'{0} {1}{2}'.format(course.language.name, course.level, u' (voll)' if course.is_full() else u''))
             for course in upcoming]
+
+
+@cache.cached(key_prefix='all_courses')
+def all_courses_to_choicelist():
+    return [(course.id, u'{0} {1}'.format(course.language.name, course.level))
+            for course in models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all()]
 
 
 class SignupForm(Form):
@@ -86,7 +92,7 @@ class SignupForm(Form):
         self.degree.choices = degrees_to_choicelist()
         self.graduation.choices = graduations_to_choicelist()
         self.origin.choices = origins_to_choicelist()
-        self.course.choices = course_to_choicelist()
+        self.course.choices = upcoming_courses_to_choicelist()
 
     # Accessors, to encapsulate the way the form represents and retrieves objects
     # This especially ensures that optional fields only get queried if a value is present
@@ -153,7 +159,7 @@ class NotificationForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
-        self.mail_courses.choices = course_to_choicelist()  # See SignupForm for this "trick"
+        self.mail_courses.choices = all_courses_to_choicelist()  # See SignupForm for this "trick"
 
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
