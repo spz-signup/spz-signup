@@ -53,8 +53,8 @@
 				{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
 				{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Science and Technology a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Science and Technology b", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
+				{"level": "B2: Science and Technology a", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
+				{"level": "B2: Science and Technology b", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "B2: Upper Intermediate a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "B2: Upper Intermediate b", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "B2: Upper Intermediate c", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
@@ -67,11 +67,11 @@
 				{"level": "for Work B2e", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Presentation Skills B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
+				{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "Topical Issues", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Writing Skills B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
+				{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79},
 				{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100},
-				{"level": "TOEFL iBT Vorbereitung a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100},
+				{"level": "TOEFL iBT Vorbereitung a", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100},
 				{"level": "Business Leadership C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
 				{"level": "Business Studies 1 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
 				{"level": "Business Studies 2 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
@@ -82,10 +82,10 @@
 				{"level": "for Work C1a", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
 				{"level": "for Work C1b", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
 				{"level": "Intercultural Communication C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Issues in Science & Technology", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Presentation Skills C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Scientific Writing a", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Scientific Writing b", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100}
+				{"level": "Issues in Science & Technology", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100},
+				{"level": "Presentation Skills C1", "limit": 15, "price": 60, "rating_lowest": 80, "rating_highest": 100},
+				{"level": "Scientific Writing a", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100},
+				{"level": "Scientific Writing b", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100}
 			]
 		},
 		{
@@ -94,10 +94,10 @@
 			"signup_begin_iso_utc": "2013-10-14T19:00:00.Z",
 			"signup_end_iso_utc": "2013-10-15T19:00:00.Z",
 			"courses": [
-				{"level": "B2: Science and Technology Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "B2: Upper Intermediate Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "C1: Advanced Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "for Work C1 Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "B2: Science and Technology Intensive", "limit": 15, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "B2: Upper Intermediate Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "C1: Advanced Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
+				{"level": "for Work C1 Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
 				{"level": "in Everyday Situations Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
 			]
 		},
