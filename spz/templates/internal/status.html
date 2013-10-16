@@ -8,14 +8,16 @@
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-8 col-md-offset-2">
         <div class="well">
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Teilnahmestatus</legend>
-                    {{ render_input(form.registered) }}
-                    {{ render_input(form.payingdate) }}
+                    <p>Anmeldedatum: <span class="fmt-datetime">{{ form.registered.data }}</span></p>
+                    {% if form.payingdate.data %}
+                    <p>Bezahldatum: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
+                    {% endif %}
                     {{ render_boolean(form.waiting) }} 
                     {{ render_boolean(form.has_to_pay) }} 
                     {{ render_boolean(form.discounted) }} 
@@ -24,14 +26,14 @@
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
-                        <div class="col-lg-10 col-lg-offset-2">
+                        <div class="col-md-8 col-md-offset-2">
                             <button type="submit" class="btn btn-primary">Änderungen speichern</button>
                             <button type="reset" class="btn btn-default">Zurücksetzen</button>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <div class="col-lg-10 col-lg-offset-2">
+                    <div class="col-md-8 col-md-offset-2">
                         <h4><a href="">Quittung drucken</a></h4>
                         <h4><a href="{{ url_for('remove_attendance', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
                     </div>
