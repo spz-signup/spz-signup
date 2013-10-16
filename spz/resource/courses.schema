@@ -15,11 +15,11 @@
 							"type": "string",
 							"format": "email"
 						},
-						"signup_begin_utc": {
+						"signup_begin_iso_utc": {
 							"type": "string",
 							"format": "date-time"
 						},
-						"signup_end_utc": {
+						"signup_end_iso_utc": {
 							"type": "string",
 							"format": "date-time"
 						},
