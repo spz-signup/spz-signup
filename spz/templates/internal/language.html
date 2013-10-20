@@ -25,11 +25,9 @@ Sprache: {{ language.name }}
                     <th>Maximal</th>
                     <th>Restplätze</th>
                     <th>Bewerber</th>
+                    <th>Aktive</th>
                     <th>Warteliste</th>
-                    <th>Zahlungspflichtig</th>
-                    <th>Preis in Euro</th>
-                    {# <th>Anwesenheitsliste</th> #}
-                    {# <th>Teilnehmerliste</th> #}
+                    <th>Zahlungspflichtige</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,11 +37,9 @@ Sprache: {{ language.name }}
                     <td>{{ course.limit }}</td>
                     <td>{{ course.limit - course.get_active_applicants()|count }}</td>
                     <td>{{ course.attendances|count }}</td>
+                    <td>{{ course.get_active_applicants()|count }}</td>
                     <td>{{ course.get_waiting_applicants()|count }}</td>
                     <td>{{ course.get_paying_applicants()|count }}</td>
-                    <td>{{ course.price }}</td>
-                    {# <td><a href="">Drucken</a></td> #}
-                    {# <td><a href="">Drucken</a></td> #}
                 </tr>
                 {% endfor %}
             </tbody>

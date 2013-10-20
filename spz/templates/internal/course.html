@@ -13,8 +13,6 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
                 <tr>
                     <th>Teilnehmer</th>
                     <th>E-Mail</th>
-                    <th>Telefon</th>
-                    <th>Herkunft</th>
                     <th>Identifikation</th>
                     <th>Status</th>
                 </tr>
@@ -24,8 +22,6 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
                 <tr>
                     <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }} <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }}</a></td>
                     <td><a href="mailto:{{ attendance.applicant.mail }}">{{ attendance.applicant.mail }}</a></td>
-                    <td>{{ attendance.applicant.phone }}</td>
-                    <td>{{ attendance.applicant.origin.name }}</td>
                     <td>{{ attendance.applicant.tag }}</td>
                     <td>
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
