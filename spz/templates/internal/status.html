@@ -13,15 +13,15 @@
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
                 <fieldset>
-                    <legend>Teilnahmestatus</legend>
+                    <legend>Teilnahmestatus: {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}</legend>
                     <p>Anmeldedatum: <span class="fmt-datetime">{{ form.registered.data }}</span></p>
                     {% if form.payingdate.data %}
-                    <p>Bezahldatum: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
+                    <p>Letzte Änderung: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
                     {% endif %}
-                    {{ render_boolean(form.waiting) }} 
-                    {{ render_boolean(form.has_to_pay) }} 
-                    {{ render_boolean(form.discounted) }} 
-                    {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }} 
+                    {{ render_boolean(form.waiting) }}
+                    {{ render_boolean(form.has_to_pay) }}
+                    {{ render_boolean(form.discounted) }}
+                    {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }}
                     {{ render_input(form.amountpaid, type='number', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
                 </fieldset>
                 <fieldset>

@@ -22,13 +22,16 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 			</fieldset>
 
             {% if form.get_attendances() %}
-            <legend>Kurswünsche</legend>
+            <legend>Teilnahmen</legend>
             <table class="table table-striped">
                 <tbody>
 				{% for attendance in form.get_attendances() %}
                     <tr>
                         <td>
 							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+                        </td>
+                        <td>
+                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
                         </td>
                         <td>
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
