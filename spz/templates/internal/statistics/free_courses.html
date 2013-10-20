@@ -14,6 +14,7 @@ Restplätze
                     <th>Kurs</th>
                     <th>Angebot</th>
                     <th>Restplätze</th>
+                    <th>Warteliste</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,7 @@ Restplätze
                         <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.language.name }} {{ course.level }}</a></td>
                         <td>{{ course.limit }}</td>
                         <td>{{ course.limit - course.get_active_applicants()|count }}</td>
+                        <td>{{ course.get_waiting_applicants()|count }}</td>
                     </tr>
                     {% endif %}
                 {% endfor %}
