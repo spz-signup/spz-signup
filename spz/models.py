@@ -48,7 +48,7 @@ class Attendance(db.Model):
     registered = db.Column(db.DateTime())
     payingdate = db.Column(db.DateTime())
 
-    def __init__(self, course, graduation, waiting, has_to_pay, registered=datetime.utcnow()):
+    def __init__(self, course, graduation, waiting, has_to_pay, registered=None):
         self.course = course
         self.graduation = graduation
         self.waiting = waiting
@@ -56,7 +56,7 @@ class Attendance(db.Model):
         self.discounted = False
         self.paidbycash = False
         self.amountpaid = 0
-        self.registered = registered
+        self.registered = datetime.utcnow()
         self.payingdate = None
 
     def __repr__(self):
@@ -109,7 +109,7 @@ class Applicant(db.Model):
 
     registered = db.Column(db.DateTime())
 
-    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, registered=datetime.utcnow()):
+    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, registered=None):
         self.mail = mail
         self.tag = tag
         self.sex = sex
@@ -119,7 +119,7 @@ class Applicant(db.Model):
         self.degree = degree
         self.semester = semester
         self.origin = origin
-        self.registered = registered
+        self.registered = datetime.utcnow()
 
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
