@@ -369,4 +369,18 @@ def free_courses():
     return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all())
 
 
+@auth_required
+@templated('internal/duplicates.html')
+def duplicates():
+    taglist = db.session.query(models.Applicant.tag) \
+                        .filter(models.Applicant.tag != None, models.Applicant.tag != '') \
+                        .group_by(models.Applicant.tag) \
+                        .having(func.count(models.Applicant.id) > 1)\
+                        .all()
+
+    doppelganger = [models.Applicant.query.filter_by(tag=duptag).all() for duptag in map(lambda tup: tup[0], taglist)]
+
+    return dict(doppelganger=doppelganger)
+
+
 # vim: set tabstop=4 shiftwidth=4 expandtab:

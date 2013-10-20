@@ -1,0 +1,50 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input %}
+
+{% block caption %}
+Doppelgänger
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Matrikelnummer</th>
+                    <th>E-Mails</th>
+                    <th>Aktive kostenlose Teilnahmen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicants in doppelganger %}
+                <tr>
+                    <td>
+                        {{ applicants[0].tag }} {# we group_by tag, so it's the same for every applicant #}
+                    </td>
+                    <td>
+                        {% for applicant in applicants %}
+                        <a href="{{ url_for('applicant', id=applicant.id) }}">{{ applicant.mail }}</a>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for applicant in applicants %}
+                        {% for attendance in applicant.attendances %}
+                        {% if not attendance.waiting and not attendance.has_to_pay %}
+                        <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                        </a>{% if not loop.last %}, {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

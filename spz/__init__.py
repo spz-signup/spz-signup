@@ -109,6 +109,8 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/statistics', views.statistics, ['GET']),
           ('/internal/statistics/free_courses', views.free_courses, ['GET']),
 
+          ('/internal/duplicates', views.duplicates, ['GET']),
+
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]
 
