@@ -8,7 +8,6 @@
 from datetime import datetime
 
 from sqlalchemy import func
-from datetime import datetime
 
 from spz import app, db
 
