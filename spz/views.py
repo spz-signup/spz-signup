@@ -162,14 +162,15 @@ def notifications():
 
     if form.validate_on_submit():
         try:
-            # Do not leak mail addresses -- bcc, because the message is unique anyway
-            bcc = form.get_bcc() + form.get_recipients()
+            with mail.connect() as conn:
+                for recipient in form.get_recipients():
+                    msg = Message(sender=g.user, recipients=[recipient], subject=form.get_subject(),
+                                  body=form.get_body(), cc=form.get_cc(), bcc=form.get_bcc(), reply_to=form.get_reply_to())
 
-            msg = Message(sender=g.user, recipients=[g.user], subject=form.mail_subject.data, body=form.mail_body.data,
-                          cc=form.get_cc(), bcc=bcc, reply_to=form.get_reply_to())
-            mail.send(msg)
+                    conn.send(msg)
 
-            flash(u'Mail erfolgreich verschickt', 'success')
+                flash(u'Mail erfolgreich verschickt', 'success')
+
             return redirect(url_for('internal'))
 
         except (AssertionError, socket.error) as e:

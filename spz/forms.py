@@ -165,15 +165,22 @@ class NotificationForm(Form):
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
 
+    # TODO: refactor by using the course's get_active_applicants member function
     def get_recipients(self):
         flatten = lambda x: sum(x, [])
         attendances = flatten([course.attendances for course in self.get_courses()]) # single list of attendances
-        recipients = [attendance.applicant.mail for attendance in attendances if not attendance.waiting]
+        recipients = [attendance.applicant.mail.encode('utf-8') for attendance in attendances if not attendance.waiting]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
+
+    def get_body(self):
+        return self.mail_body.data.encode('utf-8')
+
+    def get_subject(self):
+        return self.mail_subject.data.encode('utf-8')
 
     @staticmethod
     def _unique_mails_from_str(s):
-        return list(set([mail.strip() for mail in s.split(',') if '@' in mail]))  # XXX
+        return list(set([mail.strip().encode('utf-8') for mail in s.split(',') if '@' in mail]))  # XXX
 
     def get_cc(self):
         return self._unique_mails_from_str(self.mail_cc.data)
@@ -187,7 +194,7 @@ class NotificationForm(Form):
     @staticmethod
     def _reply_to_choices():
         # Start index by 1 instead of 0, for the form submitting to be consistent
-        return [(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
+        return [(idx, mail.encode('utf-8')) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
 
 
 class ApplicantForm(Form): #TODO mail, phone
