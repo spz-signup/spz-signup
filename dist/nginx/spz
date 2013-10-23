@@ -1,13 +1,13 @@
 server {
         listen 80;
-        server_name "anmeldung.kit.edu";
+        server_name "anmeldung.spz.kit.edu";
         return 301 https://$server_name$request_uri;
 }
 
 server {
         listen 443 default_server ssl;
 
-        server_name "anmeldung.kit.edu";
+        server_name "anmeldung.spz.kit.edu";
         ssl_certificate      "/etc/ssl/certs/anmeldung.spz.kit.edu.crt";
         ssl_certificate_key  "/etc/ssl/private/anmeldung.spz.kit.edu.key";
         keepalive_timeout    70;
