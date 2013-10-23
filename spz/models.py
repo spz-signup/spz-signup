@@ -218,6 +218,8 @@ class Course(db.Model):
             attendance.has_to_pay = attendance.applicant.has_to_pay()
             attendance.waiting = False
 
+        return to_move
+
 
 class Language(db.Model):
     """Represents a language for a :py:class:`course`.

@@ -169,8 +169,7 @@ def notifications():
 
                     conn.send(msg)
 
-                flash(u'Mail erfolgreich verschickt', 'success')
-
+            flash(u'Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
 
         except (AssertionError, socket.error) as e:
@@ -391,18 +390,39 @@ def restock():
 
     if form.validate_on_submit():
         courses = form.get_courses()
+        restocked_attendances = []
 
         try:
             for course in courses:
-                course.restock()
+                restocked_attendances.extend(course.restock())
 
             db.session.commit()
             flash(u'Kurse bestmöglichst mit Nachrückern gefüllt', 'success')
-
-            return redirect(url_for('internal'))
         except Exception as e:
             db.session.rollback()
             flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'danger')
+            return redirect(url_for('restock'))
+
+        if len(restocked_attendances) == 0:
+            flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind', 'warning')
+            return redirect(url_for('restock'))
+
+        try:
+            with mail.connect() as conn:
+                for attendance in restocked_attendances:
+                    msg = Message(sender=g.user, recipients=[attendance.applicant.mail],
+                                  reply_to=attendance.course.language.reply_to,
+                                  subject=u'[Sprachenzentrum] Freier Platz im Kurs {0} {1}'.
+                                          format(attendance.course.language.name, attendance.course.level),
+                                  body=render_template('mails/restockmail.html', attendance=attendance))
+
+                    conn.send(msg)
+
+            flash(u'Mails erfolgreich verschickt', 'success')
+            return redirect(url_for('internal'))
+
+        except (AssertionError, socket.error) as e:
+            flash(u'Mails konnten nicht verschickt werden: {0}'.format(e), 'danger')
 
     return dict(form=form)
 
