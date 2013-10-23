@@ -89,6 +89,7 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/import/approvals', views.approvals, ['GET', 'POST']),
 
           ('/internal/export', views.exporter, ['GET']),
+          ('/internal/export_course/<int:course_id>', views.export_course, ['GET']),
 
           ('/internal/notifications', views.notifications, ['GET', 'POST']),
 

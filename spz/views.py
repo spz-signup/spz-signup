@@ -6,18 +6,19 @@
 """
 
 import socket
-import csv
 import re
+import StringIO
 from datetime import datetime
 
 from sqlalchemy import func
 
-from flask import request, redirect, render_template, url_for, flash, g
+from flask import request, redirect, render_template, url_for, flash, g, make_response
 from flask.ext.mail import Message
 
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm
+from spz.util.Encoding import UnicodeWriter
 
 
 @templated('signup.html')
@@ -181,7 +182,39 @@ def notifications():
 @auth_required
 @templated('internal/exporter.html')
 def exporter():
-    return None
+    return dict(languages=models.Language.query.order_by(models.Language.name).all())
+
+
+@auth_required
+def export_course(course_id):
+    course = models.Course.query.get_or_404(course_id)
+
+    active_no_debt = [attendance.applicant for attendance in course.attendances
+                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+
+    buf = StringIO.StringIO()
+    out = UnicodeWriter(buf, delimiter=';')
+
+    # XXX: header -- not standardized
+    out.writerow([u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail', u'Matrikelnummer',
+                  u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
+
+    maybe = lambda x: x if x else u''
+
+    idx = 1
+    for applicant in active_no_debt:
+        out.writerow([u'{0}'.format(idx), u'{0}'.format(applicant.id), applicant.first_name,
+                      applicant.last_name, applicant.mail, maybe(applicant.tag), maybe(applicant.phone),
+                      applicant.degree.name if applicant.degree else u'', u'{0}'.format(maybe(applicant.semester)),
+                      applicant.origin.name if applicant.origin else u''])
+        idx += 1
+
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Disposition'] = u'attachment; filename=Kursliste {0} {1}.csv'.format(course.language.name, course.level)
+    resp.mimetype = 'text/csv'
+
+    return resp
+
 
 
 @auth_required
