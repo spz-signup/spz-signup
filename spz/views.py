@@ -254,10 +254,10 @@ def search_applicant():
     applicants = []
 
     if form.validate_on_submit():
-        applicants = models.Applicant.query.filter(models.Applicant.first_name.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.last_name.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.mail.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.tag.like('%{0}%'.format(form.token.data)))
+        applicants = models.Applicant.query.filter(models.Applicant.first_name.like(u'%{0}%'.format(form.token.data))
+                                                   | models.Applicant.last_name.like(u'%{0}%'.format(form.token.data))
+                                                   | models.Applicant.mail.like(u'%{0}%'.format(form.token.data))
+                                                   | models.Applicant.tag.like(u'%{0}%'.format(form.token.data)))
 
     return dict(form=form, applicants=applicants)
 
