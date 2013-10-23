@@ -17,7 +17,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm
 
 
 @templated('signup.html')
@@ -382,6 +382,29 @@ def duplicates():
     doppelganger = [models.Applicant.query.filter_by(tag=duptag).all() for duptag in map(lambda tup: tup[0], taglist)]
 
     return dict(doppelganger=doppelganger)
+
+
+@auth_required
+@templated('internal/restock.html')
+def restock():
+    form = RestockForm()
+
+    if form.validate_on_submit():
+        courses = form.get_courses()
+
+        try:
+            for course in courses:
+                course.restock()
+
+            db.session.commit()
+            flash(u'Kurse bestmöglichst mit Nachrückern gefüllt', 'success')
+
+            return redirect(url_for('internal'))
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'danger')
+
+    return dict(form=form)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

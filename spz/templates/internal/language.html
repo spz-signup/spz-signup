@@ -35,11 +35,11 @@ Sprache: {{ language.name }}
                 <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
                     <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.language.name }} {{ course.level }}</strong></a></td>
                     <td>{{ course.limit }}</td>
-                    <td>{{ course.limit - course.get_active_applicants()|count }}</td>
+                    <td>{{ course.limit - course.get_active_attendances()|count }}</td>
                     <td>{{ course.attendances|count }}</td>
-                    <td>{{ course.get_active_applicants()|count }}</td>
-                    <td>{{ course.get_waiting_applicants()|count }}</td>
-                    <td>{{ course.get_paying_applicants()|count }}</td>
+                    <td>{{ course.get_active_attendances()|count }}</td>
+                    <td>{{ course.get_waiting_attendances()|count }}</td>
+                    <td>{{ course.get_paying_attendances()|count }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

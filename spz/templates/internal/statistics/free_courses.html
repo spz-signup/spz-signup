@@ -19,12 +19,12 @@ Restplätze
             </thead>
             <tbody>
                 {% for course in courses %}
-                    {% if course.limit > course.get_active_applicants()|count %}
+                    {% if course.limit > course.get_active_attendances()|count %}
                     <tr>
                         <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.language.name }} {{ course.level }}</a></td>
                         <td>{{ course.limit }}</td>
-                        <td>{{ course.limit - course.get_active_applicants()|count }}</td>
-                        <td>{{ course.get_waiting_applicants()|count }}</td>
+                        <td>{{ course.limit - course.get_active_attendances()|count }}</td>
+                        <td>{{ course.get_waiting_attendances()|count }}</td>
                     </tr>
                     {% endif %}
                 {% endfor %}

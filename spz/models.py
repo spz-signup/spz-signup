@@ -188,22 +188,35 @@ class Course(db.Model):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
     def is_full(self):
-        return len(self.attendances) >= self.limit
+        return len(self.get_active_attendances()) >= self.limit
 
     def is_overbooked(self):
         return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
 
-    def get_waiting_applicants(self):
+    def get_waiting_attendances(self):
         return filter(lambda attendance: attendance.waiting, self.attendances)
 
-    def get_active_applicants(self):
+    def get_active_attendances(self):
         return filter(lambda attendance: not attendance.waiting, self.attendances)
 
-    def get_paying_applicants(self):
+    def get_paying_attendances(self):
         return filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.attendances)
 
-    def get_free_applicants(self):
+    def get_free_attendances(self):
         return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.attendances)
+
+    def restock(self):
+        # Negative number of free seats may happen if s.o. manually added an attendance
+        num_free = max(self.limit - len(self.get_active_attendances()), 0)
+        waiting = self.get_waiting_attendances()
+
+        to_move = waiting[:num_free]
+
+        # Check if an applicant has to pay before toggling the waiting status,
+        # otherwise he has to pay _from the status change_ on.
+        for attendance in to_move:
+            attendance.has_to_pay = attendance.applicant.has_to_pay()
+            attendance.waiting = False
 
 
 class Language(db.Model):

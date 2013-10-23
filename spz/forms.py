@@ -165,7 +165,7 @@ class NotificationForm(Form):
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
 
-    # TODO: refactor by using the course's get_active_applicants member function
+    # TODO: refactor by using the course's get_active_attendances member function
     def get_recipients(self):
         flatten = lambda x: sum(x, [])
         attendances = flatten([course.attendances for course in self.get_courses()]) # single list of attendances
@@ -279,6 +279,17 @@ class SearchForm(Form):
     """
 
     token = TextField(u'Suchen', [validators.Required(u'Suchparameter muss angegeben werden')])
+
+
+class RestockForm(Form):
+    """Represents a form to fill languages and courses with waiting applicants.
+    """
+
+    language = SelectField(u'Sprache', [validators.Required(u'Die Sprache muss angegeben werden')], coerce=int,
+                           choices=[(language.id, language.name) for language in models.Language.query.order_by(models.Language.name).all()])
+
+    def get_courses(self):
+        return models.Language.query.get(self.language.data).courses.all()
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
