@@ -211,7 +211,7 @@ def export_course(course_id):
         idx += 1
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename=Kursliste {0} {1}.csv'.format(course.language.name, course.level)
+    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0} {1}.csv"'.format(course.language.name, course.level)
     resp.mimetype = 'text/csv'
 
     return resp
