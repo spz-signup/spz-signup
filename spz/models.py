@@ -188,7 +188,7 @@ class Course(db.Model):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
     def is_full(self):
-        return len(self.get_active_attendances()) >= self.limit
+        return len(self.attendances) >= self.limit
 
     def is_overbooked(self):
         return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
