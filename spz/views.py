@@ -248,7 +248,7 @@ def export_language(language_id):
             out.writerow(11 * [''])
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0} {1}.csv"'.format(course.language.name, course.level)
+    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)
     resp.mimetype = 'text/csv'
 
     return resp
