@@ -14,6 +14,7 @@ Sprachen
                     <th>Sprache</th>
                     <th>Anzahl der Kurse</th>
                     <th>Anzahl der Plätze</th>
+                    <th>Export</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,7 @@ Sprachen
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
                     <td>{{ num_courses }}</td>
                     <td>{{ num_seats }}</td>
+                    <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

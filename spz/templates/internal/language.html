@@ -41,7 +41,7 @@ Sprache: {{ language.name }}
                     <td>{{ course.get_active_attendances()|count }}</td>
                     <td>{{ course.get_waiting_attendances()|count }}</td>
                     <td>{{ course.get_paying_attendances()|count }}</td>
-                    <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">Download</button></a></td>
+                    <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

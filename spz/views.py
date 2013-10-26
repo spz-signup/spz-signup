@@ -217,6 +217,42 @@ def export_course(course_id):
     return resp
 
 
+@auth_required
+def export_language(language_id):
+    language = models.Language.query.get_or_404(language_id)
+
+    buf = StringIO.StringIO()
+    out = UnicodeWriter(buf, delimiter=';')
+
+    # XXX: header -- not standardized
+    out.writerow([u'Kurs', u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail',
+                  u'Matrikelnummer', u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
+
+    maybe = lambda x: x if x else u''
+
+    for course in language.courses:
+        active_no_debt = [attendance.applicant for attendance in course.attendances
+                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+
+        idx = 1
+        for applicant in active_no_debt:
+            out.writerow([u'{0} {1}'.format(course.language.name, course.level), u'{0}'.format(idx), u'{0}'.format(applicant.id), applicant.first_name,
+                          applicant.last_name, applicant.mail, maybe(applicant.tag), maybe(applicant.phone),
+                          applicant.degree.name if applicant.degree else u'', u'{0}'.format(maybe(applicant.semester)),
+                          applicant.origin.name if applicant.origin else u''])
+            idx += 1
+
+        # XXX: write two newlines after a course: rowlen * ''
+        if len(active_no_debt) > 0:
+            out.writerow(11 * [''])
+            out.writerow(11 * [''])
+
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0} {1}.csv"'.format(course.language.name, course.level)
+    resp.mimetype = 'text/csv'
+
+    return resp
+
 
 @auth_required
 @templated('internal/lists.html')
