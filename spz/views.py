@@ -242,11 +242,6 @@ def export_language(language_id):
                           applicant.origin.name if applicant.origin else u''])
             idx += 1
 
-        # XXX: write two newlines after a course: rowlen * ''
-        if len(active_no_debt) > 0:
-            out.writerow(11 * [''])
-            out.writerow(11 * [''])
-
     resp = make_response(buf.getvalue())
     resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)
     resp.mimetype = 'text/csv'
