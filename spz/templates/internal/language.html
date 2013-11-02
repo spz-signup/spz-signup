@@ -32,6 +32,7 @@ Sprache: {{ language.name }}
                 </tr>
             </thead>
             <tbody>
+                {% set sums = {'limit': 0, 'rest': 0, 'attendances': 0, 'active': 0, 'waiting': 0, 'paying': 0} %}
                 {% for course in language.courses.all() %}
                 <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
                     <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.language.name }} {{ course.level }}</strong></a></td>
@@ -43,8 +44,28 @@ Sprache: {{ language.name }}
                     <td>{{ course.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
+                {% if sums.update({
+                  'limit': sums['limit'] + course.limit,
+                  'rest': sums['rest'] + course.limit - course.get_active_attendances()|count,
+                  'attendances': sums['attendances'] + course.attendances|count,
+                  'active': sums['active'] + course.get_active_attendances()|count,
+                  'waiting': sums['waiting'] + course.get_waiting_attendances()|count,
+                  'paying': sums['paying'] + course.get_paying_attendances()|count,
+                }) %}{% endif %}
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>&Sigma;</th>
+                    <th>{{ sums['limit'] }}</th>
+                    <th>{{ sums['rest'] }}</th>
+                    <th>{{ sums['attendances'] }}</th>
+                    <th>{{ sums['active'] }}</th>
+                    <th>{{ sums['waiting'] }}</th>
+                    <th>{{ sums['paying'] }}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

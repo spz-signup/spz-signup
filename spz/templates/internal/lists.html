@@ -18,6 +18,7 @@ Sprachen
                 </tr>
             </thead>
             <tbody>
+                {% set sums = {'courses': 0, 'seats': 0} %}
                 {% for language, num_courses, num_seats in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
@@ -25,8 +26,17 @@ Sprachen
                     <td>{{ num_seats }}</td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
+                {% if sums.update({'courses': sums['courses'] + num_courses, 'seats': sums['seats'] + num_seats}) %}{% endif %}
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>&Sigma;</th>
+                    <th>{{ sums['courses'] }}</th>
+                    <th>{{ sums['seats'] }}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
