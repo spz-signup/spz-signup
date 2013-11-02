@@ -32,7 +32,9 @@ Bewerbersuche
         <table class="table table-striped sortable">
             <thead>
                 <tr>
-                    <th>Vorname Nachname</th>
+                    <th>Anrede</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
                     <th>E-Mail</th>
                     <th>Matrikelnummer</th>
                     <th>Kurswünsche</th>
@@ -41,7 +43,9 @@ Bewerbersuche
             <tbody>
                 {% for applicant in applicants %}
                 <tr>
-                    <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }} {{ applicant.last_name }}</a></td>
+                    <td>{{ 'Herr' if applicant.sex else 'Frau' }}</a></td>
+                    <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }}</a></td>
+                    <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.last_name }}</a></td>
                     <td>{{ applicant.mail }}</td>
                     <td>{{ applicant.tag }}</td>
                     <td><a href="{{ url_for('applicant_attendances', id=applicant.id)}}">{{ applicant.attendances|count }}</a></td>
