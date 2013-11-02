@@ -23,7 +23,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 
             {% if form.get_attendances() %}
             <legend>Teilnahmen</legend>
-            <table class="table table-striped">
+            <table class="table table-striped sortable">
                 <tbody>
 				{% for attendance in form.get_attendances() %}
                     <tr>

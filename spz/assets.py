@@ -38,6 +38,7 @@ all_js = Bundle('js/jquery-1.10.2.min.js',
                 'js/parsley-1.1.16.min.js',
                 'js/moment.2.0.0.min.js',
                 'js/bootstrap.min.js',
+                'js/bootstrap-sortable.js',
                 'js/intro.min.js',
                 filters='rjsmin', output='js/packed.js')
 
@@ -55,6 +56,7 @@ tools_js = Bundle('js/persona.js',
 # Stylesheet bundles:
 
 all_css = Bundle('css/bootstrap.min.css',
+                 'css/bootstrap-sortable.css',
                  'css/sidebar.css',
                  'css/scrollbars.css',
                  'css/introjs.min.css',
