@@ -12,9 +12,13 @@ Sprachen
             <thead>
                 <tr>
                     <th>Sprache</th>
-                    <th>Anzahl der Kurse</th>
-                    <th>Anzahl der Plätze</th>
-                    <th>Export</th>
+                    <th>Kurse</th>
+                    <th>Plätze</th>
+                    <th>Wartende</th>
+                    <th>Aktive</th>
+                    <th>Zahlende</th>
+                    <th>Bezahlte</th>
+                    <td>Export</td>
                 </tr>
             </thead>
             <tbody>
@@ -22,8 +26,12 @@ Sprachen
                 {% for language, num_courses, num_seats in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
-                    <td>{{ num_courses }}</td>
-                    <td>{{ num_seats }}</td>
+                    <td align="right">{{ num_courses }}</td>
+                    <td align="right">{{ num_seats }}</td>
+                    <td align="right">{{ num_seats }}</td>
+                    <td align="right">{{ num_seats }}</td>
+                    <td align="right">{{ num_seats }}</td>
+                    <td align="right">{{ num_seats }}</td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({'courses': sums['courses'] + num_courses, 'seats': sums['seats'] + num_seats}) %}{% endif %}
@@ -32,9 +40,9 @@ Sprachen
             <tfoot>
                 <tr>
                     <th>&Sigma;</th>
-                    <th>{{ sums['courses'] }}</th>
-                    <th>{{ sums['seats'] }}</th>
-                    <th></th>
+                    <td align="right">{{ sums['courses'] }}</td>
+                    <td align="right">{{ sums['seats'] }}</td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
