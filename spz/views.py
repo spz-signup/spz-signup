@@ -258,7 +258,20 @@ def lists():
                           .group_by(models.Language) \
                           .order_by(models.Language.name) \
                           .all()
-
+                          
+    lang_misc = db.session.query(models.Language, 
+                func.count(models.Language.courses),
+                func.sum(models.Course.limit), 
+                func.count(models.Attendance.waiting), 
+                func.count(models.Attendance.has_to_pay), 
+                func.count(models.Attendance.discounted), 
+                func.count(models.Attendance.paidbycash), 
+                func.sum(models.Attendance.amountpaid)) \
+                  .join(models.Course, models.Language.courses) \
+                  .join(models.Attendance, models.Course.attendances) \
+                  .group_by(models.Language) \
+                  .order_by(models.Language.name) \
+                  .all()
     return dict(lang_misc=lang_misc)
 
 

@@ -15,33 +15,37 @@ Sprachen
                     <th>Kurse</th>
                     <th>Plätze</th>
                     <th>Wartende</th>
-                    <th>Aktive</th>
                     <th>Zahlende</th>
-                    <th>Bezahlte</th>
+                    <th>Ermäßigte</th>
+                    <th>Geldeingang</th>
                     <td>Export</td>
                 </tr>
             </thead>
             <tbody>
-                {% set sums = {'courses': 0, 'seats': 0} %}
-                {% for language, num_courses, num_seats in lang_misc %}
+                {% set sums = {'courses_t': 0, 'seats_t': 0, 'paid_t': 0} %}
+                {% for language, courses, seats, waiting, paying, discounted, cash, paid in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
-                    <td align="right">{{ num_courses }}</td>
-                    <td align="right">{{ num_seats }}</td>
-                    <td align="right">{{ num_seats }}</td>
-                    <td align="right">{{ num_seats }}</td>
-                    <td align="right">{{ num_seats }}</td>
-                    <td align="right">{{ num_seats }}</td>
+                    <td align="right">{{ courses }}</td>
+                    <td align="right">{{ seats }}</td>
+                    <td align="right">{{ waiting }}</td>
+                    <td align="right">{{ paying }}</td>
+                    <td align="right">{{ discounted }}</td>
+                    <td align="right">{{ paid }}</td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
-                {% if sums.update({'courses': sums['courses'] + num_courses, 'seats': sums['seats'] + num_seats}) %}{% endif %}
+                {% if sums.update({'courses_t': sums['courses_t'] + courses, 'seats_t': sums['seats_t'] + seats, 'paid_t': sums['paid_t'] + paid}) %}{% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
                     <th>&Sigma;</th>
-                    <td align="right">{{ sums['courses'] }}</td>
-                    <td align="right">{{ sums['seats'] }}</td>
+                    <td align="right">{{ sums['courses_t'] }}</td>
+                    <td align="right">{{ sums['seats_t'] }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td align="right">{{ sums['paid_t'] }}</td>
                     <td></td>
                 </tr>
             </tfoot>
