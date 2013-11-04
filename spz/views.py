@@ -267,8 +267,8 @@ def lists():
                 func.count(models.Attendance.discounted), 
                 func.count(models.Attendance.paidbycash), 
                 func.sum(models.Attendance.amountpaid)) \
-                  .join(models.Course, models.Language.courses) \
-                  .join(models.Attendance, models.Course.attendances) \
+                  .outerjoin(models.Course, models.Language.courses) \
+                  .outerjoin(models.Attendance, models.Course.attendances) \
                   .group_by(models.Language) \
                   .order_by(models.Language.name) \
                   .all()

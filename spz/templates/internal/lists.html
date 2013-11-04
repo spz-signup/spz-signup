@@ -31,10 +31,11 @@ Sprachen
                     <td align="right">{{ waiting }}</td>
                     <td align="right">{{ paying }}</td>
                     <td align="right">{{ discounted }}</td>
-                    <td align="right">{{ paid }}</td>
+                    {% set p = paid if paid else 0 %}
+                    <td align="right">{{ p }}</td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
-                {% if sums.update({'courses_t': sums['courses_t'] + courses, 'seats_t': sums['seats_t'] + seats, 'paid_t': sums['paid_t'] + paid}) %}{% endif %}
+                {% if sums.update({'courses_t': sums['courses_t'] + courses, 'seats_t': sums['seats_t'] + seats, 'paid_t': sums['paid_t'] + p }) %}{% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
