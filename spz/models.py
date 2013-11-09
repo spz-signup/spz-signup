@@ -257,16 +257,16 @@ class Language(db.Model):
 
     # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
     def get_waiting_attendances(self):
-        return sum(map(lambda c: c.get_waiting_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_waiting_attendances(), self.courses.all()), [])
 
     def get_active_attendances(self):
-        return sum(map(lambda c: c.get_active_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_active_attendances(), self.courses.all()), [])
 
     def get_paying_attendances(self):
-        return sum(map(lambda c: c.get_paying_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_paying_attendances(), self.courses.all()), [])
 
     def get_free_attendances(self):
-        return sum(map(lambda c: c.get_free_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_free_attendances(), self.courses.all()), [])
 
 
 class Degree(db.Model):

@@ -14,28 +14,32 @@ Sprachen
                     <th>Sprache</th>
                     <th>Kurse</th>
                     <th>Plätze</th>
-                    <th>Wartende</th>
-                    <th>Zahlende</th>
-                    <th>Ermäßigte</th>
-                    <th>Geldeingang</th>
+                    <th>Warteliste</th>
+                    <th>Aktive</th>
+                    <th>Zahlungspflichtige</th>
                     <td>Export</td>
                 </tr>
             </thead>
             <tbody>
-                {% set sums = {'courses_t': 0, 'seats_t': 0, 'paid_t': 0} %}
-                {% for language, courses, seats, waiting, paying, discounted, cash, paid in lang_misc %}
+                {% set sums = {'courses_t': 0, 'seats_t': 0, 'waiting_t': 0, 'active_t': 0, 'paying_t': 0} %}
+                {% for language, courses, seats in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
                     <td align="right">{{ courses }}</td>
                     <td align="right">{{ seats }}</td>
-                    <td align="right">{{ waiting }}</td>
-                    <td align="right">{{ paying }}</td>
-                    <td align="right">{{ discounted }}</td>
-                    {% set p = paid if paid else 0 %}
-                    <td align="right">{{ p }}</td>
+                    <td align="right">{{ language.get_waiting_attendances()|count }}</td>
+                    <td align="right">{{ language.get_active_attendances()|count }}</td>
+                    <td align="right">{{ language.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
-                {% if sums.update({'courses_t': sums['courses_t'] + courses, 'seats_t': sums['seats_t'] + seats, 'paid_t': sums['paid_t'] + p }) %}{% endif %}
+                {% if sums.update({
+                    'courses_t': sums['courses_t'] + courses, 
+                    'seats_t': sums['seats_t'] + seats, 
+                    'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count, 
+                    'active_t': sums['active_t'] + language.get_active_attendances()|count, 
+                    'paying_t': sums['paying_t'] + language.get_paying_attendances()|count 
+                }) %}
+                {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
@@ -43,10 +47,9 @@ Sprachen
                     <th>&Sigma;</th>
                     <td align="right">{{ sums['courses_t'] }}</td>
                     <td align="right">{{ sums['seats_t'] }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td align="right">{{ sums['paid_t'] }}</td>
+                    <td align="right">{{ sums['waiting_t'] }}</td>
+                    <td align="right">{{ sums['active_t'] }}</td>
+                    <td align="right">{{ sums['paying_t'] }}</td>
                     <td></td>
                 </tr>
             </tfoot>
