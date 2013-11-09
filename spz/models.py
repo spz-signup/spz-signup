@@ -255,6 +255,19 @@ class Language(db.Model):
         now = datetime.utcnow()
         return self.signup_begin < now < self.signup_end
 
+    # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
+    def get_waiting_attendances(self):
+        return sum(map(lambda c: c.get_waiting_attendances(), self.courses.all()), [])
+
+    def get_active_attendances(self):
+        return sum(map(lambda c: c.get_active_attendances(), self.courses.all()), [])
+
+    def get_paying_attendances(self):
+        return sum(map(lambda c: c.get_paying_attendances(), self.courses.all()), [])
+
+    def get_free_attendances(self):
+        return sum(map(lambda c: c.get_free_attendances(), self.courses.all()), [])
+
 
 class Degree(db.Model):
     """Represents the degree a :py:class:`Applicant` aims for.
