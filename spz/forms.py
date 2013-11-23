@@ -289,7 +289,7 @@ class StatusForm(Form):
         self.graduation.choices = graduations_to_choicelist()
 
     def populate(self, attendance):
-        self.graduation.data = attendance.graduation.id
+        self.graduation.data = attendance.graduation.id if attendance.graduation else None
         self.registered.data = attendance.registered
         self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
