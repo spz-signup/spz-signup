@@ -402,22 +402,23 @@ def payments():
 def status(applicant_id, course_id):
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
     form = StatusForm()
-    
+
     if form.validate_on_submit():
         try:
+            attendance.graduation = form.get_graduation()
             attendance.payingdate = datetime.utcnow()
-            attendance.waiting =    form.waiting.data
+            attendance.waiting = form.waiting.data
             attendance.has_to_pay = form.has_to_pay.data
             attendance.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
-            attendance.amountpaid = form.amountpaid.data 
+            attendance.amountpaid = form.amountpaid.data
             db.session.commit()
             flash(u'Der Status wurde aktualisiert', 'success')
         except Exception as e:
             db.session.rollback()
             flash(u'Der Status konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
             return dict(form=form, attendance=attendance)
-            
+
     form.populate(attendance)
     return dict(form=form, attendance=attendance)
 

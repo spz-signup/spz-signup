@@ -248,6 +248,7 @@ class StatusForm(Form):
 
     """
 
+    graduation = SelectField(u'Kursabschluss', [validators.Optional()], coerce=int)
     registered = TextField(u'Registrierungsdatum')
     payingdate = TextField(u'Zahlungsdatum')
     waiting = BooleanField(u'Warteliste')
@@ -256,7 +257,15 @@ class StatusForm(Form):
     paidbycash = BooleanField(u'Zahlungsart: Bar')
     amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
 
+    def __init__(self, *args, **kwargs):
+        super(StatusForm, self).__init__(*args, **kwargs)
+        self._populate()
+
+    def _populate(self):
+        self.graduation.choices = graduations_to_choicelist()
+
     def populate(self, attendance):
+        self.graduation.data = attendance.graduation.id
         self.registered.data = attendance.registered
         self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
@@ -264,6 +273,9 @@ class StatusForm(Form):
         self.discounted.data = attendance.discounted
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
+
+    def get_graduation(self):
+        return models.Graduation.query.get(self.graduation.data) if self.graduation.data else None
 
 
 class PaymentForm(Form):
