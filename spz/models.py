@@ -98,7 +98,7 @@ class Applicant(db.Model):
     degree_id = db.Column(db.Integer, db.ForeignKey('degree.id'))
     degree = db.relationship("Degree", backref="applicants")
 
-    semester = db.Column(db.Integer)
+    semester = db.Column(db.Integer)  # TODO constraint: > 0, but still optional
 
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")

@@ -288,7 +288,11 @@ def applicant(id):
             applicant.phone = form.phone.data
             applicant.mail = form.mail.data
             applicant.tag = form.tag.data
-            applicant.origin = models.Origin.query.get(form.origin.data)
+            applicant.origin = form.get_origin()
+            applicant.sex = form.get_sex()
+            applicant.degree = form.get_degree()
+            applicant.semester = form.get_semester()
+
             db.session.commit()
             flash(u'Der Bewerber wurde aktualisiert', 'success')
 

@@ -13,12 +13,16 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 			{{ form.hidden_tag() }}
 			<fieldset>
 				<legend>Persönliche Angaben</legend>
+                {{ render_option(form.sex) }}
 				{{ render_input(form.first_name, required=False) }}
 				{{ render_input(form.last_name, required=False) }}
 				{{ render_input(form.phone, required=False) }}
 				{{ render_input(form.mail, required=False) }}
 				{{ render_input(form.tag, required=False) }}
 				{{ render_option(form.origin) }}
+
+                {{ render_option(form.degree) }}
+                {{ render_input(form.semester) }}
 			</fieldset>
 
             {% if form.get_attendances() %}

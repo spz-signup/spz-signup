@@ -197,7 +197,7 @@ class NotificationForm(Form):
         return [(idx, mail.encode('utf-8')) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
 
 
-class ApplicantForm(Form): #TODO mail, phone
+class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
     """Represents the form for editing an applicant and his/her attendances.
 
     """
@@ -210,6 +210,9 @@ class ApplicantForm(Form): #TODO mail, phone
 
     origin = SelectField(u'Bewerberkreis', [validators.Required(u'Bewerberkreis muss angegeben werden')], coerce=int)
 
+    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')],
+                      choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+    degree = SelectField(u'Studienabschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
 
     add_to = SelectField(u'Neue Teilnahme', [validators.Optional()], coerce=int, choices=[])
@@ -218,6 +221,7 @@ class ApplicantForm(Form): #TODO mail, phone
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
         self.origin.choices = origins_to_choicelist()
+        self.degree.choices = degrees_to_choicelist()
         self.add_to.choices = all_courses_to_choicelist()
         self.remove_from.choices = all_courses_to_choicelist()
 
@@ -229,6 +233,9 @@ class ApplicantForm(Form): #TODO mail, phone
         self.phone.data = self.applicant.phone
         self.tag.data = self.applicant.tag
         self.origin.data = self.applicant.origin_id
+        self.sex.data = 1 if self.applicant.sex else 2
+        self.degree.data = self.applicant.degree.id if self.applicant.degree else None
+        self.semester.data = self.applicant.semester
 
     def get_applicant(self):
         return self.applicant
@@ -241,6 +248,18 @@ class ApplicantForm(Form): #TODO mail, phone
 
     def get_remove_from(self):
         return models.Course.query.get(self.remove_from.data) if self.remove_from.data else None
+
+    def get_sex(self):
+        return True if self.sex.data == 1 else False
+
+    def get_origin(self):
+        return models.Origin.query.get(self.origin.data)
+
+    def get_degree(self):
+        return models.Degree.query.get(self.degree.data) if self.degree.data else None
+
+    def get_semester(self):
+        return self.semester.data if self.semester.data else None
 
 
 class StatusForm(Form):
