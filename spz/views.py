@@ -260,6 +260,16 @@ def export_language(language_id):
 @auth_required
 def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
+    
+    class LISTE(FPDF):
+        def header(this):
+            this.set_font('Arial','B',15)
+#            this.cell(0, 10, 'Kursliste', 0, 1, 'C')
+        def footer(this):
+            this.set_y(-15)
+            now = datetime.now()
+            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}'.format(now.day, now.month, now.year, now.hour, now.minute), 0, 0, 'R')
+            
 
     buf = StringIO.StringIO()
     out = UnicodeWriter(buf, delimiter=';')
@@ -274,32 +284,41 @@ def print_language(language_id):
         active_no_debt = [attendance.applicant for attendance in course.attendances
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
-        pdf = FPDF('L','mm','A4')
+        pdf = LISTE('L','mm','A4')
         pdf.add_page()
         pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
         course = u'{0} {1}'.format(course.language.name, course.level)
         pdf.set_font('Arial','B',16)
-        pdf.cell(40,10,course)
-        pdf.ln()
+        pdf.cell(0, 10, course, 0, 1, 'C')
         pdf.set_font('Arial','',10)
-        hight = 7
+        hight = 6
         
         idx = 1
+        pdf.cell(7, hight, u'Nr.', 1)
+        pdf.cell(30, hight, u'Vorname', 1)
+        pdf.cell(30, hight, u'Nachname', 1)
+        pdf.cell(70, hight, u'Herkunft', 1)
+        pdf.cell(15, hight, u'Matr.', 1)
+        pdf.cell(60, hight, u'E-Mail', 1)
+        pdf.cell(20, hight, u'Telefon', 1)
+        pdf.cell(10, hight, u'Sem.', 1)
+        pdf.cell(10, hight, u'', 1)
+        pdf.cell(15, hight, u'Punkte', 1)
+        pdf.cell(15, hight, u'Note', 1, 1)
         for applicant in active_no_debt:
-            pdf.cell(5, hight, u'{0}'.format(idx), 1)
+            pdf.cell(7, hight, u'{0}'.format(idx), 1, 0, 'R')
             pdf.cell(30, hight, u'{0}'.format(applicant.first_name), 1)
             pdf.cell(30, hight, u'{0}'.format(applicant.last_name), 1)
-            pdf.cell(80, hight, u'{0}'.format(maybe(applicant.origin.name)), 1)
+            pdf.cell(70, hight, u'{0}'.format(maybe(applicant.origin.name)), 1)
             pdf.cell(15, hight, maybe(applicant.tag), 1)
             pdf.cell(60, hight, applicant.mail, 1)
             pdf.cell(20, hight, applicant.phone, 1)
-            pdf.cell(5, hight, u'{0}'.format(maybe(applicant.semester)), 1)
-            pdf.cell(5, hight, u'', 1)
+            pdf.cell(10, hight, u'{0}'.format(maybe(applicant.semester)), 1, 0, 'R')
+            pdf.cell(10, hight, u'', 1)
             pdf.cell(15, hight, u'', 1)
-            pdf.cell(15, hight, u'', 1)
+            pdf.cell(15, hight, u'', 1, 1)
 
             idx += 1
-            pdf.ln()
 
         file_name = 'listen/%s.pdf' % course
         pdf.output(file_name,'F')
