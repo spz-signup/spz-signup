@@ -10,6 +10,7 @@ import re
 import csv
 import StringIO
 from datetime import datetime
+from fpdf import FPDF
 
 from sqlalchemy import func
 
@@ -236,11 +237,72 @@ def export_language(language_id):
 
         idx = 1
         for applicant in active_no_debt:
-            out.writerow([u'{0} {1}'.format(course.language.name, course.level), u'{0}'.format(idx), u'{0}'.format(applicant.id), applicant.first_name,
-                          applicant.last_name, applicant.mail, maybe(applicant.tag), maybe(applicant.phone),
-                          applicant.degree.name if applicant.degree else u'', u'{0}'.format(maybe(applicant.semester)),
+            out.writerow([u'{0} {1}'.format(course.language.name, course.level), 
+                          u'{0}'.format(idx), 
+                          u'{0}'.format(applicant.id), 
+                          applicant.first_name,
+                          applicant.last_name, 
+                          applicant.mail, 
+                          maybe(applicant.tag), 
+                          maybe(applicant.phone),
+                          applicant.degree.name if applicant.degree else u'', 
+                          u'{0}'.format(maybe(applicant.semester)),
                           applicant.origin.name if applicant.origin else u''])
             idx += 1
+
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)
+    resp.mimetype = 'text/csv'
+
+    return resp
+
+
+@auth_required
+def print_language(language_id):
+    language = models.Language.query.get_or_404(language_id)
+
+    buf = StringIO.StringIO()
+    out = UnicodeWriter(buf, delimiter=';')
+
+    # XXX: header -- not standardized
+    out.writerow([u'Kurs', u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail',
+                  u'Matrikelnummer', u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
+
+    maybe = lambda x: x if x else u''
+
+    for course in language.courses:
+        active_no_debt = [attendance.applicant for attendance in course.attendances
+                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+
+        pdf = FPDF('L','mm','A4')
+        pdf.add_page()
+        pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
+        course = u'{0} {1}'.format(course.language.name, course.level)
+        pdf.set_font('Arial','B',16)
+        pdf.cell(40,10,course)
+        pdf.ln()
+        pdf.set_font('Arial','',10)
+        hight = 7
+        
+        idx = 1
+        for applicant in active_no_debt:
+            pdf.cell(5, hight, u'{0}'.format(idx), 1)
+            pdf.cell(30, hight, u'{0}'.format(applicant.first_name), 1)
+            pdf.cell(30, hight, u'{0}'.format(applicant.last_name), 1)
+            pdf.cell(80, hight, u'{0}'.format(maybe(applicant.origin.name)), 1)
+            pdf.cell(15, hight, maybe(applicant.tag), 1)
+            pdf.cell(60, hight, applicant.mail, 1)
+            pdf.cell(20, hight, applicant.phone, 1)
+            pdf.cell(5, hight, u'{0}'.format(maybe(applicant.semester)), 1)
+            pdf.cell(5, hight, u'', 1)
+            pdf.cell(15, hight, u'', 1)
+            pdf.cell(15, hight, u'', 1)
+
+            idx += 1
+            pdf.ln()
+
+        file_name = 'listen/%s.pdf' % course
+        pdf.output(file_name,'F')
 
     resp = make_response(buf.getvalue())
     resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)

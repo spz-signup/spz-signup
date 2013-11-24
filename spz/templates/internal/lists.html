@@ -30,6 +30,7 @@ Sprachen
                     <td align="right">{{ language.get_waiting_attendances()|count }}</td>
                     <td align="right">{{ language.get_active_attendances()|count }}</td>
                     <td align="right">{{ language.get_paying_attendances()|count }}</td>
+                    <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({
