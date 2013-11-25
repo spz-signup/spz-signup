@@ -258,6 +258,7 @@ def export_language(language_id):
 
 
 @auth_required
+@templated('internal/lists.html')
 def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
     
@@ -268,16 +269,8 @@ def print_language(language_id):
         def footer(this):
             this.set_y(-15)
             now = datetime.now()
-            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}'.format(now.day, now.month, now.year, now.hour, now.minute), 0, 0, 'R')
+            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}:{5}'.format(now.day, now.month, now.year, now.hour, now.minute, now.second), 0, 0, 'R')
             
-
-    buf = StringIO.StringIO()
-    out = UnicodeWriter(buf, delimiter=';')
-
-    # XXX: header -- not standardized
-    out.writerow([u'Kurs', u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail',
-                  u'Matrikelnummer', u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
-
     maybe = lambda x: x if x else u''
 
     for course in language.courses:
@@ -323,11 +316,13 @@ def print_language(language_id):
         file_name = 'listen/%s.pdf' % course
         pdf.output(file_name,'F')
 
-    resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)
-    resp.mimetype = 'text/csv'
+    lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
+                          .join(models.Course, models.Language.courses) \
+                          .group_by(models.Language) \
+                          .order_by(models.Language.name) \
+                          .all()
 
-    return resp
+    return dict(lang_misc=lang_misc)
 
 
 @auth_required

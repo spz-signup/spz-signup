@@ -16,7 +16,7 @@ Sprachen
                     <th>Plätze</th>
                     <th>Warteliste</th>
                     <th>Aktive</th>
-                    <th>Zahlungspflichtige</th>
+                    <th>Zahlende</th>
                     <td>Export</td>
                 </tr>
             </thead>
@@ -25,11 +25,11 @@ Sprachen
                 {% for language, courses, seats in lang_misc %}
                 <tr>
                     <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
-                    <td align="right">{{ courses }}</td>
-                    <td align="right">{{ seats }}</td>
-                    <td align="right">{{ language.get_waiting_attendances()|count }}</td>
-                    <td align="right">{{ language.get_active_attendances()|count }}</td>
-                    <td align="right">{{ language.get_paying_attendances()|count }}</td>
+                    <td>{{ courses }}</td>
+                    <td>{{ seats }}</td>
+                    <td>{{ language.get_waiting_attendances()|count }}</td>
+                    <td>{{ language.get_active_attendances()|count }}</td>
+                    <td>{{ language.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
@@ -46,11 +46,11 @@ Sprachen
             <tfoot>
                 <tr>
                     <th>&Sigma;</th>
-                    <td align="right">{{ sums['courses_t'] }}</td>
-                    <td align="right">{{ sums['seats_t'] }}</td>
-                    <td align="right">{{ sums['waiting_t'] }}</td>
-                    <td align="right">{{ sums['active_t'] }}</td>
-                    <td align="right">{{ sums['paying_t'] }}</td>
+                    <td>{{ sums['courses_t'] }}</td>
+                    <td>{{ sums['seats_t'] }}</td>
+                    <td>{{ sums['waiting_t'] }}</td>
+                    <td>{{ sums['active_t'] }}</td>
+                    <td>{{ sums['paying_t'] }}</td>
                     <td></td>
                 </tr>
             </tfoot>
