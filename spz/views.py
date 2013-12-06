@@ -264,12 +264,22 @@ def print_language(language_id):
     
     class LISTE(FPDF):
         def header(this):
-            this.set_font('Arial','B',15)
-#            this.cell(0, 10, 'Kursliste', 0, 1, 'C')
-        def footer(this):
-            this.set_y(-15)
             now = datetime.now()
-            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}:{5}'.format(now.day, now.month, now.year, now.hour, now.minute, now.second), 0, 0, 'R')
+            if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
+            elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
+            else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
+            this.set_font('Arial','',10)
+            #fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
+            this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
+            this.cell(0, 5, semester, 0, 1, 'R')
+            this.set_font('Arial','B',10)
+            this.cell(0, 5, u'Sprachenzentrum', 0, 1)
+        def footer(this):
+            this.set_y(-35)
+            now = datetime.now()
+            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}:{5}'.format(now.day, now.month, now.year, now.hour, now.minute, now.second), 0, 1, 'R')
+            this.multi_cell(200, 5, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht an der Kursteilnahme berechtigt. Dementsprechend könnten Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 0)
+            this.multi_cell(200, 5, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat - falls es eine gab - und dann die Liste wieder zurückgeben. Danke!', 0, 0)
             
     maybe = lambda x: x if x else u''
 
@@ -283,30 +293,30 @@ def print_language(language_id):
         course = u'{0} {1}'.format(course.language.name, course.level)
         pdf.set_font('Arial','B',16)
         pdf.cell(0, 10, course, 0, 1, 'C')
+
+
         pdf.set_font('Arial','',10)
         hight = 6
         
         idx = 1
         pdf.cell(7, hight, u'Nr.', 1)
-        pdf.cell(30, hight, u'Vorname', 1)
-        pdf.cell(30, hight, u'Nachname', 1)
-        pdf.cell(70, hight, u'Herkunft', 1)
-        pdf.cell(15, hight, u'Matr.', 1)
-        pdf.cell(60, hight, u'E-Mail', 1)
-        pdf.cell(20, hight, u'Telefon', 1)
-        pdf.cell(10, hight, u'Sem.', 1)
-        pdf.cell(10, hight, u'', 1)
-        pdf.cell(15, hight, u'Punkte', 1)
-        pdf.cell(15, hight, u'Note', 1, 1)
+        pdf.cell(40, hight, u'Nachname', 1)
+        pdf.cell(40, hight, u'Vorname', 1)
+        pdf.cell(20, hight, u'Matr.', 1)
+        pdf.cell(80, hight, u'E-Mail', 1)
+        pdf.cell(30, hight, u'Telefon', 1)
+        pdf.cell(10, hight, u'Tln.', 1)
+        pdf.cell(10, hight, u'Prf.', 1)
+        pdf.cell(15, hight, u'Note', 1)
+        pdf.cell(15, hight, u'Punkte', 1, 1)
         for applicant in active_no_debt:
             pdf.cell(7, hight, u'{0}'.format(idx), 1, 0, 'R')
-            pdf.cell(30, hight, u'{0}'.format(applicant.first_name), 1)
-            pdf.cell(30, hight, u'{0}'.format(applicant.last_name), 1)
-            pdf.cell(70, hight, u'{0}'.format(maybe(applicant.origin.name)), 1)
-            pdf.cell(15, hight, maybe(applicant.tag), 1)
-            pdf.cell(60, hight, applicant.mail, 1)
-            pdf.cell(20, hight, applicant.phone, 1)
-            pdf.cell(10, hight, u'{0}'.format(maybe(applicant.semester)), 1, 0, 'R')
+            pdf.cell(40, hight, u'{0}'.format(applicant.last_name), 1)
+            pdf.cell(40, hight, u'{0}'.format(applicant.first_name), 1)
+            pdf.cell(20, hight, maybe(applicant.tag), 1)
+            pdf.cell(80, hight, applicant.mail, 1)
+            pdf.cell(30, hight, applicant.phone, 1)
+            pdf.cell(10, hight, u'', 1)
             pdf.cell(10, hight, u'', 1)
             pdf.cell(15, hight, u'', 1)
             pdf.cell(15, hight, u'', 1, 1)
@@ -315,6 +325,8 @@ def print_language(language_id):
 
         file_name = 'listen/%s.pdf' % course
         pdf.output(file_name,'F')
+
+    flash(u'Kurslisten für Sprache {0} wurden generiert'.format(language.name), 'success')
 
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
