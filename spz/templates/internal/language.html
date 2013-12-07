@@ -27,7 +27,8 @@ Sprache: {{ language.name }}
                     <th>Aktive</th>
                     <th>Warteliste</th>
                     <th>Zahlungspflichtige</th>
-                    <th>Export</th>
+                    <th>PDF</th>
+                    <th>CSV</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,6 +42,7 @@ Sprache: {{ language.name }}
                     <td>{{ course.get_active_attendances()|count }}</td>
                     <td>{{ course.get_waiting_attendances()|count }}</td>
                     <td>{{ course.get_paying_attendances()|count }}</td>
+                    <td><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
                     <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({
@@ -62,6 +64,7 @@ Sprache: {{ language.name }}
                     <th>{{ sums['active'] }}</th>
                     <th>{{ sums['waiting'] }}</th>
                     <th>{{ sums['paying'] }}</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </tfoot>

@@ -10,7 +10,6 @@ import re
 import csv
 import StringIO
 from datetime import datetime
-from fpdf import FPDF
 
 from sqlalchemy import func
 
@@ -259,86 +258,6 @@ def export_language(language_id):
 
 @auth_required
 @templated('internal/lists.html')
-def print_language(language_id):
-    language = models.Language.query.get_or_404(language_id)
-    
-    class LISTE(FPDF):
-        def header(this):
-            now = datetime.now()
-            if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-            elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
-            else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
-            this.set_font('Arial','',10)
-            #fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
-            this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
-            this.cell(0, 5, semester, 0, 1, 'R')
-            this.set_font('Arial','B',10)
-            this.cell(0, 5, u'Sprachenzentrum', 0, 1)
-        def footer(this):
-            this.set_y(-35)
-            now = datetime.now()
-            this.cell(0, 10, u'{0}.{1}.{2} {3}:{4}:{5}'.format(now.day, now.month, now.year, now.hour, now.minute, now.second), 0, 1, 'R')
-            this.multi_cell(200, 5, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht an der Kursteilnahme berechtigt. Dementsprechend könnten Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 0)
-            this.multi_cell(200, 5, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat - falls es eine gab - und dann die Liste wieder zurückgeben. Danke!', 0, 0)
-            
-    maybe = lambda x: x if x else u''
-
-    for course in language.courses:
-        active_no_debt = [attendance.applicant for attendance in course.attendances
-                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-
-        pdf = LISTE('L','mm','A4')
-        pdf.add_page()
-        pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
-        course = u'{0} {1}'.format(course.language.name, course.level)
-        pdf.set_font('Arial','B',16)
-        pdf.cell(0, 10, course, 0, 1, 'C')
-
-
-        pdf.set_font('Arial','',10)
-        hight = 6
-        
-        idx = 1
-        pdf.cell(7, hight, u'Nr.', 1)
-        pdf.cell(40, hight, u'Nachname', 1)
-        pdf.cell(40, hight, u'Vorname', 1)
-        pdf.cell(20, hight, u'Matr.', 1)
-        pdf.cell(80, hight, u'E-Mail', 1)
-        pdf.cell(30, hight, u'Telefon', 1)
-        pdf.cell(10, hight, u'Tln.', 1)
-        pdf.cell(10, hight, u'Prf.', 1)
-        pdf.cell(15, hight, u'Note', 1)
-        pdf.cell(15, hight, u'Punkte', 1, 1)
-        for applicant in active_no_debt:
-            pdf.cell(7, hight, u'{0}'.format(idx), 1, 0, 'R')
-            pdf.cell(40, hight, u'{0}'.format(applicant.last_name), 1)
-            pdf.cell(40, hight, u'{0}'.format(applicant.first_name), 1)
-            pdf.cell(20, hight, maybe(applicant.tag), 1)
-            pdf.cell(80, hight, applicant.mail, 1)
-            pdf.cell(30, hight, applicant.phone, 1)
-            pdf.cell(10, hight, u'', 1)
-            pdf.cell(10, hight, u'', 1)
-            pdf.cell(15, hight, u'', 1)
-            pdf.cell(15, hight, u'', 1, 1)
-
-            idx += 1
-
-        file_name = 'listen/%s.pdf' % course
-        pdf.output(file_name,'F')
-
-    flash(u'Kurslisten für Sprache {0} wurden generiert'.format(language.name), 'success')
-
-    lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
-                          .join(models.Course, models.Language.courses) \
-                          .group_by(models.Language) \
-                          .order_by(models.Language.name) \
-                          .all()
-
-    return dict(lang_misc=lang_misc)
-
-
-@auth_required
-@templated('internal/lists.html')
 def lists():
     # list of tuple (lang, aggregated number of courses, aggregated number of seats)
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
@@ -513,6 +432,7 @@ def status(applicant_id, course_id):
 
     form.populate(attendance)
     return dict(form=form, attendance=attendance)
+
 
 
 @auth_required

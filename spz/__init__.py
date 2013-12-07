@@ -60,7 +60,7 @@ cache = Cache(app, config=app.config['CACHE_CONFIG'])
 
 
 # Register all views here
-from spz import views, errorhandlers, auth
+from spz import views, errorhandlers, auth, pdf
 
 
 # Authentication
@@ -90,7 +90,7 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/export', views.exporter, ['GET']),
           ('/internal/export_course/<int:course_id>', views.export_course, ['GET']),
-          ('/internal/print_language/<int:language_id>', views.print_language, ['GET']),
+          ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),
           ('/internal/export_language/<int:language_id>', views.export_language, ['GET']),
 
           ('/internal/notifications', views.notifications, ['GET', 'POST']),
@@ -108,6 +108,7 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/payments', views.payments, ['GET', 'POST']),
           ('/internal/status/<int:applicant_id>/<int:course_id>', views.status, ['GET', 'POST']),
+          ('/internal/print_bill/<int:applicant_id>/<int:course_id>', pdf.print_bill, ['GET']),
 
           ('/internal/restock', views.restock, ['GET', 'POST']),
 

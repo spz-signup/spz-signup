@@ -27,16 +27,11 @@
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
+                        <div class="col-lg-10 col-lg-offset-1">
                             <button type="submit" class="btn btn-primary">Änderungen speichern</button>
                             <button type="reset" class="btn btn-default">Zurücksetzen</button>
+                            <a href="{{ url_for('print_bill', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}"><button type="button" class="btn btn-info">Quittung</button></a>
                         </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <h4><a href="">Quittung drucken</a></h4>
-                        <h4><a id="confirm" href="{{ url_for('remove_attendance', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">Teilnahme löschen</a></h4>
                     </div>
                 </fieldset>
             </form>
