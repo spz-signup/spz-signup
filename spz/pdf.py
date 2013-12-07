@@ -99,28 +99,38 @@ def print_bill(applicant_id, course_id):
             this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
             this.cell(0, 5, semester, 0, 1, 'R')
             this.set_font('Arial','B',10)
-            this.cell(0, 5, u'Sprachenzentrum', 0, 1)
-            now = datetime.now()
-            this.cell(0, 10, now.strftime("%d.%m.%Y %H:%M:%S"), 0, 1, 'R')
+            this.cell(0, 5, u'Sprachenzentrum', 0, 0)
+            this.set_font('Arial','',10)
+            this.cell(0, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
         def footer(this):
-            this.set_y(-35)
+            this.set_y(-15)
+            this.set_font('Arial','',8)
+            this.cell(0, 4, u'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.', 0, 0, 'C')
 
-    applicant = models.Applicant.query.get_or_404(applicant_id)
-    course = models.Course.query.get_or_404(course_id)
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
 
     bill = BillGenerator('P','mm','A5')
     bill.add_page()
-    teststring = u'ÜÄÖüäößáà'
-    te = teststring.encode('windows-1252')
 #   fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
-    bill.cell(0, 10, te, 1, 1)
+    applicant_str = u'{0} {1} {2}'.format(u'Herr' if attendance.applicant.sex else u'Frau', attendance.applicant.first_name, attendance.applicant.last_name)
+    now = datetime.now()
+    course_str = u'für die Teilnahme am Kurs:\n{0} {1}'.format(attendance.course.language.name, attendance.course.level)
+    amount_str = u'{0} Euro bezahlt.'.format(attendance.amountpaid)
+    code = u'A{0}C{1}'.format(applicant_id, course_id)
+    bill.cell(0, 6, code, 0, 1, 'R')
+    bill.ln(40)
+    bill.set_font('','',12)
+    bill.cell(0, 6, applicant_str, 0, 1)
+    bill.cell(0, 6, u'hat am {0}'.format(now.strftime("%d.%m.%Y")), 0, 1)
+    bill.multi_cell(0, 6, course_str, 0, 1)
+    bill.cell(0, 6, amount_str, 0, 1)
+    bill.ln(30)
 
     buf = StringIO.StringIO()
     buf.write(bill.output('','S'))
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Quittung {0}.pdf"'.format(applicant.last_name)
+    resp.headers['Content-Disposition'] = u'attachment; filename="Quittung {0}.pdf"'.format(attendance.applicant.last_name)
     resp.mimetype = 'application/pdf'
 
     return resp
