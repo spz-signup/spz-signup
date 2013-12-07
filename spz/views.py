@@ -404,8 +404,13 @@ def payments():
             return redirect(url_for('status', applicant_id=a_id, course_id=c_id))
 
         flash(u'Belegungsnummer ungültig', 'danger')
+    
+    stats = db.session.query(func.sum(models.Attendance.amountpaid),\
+                             func.count())\
+                       .group_by(models.Attendance.paidbycash)\
+                       .all()
 
-    return dict(form=form)
+    return dict(form=form, stats=stats)
 
 
 @auth_required
