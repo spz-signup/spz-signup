@@ -24,12 +24,14 @@ class ListGenerator(FPDF):
         this.set_font('Arial','B',10)
         this.cell(0, 5, u'Sprachenzentrum', 0, 1)
     def footer(this):
-        this.set_font('Arial','',10)
-        this.set_y(-30)
+        this.set_y(-20)
+        this.set_font('Arial','',11)
+        this.cell(0,7, u'Datum _________________ Unterschrift ____________________________________', 0, 1, 'R')
+        this.set_font('Arial','',9)
         now = datetime.now()
-        this.multi_cell(200, 4, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht an der Kursteilnahme berechtigt. Dementsprechend könnten Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 0)
-        this.multi_cell(200, 4, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat - falls es eine gab - und dann die Liste wieder zurückgeben. Danke!', 0, 0)
-        this.cell(0, 4, now.strftime("%d.%m.%Y %H:%M:%S"), 0, 1, 'R')
+        this.cell(0, 5, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht zur Kursteilnahme berechtigt. Dementsprechend können Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 1, 'C')
+        this.cell(0, 5, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat und dann die unterschriebene Liste wieder zurückgeben. Danke!', 0, 1, 'C')
+        # this.cell(0, 4, now.strftime("%d.%m.%Y %H:%M:%S"), 1, 1, 'R')
 
 
 @auth_required
@@ -88,24 +90,6 @@ def print_language(language_id):
 def print_course(course_id):
     course = models.Course.query.get_or_404(course_id)
     
-    # class ListGenerator(FPDF):
-        # def header(this):
-            # now = datetime.now()
-            # if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-            # elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
-            # else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
-            # this.set_font('Arial','',10)
-            # this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
-            # this.cell(0, 5, semester, 0, 1, 'R')
-            # this.set_font('Arial','B',10)
-            # this.cell(0, 5, u'Sprachenzentrum', 0, 1)
-        # def footer(this):
-            # this.set_y(-35)
-            # now = datetime.now()
-            # this.cell(0, 10, now.strftime("%d.%m.%Y %H:%M:%S"), 0, 1, 'R')
-            # this.multi_cell(200, 4, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht an der Kursteilnahme berechtigt. Dementsprechend könnten Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 0)
-            # this.multi_cell(200, 4, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat - falls es eine gab - und dann die Liste wieder zurückgeben. Danke!', 0, 0)
-            
     maybe = lambda x: x if x else u''
 
     active_no_debt = [attendance.applicant for attendance in course.attendances
@@ -185,7 +169,9 @@ def print_bill(applicant_id, course_id):
 #   fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
     applicant_str = u'{0} {1} {2}'.format(u'Herr' if attendance.applicant.sex else u'Frau', attendance.applicant.first_name, attendance.applicant.last_name)
     now = datetime.now()
-    course_str = u'für die Teilnahme am Kurs:\n{0} {1}'.format(attendance.course.language.name, attendance.course.level)
+    stamp1_str = u'hat für die Teilnahme am Kurs:'
+    stamp2_str = u'Stempel'
+    course_str = u'{0} {1}'.format(attendance.course.language.name, attendance.course.level)
     amount_str = u'{0} Euro bezahlt.'.format(attendance.amountpaid)
     code = u'A{0}C{1}'.format(applicant_id, course_id)
     bill.cell(0, 6, code, 0, 1, 'R')
@@ -193,7 +179,11 @@ def print_bill(applicant_id, course_id):
     bill.set_font('','',12)
     bill.cell(0, 6, applicant_str, 0, 1)
     bill.cell(0, 6, u'hat am {0}'.format(now.strftime("%d.%m.%Y")), 0, 1)
+    bill.cell(0, 6, stamp1_str, 0, 0)
+    bill.cell(0, 6, stamp2_str, 0, 1, 'R')
+    bill.set_font('','B',12)
     bill.multi_cell(0, 6, course_str, 0, 1)
+    bill.set_font('','',12)
     bill.cell(0, 6, amount_str, 0, 1)
     bill.ln(30)
 
