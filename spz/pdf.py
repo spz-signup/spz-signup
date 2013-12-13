@@ -143,49 +143,102 @@ def print_course(course_id):
 @auth_required
 def print_bill(applicant_id, course_id):
 
+    maybe = lambda x: x if x else u''
+
     class BillGenerator(FPDF):
         def header(this):
+            this.zwischenraum = 21
+            this.teiler = u''
+            this.rahmen = 0
+            this.breite = 128
             now = datetime.now()
             if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
             elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
             else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
             this.set_font('Arial','',10)
             #fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
-            this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
-            this.cell(0, 5, semester, 0, 1, 'R')
+            this.cell(80, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
+            this.cell(48, 5, semester, 0, 0, 'R')
+            this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
+            this.cell(80, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
+            this.cell(48, 5, semester, 0, 1, 'R')
             this.set_font('Arial','B',10)
-            this.cell(0, 5, u'Sprachenzentrum', 0, 0)
+            this.cell(80, 5, u'Sprachenzentrum', 0, 0)
             this.set_font('Arial','',10)
-            this.cell(0, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
+            this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 0, 'R')
+            this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
+            this.set_font('Arial','B',10)
+            this.cell(80, 5, u'Sprachenzentrum', 0, 0)
+            this.set_font('Arial','',10)
+            this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
         def footer(this):
             this.set_y(-15)
             this.set_font('Arial','',8)
-            this.cell(0, 4, u'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.', 0, 0, 'C')
+            this.cell(this.breite, 4, u'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.', 0, 0, 'C')
+            this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
+            this.cell(this.breite, 4, u'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.', 0, 1, 'C')
+            this.cell(this.breite, 4, u'Exemplar für den Teilnehmer.', 0, 0, 'C')
+            this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
+            this.cell(this.breite, 4, u'Exemplar für das Sprachenzentrum.', 0, 1, 'C')
 
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
 
-    bill = BillGenerator('P','mm','A5')
+    bill = BillGenerator('L','mm','A4')
     bill.add_page()
 #   fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
-    applicant_str = u'{0} {1} {2}'.format(u'Herr' if attendance.applicant.sex else u'Frau', attendance.applicant.first_name, attendance.applicant.last_name)
+    title = u'Quittung'
+    sex_str = u'{0}'.format(u'Herr' if attendance.applicant.sex else u'Frau')
+    applicant_str = u'{0} {1}'.format(attendance.applicant.first_name, attendance.applicant.last_name)
+    tag_str = u'Matrikelnummer {0}'.format(attendance.applicant.tag) if attendance.applicant.tag else u''
     now = datetime.now()
-    stamp1_str = u'hat für die Teilnahme am Kurs:'
-    stamp2_str = u'Stempel'
+    str1 = u'für die Teilnahme am Kurs:'
     course_str = u'{0} {1}'.format(attendance.course.language.name, attendance.course.level)
-    amount_str = u'{0} Euro bezahlt.'.format(attendance.amountpaid)
+    amount_str = u'{0} Euro'.format(attendance.amountpaid)
+    str2 = u'bezahlt.'
+    str3 = u'Stempel'
     code = u'A{0}C{1}'.format(applicant_id, course_id)
-    bill.cell(0, 6, code, 0, 1, 'R')
-    bill.ln(40)
+    bill.cell(bill.breite, 6, code, 0, 0, 'R')
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, code, 0, 1, 'R')
+    bill.ln(20)
+    bill.set_font('','B',16)
+    bill.cell(bill.breite, 8, title, 0, 0, 'C')
+    bill.cell(bill.zwischenraum, 8, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 8, title, 0, 1, 'C')
+    bill.ln(20)
+
     bill.set_font('','',12)
-    bill.cell(0, 6, applicant_str, 0, 1)
-    bill.cell(0, 6, u'hat am {0}'.format(now.strftime("%d.%m.%Y")), 0, 1)
-    bill.cell(0, 6, stamp1_str, 0, 0)
-    bill.cell(0, 6, stamp2_str, 0, 1, 'R')
+    bill.cell(bill.breite, 6, sex_str, 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, sex_str, 0, 1)
+    bill.cell(bill.breite, 6, applicant_str, 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, applicant_str, 0, 1)
+    bill.cell(bill.breite, 6, tag_str, 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, tag_str, 0, 1)
+    bill.cell(bill.breite, 6, u'hat am {0}'.format(now.strftime("%d.%m.%Y")), 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, u'hat am {0}'.format(now.strftime("%d.%m.%Y")), 0, 1)
+    bill.cell(bill.breite, 6, str1, 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, str1, 0, 1)
     bill.set_font('','B',12)
-    bill.multi_cell(0, 6, course_str, 0, 1)
+    bill.cell(bill.breite, 6, course_str, 0, 0, 'C')
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, course_str, 0, 1, 'C')
+    bill.cell(bill.breite, 6, amount_str, 0, 0, 'C')
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, amount_str, 0, 1, 'C')
     bill.set_font('','',12)
-    bill.cell(0, 6, amount_str, 0, 1)
+    bill.cell(bill.breite, 6, str2, 0, 0)
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, str2, 0, 1)
+
     bill.ln(30)
+    bill.cell(bill.breite, 6, str3, 0, 0, 'C')
+    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
+    bill.cell(bill.breite, 6, str3, 0, 1, 'C')
 
     buf = StringIO.StringIO()
     buf.write(bill.output('','S'))
