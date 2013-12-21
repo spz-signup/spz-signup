@@ -44,6 +44,7 @@ def print_language(language_id):
     for course in language.courses:
         active_no_debt = [attendance.applicant for attendance in course.attendances
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+        active_no_debt.sort(key=lambda applicant: applicant.last_name)
         list.add_page()
         course_str = u'{0} {1}'.format(course.language.name, course.level)
         list.set_font('Arial','B',16)
@@ -94,6 +95,7 @@ def print_course(course_id):
 
     active_no_debt = [attendance.applicant for attendance in course.attendances
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+    active_no_debt.sort(key=lambda applicant: applicant.last_name)
 
     pdf = ListGenerator('L','mm','A4')
     pdf.add_page()
