@@ -6,6 +6,7 @@
 """
 
 from datetime import datetime
+from functools import total_ordering
 
 from sqlalchemy import func
 
@@ -17,6 +18,8 @@ from spz import app, db
 # http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
 # http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
 
+
+@total_ordering
 class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
@@ -61,7 +64,11 @@ class Attendance(db.Model):
     def __repr__(self):
         return '<Attendance %r %r>' % (self.applicant, self.course)
 
+    def __lt__(self, other):
+        return self.registered < other.registered
 
+
+@total_ordering
 class Applicant(db.Model):
     """Represents a person, applying for one or more :py:class:`Course`.
 
@@ -123,6 +130,9 @@ class Applicant(db.Model):
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
 
+    def __lt__(self, other):
+        return (self.last_name.lower(), self.first_name.lower()) < (other.last_name.lower(), other.first_name.lower())
+
     def add_course_attendance(self, *args, **kwargs):
         attendance = Attendance(*args, **kwargs)
         self.attendances.append(attendance)
@@ -147,6 +157,7 @@ class Applicant(db.Model):
         return course in [attendance.course for attendance in self.attendances]
 
 
+@total_ordering
 class Course(db.Model):
     """Represents a course that has a :py:class:`Language` and gets attended by multiple :py:class:`Applicant`.
 
@@ -183,6 +194,9 @@ class Course(db.Model):
 
     def __repr__(self):
         return '<Course %r %r>' % (self.language, self.level)
+
+    def __lt__(self, other):
+        return (self.language, self.level.lower()) < (other.language, other.level.lower())
 
     def is_allowed(self, applicant):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
@@ -221,6 +235,7 @@ class Course(db.Model):
         return to_move
 
 
+@total_ordering
 class Language(db.Model):
     """Represents a language for a :py:class:`course`.
 
@@ -251,6 +266,9 @@ class Language(db.Model):
     def __repr__(self):
         return '<Language %r>' % self.name
 
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
+
     def is_open_for_signup(self):
         now = datetime.utcnow()
         return self.signup_begin < now < self.signup_end
@@ -269,6 +287,7 @@ class Language(db.Model):
         return sum(map(lambda course: course.get_free_attendances(), self.courses.all()), [])
 
 
+@total_ordering
 class Degree(db.Model):
     """Represents the degree a :py:class:`Applicant` aims for.
 
@@ -286,7 +305,11 @@ class Degree(db.Model):
     def __repr__(self):
         return '<Degree %r>' % self.name
 
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
 
+
+@total_ordering
 class Graduation(db.Model):
     """Represents the graduation a :py:class:`Applicant` aims for.
 
@@ -304,7 +327,11 @@ class Graduation(db.Model):
     def __repr__(self):
         return '<Graduation %r>' % self.name
 
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
 
+
+@total_ordering
 class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
@@ -322,7 +349,11 @@ class Origin(db.Model):
     def __repr__(self):
         return '<Origin %r>' % self.name
 
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
 
+
+@total_ordering
 class Registration(db.Model):
     """Registration number for a :py:class:`Applicant` that is a student.
 
@@ -338,7 +369,10 @@ class Registration(db.Model):
         self.number = number
 
     def __eq__(self, other):
-        return self.number == other.number
+        return self.number.lower() == other.number.lower()
+
+    def __lt__(self, other):
+        return self.number.lower() < other.number.lower()
 
     def __hash__(self):
         return hash(self.__repr__())
@@ -347,8 +381,9 @@ class Registration(db.Model):
         return '<Registration %r>' % self.number
 
 
-# XXX: This should hole a ref to the specific language the rating is for
+# XXX: This should hold a ref to the specific language the rating is for
 #      it's ok as of now, because we only got english test results.
+@total_ordering
 class Approval(db.Model):
     """Represents the approval for English courses a :py:class:`Applicant` aims for.
 
@@ -368,6 +403,9 @@ class Approval(db.Model):
 
     def __repr__(self):
         return '<Approval %r %r>' % (self.tag, self.percent)
+
+    def __lt__(self, other):
+        return self.percent < other.percent
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
