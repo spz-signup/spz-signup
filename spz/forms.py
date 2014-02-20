@@ -35,6 +35,10 @@ def origins_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
+@cache.cached(key_prefix='languages')
+def languages_to_choicelist():
+    return [(x.id, u'{0}'.format(x.name))
+            for x in models.Language.query.order_by(models.Language.name.asc()).all()]
 
 @cache.cached(key_prefix='upcoming_courses')
 def upcoming_courses_to_choicelist():
@@ -321,8 +325,14 @@ class RestockForm(Form):
     """Represents a form to fill languages and courses with waiting applicants.
     """
 
-    language = SelectField(u'Sprache', [validators.Required(u'Die Sprache muss angegeben werden')], coerce=int,
-                           choices=[(language.id, language.name) for language in models.Language.query.order_by(models.Language.name).all()])
+    language = SelectField(u'Sprache', [validators.Required(u'Die Sprache muss angegeben werden')], coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(RestockForm, self).__init__(*args, **kwargs)
+        self._populate()
+
+    def _populate(self):
+        self.language.choices = languages_to_choicelist()
 
     def get_courses(self):
         return models.Language.query.get(self.language.data).courses.all()
