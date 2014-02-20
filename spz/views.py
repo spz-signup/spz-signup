@@ -16,7 +16,7 @@ from sqlalchemy import func
 from flask import request, redirect, render_template, url_for, flash, g, make_response
 from flask.ext.mail import Message
 
-from spz import app, models, mail, db
+from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm
 from spz.util.Encoding import UnicodeWriter
@@ -26,11 +26,13 @@ from spz.util.Encoding import UnicodeWriter
 def index():
     form = SignupForm()
 
+
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
+        one_time_token = request.args.get('token', None)
 
-        if not course.language.is_open_for_signup():
+        if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail):
             flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist noch nicht möglich', 'danger')
             return dict(form=form)
 
