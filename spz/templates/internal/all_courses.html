@@ -17,7 +17,7 @@ Alle Kurse
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td><a href="{{ url_for('course', id=course.id) }}"> {{ course.language.name }} {{ course.level }}</a></td>
+                    <td><a href="{{ url_for('course', id=course.id) }}"> {{ course.full_name() }}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

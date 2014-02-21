@@ -32,7 +32,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 				{% for attendance in form.get_attendances() %}
                     <tr>
                         <td>
-							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{attendance.course.language.name }} {{attendance.course.level}} </a>
+							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name() }} </a>
                         </td>
                         <td>
                             {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}

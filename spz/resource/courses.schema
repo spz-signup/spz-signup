@@ -42,9 +42,15 @@
 									},
 									"rating_highest": {
 										"type": "integer"
-									}
+									},
+                                    "alternative": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
 								},
-								"required": [ "level", "limit", "price", "rating_lowest", "rating_highest" ]
+								"required": [ "level", "limit", "price", "rating_lowest", "rating_highest", "alternative" ]
 							},
 							"uniqueItems": true
 						}

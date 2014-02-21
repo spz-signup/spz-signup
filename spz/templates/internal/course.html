@@ -1,7 +1,7 @@
 {% extends 'internal/internal.html' %}
 
 {% block caption %}
-Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.language.name }}</a> {{ course.level }}
+Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.language.name }}</a> {{ course.level }} {{ course.alternative }}
 {% endblock caption %}
 
 

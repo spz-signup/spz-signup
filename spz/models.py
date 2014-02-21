@@ -163,6 +163,7 @@ class Course(db.Model):
 
        :param language: The :py:class:`Language` for this course
        :param level: The course's level
+       :param alternative: The course's alternative of the same level.
        :param limit: The max. number of :py:class:`Applicant` that can attend this course.
        :param price: The course's price.
        :param rating_highest: The course's upper bound of required rating.
@@ -172,21 +173,22 @@ class Course(db.Model):
     """
 
     __tablename__ = 'course'
-    __table_args__ = (db.UniqueConstraint('language_id', 'level'),
+    __table_args__ = (db.UniqueConstraint('language_id', 'level', 'alternative'),
                       db.CheckConstraint('rating_highest >= rating_lowest'))
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     level = db.Column(db.String(120))
+    alternative = db.Column(db.String(10), nullable=False)
     limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
-
     rating_highest = db.Column(db.Integer, db.CheckConstraint('rating_highest >= 0'), nullable=False)
     rating_lowest = db.Column(db.Integer, db.CheckConstraint('rating_lowest >= 0'), nullable=False)
 
-    def __init__(self, language, level, limit, price, rating_highest, rating_lowest):
+    def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest):
         self.language = language
         self.level = level
+        self.alternative = alternative
         self.limit = limit
         self.price = price
         self.rating_highest = rating_highest
@@ -234,6 +236,8 @@ class Course(db.Model):
 
         return to_move
 
+    def full_name(self):
+        return u'{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
 
 @total_ordering
 class Language(db.Model):

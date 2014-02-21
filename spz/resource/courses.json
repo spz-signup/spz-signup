@@ -6,11 +6,17 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
-
+				{
+                    "level": "1",
+                    "limit": 25,
+                    "price": 60,
+                    "rating_lowest": 0,
+                    "rating_highest": 100,
+                    "alternative": ["a", "b"]
+                },
+				{
+                    "level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]
+                }
 			]
 		},
 		{
@@ -19,16 +25,22 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 e", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{
+                    "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100,
+                    "alternative": ["a", "b", "c", "d", "e"]
+                },
+				{
+                    "level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
+                    "alternative": ["a", "b"]
+                },
+				{
+                    "level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
+                    "alternative": ["a", "b"]
+                },
+				{
+                    "level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
+                    "alternative": []
+                }
 			]
 		},
 		{
@@ -37,55 +49,40 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
-				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
-				{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49},
-				{"level": "B1 Engineering a", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Engineering b", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Intermediate 1 a", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Intermediate 1 b", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Intermediate 2 a", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Intermediate 2 b", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "B1 Science", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "for Business Communication a", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "for Business Communication b", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "in Everyday Situations", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64},
-				{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Science and Technology a", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Science and Technology b", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Upper Intermediate a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Upper Intermediate b", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "B2: Upper Intermediate c", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Engineers B2a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Engineers B2b", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Work B2a", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Work B2b", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Work B2c", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Work B2d", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Work B2e", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Topical Issues", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79},
-				{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100},
-				{"level": "TOEFL iBT Vorbereitung a", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100},
-				{"level": "Business Leadership C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Business Studies 1 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Business Studies 2 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Discussion & Debate", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "C1: Advanced a", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "C1: Advanced b", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "for Engineers C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "for Work C1a", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "for Work C1b", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Intercultural Communication C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Issues in Science & Technology", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Presentation Skills C1", "limit": 15, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Scientific Writing a", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100},
-				{"level": "Scientific Writing b", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100}
+				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
+				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
+				{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
+				{"level": "B1 Engineering", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
+				{"level": "B1 Intermediate 1", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
+				{"level": "B1 Intermediate 2", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
+				{"level": "B1 Science", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
+				{"level": "for Business Communication", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
+				{"level": "in Everyday Situations", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
+				{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
+				{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "B2: Science and Technology", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b"]},
+				{"level": "B2: Upper Intermediate", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"]},
+				{"level": "for Engineers B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b"]},
+				{"level": "for Work B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d", "e"]},
+				{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "Topical Issues", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": []},
+				{"level": "TOEFL iBT Vorbereitung", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": ["a"]},
+				{"level": "Business Leadership C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Business Studies 1 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Business Studies 2 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Discussion & Debate", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "C1: Advanced", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "for Engineers C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "for Work C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "Intercultural Communication C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Issues in Science & Technology", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Presentation Skills C1", "limit": 15, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
+				{"level": "Scientific Writing", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"]}
 			]
 		},
 		{
@@ -94,11 +91,11 @@
 			"signup_begin_iso_utc": "2013-10-14T19:00:00.Z",
 			"signup_end_iso_utc": "2013-10-15T19:00:00.Z",
 			"courses": [
-				{"level": "B2: Science and Technology Intensive", "limit": 15, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "B2: Upper Intermediate Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "C1: Advanced Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "for Work C1 Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "in Everyday Situations Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "B2: Science and Technology Intensive", "limit": 15, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "B2: Upper Intermediate Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "C1: Advanced Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "for Work C1 Intensive", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "in Everyday Situations Intensive", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -107,33 +104,23 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 C", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "5 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "5 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "6 A", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "6 B", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "7", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Grammatik A (Aufbau, Delf A1-A2)", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Grammatik B (Aufbau, Delf A1-A2)", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Fit für Frankreich A", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Fit für Frankreich B", "limit": 18, "price": 90, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "für alle Fälle", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Express+2", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Energie und Umwelt", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Frankreich heute", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Aktuelle Themen plus A", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Aktuelle Themen plus B", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Pro & Kontra", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "für Business und Marketing", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Express+3", "limit": 18, "price": 90, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "6", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "7", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Grammatik A (Aufbau, Delf A1-A2)", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "Fit für Frankreich A", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "für alle Fälle", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Express+2", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Energie und Umwelt", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Frankreich heute", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Aktuelle Themen plus", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "Pro & Kontra", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "für Business und Marketing", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Express+3", "limit": 18, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 
 			]
 		},
@@ -143,17 +130,10 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 e", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -162,17 +142,11 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -181,13 +155,10 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -196,13 +167,10 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"]},
+				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -211,14 +179,10 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"]},
+				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "3", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "4", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -227,49 +191,21 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 d", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 e", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 f", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 g", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 h", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 i", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 j", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 k", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 l", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 m", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "1 n", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 d", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 e", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 f", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 g", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2 h", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 d", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3 e", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4 b", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "4 c", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "rápido 1 a", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "rápido 1 b", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "rápido 2 a", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "rápido 2 b", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "¡Mejora tu oído!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "¡Mejora tu habla!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Informática", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Gramática", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Auslandsvorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Temas de actualidad", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "Intercultural", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "DELE-Vorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h"]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"]},
+				{"level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"]},
+				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "rápido 1", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "rápido 2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "¡Mejora tu oído!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "¡Mejora tu habla!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Informática", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Gramática", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Auslandsvorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Temas de actualidad", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "Intercultural", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "DELE-Vorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -278,9 +214,9 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -289,8 +225,8 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -299,8 +235,8 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		},
 		{
@@ -309,8 +245,8 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100},
-				{"level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100}
+				{"level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
+				{"level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]}
 			]
 		}
 	]

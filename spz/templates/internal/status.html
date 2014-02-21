@@ -2,7 +2,7 @@
 {% from 'formhelpers.html' import render_input, render_boolean, render_option %}
 
 {% block caption %}
-<a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.language.name ~ " " ~ attendance.course.level }}</a>
+<a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.full_name() }}</a>
 {% endblock caption %}
 
 

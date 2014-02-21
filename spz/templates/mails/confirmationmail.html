@@ -9,7 +9,7 @@ E-Mail Adresse: {{ applicant.mail }}
 Sie haben sich am {{ date.day ~ '.' ~ date.month ~ '.' ~ date.year ~ ' um ' ~ date.hour ~ ':' ~ date.minute }} Uhr{% if not waiting %} erfolgreich{% endif %} für den folgenden Sprachkurs
 am Sprachenzentrum des KIT angemeldet:
 
-Kurs: {{ course.language.name ~ ' ' ~ course.level }}
+Kurs: {{ course.full_name() }}
 {# TODO: ugly hack. refactor it! #}
 Semester: {{ 'SS ' ~ date.year if (4 <= date.month < 10) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
 
@@ -23,7 +23,7 @@ Bitte bezahlen Sie die Kursgebühr an einem der auf der Homepage genannte
 Barzahlngstermine (Keine Karten!) oder überweisen Sie innerhalb der nächsten
 4 Tage den Betrag ({{ course.price }} Euro) unter Angabe des folgenden Verwendungszwecks:
 
-XD2003911901 {{ applicant.last_name ~ ', ' ~ applicant.first_name ~ ', ' ~ 'A' ~ applicant.id ~ 'C' ~ course.id ~ ', ' ~ course.language.name ~ ' ' ~ course.level }}
+XD2003911901 {{ applicant.last_name ~ ', ' ~ applicant.first_name ~ ', ' ~ 'A' ~ applicant.id ~ 'C' ~ course.id ~ ', ' ~ course.full_name() }}
 
 auf folgendes Konto des KIT:
 

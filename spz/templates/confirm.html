@@ -9,14 +9,14 @@ Ihre Registrierung war erfolgreich
 <div class="row">
     <div class="col-lg-8 col-lg-offset-2">
         <p>
-        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie haben sich um den Kurs <strong>{{ course.language.name ~ ' ' ~ course.level }}</strong> beworben.
+        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie haben sich um den Kurs <strong>{{ course.full_name() }}</strong> beworben.
         Bitte notieren Sie sich die <strong>Belegungsnummer</strong> und geben Sie diese bei der Bezahlung oder bei Anfragen an.
         </p>
 
         {% for attendance in applicant.attendances %}
         <div class="panel panel-{{ 'primary' if not attendance.waiting else 'default' }}">
             <div class="panel-heading">
-                <h3 class="panel-title">{{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}</h3>
+                <h3 class="panel-title">{{ attendance.course.full_name() }}</h3>
             </div>
             <div class="panel-body">
                 <ul class="list-unstyled">

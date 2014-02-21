@@ -4,7 +4,7 @@ Sprachenzentrum des KIT
 {{ 'Herr' if attendance.applicant.sex else 'Frau' }}: {{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }}
 Bewerberkreis: {{ attendance.applicant.origin.name }}
 E-Mail Adresse: {{ attendance.applicant.mail }}
-Kurs: {{ attendance.course.language.name ~ ' ' ~ attendance.course.level }}
+Kurs: {{ attendance.course.full_name() }}
 
 
 Sehr geehrt{{ 'er Herr' if attendance.applicant.sex else 'e Frau' }} {{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }},

@@ -51,8 +51,10 @@ def insert_resources():
                                 datetime.strptime(language["signup_end_iso_utc"], "%Y-%m-%dT%H:%M:%S.Z"))  # see also Jsonschema RFC, date-time
 
             for course in language["courses"]:
-                db.session.add(Course(ref_lang, course["level"], limit=course["limit"], price=course["price"],
-                                      rating_lowest=course["rating_lowest"], rating_highest=course["rating_highest"]))
+                for alt in course["alternative"]:
+                    db.session.add(Course(ref_lang, level=course["level"], alternative=alt, limit=course["limit"],
+                                          price=course["price"], rating_lowest=course["rating_lowest"],
+                                          rating_highest=course["rating_highest"]))
 
     db.session.commit()
 

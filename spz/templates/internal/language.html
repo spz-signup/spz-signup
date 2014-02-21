@@ -35,7 +35,7 @@ Sprache: {{ language.name }}
                 {% set sums = {'limit': 0, 'rest': 0, 'attendances': 0, 'active': 0, 'waiting': 0, 'paying': 0} %}
                 {% for course in language.courses.all() %}
                 <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
-                    <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.language.name }} {{ course.level }}</strong></a></td>
+                    <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.full_name() }}</strong></a></td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.limit - course.get_active_attendances()|count }}</td>
                     <td>{{ course.attendances|count }}</td>

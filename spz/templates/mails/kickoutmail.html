@@ -3,7 +3,7 @@ Sprachenzentrum des KIT
 
 Sehr geehrt{{ 'er Herr' if attendance.applicant.sex else 'e Frau' }} {{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }},
 
-Sie hatten sich für den Sprachkurs {{ attendance.course.language.name ~ ' ' ~ attendance.course.level }} am Sprachenzentrum des KIT angemeldet.
+Sie hatten sich für den Sprachkurs {{ attendance.course.full_name() }} am Sprachenzentrum des KIT angemeldet.
 
 Wir mussten Sie heute von der Kursliste streichen, da mindestens einer
 der folgenden Gründe zutrifft:
