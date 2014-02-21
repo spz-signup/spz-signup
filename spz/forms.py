@@ -11,7 +11,7 @@ from sqlalchemy import func
 from flask.ext.wtf import Form
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, validators
 
-from spz import app, models, cache
+from spz import app, models, cache, token
 
 
 # Cacheable helpers for database fields that are not supposed to change often or quickly
@@ -336,6 +336,17 @@ class RestockForm(Form):
 
     def get_courses(self):
         return models.Language.query.get(self.language.data).courses.all()
+
+
+class PretermForm(Form):
+    """Represents a form to generate a preterm signup token.
+    """
+
+    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
+                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
+
+    def get_token(self):
+        return token.generate(self.mail.data)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

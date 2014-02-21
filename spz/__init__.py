@@ -113,6 +113,8 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/restock', views.restock, ['GET', 'POST']),
 
+          ('/internal/preterm', views.preterm, ['GET', 'POST']),
+
           ('/internal/statistics', views.statistics, ['GET']),
           ('/internal/statistics/free_courses', views.free_courses, ['GET']),
 

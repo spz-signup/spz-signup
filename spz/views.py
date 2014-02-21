@@ -18,7 +18,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm
 from spz.util.Encoding import UnicodeWriter
 
 
@@ -452,6 +452,25 @@ def statistics():
 @templated('internal/statistics/free_courses.html')
 def free_courses():
     return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all())
+
+
+@auth_required
+@templated('internal/preterm.html')
+def preterm():
+    form = PretermForm()
+
+    token = None
+
+    if form.validate_on_submit():
+        token = form.get_token()
+
+    attendances = models.Attendance.query \
+                        .join(models.Course, models.Language, models.Applicant) \
+                        .filter(models.Attendance.registered < models.Language.signup_begin) \
+                        .order_by(models.Applicant.last_name, models.Applicant.first_name) \
+                        .all()
+
+    return dict(form=form, token=token, preterm_signups=attendances)
 
 
 @auth_required

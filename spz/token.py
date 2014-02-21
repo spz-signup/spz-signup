@@ -4,8 +4,6 @@
 
 """
 
-import hmac
-import hashlib
 from datetime import timedelta
 
 from itsdangerous import URLSafeTimedSerializer as Signer
@@ -24,9 +22,6 @@ def generate(mail, signer=Signer(app.config['TOKEN_SECRET_KEY'])):
     """
     return signer.dumps(mail)
 
-    # XXX: alt. impl., validate in the following month
-    # return hmac.new(app.config['TOKEN_SECRET_KEY'], mail, hashlib.sha256).hexdigest()
-
 
 def validate(token, mail, max_age=timedelta(weeks=1).total_seconds(), signer=Signer(app.config['TOKEN_SECRET_KEY'])):
     """Validates a mail-specific one-time-token.
@@ -42,10 +37,6 @@ def validate(token, mail, max_age=timedelta(weeks=1).total_seconds(), signer=Sig
     # see: https://pythonhosted.org/itsdangerous/#responding-to-failure
     ok, payload = signer.loads_unsafe(token, max_age=max_age)
     return ok and payload == mail
-
-    # XXX: alt. impl., validate in the following month
-    # prevent None token, mail: otherwise generated token is already nonsense
-    #return token and mail and token == generate_token(mail)
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:

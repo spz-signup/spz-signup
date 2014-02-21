@@ -1,0 +1,73 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_input %}
+
+{% block caption %}
+Prioritäranmeldungen
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="well">
+            <form class="form-horizontal" method="post">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    {{ render_input(form.mail, help="Mail für prioritäre Anmeldungsberechtigung") }}
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <button type="submit" class="btn btn-primary">Token erstellen</button>
+                            <button type="reset" class="btn btn-default">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        {% if token %}
+        <div class="panel panel-primary }}">
+            <div class="panel-heading">
+                <h3 class="panel-title">Token URL für {{ form.mail.data }}</h3>
+            </div>
+            <div class="panel-body">
+                <textarea class="form-control" readonly="readonly">{{ url_for('index', token=token, _external=True) }}</textarea>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-striped sortable">
+            <thead>
+                <tr>
+                    <th>Anrede</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-Mail</th>
+                    <th>Matrikelnummer</th>
+                    <th>Kurswunsch</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in preterm_signups %}
+                <tr>
+                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
+                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
+                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
+                    <td>{{ attendance.applicant.mail }}</td>
+                    <td>{{ attendance.applicant.tag }}</td>
+                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
