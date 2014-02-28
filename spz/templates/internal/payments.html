@@ -29,10 +29,30 @@ Zahlungen
 </div>
 <div class="row">
     <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <p>Bar <strong>{{ stats[0][0] }}</strong> Euro von <strong>{{ stats[0][1] }}</strong> Teilnehmer</p>
-            <p>Überweisung <strong>{{ stats[1][0] }}</strong> Euro von <strong>{{ stats[1][1] }}</strong> Teilnehmer</p>
-        </div>
+        <table class="table table-striped sortable">
+            <thead>
+                <tr>
+                    <th>Zahlungsart</th>
+                    <th>Anzahl</th>
+                    <th>Summe</th>
+                    <th>Durchschnitt</th>
+                    <th>Minimum</th>
+                    <th>Maximum</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for stat in stats %}
+                <tr>
+                    <td>{{ 'Bar' if stat['cash'] else 'Überweisung' }}</td>
+                    <td>{{ stat['count'] }}</td>
+                    <td>{{ stat['sum'] }}</td>
+                    <td>{{ stat['avg'] }}</td>
+                    <td>{{ stat['min'] }}</td>
+                    <td>{{ stat['max'] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
    

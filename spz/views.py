@@ -182,12 +182,6 @@ def notifications():
 
 
 @auth_required
-@templated('internal/exporter.html')
-def exporter():
-    return dict(languages=models.Language.query.order_by(models.Language.name).all())
-
-
-@auth_required
 def export_course(course_id):
     course = models.Course.query.get_or_404(course_id)
 
@@ -406,12 +400,20 @@ def payments():
 
         flash(u'Belegungsnummer ungültig', 'danger')
     
-    stats = db.session.query(func.sum(models.Attendance.amountpaid),\
-                             func.count())\
-                       .group_by(models.Attendance.paidbycash)\
-                       .all()
 
-    return dict(form=form, stats=stats)
+    stat_list = db.session.query(models.Attendance.paidbycash,
+                                 func.sum(models.Attendance.amountpaid),
+                                 func.count(),
+                                 func.avg(models.Attendance.amountpaid),
+                                 func.min(models.Attendance.amountpaid),
+                                 func.max(models.Attendance.amountpaid)) \
+                           .group_by(models.Attendance.paidbycash) \
+                           .all()
+
+    desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
+    rv = [dict(zip(desc, tup)) for tup in stat_list]
+
+    return dict(form=form, stats=rv)
 
 
 @auth_required
