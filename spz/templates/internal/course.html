@@ -31,7 +31,7 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
 {{ 'Warteliste' if attendance.waiting else 'Fester Platz' }} 
 {% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
-{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.discounted else 'Vollzahler' }} {% endif %}
+{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
 {% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro;{% endif %}
 </a>
                     </td>

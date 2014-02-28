@@ -237,7 +237,7 @@ def export_language(language_id):
 
         idx = 1
         for applicant in active_no_debt:
-            out.writerow([u'{0}'.format(course.full_name(),
+            out.writerow([u'{0}'.format(course.full_name()),
                           u'{0}'.format(idx), 
                           u'{0}'.format(applicant.id), 
                           applicant.first_name,
@@ -426,7 +426,7 @@ def status(applicant_id, course_id):
             attendance.payingdate = datetime.utcnow()
             attendance.waiting = form.waiting.data
             attendance.has_to_pay = form.has_to_pay.data
-            attendance.discounted = form.discounted.data
+            attendance.applicant.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
             db.session.commit()

@@ -43,7 +43,6 @@ class Attendance(db.Model):
 
     waiting = db.Column(db.Boolean)
     has_to_pay = db.Column(db.Boolean)
-    discounted = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
     amountpaid = db.Column(db.Integer, db.CheckConstraint('amountpaid >= 0'), nullable=False)
 
@@ -55,7 +54,6 @@ class Attendance(db.Model):
         self.graduation = graduation
         self.waiting = waiting
         self.has_to_pay = has_to_pay
-        self.discounted = False
         self.paidbycash = False
         self.amountpaid = 0
         self.registered = datetime.utcnow()
@@ -110,6 +108,8 @@ class Applicant(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
     origin = db.relationship("Origin", backref="applicants")
 
+    discounted = db.Column(db.Boolean)
+
     # See {add,remove}_course_attendance member functions below
     attendances = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan')
 
@@ -125,6 +125,7 @@ class Applicant(db.Model):
         self.degree = degree
         self.semester = semester
         self.origin = origin
+        self.discounted = False
         self.registered = datetime.utcnow()
 
     def __repr__(self):

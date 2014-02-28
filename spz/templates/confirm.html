@@ -26,7 +26,7 @@ Ihre Registrierung war erfolgreich
                     {% else %}
                     <li>Fester Platz</li>
                     {% if attendance.has_to_pay %}
-                    {% set amount = attendance.course.price if not attendance.discounted else attendance.course.price / 2 %}
+                    {% set amount = attendance.course.price if not attendance.applicant.discounted else attendance.course.price / 2 %}
                     <li>Zu zahlen sind: <strong>{{ amount }} Euro</strong></li>
                     {% else %}
                     <li>Gebührenfrei</li>

@@ -301,7 +301,7 @@ class StatusForm(Form):
         self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
         self.has_to_pay.data = attendance.has_to_pay
-        self.discounted.data = attendance.discounted
+        self.discounted.data = attendance.applicant.discounted
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
 
