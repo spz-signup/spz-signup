@@ -48,15 +48,18 @@ def upcoming_courses_to_choicelist():
 
     upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
 
-    return [(course.id, u'{0} {1}{2}'.format(course.language.name, course.level, u' (voll)' if course.is_full() else u''))
+    return [(course.id, u'{0} {1}'.format(course.full_name(), u' (voll)' if course.is_full() else u''))
             for course in upcoming]
 
 
 @cache.cached(key_prefix='all_courses')
 def all_courses_to_choicelist():
-    return [(course.id, u'{0} {1}'.format(course.language.name, course.level))
-            for course in models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all()]
+    courses = models.Course.query.join(models.Language.courses) \
+                                 .order_by(models.Language.name, models.Course.level) \
+                                 .all()
 
+    return [(course.id, u'{0}'.format(course.full_name()))
+            for course in courses]
 
 class SignupForm(Form):
     """Represents the main sign up form.

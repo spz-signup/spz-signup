@@ -70,8 +70,7 @@ def index():
             msg = Message(sender=app.config['PRIMARY_MAIL'],
                           reply_to=course.language.reply_to,
                           recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Anmeldung für Kurs {0} {1}'.
-                                  format(course.language.name, course.level),
+                          subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(course.full_name()),
                           body=render_template('mails/confirmationmail.html',
                                                applicant=applicant, course=course, has_to_pay=has_to_pay,
                                                waiting=waiting, date=datetime.now()))
@@ -213,7 +212,7 @@ def export_course(course_id):
         idx += 1
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0} {1}.csv"'.format(course.language.name, course.level)
+    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(course.full_name())
     resp.mimetype = 'text/csv'
 
     return resp
@@ -238,7 +237,7 @@ def export_language(language_id):
 
         idx = 1
         for applicant in active_no_debt:
-            out.writerow([u'{0} {1}'.format(course.language.name, course.level), 
+            out.writerow([u'{0}'.format(course.full_name(),
                           u'{0}'.format(idx), 
                           u'{0}'.format(applicant.id), 
                           applicant.first_name,
@@ -516,8 +515,8 @@ def restock():
                 for attendance in restocked_attendances:
                     msg = Message(sender=g.user, recipients=[attendance.applicant.mail],
                                   reply_to=attendance.course.language.reply_to,
-                                  subject=u'[Sprachenzentrum] Freier Platz im Kurs {0} {1}'.
-                                          format(attendance.course.language.name, attendance.course.level),
+                                  subject=u'[Sprachenzentrum] Freier Platz im Kurs {0}'.
+                                          format(attendance.course.full_name()),
                                   body=render_template('mails/restockmail.html', attendance=attendance))
 
                     conn.send(msg)

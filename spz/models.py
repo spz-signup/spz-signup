@@ -195,7 +195,7 @@ class Course(db.Model):
         self.rating_lowest = rating_lowest
 
     def __repr__(self):
-        return '<Course %r %r>' % (self.language, self.level)
+        return '<Course %r>' % (self.full_name())
 
     def __lt__(self, other):
         return (self.language, self.level.lower()) < (other.language, other.level.lower())
@@ -238,6 +238,7 @@ class Course(db.Model):
 
     def full_name(self):
         return u'{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
+
 
 @total_ordering
 class Language(db.Model):

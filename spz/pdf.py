@@ -47,7 +47,7 @@ def print_language(language_id):
         active_no_debt.sort()
 
         list.add_page()
-        course_str = u'{0} {1}'.format(course.language.name, course.level)
+        course_str = u'{0}'.format(course.full_name())
         list.set_font('Arial','B',16)
         list.cell(0, 10, course_str, 0, 1, 'C')
 
@@ -100,7 +100,7 @@ def print_course(course_id):
 
     pdf = ListGenerator('L','mm','A4')
     pdf.add_page()
-    course_str = u'{0} {1}'.format(course.language.name, course.level)
+    course_str = u'{0}'.format(course.full_name())
     pdf.set_font('Arial','B',16)
     pdf.cell(0, 10, course_str, 0, 1, 'C')
 
@@ -136,7 +136,7 @@ def print_course(course_id):
     buf = StringIO.StringIO()
     buf.write(pdf.output('','S'))
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="{0} {1}.pdf"'.format(course.language.name, course.level)
+    resp.headers['Content-Disposition'] = u'attachment; filename="{0}.pdf"'.format(course.full_name())
     resp.mimetype = 'application/pdf'
 
     return resp
@@ -195,7 +195,7 @@ def print_bill(applicant_id, course_id):
     tag_str = u'Matrikelnummer {0}'.format(attendance.applicant.tag) if attendance.applicant.tag else u''
     now = datetime.now()
     str1 = u'für die Teilnahme am Kurs:'
-    course_str = u'{0} {1}'.format(attendance.course.language.name, attendance.course.level)
+    course_str = u'{0}'.format(attendance.course.full_name())
     amount_str = u'{0} Euro'.format(attendance.amountpaid)
     str2 = u'bezahlt.'
     str3 = u'Stempel'
