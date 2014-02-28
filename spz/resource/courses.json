@@ -3,8 +3,8 @@
 		{
 			"name": "Arabisch",
 			"reply_to" : "info@spz.kit.edu",
-			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
-			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
+			"signup_begin_iso_utc": "2014-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2014-11-16T19:00:00.Z",
 			"courses": [
 				{
                     "level": "1",
@@ -22,8 +22,8 @@
 		{
 			"name": "Chinesisch",
 			"reply_to" : "info@spz.kit.edu",
-			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
-			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
+			"signup_begin_iso_utc": "2014-10-16T19:00:00.Z",
+			"signup_end_iso_utc": "2014-11-16T19:00:00.Z",
 			"courses": [
 				{
                     "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100,
@@ -34,12 +34,12 @@
                     "alternative": ["a", "b"]
                 },
 				{
-                    "level": "3 a", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
+                    "level": "3", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
                     "alternative": ["a", "b"]
                 },
 				{
                     "level": "4", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100,
-                    "alternative": []
+                    "alternative": [""]
                 }
 			]
 		},
@@ -49,28 +49,28 @@
 			"signup_begin_iso_utc": "2013-10-16T19:00:00.Z",
 			"signup_end_iso_utc": "2013-11-16T19:00:00.Z",
 			"courses": [
-				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
-				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
-				{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": []},
+				{"level": "Communication at Work", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""]},
+				{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""]},
+				{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""]},
 				{"level": "B1 Engineering", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
 				{"level": "B1 Intermediate 1", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
 				{"level": "B1 Intermediate 2", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
-				{"level": "B1 Science", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
+				{"level": "B1 Science", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""]},
 				{"level": "for Business Communication", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"]},
-				{"level": "in Everyday Situations", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
-				{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": []},
-				{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
+				{"level": "in Everyday Situations", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""]},
+				{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""]},
+				{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
 				{"level": "B2: Science and Technology", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b"]},
 				{"level": "B2: Upper Intermediate", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"]},
 				{"level": "for Engineers B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b"]},
 				{"level": "for Work B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d", "e"]},
-				{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "Topical Issues", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": []},
-				{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": []},
+				{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "Topical Issues", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""]},
+				{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""]},
 				{"level": "TOEFL iBT Vorbereitung", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": ["a"]},
 				{"level": "Business Leadership C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
 				{"level": "Business Studies 1 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""]},
@@ -111,8 +111,8 @@
 				{"level": "5", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
 				{"level": "6", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
 				{"level": "7", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
-				{"level": "Grammatik A (Aufbau, Delf A1-A2)", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
-				{"level": "Fit für Frankreich A", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "Grammatik (Aufbau, Delf A1-A2)", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
+				{"level": "Fit für Frankreich", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"]},
 				{"level": "für alle Fälle", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
 				{"level": "Express+2", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
 				{"level": "Energie und Umwelt", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""]},
