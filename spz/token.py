@@ -23,7 +23,7 @@ def generate(mail, signer=Signer(app.config['TOKEN_SECRET_KEY'])):
     return signer.dumps(mail)
 
 
-def validate(token, mail, max_age=timedelta(weeks=1).total_seconds(), signer=Signer(app.config['TOKEN_SECRET_KEY'])):
+def validate(token, mail, max_age=timedelta(weeks=2).total_seconds(), signer=Signer(app.config['TOKEN_SECRET_KEY'])):
     """Validates a mail-specific one-time-token.
 
        Additional checking is done for its integrity and expiration, defaulting to one week.
