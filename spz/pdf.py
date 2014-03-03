@@ -118,7 +118,7 @@ def print_course(course_id):
     pdf.cell(10, hight, u'Tln.', 1)
     pdf.cell(10, hight, u'Prf.', 1)
     pdf.cell(15, hight, u'Note', 1)
-    pdf.cell(15, hight, u'Punkte', 1, 1)
+    pdf.cell(15, hight, u'Prozent', 1, 1)
     for applicant in active_no_debt:
         pdf.cell(7, hight, u'{0}'.format(idx), 1, 0, 'R')
         pdf.cell(40, hight, u'{0}'.format(applicant.last_name), 1)
