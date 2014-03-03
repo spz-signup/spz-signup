@@ -11,7 +11,7 @@ import csv
 import StringIO
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, not_
 
 from flask import request, redirect, render_template, url_for, flash, g, make_response
 from flask.ext.mail import Message
@@ -399,7 +399,6 @@ def payments():
             return redirect(url_for('status', applicant_id=a_id, course_id=c_id))
 
         flash(u'Belegungsnummer ungültig', 'danger')
-    
 
     stat_list = db.session.query(models.Attendance.paidbycash,
                                  func.sum(models.Attendance.amountpaid),
@@ -411,9 +410,24 @@ def payments():
                            .all()
 
     desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
-    rv = [dict(zip(desc, tup)) for tup in stat_list]
+    stats = [dict(zip(desc, tup)) for tup in stat_list]
 
-    return dict(form=form, stats=rv)
+    return dict(form=form, stats=stats)
+
+
+@auth_required
+@templated('internal/outstanding.html')
+def outstanding():
+    # XXX: discounted /2
+    outstanding = db.session.query(models.Attendance) \
+                            .join(models.Course, models.Applicant) \
+                            .filter(not_(models.Attendance.waiting),
+                                    not_(models.Applicant.discounted),
+                                    models.Attendance.has_to_pay,
+                                    models.Attendance.amountpaid < models.Course.price) \
+                            .all()
+
+    return dict(outstanding=outstanding)
 
 
 @auth_required

@@ -9,11 +9,12 @@
 <li data-intro='Verschicke Mails an Kursteilnehmer' data-step='4'><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
 <li data-intro='Zum Suchen nach einzelnen Kursteilnehmern' data-step='5'><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-search"></span> Bewerbersuche</a></li>
 <li data-intro='Zur Bearbeitung einzelner Zahlungsvorgänge' data-step='6'><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
-<li data-intro='Informative Statistiken zur Kursbelegung' data-step='7'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
-<li data-intro='Zum Finden von Teilnehmern mit mehrfachen freien Kursteilnahmen' data-step='8'><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
-<li data-intro='Automatisches Holen von Nachrücker, pro Sprache' data-step='9'><a href="{{ url_for('restock') }}"><span class="glyphicon glyphicon-repeat"></span> Nachrücker</a></li>
-<li data-intro='Tokens für prioritäre Anmeldungen können hier erstellt werden' data-step='10'><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
-<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='11'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
+<li data-intro='Zum Anzeigen von offenen Beträgen' data-step='7'><a href="{{ url_for('outstanding') }}"><span class="glyphicon glyphicon-warning-sign"></span> Offene Beträge</a></li>
+<li data-intro='Informative Statistiken zur Kursbelegung' data-step='8'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
+<li data-intro='Zum Finden von Teilnehmern mit mehrfachen freien Kursteilnahmen' data-step='9'><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
+<li data-intro='Automatisches Holen von Nachrücker, pro Sprache' data-step='10'><a href="{{ url_for('restock') }}"><span class="glyphicon glyphicon-repeat"></span> Nachrücker</a></li>
+<li data-intro='Tokens für prioritäre Anmeldungen können hier erstellt werden' data-step='11'><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
+<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='12'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
 {% endif %}
 {% endblock navbar %}
 

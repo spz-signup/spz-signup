@@ -107,6 +107,7 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/applicants/applicant_attendances/<int:id>', views.applicant_attendances, ['GET']),
 
           ('/internal/payments', views.payments, ['GET', 'POST']),
+          ('/internal/outstanding', views.outstanding, ['GET', 'POST']),
           ('/internal/status/<int:applicant_id>/<int:course_id>', views.status, ['GET', 'POST']),
           ('/internal/print_bill/<int:applicant_id>/<int:course_id>', pdf.print_bill, ['GET']),
 
