@@ -23,7 +23,7 @@
                     {{ render_boolean(form.has_to_pay) }}
                     {{ render_boolean(form.discounted) }}
                     {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }}
-                    {{ render_input(form.amountpaid, type='number', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
+                    {{ render_input(form.amountpaid, type='number', required_extras='step="30"', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
