@@ -26,13 +26,16 @@ from spz.util.Encoding import UnicodeWriter
 def index():
     form = SignupForm()
 
+    if g.access:
+        flash(u'Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
         one_time_token = request.args.get('token', None)
 
-        if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail):
+        # signup at all times only with token or privileged users
+        if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail) and not g.access:
             flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist noch nicht möglich', 'danger')
             return dict(form=form)
 
