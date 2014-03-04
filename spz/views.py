@@ -479,6 +479,19 @@ def preterm():
     if form.validate_on_submit():
         token = form.get_token()
 
+        try:
+            msg = Message(sender=app.config['PRIMARY_MAIL'],
+                          recipients=[form.mail.data.encode('utf-8')],
+                          subject=u'[Sprachenzentrum] URL für prioritäre Anmeldung',
+                          body=u'{0}'.format(token))
+
+            mail.send(msg)
+            flash(u'Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
+
+        except (AssertionError, socket.error) as e:
+            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
+
+    # always show preterm signups in this view
     attendances = models.Attendance.query \
                         .join(models.Course, models.Language, models.Applicant) \
                         .filter(models.Attendance.registered < models.Language.signup_begin) \
