@@ -6,9 +6,10 @@
 
 from datetime import timedelta
 
+from sqlalchemy import func
 from itsdangerous import URLSafeTimedSerializer as Signer
 
-from spz import app
+from spz import app, models
 
 
 def generate(mail, signer=Signer(app.config['TOKEN_SECRET_KEY'])):
@@ -36,7 +37,12 @@ def validate(token, mail, max_age=timedelta(weeks=2).total_seconds(), signer=Sig
     # we're not interested in the exception type (BadSignature, SignatureExpired)
     # see: https://pythonhosted.org/itsdangerous/#responding-to-failure
     ok, payload = signer.loads_unsafe(token, max_age=max_age)
-    return ok and payload == mail
+
+    # token is only valid if it's associated mail is not already in the database
+    # this way we're able to guarantee the token's one-time property
+    found = models.Applicant.query.filter(func.lower(models.Applicant.mail) == func.lower(mail)).first()
+
+    return ok and payload == mail and not found
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
