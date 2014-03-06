@@ -486,7 +486,7 @@ def preterm():
             msg = Message(sender=app.config['PRIMARY_MAIL'],
                           recipients=[form.mail.data.encode('utf-8')],
                           subject=u'[Sprachenzentrum] URL für prioritäre Anmeldung',
-                          body=u'{0}'.format(token))
+                          body=u'{0}'.format(url_for('index', token=token, _external=True)))
 
             mail.send(msg)
             flash(u'Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
