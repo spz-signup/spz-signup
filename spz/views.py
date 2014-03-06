@@ -459,7 +459,6 @@ def status(applicant_id, course_id):
     return dict(form=form, attendance=attendance)
 
 
-
 @auth_required
 @templated('internal/statistics.html')
 def statistics():
@@ -469,7 +468,23 @@ def statistics():
 @auth_required
 @templated('internal/statistics/free_courses.html')
 def free_courses():
-    return dict(courses=models.Course.query.join(models.Language.courses).order_by(models.Language.name, models.Course.level).all())
+    rv = models.Course.query.join(models.Language.courses) \
+                      .order_by(models.Language.name, models.Course.level) \
+                      .all()
+
+    return dict(courses=rv)
+
+
+@auth_required
+@templated('internal/statistics/origins_breakdown.html')
+def origins_breakdown():
+    rv = db.session.query(models.Origin, func.count()) \
+                   .join(models.Applicant, models.Attendance) \
+                   .filter(not_(models.Attendance.waiting)) \
+                   .group_by(models.Origin) \
+                   .all()
+
+    return dict(origins_breakdown=rv)
 
 
 @auth_required

@@ -8,9 +8,11 @@ Statistiken
 {% block internal_body %}
 <div class="row">
     <div class="col-lg-12">
-        <p>Restplätze, ...</p>
         <a href="{{ url_for('free_courses') }}" class="list-group-item">
-            <p class="list-group-item-text text-info">Restplätze</p>
+            <p class="list-group-item-text text-info">Restplätze nach Kurse</p>
+        </a>
+        <a href="{{ url_for('origins_breakdown') }}" class="list-group-item">
+            <p class="list-group-item-text text-info">Aufteilung nach Herkunft</p>
         </a>
     </div>
 </div>

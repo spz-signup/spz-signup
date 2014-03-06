@@ -1,0 +1,31 @@
+{% extends 'internal/internal.html' %}
+
+{% block caption %}
+Aktive Teilnahmen nach Herkunft
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-striped sortable">
+            <thead>
+                <tr>
+                    <th>Herkunft</th>
+                    <th>Anzahl</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for origin, count in origins_breakdown %}
+                    <tr>
+                        <td>{{ origin.name }}</a></td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
