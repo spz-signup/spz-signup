@@ -46,7 +46,7 @@ Zahlungen
                     <td>{{ 'Bar' if stat['cash'] else 'Überweisung' }}</td>
                     <td>{{ stat['count'] }}</td>
                     <td>{{ stat['sum'] }}</td>
-                    <td>{{ stat['avg'] }}</td>
+                    <td>{{ '%0.2f'|format(stat['avg']) }}</td>
                     <td>{{ stat['min'] }}</td>
                     <td>{{ stat['max'] }}</td>
                 </tr>
