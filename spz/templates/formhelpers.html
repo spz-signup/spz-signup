@@ -6,7 +6,7 @@
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id }}" class="col-lg-3 control-label">{{ field.label }}</label>
     <div class="col-lg-{{ width - 3 }}">
-        <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data != None %} value="{{ field.data }}" {% endif %}placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
+        <input type="{{ type }}" class="form-control" id="{{ field.id }}" name="{{ field.id }}"{% if field.data != None %} value="{{ field.data }}" {% endif %} placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
         {% for error in field.errors %}
         <span class="label label-danger">{{ error }}</span>
         {% endfor %}
