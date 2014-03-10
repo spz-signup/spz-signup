@@ -11,7 +11,7 @@ am Sprachenzentrum des KIT angemeldet:
 
 Kurs: {{ course.full_name() }}
 {# TODO: ugly hack. refactor it! #}
-Semester: {{ 'SS ' ~ date.year if (4 <= date.month < 10) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
+Semester: {{ 'SS ' ~ date.year if (3 <= date.month < 9) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
 
 Bitte beachten Sie folgende Hinweise:
 

@@ -15,7 +15,7 @@ from spz.decorators import auth_required
 class ListGenerator(FPDF):
     def header(this):
         now = datetime.now()
-        if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
+        if now.month < 3: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
         elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
         else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
         this.set_font('Arial','',10)
