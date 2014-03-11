@@ -16,7 +16,7 @@ class ListGenerator(FPDF):
     def header(this):
         now = datetime.now()
         if now.month < 3: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-        elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
+        elif now.month < 9: semester = u'Sommersemester {0}'.format(now.year)
         else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
         this.set_font('Arial','',10)
         this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
@@ -155,8 +155,8 @@ def print_bill(applicant_id, course_id):
             this.rahmen = 0
             this.breite = 128
             now = datetime.now()
-            if now.month < 4: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-            elif now.month < 9: semester = u'Sommersemester {0}.format(now.year)'
+            if now.month < 3: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
+            elif now.month < 9: semester = u'Sommersemester {0}'.format(now.year)
             else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
             this.set_font('Arial','',10)
             #fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
