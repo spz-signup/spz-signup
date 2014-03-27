@@ -42,7 +42,10 @@ def validate(token, mail, max_age=timedelta(weeks=2).total_seconds(), signer=Sig
     # this way we're able to guarantee the token's one-time property
     found = models.Applicant.query.filter(func.lower(models.Applicant.mail) == func.lower(mail)).first()
 
-    return ok and payload == mail and not found
+    # case insensitive mail address check, otherwise confusing!
+    same = payload.lower() == mail.lower()
+
+    return ok and same and not found
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
