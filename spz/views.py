@@ -258,10 +258,11 @@ def export_language(language_id):
 @templated('internal/lists.html')
 def lists():
     # list of tuple (lang, aggregated number of courses, aggregated number of seats)
+    # XXX: optimize query, takes 'too long'
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
                           .group_by(models.Language) \
-                          .order_by(models.Language.name) \
+                          .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
                           .all()
 
     return dict(lang_misc=lang_misc)
@@ -469,7 +470,7 @@ def statistics():
 @templated('internal/statistics/free_courses.html')
 def free_courses():
     rv = models.Course.query.join(models.Language.courses) \
-                      .order_by(models.Language.name, models.Course.level) \
+                      .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
                       .all()
 
     return dict(courses=rv)

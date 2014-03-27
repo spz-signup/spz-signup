@@ -35,15 +35,17 @@ def origins_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
 
+
 @cache.cached(key_prefix='languages')
 def languages_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
             for x in models.Language.query.order_by(models.Language.name.asc()).all()]
 
+
 @cache.cached(key_prefix='upcoming_courses')
 def upcoming_courses_to_choicelist():
     available = models.Course.query.join(models.Language.courses) \
-                                   .order_by(models.Language.name, models.Course.level) \
+                                   .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
                                    .all()
 
     upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
@@ -55,11 +57,12 @@ def upcoming_courses_to_choicelist():
 @cache.cached(key_prefix='all_courses')
 def all_courses_to_choicelist():
     courses = models.Course.query.join(models.Language.courses) \
-                                 .order_by(models.Language.name, models.Course.level) \
+                                 .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
                                  .all()
 
     return [(course.id, u'{0}'.format(course.full_name()))
             for course in courses]
+
 
 class SignupForm(Form):
     """Represents the main sign up form.
