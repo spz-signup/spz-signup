@@ -28,10 +28,8 @@ class ListGenerator(FPDF):
         this.set_font('Arial','',11)
         this.cell(0,7, u'Datum _________________ Unterschrift ____________________________________', 0, 1, 'R')
         this.set_font('Arial','',9)
-        now = datetime.now()
         this.cell(0, 5, u'Personen, die nicht auf der Liste stehen, haben nicht bezahlt und sind nicht zur Kursteilnahme berechtigt. Dementsprechend können Sie auch keine Teilnahme- oder Prüfungsscheine erhalten.', 0, 1, 'C')
         this.cell(0, 5, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat und dann die unterschriebene Liste wieder zurückgeben. Danke!', 0, 1, 'C')
-        # this.cell(0, 4, now.strftime("%d.%m.%Y %H:%M:%S"), 1, 1, 'R')
 
 
 @auth_required
@@ -145,9 +143,6 @@ def print_course(course_id):
 
 @auth_required
 def print_bill(applicant_id, course_id):
-
-    maybe = lambda x: x if x else u''
-
     class BillGenerator(FPDF):
         def header(this):
             this.zwischenraum = 21
