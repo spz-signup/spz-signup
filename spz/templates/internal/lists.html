@@ -17,7 +17,9 @@ Sprachen
                     <th>Warteliste</th>
                     <th>Aktive</th>
                     <th>Zahlende</th>
-                    <td>Export</td>
+                    <th>Kurs-L.</th>
+                    <th>Anw.-L.</th>
+                    <th>Daten</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +33,7 @@ Sprachen
                     <td>{{ language.get_active_attendances()|count }}</td>
                     <td>{{ language.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
+                    <td><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({

@@ -90,8 +90,10 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/export_course/<int:course_id>', views.export_course, ['GET']),
           ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),
+          ('/internal/print_course_presence/<int:course_id>', pdf.print_course_presence, ['GET']),
           ('/internal/export_language/<int:language_id>', views.export_language, ['GET']),
           ('/internal/print_language/<int:language_id>', pdf.print_language, ['GET']),
+          ('/internal/print_language_presence/<int:language_id>', pdf.print_language_presence, ['GET']),
 
           ('/internal/notifications', views.notifications, ['GET', 'POST']),
 

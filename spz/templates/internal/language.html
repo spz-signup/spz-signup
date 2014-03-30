@@ -26,9 +26,10 @@ Sprache: {{ language.name }}
                     <th>Bewerber</th>
                     <th>Aktive</th>
                     <th>Warteliste</th>
-                    <th>Zahlungspflichtige</th>
-                    <th>PDF</th>
-                    <th>CSV</th>
+                    <th>Zahlungspf.</th>
+                    <th>Kurs-L.</th>
+                    <th>Anw.-L.</th>
+                    <th>Daten</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +44,7 @@ Sprache: {{ language.name }}
                     <td>{{ course.get_waiting_attendances()|count }}</td>
                     <td>{{ course.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
+                    <td><a href="{{ url_for('print_course_presence', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
                     <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({
