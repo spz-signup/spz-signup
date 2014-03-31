@@ -31,12 +31,12 @@ class BasePDF(FPDF):
         return self.header_texts
 
 
-class ListGenerator(BasePDF):
+class CourseGenerator(BasePDF):
     column_size = [7, 40, 40, 20, 80, 30, 15, 15, 15, 15]
     header_texts = ["Nr.", "Nachname", "Vorname", "Matr.", "E-Mail", "Telefon", "Tln.", "Prf.", "Note", "Prozent"]
 
     def header(self):
-        super(ListGenerator, self).header()
+        super(CourseGenerator, self).header()
         self.cell(0, 5, u'Kursliste', 0, 0, 'R')
         self.ln()
 
@@ -64,15 +64,13 @@ class PresenceGenerator(BasePDF):
         self.cell(0, 5, u'Diese Liste bildet lediglich eine Hilfe im Unterricht und verbleibt beim Dozenten.', 0, 1, 'C')
 
 
-@auth_required
-def print_course_presence(course_id):
-    course = models.Course.query.get_or_404(course_id)
-    
+def list_presence (pdflist, course):
+    column = pdflist.get_column_size()
+    header = pdflist.get_header_texts()
     active_no_debt = [attendance.applicant for attendance in course.attendances
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
     active_no_debt.sort()
 
-    pdflist = PresenceGenerator('L','mm','A4')
     pdflist.add_page()
 
     pdflist.set_font('Arial','B',16)
@@ -81,8 +79,6 @@ def print_course_presence(course_id):
     height = 6
     
     idx = 1
-    column = pdflist.get_column_size()
-    header = pdflist.get_header_texts()
     for c, h in zip(column, header):
         pdflist.cell(c, height, h, 1)
     for i in range(13):
@@ -97,7 +93,15 @@ def print_course_presence(course_id):
         pdflist.ln()
 
         idx += 1
+    return
 
+
+@auth_required
+def print_course_presence(course_id):
+    pdflist = PresenceGenerator('L','mm','A4')
+    course = models.Course.query.get_or_404(course_id)
+    list_presence (pdflist, course)
+    
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
     resp = make_response(buf.getvalue())
@@ -111,36 +115,8 @@ def print_course_presence(course_id):
 def print_language_presence(language_id):
     language = models.Language.query.get_or_404(language_id)
     pdflist = PresenceGenerator('L','mm','A4')
-    column = pdflist.get_column_size()
-    header = pdflist.get_header_texts()
-
     for course in language.courses:
-        active_no_debt = [attendance.applicant for attendance in course.attendances
-                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-        active_no_debt.sort()
-
-        pdflist.add_page()
-        pdflist.set_font('Arial','B',16)
-        pdflist.cell(0, 10, u'{0}'.format(course.full_name()), 0, 1, 'C')
-
-        pdflist.set_font('Arial','',10)
-        height = 6
-
-        idx = 1
-        for c, h in zip(column, header):
-            pdflist.cell(c, height, h, 1)
-        for i in range(13):
-            pdflist.cell(column[-1], height, '', 1)
-        pdflist.ln()
-        for applicant in active_no_debt:
-            content = [idx, applicant.last_name, applicant.first_name, ""]
-            for c, co in zip(column, content):
-                pdflist.cell(c, height, u'{0}'.format(co), 1)
-            for i in range(13):
-                pdflist.cell(column[-1], height, '', 1)
-            pdflist.ln()
-
-            idx += 1
+        list_presence (pdflist, course)
 
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
@@ -151,17 +127,15 @@ def print_language_presence(language_id):
     return resp
 
 
-@auth_required
-def print_course(course_id):
-    course = models.Course.query.get_or_404(course_id)
-    
+def list_course (pdflist, course):
+    column = pdflist.get_column_size()
+    header = pdflist.get_header_texts()
     maybe = lambda x: x if x else u''
 
     active_no_debt = [attendance.applicant for attendance in course.attendances
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
     active_no_debt.sort()
 
-    pdflist = ListGenerator('L','mm','A4')
     pdflist.add_page()
     course_str = u'{0}'.format(course.full_name())
     pdflist.set_font('Arial','B',16)
@@ -170,8 +144,6 @@ def print_course(course_id):
     pdflist.set_font('Arial','',10)
     height = 6
     
-    column = pdflist.get_column_size()
-    header = pdflist.get_header_texts()
     idx = 1
     for c, h in zip(column, header):
         pdflist.cell(c, height, h, 1)
@@ -182,6 +154,14 @@ def print_course(course_id):
             pdflist.cell(c, height, u'{0}'.format(co), 1)
         pdflist.ln()
         idx += 1
+    return
+
+
+@auth_required
+def print_course(course_id):
+    pdflist = CourseGenerator('L','mm','A4')
+    course = models.Course.query.get_or_404(course_id)
+    list_course (pdflist, course)   
 
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
@@ -195,36 +175,9 @@ def print_course(course_id):
 @auth_required
 def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
-    pdflist = ListGenerator('L','mm','A4')
-    column = pdflist.get_column_size()
-    header = pdflist.get_header_texts()
-
-    maybe = lambda x: x if x else u''
-
+    pdflist = CourseGenerator('L','mm','A4')
     for course in language.courses:
-        active_no_debt = [attendance.applicant for attendance in course.attendances
-                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-        active_no_debt.sort()
-
-        pdflist.add_page()
-        course_str = u'{0}'.format(course.full_name())
-        pdflist.set_font('Arial','B',16)
-        pdflist.cell(0, 10, course_str, 0, 1, 'C')
-
-        pdflist.set_font('Arial','',10)
-        height = 6
-
-        for c, h in zip(column, header):
-            pdflist.cell(c, height, h, 1)
-        pdflist.ln()
-        idx = 1
-        for applicant in active_no_debt:
-            content = [idx, applicant.last_name, applicant.first_name, maybe(applicant.tag), applicant.mail, applicant.phone, "", "", "", ""]
-            for c, co in zip(column, content):
-                pdflist.cell(c, height, u'{0}'.format(co), 1)
-            pdflist.ln()
-
-            idx += 1
+        list_course (pdflist, course)   
 
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
