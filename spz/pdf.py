@@ -12,7 +12,7 @@ from flask import make_response
 from spz import models
 from spz.decorators import auth_required
 
-class ListGenerator(FPDF):
+class BasePDF(FPDF):
     def header(this):
         now = datetime.now()
         if now.month < 3: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
@@ -23,7 +23,14 @@ class ListGenerator(FPDF):
         this.cell(0, 5, semester, 0, 1, 'R')
         this.set_font('Arial','B',10)
         this.cell(0, 5, u'Sprachenzentrum', 0)
-        this.cell(0, 5, u'Kursliste', 0, 1, 'R')
+
+
+class ListGenerator(BasePDF):
+    def header(self):
+        super(ListGenerator, self).header()
+        self.cell(0, 5, u'Kursliste', 0, 0, 'R')
+        self.ln()
+
     def footer(this):
         this.set_y(-20)
         this.set_font('Arial','',11)
@@ -33,28 +40,66 @@ class ListGenerator(FPDF):
         this.cell(0, 5, u'Nach Kursende bitte abhaken, ob der Teilnehmer regelmäßig anwesend war, ob er die Abschlussprüfung bestanden hat und dann die unterschriebene Liste wieder zurückgeben. Danke!', 0, 1, 'C')
 
 
-class PresenceGenerator(FPDF):
-    def header(this):
-        now = datetime.now()
-        if now.month < 3: semester = u'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-        elif now.month < 9: semester = u'Sommersemester {0}'.format(now.year)
-        else: semester = u'Wintersemester {0}/{1}'.format(now.year, now.year+1)
-        this.set_font('Arial','',10)
-        this.cell(0, 5, u'Karlsruher Institut für Technologie (KIT)', 0, 0)
-        this.cell(0, 5, semester, 0, 1, 'R')
-        this.set_font('Arial','B',10)
-        this.cell(0, 5, u'Sprachenzentrum', 0)
-        this.cell(0, 5, u'Anwesenheitsliste', 0, 1, 'R')
-    def footer(this):
-        this.set_y(-10)
-        this.set_font('Arial','',9)
-        this.cell(0, 5, u'Diese Liste bildet lediglich eine Hilfe im Unterricht und verbleibt beim Dozenten.', 0, 1, 'C')
+class PresenceGenerator(BasePDF):
+    def header(self):
+        super(PresenceGenerator, self).header()
+        self.cell(0, 5, u'Anwesenheitsliste', 0, 0, 'R')
+        self.ln()
+
+    def footer(self):
+        self.set_y(-10)
+        self.set_font('Arial','',9)
+        self.cell(0, 5, u'Diese Liste bildet lediglich eine Hilfe im Unterricht und verbleibt beim Dozenten.', 0, 1, 'C')
+
+
+
+@auth_required
+def print_course_presence(course_id):
+    course = models.Course.query.get_or_404(course_id)
+    
+    active_no_debt = [attendance.applicant for attendance in course.attendances
+                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+    active_no_debt.sort()
+
+    pdflist = PresenceGenerator('L','mm','A4')
+    pdflist.add_page()
+
+    pdflist.set_font('Arial','B',16)
+    pdflist.cell(0, 10, u'{0}'.format(course.full_name()), 0, 1, 'C')
+    pdflist.set_font('Arial','',10)
+    height = 6
+    
+    idx = 1
+    column = [7, 40, 40, 13]
+    header = ["Nr.", "Nachname", "Vorname", ""]
+    for c, h in zip(column, header):
+        pdflist.cell(c, height, h, 1)
+    for i in range(13):
+        pdflist.cell(column[-1], height, '', 1)
+    pdflist.ln()
+    for applicant in active_no_debt:
+        content = [idx, applicant.last_name, applicant.first_name, ""]
+        for c, co in zip(column, content):
+            pdflist.cell(c, height, u'{0}'.format(co), 1)
+        for i in range(13):
+            pdflist.cell(column[-1], height, '', 1)
+        pdflist.ln()
+
+        idx += 1
+
+    buf = StringIO.StringIO()
+    buf.write(pdflist.output('','S'))
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Disposition'] = u'attachment; filename="{0}.pdf"'.format(course.full_name())
+    resp.mimetype = 'application/pdf'
+
+    return resp
 
 
 @auth_required
 def print_language_presence(language_id):
     language = models.Language.query.get_or_404(language_id)
-    list = PresenceGenerator('L','mm','A4')
+    pdflist = PresenceGenerator('L','mm','A4')
 
     maybe = lambda x: x if x else u''
     column = [7, 40, 40, 79, 8]
@@ -64,35 +109,33 @@ def print_language_presence(language_id):
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
         active_no_debt.sort()
 
-        list.add_page()
-        course_str = u'{0}'.format(course.full_name())
-        list.set_font('Arial','B',16)
-        list.cell(0, 10, course_str, 0, 1, 'C')
+        pdflist.add_page()
+        pdflist.set_font('Arial','B',16)
+        pdflist.cell(0, 10, u'{0}'.format(course.full_name()), 0, 1, 'C')
 
-        list.set_font('Arial','',10)
+        pdflist.set_font('Arial','',10)
         height = 6
 
         idx = 1
-        list.cell(7, height, u'Nr.', 1)
-        list.cell(40, height, u'Nachname', 1)
-        list.cell(40, height, u'Vorname', 1)
-        list.cell(80, height, u'E-Mail', 1)
-        for i in range(14):
-            list.cell(column[4], height, '', 1)
-        list.ln()
+        column = [7, 40, 40, 13]
+        header = ["Nr.", "Nachname", "Vorname", ""]
+        for c, h in zip(column, header):
+            pdflist.cell(c, height, h, 1)
+        for i in range(13):
+            pdflist.cell(column[-1], height, '', 1)
+        pdflist.ln()
         for applicant in active_no_debt:
-            list.cell(7, height, u'{0}'.format(idx), 1, 0, 'R')
-            list.cell(40, height, u'{0}'.format(applicant.last_name), 1)
-            list.cell(40, height, u'{0}'.format(applicant.first_name), 1)
-            list.cell(80, height, applicant.mail, 1)
-            for i in range(14):
-                list.cell(column[4], height, '', 1)
-            list.ln()
+            content = [idx, applicant.last_name, applicant.first_name, ""]
+            for c, co in zip(column, content):
+                pdflist.cell(c, height, u'{0}'.format(co), 1)
+            for i in range(13):
+                pdflist.cell(column[-1], height, '', 1)
+            pdflist.ln()
 
             idx += 1
 
     buf = StringIO.StringIO()
-    buf.write(list.output('','S'))
+    buf.write(pdflist.output('','S'))
     resp = make_response(buf.getvalue())
     resp.headers['Content-Disposition'] = u'attachment; filename="{0}.pdf"'.format(language.name)
     resp.mimetype = 'application/pdf'
@@ -150,54 +193,6 @@ def print_language(language_id):
     buf.write(list.output('','S'))
     resp = make_response(buf.getvalue())
     resp.headers['Content-Disposition'] = u'attachment; filename="{0}.pdf"'.format(language.name)
-    resp.mimetype = 'application/pdf'
-
-    return resp
-
-
-@auth_required
-def print_course_presence(course_id):
-    course = models.Course.query.get_or_404(course_id)
-    
-    maybe = lambda x: x if x else u''
-
-    active_no_debt = [attendance.applicant for attendance in course.attendances
-                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-    active_no_debt.sort()
-
-    pdf = PresenceGenerator('L','mm','A4')
-    pdf.add_page()
-    course_str = u'{0}'.format(course.full_name())
-    pdf.set_font('Arial','B',16)
-    pdf.cell(0, 10, course_str, 0, 1, 'C')
-
-    pdf.set_font('Arial','',10)
-    height = 6
-    
-    idx = 1
-    column = [7, 40, 40, 79, 8]
-    pdf.cell(column[0], height, u'Nr.', 1)
-    pdf.cell(column[1], height, u'Nachname', 1)
-    pdf.cell(column[2], height, u'Vorname', 1)
-    pdf.cell(column[3], height, u'E-Mail', 1)
-    for i in range(14):
-        pdf.cell(column[4], height, '', 1)
-    pdf.ln()
-    for applicant in active_no_debt:
-        pdf.cell(column[0], height, u'{0}'.format(idx), 1, 0, 'R')
-        pdf.cell(column[1], height, u'{0}'.format(applicant.last_name), 1)
-        pdf.cell(column[2], height, u'{0}'.format(applicant.first_name), 1)
-        pdf.cell(column[3], height, applicant.mail, 1)
-        for i in range(14):
-            pdf.cell(column[4], height, '', 1)
-        pdf.ln()
-
-        idx += 1
-
-    buf = StringIO.StringIO()
-    buf.write(pdf.output('','S'))
-    resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="{0}.pdf"'.format(course.full_name())
     resp.mimetype = 'application/pdf'
 
     return resp
