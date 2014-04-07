@@ -16,6 +16,7 @@ Offene Beträge
                     <th>E-Mail</th>
                     <th>Zahlstatus</th>
                     <th>Kurswunsch</th>
+                    <th>Sprache</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,7 @@ Offene Beträge
                             {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
                         </a>
                     </td>
+                    <td><a href="{{ url_for('language', id=attendance.course.language.id) }}">{{ attendance.course.language.name }}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
