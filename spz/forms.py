@@ -225,8 +225,8 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
     degree = SelectField(u'Studienabschluss', [validators.Optional()], coerce=int)
     semester = IntegerField(u'Fachsemester', [validators.Optional()])
 
-    add_to = SelectField(u'Neue Teilnahme', [validators.Optional()], coerce=int, choices=[])
-    remove_from = SelectField(u'Teilnahme Löschen', [validators.Optional()], coerce=int, choices=[])
+    add_to = SelectField(u'Teilnahme hinzufügen', [validators.Optional()], coerce=int, choices=[])
+    remove_from = SelectField(u'Teilnahme löschen', [validators.Optional()], coerce=int, choices=[])
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
