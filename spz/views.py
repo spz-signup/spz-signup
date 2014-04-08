@@ -47,8 +47,8 @@ def index():
             flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
             return dict(form=form)
 
-        if applicant.in_course(course) or applicant.in_parallel_course(course):
-            flash(u'Sie nehmen bereits am Kurs oder einem Parallelkurs teil', 'danger')
+        if applicant.in_course(course) or applicant.active_in_parallel_course(course):
+            flash(u'Sie sind bereits im Kurs oder nehmen aktiv an einem Parallelkurs teil', 'danger')
             return dict(form=form)
 
         # Save the state in order to use it after the transaction is commited
@@ -342,8 +342,8 @@ def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
     applicant = models.Applicant.query.get_or_404(applicant_id)
     course = models.Course.query.get_or_404(course_id)
 
-    if applicant.in_course(course) or applicant.in_parallel_course(course):
-        flash(u'Der Teilnehmer ist bereits im Kurs oder einem Parallelkurs eingetragen', 'danger')
+    if applicant.in_course(course) or applicant.active_in_parallel_course(course):
+        flash(u'Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil', 'danger')
         return redirect(url_for('course', id=course.id))
 
     try:
