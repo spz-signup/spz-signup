@@ -20,6 +20,7 @@ from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm
 from spz.util.Encoding import UnicodeWriter
+from spz.async import queue, async_send
 
 
 @templated('signup.html')
@@ -78,8 +79,11 @@ def index():
                                                applicant=applicant, course=course, has_to_pay=has_to_pay,
                                                waiting=waiting, date=datetime.now()))
 
-            mail.send(msg)
-            flash(u'Eine Bestätigungsmail wurde an {0} verschickt'.format(applicant.mail), 'success')
+            # TODO(daniel): exceptions in work queue -- currently stored in 'failed' queue
+            #mail.send(msg) -- this is synchronous
+            queue.enqueue(async_send, msg)
+
+            flash(u'Eine Bestätigungsmail wird innerhalb der kommenden Stunden an {0} verschickt'.format(applicant.mail), 'success')
         except (AssertionError, socket.error) as e:
             flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
