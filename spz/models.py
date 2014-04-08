@@ -157,6 +157,12 @@ class Applicant(db.Model):
     def in_course(self, course):
         return course in [attendance.course for attendance in self.attendances]
 
+    # XXX: in_course and this -- both needed?
+    def in_parallel_course(self, course):
+        same_lang = filter(lambda attendance: attendance.course.language == course.language, self.attendances)
+        same_level = filter(lambda attendance: attendance.course.level == course.level, same_lang)
+        return len(same_level) > 0
+
 
 @total_ordering
 class Course(db.Model):
