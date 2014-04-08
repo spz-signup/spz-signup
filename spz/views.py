@@ -262,7 +262,7 @@ def lists():
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
                           .group_by(models.Language) \
-                          .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
+                          .order_by(models.Language.name) \
                           .all()
 
     return dict(lang_misc=lang_misc)
