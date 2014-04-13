@@ -39,5 +39,5 @@ server {
         add_header 'X-XSS-Protection' '1; mode=block';
 
         # of course he we have to be a bit silly!
-        add_header 'X-Powered-By:' 'Unicorns';
+        add_header 'X-Powered-By' 'Unicorns';
 }
