@@ -50,8 +50,8 @@ class CourseGenerator(BasePDF):
 
 
 class PresenceGenerator(BasePDF):
-    column_size = [7, 40, 40, 13]
-    header_texts = ["Nr.", "Nachname", "Vorname", ""]
+    column_size = [7, 40, 40, 20, 80, 6]
+    header_texts = ["Nr.", "Nachname", "Vorname", "Matr.", "E-Mail", ""]
 
     def header(self):
         super(PresenceGenerator, self).header()
@@ -67,6 +67,8 @@ class PresenceGenerator(BasePDF):
 def list_presence (pdflist, course):
     column = pdflist.get_column_size()
     header = pdflist.get_header_texts()
+    maybe = lambda x: x if x else u''
+
     active_no_debt = [attendance.applicant for attendance in course.attendances
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
     active_no_debt.sort()
@@ -85,7 +87,7 @@ def list_presence (pdflist, course):
         pdflist.cell(column[-1], height, '', 1)
     pdflist.ln()
     for applicant in active_no_debt:
-        content = [idx, applicant.last_name, applicant.first_name, ""]
+        content = [idx, applicant.last_name, applicant.first_name, maybe(applicant.tag), applicant.mail, ""]
         for c, co in zip(column, content):
             pdflist.cell(c, height, u'{0}'.format(co), 1)
         for i in range(13):

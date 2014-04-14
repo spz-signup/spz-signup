@@ -1,0 +1,9 @@
+setup.cfg
+pip-egg-info/times.egg-info/PKG-INFO
+pip-egg-info/times.egg-info/SOURCES.txt
+pip-egg-info/times.egg-info/dependency_links.txt
+pip-egg-info/times.egg-info/not-zip-safe
+pip-egg-info/times.egg-info/requires.txt
+pip-egg-info/times.egg-info/top_level.txt
+times/__init__.py
+times/version.py

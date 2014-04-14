@@ -1,0 +1,14 @@
+CHANGES
+LICENSE
+MANIFEST.in
+README
+setup.cfg
+six.py
+test_six.py
+documentation/Makefile
+documentation/conf.py
+documentation/index.rst
+pip-egg-info/six.egg-info/PKG-INFO
+pip-egg-info/six.egg-info/SOURCES.txt
+pip-egg-info/six.egg-info/dependency_links.txt
+pip-egg-info/six.egg-info/top_level.txt
