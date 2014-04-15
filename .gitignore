@@ -2,6 +2,7 @@
 *.swp
 *.log
 
+build
 env
 doc/build
 

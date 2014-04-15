@@ -1,4 +1,0 @@
-    [console_scripts]
-    rqworker = rq.scripts.rqworker:main
-    rqinfo = rq.scripts.rqinfo:main
-    
