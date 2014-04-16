@@ -11,6 +11,8 @@ import csv
 import StringIO
 from datetime import datetime
 
+from redis import ConnectionError
+
 from sqlalchemy import func, not_
 
 from flask import request, redirect, render_template, url_for, flash, g, make_response
@@ -84,7 +86,7 @@ def index():
             queue.enqueue(async_send, msg)
 
             flash(u'Eine Bestätigungsmail wird innerhalb der kommenden Stunden an {0} verschickt'.format(applicant.mail), 'success')
-        except (AssertionError, socket.error) as e:
+        except (AssertionError, socket.error, ConnectionError) as e:
             flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
         # Finally redirect the user to an confirmation page, too
