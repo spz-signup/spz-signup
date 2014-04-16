@@ -1,0 +1,41 @@
+{% extends 'internal/internal.html' %}
+
+{# TODO(daniel): evaluate the need for auto. refresh
+{% block head %}
+<meta http-equiv="refresh" content="60">
+{% endblock head %}
+#}
+
+{% block caption %}
+Informationen zur Warteschlange
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-striped sortable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>Erstellt</th>
+                    <th>Payload</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.id }}</a></td>
+                        <td>{{ task.status }}</td>
+                        <td class="fmt-datetime">{{ task.created_at }}</td>
+                        <td>{{ task.payload }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock internal_body %}
+
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

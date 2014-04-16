@@ -495,6 +495,34 @@ def origins_breakdown():
 
 
 @auth_required
+@templated('internal/statistics/task_queue.html')
+def task_queue():
+    tasks = []
+
+    for job in queue.jobs:
+        payload = ''
+
+        try:
+            args = job.args[0]
+
+            # if the argument is a flask.ext.Message we know how to get its most interesting information
+            if isinstance(args, Message):
+                payload = u'{0}, {1}'.format(args.recipients, args.subject)
+
+            # otherwise we have to show the description for now -- XXX: support more tasks
+            else:
+                payload = args
+
+        except IndexError:
+            payload = job.args
+
+        task = {'id': job.id, 'status': job.status, 'created_at': job.created_at, 'payload': payload}
+        tasks.append(task)
+
+    return dict(tasks=tasks)
+
+
+@auth_required
 @templated('internal/preterm.html')
 def preterm():
     form = PretermForm()

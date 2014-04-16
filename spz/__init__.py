@@ -120,6 +120,7 @@ routes = [('/', views.index, ['GET', 'POST']),
           ('/internal/statistics', views.statistics, ['GET']),
           ('/internal/statistics/free_courses', views.free_courses, ['GET']),
           ('/internal/statistics/origins_breakdown', views.origins_breakdown, ['GET']),
+          ('/internal/statistics/task_queue', views.task_queue, ['GET']),
 
           ('/internal/duplicates', views.duplicates, ['GET']),
 
