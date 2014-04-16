@@ -237,6 +237,9 @@ class Course(db.Model):
         num_free = max(self.limit - len(self.get_active_attendances()), 0)
         waiting = self.get_waiting_attendances()
 
+        # avoid restocking applicants already active in a parallel course
+        waiting = filter(lambda attendance: not attendance.applicant.active_in_parallel_course(self), waiting)
+
         to_move = waiting[:num_free]
 
         # Check if an applicant has to pay before toggling the waiting status,
