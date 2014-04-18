@@ -20,7 +20,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm, UniqueForm
 from spz.util.Encoding import UnicodeWriter
 from spz.async import queue, async_send
 
@@ -608,6 +608,33 @@ def restock():
 
         except (AssertionError, socket.error) as e:
             flash(u'Mails konnten nicht verschickt werden: {0}'.format(e), 'danger')
+
+    return dict(form=form)
+
+
+@auth_required
+@templated('internal/unique.html')
+def unique():
+    form = UniqueForm()
+
+    if form.validate_on_submit():
+        courses = form.get_courses()
+        deleted = 0
+
+        try:
+            waiting_but_active_parallel = [attendance for course in courses for attendance in course.get_waiting_attendances()
+                                           if attendance.applicant.active_in_parallel_course(course)]
+
+            for attendance in waiting_but_active_parallel:
+                db.session.delete(attendance)
+                deleted += 1
+
+            db.session.commit()
+            flash(u'Kurse von {0} wartenden Teilnahmen mit aktiven Parallelkurs bereinigt'.format(deleted), 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(u'Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: {0}'.format(e), 'danger')
+            return redirect(url_for('unique'))
 
     return dict(form=form)
 

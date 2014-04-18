@@ -115,6 +115,8 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/restock', views.restock, ['GET', 'POST']),
 
+          ('/internal/unique', views.unique, ['GET', 'POST']),
+
           ('/internal/preterm', views.preterm, ['GET', 'POST']),
 
           ('/internal/statistics', views.statistics, ['GET']),

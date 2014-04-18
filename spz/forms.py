@@ -327,14 +327,14 @@ class SearchForm(Form):
     token = TextField(u'Suchen', [validators.Required(u'Suchparameter muss angegeben werden')])
 
 
-class RestockForm(Form):
-    """Represents a form to fill languages and courses with waiting applicants.
+class LanguageForm(Form):
+    """Represents a form for working with courses based on the user's language selection.
     """
 
     language = SelectField(u'Sprache', [validators.Required(u'Die Sprache muss angegeben werden')], coerce=int)
 
     def __init__(self, *args, **kwargs):
-        super(RestockForm, self).__init__(*args, **kwargs)
+        super(LanguageForm, self).__init__(*args, **kwargs)
         self._populate()
 
     def _populate(self):
@@ -342,6 +342,18 @@ class RestockForm(Form):
 
     def get_courses(self):
         return models.Language.query.get(self.language.data).courses.all()
+
+
+class RestockForm(LanguageForm):
+    """Represents a form to fill languages and courses with waiting applicants.
+    """
+    pass
+
+
+class UniqueForm(LanguageForm):
+    """Represents a form to fill languages and courses with waiting applicants.
+    """
+    pass
 
 
 class PretermForm(Form):

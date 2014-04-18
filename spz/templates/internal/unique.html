@@ -1,0 +1,31 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_option %}
+
+{% block caption %}
+Wartelisten Bereinigen
+{% endblock caption %}
+
+{% block internal_body %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="well">
+            <form class="form-horizontal" method="post">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    <legend>Bereinige Kurse von wartenden Teilnahmen mit aktiven Parallelkurs folgender Sprache</legend>
+                    {{ render_option(form.language) }}
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <button type="submit" class="btn btn-primary">Abschicken</button>
+                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock internal_body %}
+{# vim: set tabstop=4 shiftwidth=4 expandtab: #}
