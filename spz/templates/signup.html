@@ -58,16 +58,19 @@ Anmeldung
             errorsWrapper: '<ul class="list-unstyled"></ul>'
         }
     });
-
-    /* TODO: this hides them, when we come back, too -- should trigger only on first run */
-    $('.kit-only').hide();
-
-    $('#origin').change(function() {
+    
+    function check_and_change_kit_visibilty(){
         if ($(this).find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').show();
-            } else {
+        } else {
             $('.kit-only').hide();
         }
+    }
+    $(document).ready(function(){
+        check_and_change_kit_visibilty();
+    });
+    $('#origin').change(function() {
+        check_and_change_kit_visibilty();
     });
 
     $('#mail').on('blur', function() {
