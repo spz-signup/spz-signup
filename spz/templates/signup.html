@@ -60,7 +60,7 @@ Anmeldung
     });
     
     function check_and_change_kit_visibilty(){
-        if ($(this).find('option:selected:contains(\'Fakultät\')').length > 0) {
+        if ($('#origin').find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').show();
         } else {
             $('.kit-only').hide();
