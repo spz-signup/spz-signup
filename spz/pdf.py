@@ -12,6 +12,7 @@ from flask import make_response
 from spz import models
 from spz.decorators import auth_required
 
+
 class BasePDF(FPDF):
     def header(self):
         now = datetime.now()

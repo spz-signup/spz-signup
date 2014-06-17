@@ -178,7 +178,7 @@ class NotificationForm(Form):
     # TODO: refactor by using the course's get_active_attendances member function
     def get_recipients(self):
         flatten = lambda x: sum(x, [])
-        attendances = flatten([course.attendances for course in self.get_courses()]) # single list of attendances
+        attendances = flatten([course.attendances for course in self.get_courses()])  # single list of attendances
         recipients = [attendance.applicant.mail.encode('utf-8') for attendance in attendances if not attendance.waiting]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
 
@@ -211,7 +211,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
     """Represents the form for editing an applicant and his/her attendances.
 
     """
-    applicant = None # really needed?
+    applicant = None  # really needed?
     first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
     last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
@@ -250,7 +250,6 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         in_courses_ids = map(lambda attendance: attendance.course.id, applicant.attendances)
         self.add_to.choices = filter(lambda (idx, _): not idx in in_courses_ids, self.add_to.choices)
         self.remove_from.choices = filter(lambda (idx, _): idx in in_courses_ids, self.remove_from.choices)
-
 
     def get_applicant(self):
         return self.applicant
