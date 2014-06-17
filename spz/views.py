@@ -497,9 +497,14 @@ def origins_breakdown():
 @auth_required
 @templated('internal/statistics/task_queue.html')
 def task_queue():
-    tasks = []
+    jobs = []
+    try:
+        jobs = queue.jobs
+    except ConnectionError as e:
+        flash(u'Jobabfrage nicht möglich: {0}'.format(e), 'danger')
 
-    for job in queue.jobs:
+    tasks = []
+    for job in jobs:
         payload = ''
 
         try:
