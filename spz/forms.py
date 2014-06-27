@@ -21,32 +21,31 @@ from spz import app, models, cache, token
 @cache.cached(key_prefix='degrees')
 def degrees_to_choicelist():
     return [(x.id, x.name)
-            for x in models.Degree.query.order_by(models.Degree.id.asc()).all()]
+            for x in models.Degree.query.order_by(models.Degree.id.asc())]
 
 
 @cache.cached(key_prefix='graduations')
 def graduations_to_choicelist():
     return [(x.id, x.name)
-            for x in models.Graduation.query.order_by(models.Graduation.id.asc()).all()]
+            for x in models.Graduation.query.order_by(models.Graduation.id.asc())]
 
 
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
-            for x in models.Origin.query.order_by(models.Origin.id.asc()).all()]
+            for x in models.Origin.query.order_by(models.Origin.id.asc())]
 
 
 @cache.cached(key_prefix='languages')
 def languages_to_choicelist():
     return [(x.id, u'{0}'.format(x.name))
-            for x in models.Language.query.order_by(models.Language.name.asc()).all()]
+            for x in models.Language.query.order_by(models.Language.name.asc())]
 
 
 @cache.cached(key_prefix='upcoming_courses')
 def upcoming_courses_to_choicelist():
     available = models.Course.query.join(models.Language.courses) \
-                                   .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
-                                   .all()
+                                   .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
     upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
 
@@ -57,8 +56,7 @@ def upcoming_courses_to_choicelist():
 @cache.cached(key_prefix='all_courses')
 def all_courses_to_choicelist():
     courses = models.Course.query.join(models.Language.courses) \
-                                 .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
-                                 .all()
+                                 .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
     return [(course.id, u'{0}'.format(course.full_name()))
             for course in courses]
@@ -173,7 +171,7 @@ class NotificationForm(Form):
         self.mail_reply_to.choices = self._reply_to_choices()
 
     def get_courses(self):
-        return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data)).all()
+        return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data))
 
     # TODO: refactor by using the course's get_active_attendances member function
     def get_recipients(self):
@@ -340,7 +338,7 @@ class LanguageForm(Form):
         self.language.choices = languages_to_choicelist()
 
     def get_courses(self):
-        return models.Language.query.get(self.language.data).courses.all()
+        return models.Language.query.get(self.language.data).courses
 
 
 class RestockForm(LanguageForm):

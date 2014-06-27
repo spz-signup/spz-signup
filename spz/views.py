@@ -268,8 +268,7 @@ def lists():
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
                           .group_by(models.Language) \
-                          .order_by(models.Language.name) \
-                          .all()
+                          .order_by(models.Language.name)
 
     return dict(lang_misc=lang_misc)
 
@@ -416,8 +415,7 @@ def payments():
                                  func.avg(models.Attendance.amountpaid),
                                  func.min(models.Attendance.amountpaid),
                                  func.max(models.Attendance.amountpaid)) \
-                          .group_by(models.Attendance.paidbycash) \
-                          .all()
+                          .group_by(models.Attendance.paidbycash)
 
     desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
     stats = [dict(zip(desc, tup)) for tup in stat_list]
@@ -434,8 +432,7 @@ def outstanding():
                             .filter(not_(models.Attendance.waiting),
                                     not_(models.Applicant.discounted),
                                     models.Attendance.has_to_pay,
-                                    models.Attendance.amountpaid < models.Course.price) \
-                            .all()
+                                    models.Attendance.amountpaid < models.Course.price)
 
     return dict(outstanding=outstanding)
 
@@ -476,8 +473,7 @@ def statistics():
 @templated('internal/statistics/free_courses.html')
 def free_courses():
     rv = models.Course.query.join(models.Language.courses) \
-                      .order_by(models.Language.name, models.Course.level, models.Course.alternative) \
-                      .all()
+                      .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
     return dict(courses=rv)
 
@@ -488,8 +484,7 @@ def origins_breakdown():
     rv = db.session.query(models.Origin, func.count()) \
                    .join(models.Applicant, models.Attendance) \
                    .filter(not_(models.Attendance.waiting)) \
-                   .group_by(models.Origin) \
-                   .all()
+                   .group_by(models.Origin)
 
     return dict(origins_breakdown=rv)
 
@@ -553,8 +548,7 @@ def preterm():
     attendances = models.Attendance.query \
                         .join(models.Course, models.Language, models.Applicant) \
                         .filter(models.Attendance.registered < models.Language.signup_begin) \
-                        .order_by(models.Applicant.last_name, models.Applicant.first_name) \
-                        .all()
+                        .order_by(models.Applicant.last_name, models.Applicant.first_name)
 
     return dict(form=form, token=token, preterm_signups=attendances)
 
@@ -565,10 +559,9 @@ def duplicates():
     taglist = db.session.query(models.Applicant.tag) \
                         .filter(models.Applicant.tag != None, models.Applicant.tag != '') \
                         .group_by(models.Applicant.tag) \
-                        .having(func.count(models.Applicant.id) > 1)\
-                        .all()
+                        .having(func.count(models.Applicant.id) > 1)
 
-    doppelganger = [models.Applicant.query.filter_by(tag=duptag).all() for duptag in map(lambda tup: tup[0], taglist)]
+    doppelganger = [models.Applicant.query.filter_by(tag=duptag) for duptag in map(lambda tup: tup[0], taglist)]
 
     return dict(doppelganger=doppelganger)
 
