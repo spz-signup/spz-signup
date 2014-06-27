@@ -36,27 +36,26 @@ class Attendance(db.Model):
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicant.id'), primary_key=True)
 
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
-    course = db.relationship("Course", backref="attendances")
+    course = db.relationship("Course", backref="attendances", lazy="joined")
 
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
-    graduation = db.relationship("Graduation", backref="attendances")
+    graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
     waiting = db.Column(db.Boolean)
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
     amountpaid = db.Column(db.Integer, db.CheckConstraint('amountpaid >= 0'), nullable=False)
 
-    registered = db.Column(db.DateTime())
+    registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())
 
-    def __init__(self, course, graduation, waiting, has_to_pay, registered=None):
+    def __init__(self, course, graduation, waiting, has_to_pay):
         self.course = course
         self.graduation = graduation
         self.waiting = waiting
         self.has_to_pay = has_to_pay
         self.paidbycash = False
         self.amountpaid = 0
-        self.registered = datetime.utcnow()
         self.payingdate = None
 
     def __repr__(self):
@@ -101,21 +100,21 @@ class Applicant(db.Model):
     phone = db.Column(db.String(20))
 
     degree_id = db.Column(db.Integer, db.ForeignKey('degree.id'))
-    degree = db.relationship("Degree", backref="applicants")
+    degree = db.relationship("Degree", backref="applicants", lazy="joined")
 
     semester = db.Column(db.Integer)  # TODO constraint: > 0, but still optional
 
     origin_id = db.Column(db.Integer, db.ForeignKey('origin.id'))
-    origin = db.relationship("Origin", backref="applicants")
+    origin = db.relationship("Origin", backref="applicants", lazy="joined")
 
     discounted = db.Column(db.Boolean)
 
     # See {add,remove}_course_attendance member functions below
-    attendances = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan')
+    attendances = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan', lazy="joined")
 
-    registered = db.Column(db.DateTime())
+    registered = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin, registered=None):
+    def __init__(self, mail, tag, sex, first_name, last_name, phone, degree, semester, origin):
         self.mail = mail
         self.tag = tag
         self.sex = sex
@@ -126,7 +125,6 @@ class Applicant(db.Model):
         self.semester = semester
         self.origin = origin
         self.discounted = False
-        self.registered = datetime.utcnow()
 
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
@@ -146,7 +144,7 @@ class Applicant(db.Model):
         return True if registered else False
 
     def best_rating(self):
-        results = [approval.percent for approval in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag)).all()]
+        results = [approval.percent for approval in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag))]
         best = max(results) if results else 0
         return best
 
@@ -269,7 +267,7 @@ class Language(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     reply_to = db.Column(db.String(120), nullable=False)
-    courses = db.relationship('Course', backref='language', lazy='dynamic')
+    courses = db.relationship('Course', backref='language', lazy='joined')
 
     # Not using db.Interval here, because it needs native db support
     # See: http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.Interval
@@ -294,16 +292,16 @@ class Language(db.Model):
 
     # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
     def get_waiting_attendances(self):
-        return sum(map(lambda course: course.get_waiting_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_waiting_attendances(), self.courses), [])
 
     def get_active_attendances(self):
-        return sum(map(lambda course: course.get_active_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_active_attendances(), self.courses), [])
 
     def get_paying_attendances(self):
-        return sum(map(lambda course: course.get_paying_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_paying_attendances(), self.courses), [])
 
     def get_free_attendances(self):
-        return sum(map(lambda course: course.get_free_attendances(), self.courses.all()), [])
+        return sum(map(lambda course: course.get_free_attendances(), self.courses), [])
 
 
 @total_ordering
