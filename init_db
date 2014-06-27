@@ -1,7 +1,11 @@
+#!/bin/sh
 # -*- coding: utf-8 -*-
+'''which' python2.7 > /dev/null && exec python2.7 "$0" "$@" || exec python "$0" "$@"
+'''
 
 import sys
 from datetime import datetime
+from uuid import uuid4
 
 from flask import json
 from jsonschema import validate, ValidationError, SchemaError
@@ -70,13 +74,17 @@ if __name__ == '__main__':
         sys.exit()
 
     # Request polite confirmation
-    if raw_input('Create and drop tables? (Yes, please. / No thanks.): ').startswith('Yes, please.'):
+    token = uuid4().get_hex()[:5]  # repeat random token of arbitrary length
+    user_in = raw_input('Create and drop tables: confirm by repeating the following token\n{0}\n'.format(token))
+
+    if token == user_in:
+        db.drop_all()
         db.create_all()
         insert_resources()
 
         print('Import OK.')
     else:
-        print('Aborting.')
+        print('Aborting: {0} did not match token {1}'.format(user_in, token))
 
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
