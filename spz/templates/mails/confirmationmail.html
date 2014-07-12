@@ -5,8 +5,7 @@ Sprachenzentrum des KIT
 Bewerberkreis: {{ applicant.origin.name }}
 E-Mail Adresse: {{ applicant.mail }}
 
-{# TODO: create strftime jinja filter #}
-Sie haben sich am {{ date.day ~ '.' ~ date.month ~ '.' ~ date.year ~ ' um ' ~ date.hour ~ ':' ~ date.minute }} Uhr{% if not waiting %} erfolgreich{% endif %} für den folgenden Sprachkurs
+Sie haben sich am {{ date.day ~ '.' ~ date.month ~ '.' ~ date.year }}{% if not waiting %} erfolgreich{% endif %} für den folgenden Sprachkurs
 am Sprachenzentrum des KIT angemeldet:
 
 Kurs: {{ course.full_name() }}
