@@ -35,12 +35,12 @@ Sprache: {{ language.name }}
             <tbody>
                 {% set sums = {'limit': 0, 'rest': 0, 'attendances': 0, 'active': 0, 'waiting': 0, 'paying': 0} %}
                 {% for course in language.courses %}
-                <tr class="{% if course.is_overbooked() %}danger{% elif course.is_full() %}warning{% endif %}">
+                <tr>
                     <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.full_name() }}</strong></a></td>
                     <td>{{ course.limit }}</td>
                     <td>{{ course.limit - course.get_active_attendances()|count }}</td>
                     <td>{{ course.attendances|count }}</td>
-                    <td>{{ course.get_active_attendances()|count }}</td>
+                    <td>{{ course.get_active_attendances()|count }}{% if course.is_full() %} (voll){% endif %}</td>
                     <td>{{ course.get_waiting_attendances()|count }}</td>
                     <td>{{ course.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
