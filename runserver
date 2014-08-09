@@ -1,7 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''which' python2.7 > /dev/null && exec python2.7 "$0" "$@" || exec python "$0" "$@"
-'''
 
 import argparse
 

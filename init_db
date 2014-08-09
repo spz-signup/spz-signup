@@ -1,7 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''which' python2.7 > /dev/null && exec python2.7 "$0" "$@" || exec python "$0" "$@"
-'''
 
 import sys
 from datetime import datetime
@@ -75,7 +73,7 @@ if __name__ == '__main__':
 
     # Request polite confirmation
     token = uuid4().get_hex()[:5]  # repeat random token of arbitrary length
-    user_in = raw_input('Create and drop tables: confirm by repeating the following token\n{0}\n'.format(token))
+    user_in = raw_input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'.format(db, token))
 
     if token == user_in:
         db.drop_all()
