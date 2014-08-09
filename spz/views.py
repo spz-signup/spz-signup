@@ -268,7 +268,8 @@ def lists():
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
                           .group_by(models.Language) \
-                          .order_by(models.Language.name)
+                          .order_by(models.Language.name) \
+                          .from_self()  # b/c of eager loading, see: http://thread.gmane.org/gmane.comp.python.sqlalchemy.user/36757
 
     return dict(lang_misc=lang_misc)
 
