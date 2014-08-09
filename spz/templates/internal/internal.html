@@ -3,19 +3,17 @@
 {% block navbar %}
 <li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
-<li data-intro='Startet den Rundgang durch die Funktionen des internen Bereichs' data-step='2'><a id="intro-start"><span class="glyphicon glyphicon-picture"></span> Rundgang</a></li>
-<li data-intro='Import von Daten. Beispielsweise Matrikelnummern oder Ergebnisse der ILIAS Englischtests' data-step='2'><a href="{{ url_for('importer') }}" ><span class="glyphicon glyphicon-import"></span> Importieren</a></li>
-<li data-intro='Auflistung aller vorhandenen Kurse und deren Teilnehmer' data-step='3'><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
-<li data-intro='Verschicke Mails an Kursteilnehmer' data-step='4'><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
-<li data-intro='Zum Suchen nach einzelnen Kursteilnehmern' data-step='5'><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-search"></span> Bewerbersuche</a></li>
-<li data-intro='Zur Bearbeitung einzelner Zahlungsvorgänge' data-step='6'><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
-<li data-intro='Zum Anzeigen von offenen Beträgen' data-step='7'><a href="{{ url_for('outstanding') }}"><span class="glyphicon glyphicon-warning-sign"></span> Offene Beträge</a></li>
-<li data-intro='Informative Statistiken zur Kursbelegung' data-step='8'><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
-<li data-intro='Zum Finden von Teilnehmern mit mehrfachen freien Kursteilnahmen' data-step='9'><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
-<li data-intro='Automatisches Holen von Nachrücker, pro Sprache' data-step='10'><a href="{{ url_for('restock') }}"><span class="glyphicon glyphicon-repeat"></span> Nachrücker</a></li>
-<li data-intro='Tokens für prioritäre Anmeldungen können hier erstellt werden' data-step='11'><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
-<li data-intro='Bereinigen von wartenden Teilnahmen mit aktiven Parallelkurs, pro Sprache' data-step='12'><a href="{{ url_for('unique') }}"><span class="glyphicon glyphicon-remove"></span> Wartelisten Bereinigen</a></li>
-<li data-intro='Wir sind für jede Art von Feedback dankbar' data-step='13'><a href="mailto:daniel+spz@trvx.org?subject=[SPZ] Feedback&cc=roman@zukowsky.de"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
+<li><a href="{{ url_for('importer') }}" ><span class="glyphicon glyphicon-import"></span> Importieren</a></li>
+<li><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
+<li><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
+<li><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-search"></span> Bewerbersuche</a></li>
+<li><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
+<li><a href="{{ url_for('outstanding') }}"><span class="glyphicon glyphicon-warning-sign"></span> Offene Beträge</a></li>
+<li><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
+<li><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
+<li><a href="{{ url_for('restock') }}"><span class="glyphicon glyphicon-repeat"></span> Nachrücker</a></li>
+<li><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
+<li><a href="{{ url_for('unique') }}"><span class="glyphicon glyphicon-remove"></span> Wartelisten Bereinigen</a></li>
 {% endif %}
 {% endblock navbar %}
 
@@ -27,7 +25,7 @@ Interner Bereich
 
 {% block subcaption %}
 {% if g.user %}
-<div class="pull-right" data-intro='Für den internen Bereich musst du authentifiziert sein.' data-step='1' data-position='bottom'>Angemeldet als <strong>{{ g.user }}</strong>
+<div class="pull-right">Angemeldet als <strong>{{ g.user }}</strong>
 (<a href="#" class="signout">Abmelden</a>)</div>
 {% else %}
 <div class="pull-right">Nicht angemeldet. <a href="#" class="signin">Anmelden</a></div>
@@ -50,25 +48,5 @@ Interner Bereich
     var $CURRENT_USER = {{ g.user|tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/persona.js') }}"></script>
-
-<script>
-    "use strict";
-    var intro = introJs();
-
-    intro.setOptions({
-        nextLabel: "Weiter",
-        prevLabel: "Zurück",
-        skipLabel: "Überspringen",
-        doneLabel: "Fertig",
-        tooltipPosition: "bottom",
-        exitOnEsc: true,
-        exitOnOverlayClick: true,
-        showStepNumbers: false,
-    });
-
-    $("#intro-start").click(function(e) {
-        intro.start();
-    });
-</script>
 {% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

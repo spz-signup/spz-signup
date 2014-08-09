@@ -30,8 +30,8 @@ register_filter(RCSSMin)
 
 # Javascript bundles:
 
-all_js = Bundle('js/jquery-1.10.2.min.js',
-                'js/mailcheck.1.0.2.min.js',
+all_js = Bundle('js/jquery-1.11.1.min.js',
+                'js/mailcheck.1.1.0.min.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
                 'js/parsley-1.1.16-de.js',
@@ -39,7 +39,6 @@ all_js = Bundle('js/jquery-1.10.2.min.js',
                 'js/moment.2.0.0.min.js',
                 'js/bootstrap.min.js',
                 'js/bootstrap-sortable.js',
-                'js/intro.min.js',
                 filters='rjsmin', output='js/packed.js')
 
 # Internet Explorer specific Javascript workarounds
@@ -59,7 +58,6 @@ all_css = Bundle('css/bootstrap.min.css',
                  'css/bootstrap-sortable.css',
                  'css/sidebar.css',
                  'css/scrollbars.css',
-                 'css/introjs.min.css',
                  filters='rcssmin', output='css/packed.css')
 
 

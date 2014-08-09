@@ -21,26 +21,36 @@
             var $this = $(this);
             applyLast = (applyLast === true);
             $this.find('span.sign').remove();
-            $this.find('thead th').each(function (index) {
-                $(this).attr('data-sortkey', index);
+            $this.find('thead tr').each(function (rowIndex) {
+                var columnsSkipped = 0;
+                $(this).find('th').each(function (columnIndex) {
+                    var $this = $(this);
+                    $this.attr('data-sortcolumn', columnIndex + columnsSkipped);
+                    $this.attr('data-sortkey', columnIndex + '-' + rowIndex);
+                    if ($this.attr("colspan") !== undefined) {
+                        columnsSkipped += parseInt($this.attr("colspan")) - 1;
+                    }
+                });
             });
             $this.find('td').each(function () {
                 var $this = $(this);
-                if ($this.attr('data-dateformat') != undefined && momentJsAvailable) {
+                if ($this.attr('data-dateformat') !== undefined && momentJsAvailable) {
                     $this.attr('data-value', moment($this.text(), $this.attr('data-dateformat')).format('YYYY/MM/DD/HH/mm/ss'));
                 }
                 else {
                     $this.attr('data-value') === undefined && $this.attr('data-value', $this.text());
                 }
             });
-            $this.find('thead th').each(function (index) {
+            $this.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
                 var $this = $(this);
-                if ($this.attr('data-defaultsort') == "disabled") { return; }
-                lastSort = applyLast ? lastSort : -1;
-                bsSort[index] = applyLast ? bsSort[index] : $this.attr('data-defaultsort');
-                if (bsSort[index] != null && (applyLast == (index == lastSort))) {
-                    bsSort[index] = bsSort[index] == 'asc' ? 'desc' : 'asc';
-                    doSort($this, $this.parents('table.sortable'))
+                var $sortTable = $this.closest('table.sortable');
+                $this.data('sortTable', $sortTable);
+                var sortKey = $this.attr('data-sortkey');
+                var thisLastSort = applyLast ? lastSort : -1;
+                bsSort[sortKey] = applyLast ? bsSort[sortKey] : $this.attr('data-defaultsort');
+                if (bsSort[sortKey] !== undefined && (applyLast === (sortKey === thisLastSort))) {
+                    bsSort[sortKey] = bsSort[sortKey] === 'asc' ? 'desc' : 'asc';
+                    doSort($this, $sortTable);
                 }
             });
             $this.trigger('sorted');
@@ -48,21 +58,38 @@
     };
 
     // add click event to table header
-    $document.on('click', 'table.sortable thead th', function (e) {
-        var $this = $(this), $table = $this.parents('table.sortable');
+    $document.on('click', 'table.sortable thead th[data-defaultsort!="disabled"]', function (e) {
+        var $this = $(this), $table = $this.data('sortTable') || $this.closest('table.sortable');
         doSort($this, $table);
         $table.trigger('sorted');
     });
 
     //Sorting mechanism separated
     function doSort($this, $table) {
-        if ($this.attr('data-defaultsort') == "disabled") { return; }
-        var localSignClass= $this.attr("data-defaultsign")||signClass;
+        var sortColumn = $this.attr('data-sortcolumn');
+
+        var colspan = $this.attr('colspan');
+        if (colspan) {
+            var selector;
+            for (var i = parseFloat(sortColumn) ; i < parseFloat(sortColumn) + parseFloat(colspan) ; i++) {
+                selector = selector + ', [data-sortcolumn="' + i + '"]';
+            }
+            var subHeader = $(selector).not('[colspan]');
+            var mainSort = subHeader.filter('[data-mainsort]').eq(0);
+
+            sortColumn = mainSort.length ? mainSort : subHeader.eq(0);
+            doSort(sortColumn, $table);
+            return;
+        }
+
+        var localSignClass = $this.attr('data-defaultsign') || signClass;
+
         // update arrow icon
         if ($.browser.mozilla) {
             var moz_arrow = $table.find('div.mozilla');
-            if (moz_arrow != null) {
-                moz_arrow.parent().html(moz_arrow.text());
+            if (moz_arrow !== undefined) {
+                moz_arrow.find('.sign').remove();
+                moz_arrow.parent().html(moz_arrow.html());
             }
             $this.wrapInner('<div class="mozilla"></div>');
             $this.children().eq(0).append('<span class="sign ' + localSignClass + '"></span>');
@@ -73,14 +100,16 @@
         }
 
         // sort direction
-        var nr = $this.attr('data-sortkey');
-        lastSort = nr;
-        bsSort[nr] = bsSort[nr] == 'asc' ? 'desc' : 'asc';
-        if (bsSort[nr] == 'desc') { $this.find('span.sign').addClass('up'); }
+        var sortKey = $this.attr('data-sortkey');
+        var initialDirection = $this.attr('data-firstsort') !== 'desc' ? 'desc' : 'asc';
+
+        lastSort = sortKey;
+        bsSort[sortKey] = (bsSort[sortKey] || initialDirection) === 'asc' ? 'desc' : 'asc';
+        if (bsSort[sortKey] === 'desc') { $this.find('span.sign').addClass('up'); }
 
         // sort rows
-        var rows = $table.find('tbody tr');
-        rows.tsort('td:eq(' + nr + ')', { order: bsSort[nr], attr: 'data-value' });
+        var rows = $table.children('tbody').children('tr');
+        rows.tsort('td:eq(' + sortColumn + ')', { order: bsSort[sortKey], attr: 'data-value' });
     }
 
     // jQuery 1.9 removed this object
@@ -89,8 +118,8 @@
         var ua = navigator.userAgent;
         $.each($.browser, function (c) {
             $.browser[c] = ((new RegExp(c, 'i').test(ua))) ? true : false;
-            if ($.browser.mozilla && c == 'mozilla') { $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false; }
-            if ($.browser.chrome && c == 'safari') { $.browser.safari = false; }
+            if ($.browser.mozilla && c === 'mozilla') { $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false; }
+            if ($.browser.chrome && c === 'safari') { $.browser.safari = false; }
         });
     }
 
