@@ -290,6 +290,15 @@ class Language(db.Model):
         now = datetime.utcnow()
         return self.signup_begin < now < self.signup_end
 
+    def until_signup_fmt(self):
+        now = datetime.utcnow()
+        delta = self.signup_begin - now
+
+        hours, remainder = divmod(delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        return '{0} Tage {1} Stunden {2} Minuten'.format(delta.days, hours, minutes)  # XXX: plural
+
     # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
     def get_waiting_attendances(self):
         return sum(map(lambda course: course.get_waiting_attendances(), self.courses), [])

@@ -39,7 +39,7 @@ def index():
 
         # signup at all times only with token or privileged users
         if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail) and not g.access:
-            flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist noch nicht möglich', 'danger')
+            flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()), 'danger')
             return dict(form=form)
 
         if course.is_overbooked():
