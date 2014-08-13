@@ -350,7 +350,7 @@ def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
 
     if applicant.in_course(course) or applicant.active_in_parallel_course(course):
         flash(u'Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil', 'danger')
-        return redirect(url_for('course', id=course.id))
+        return redirect(url_for('applicant', id=applicant_id))
 
     try:
         # Graduation optional, waits and pays by default
@@ -380,7 +380,7 @@ def remove_attendance(applicant_id, course_id):  # TODO: make forms, csrf
         attendance.applicant.remove_course_attendance(attendance.course)
         db.session.commit()
         flash(u'Der Bewerber wurde aus dem Kurs genommen', 'success')
-        return redirect(url_for('course', id=course_id))
+        return redirect(url_for('applicant', id=applicant_id))
     except Exception as e:
         db.session.rollback()
         flash(u'Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'danger')
