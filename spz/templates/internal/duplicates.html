@@ -33,7 +33,7 @@ Doppelgänger
                         {% for attendance in applicant.attendances %}
                         {% if not attendance.waiting and not attendance.has_to_pay %}
                         <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id ~ ' (' ~ attendance.course.language.name ~ ')' }}
                         </a>
                         {% endif %}
                         {% endfor %}
