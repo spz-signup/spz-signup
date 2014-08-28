@@ -38,7 +38,6 @@ all_js = Bundle('js/jquery-1.11.1.min.js',
                 'js/parsley-1.1.16.min.js',
                 'js/moment.2.0.0.min.js',
                 'js/bootstrap.min.js',
-                'js/bootstrap-sortable.js',
                 filters='rjsmin', output='js/packed.js')
 
 # Internet Explorer specific Javascript workarounds
@@ -49,16 +48,19 @@ ie_js = Bundle('js/html5shiv.js',
 
 # Tooling bundles
 tools_js = Bundle('js/persona.js',
+                  'js/bootstrap-sortable.js',
                   filters='rjsmin', output='js/packed_tools.js')
 
 
 # Stylesheet bundles:
 
 all_css = Bundle('css/bootstrap.min.css',
-                 'css/bootstrap-sortable.css',
                  'css/sidebar.css',
                  'css/scrollbars.css',
                  filters='rcssmin', output='css/packed.css')
+
+tools_css = Bundle('css/bootstrap-sortable.css',
+                   filters='rcssmin', output='css/packed_tools.css')
 
 
 # Hide concrete loading method inside this module

@@ -1,5 +1,11 @@
 {% extends 'baselayout.html' %}
 
+{% block head %}
+{% assets "tools_css" %}
+<link href="{{ ASSET_URL }}" rel="stylesheet">
+{% endassets %}
+{% endblock head %}
+
 {% block navbar %}
 <li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
 {% if g.user and g.access %}
@@ -42,6 +48,11 @@ Interner Bereich
 
 {% block scripts %}
 {{ super() }}
+
+{% assets "tools_js" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 <script src="{{ config.PERSONA_JS }}"></script>
 <script>
     var $URL_ROOT = {{ request.url_root|tojson }};
