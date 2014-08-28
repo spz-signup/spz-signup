@@ -416,6 +416,7 @@ def payments():
                                  func.avg(models.Attendance.amountpaid),
                                  func.min(models.Attendance.amountpaid),
                                  func.max(models.Attendance.amountpaid)) \
+                          .filter(not_(models.Attendance.waiting), models.Attendance.has_to_pay) \
                           .group_by(models.Attendance.paidbycash)
 
     desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
