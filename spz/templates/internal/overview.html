@@ -1,16 +1,71 @@
 {% extends 'internal/internal.html' %}
 
+{#
+  - Real time charts: http://fastly.github.io/epoch/real-time/
+  - Color palettes: https://github.com/mbostock/d3/wiki/Ordinal-Scales#categorical-colors
+
+  - TODO(daniel):
+    + height is pixel based
+    + charts not responsive
+    + dummy object needed instead of empty chart initialization
+#}
+
 {% block internal_body %}
 <div class="row">
     <div class="col-lg-12">
-        <p>
-        Willkommen im internen Bereich.
-        Um die Verwaltung der Kurse, Teilnehmer und Anmeldungen näher kennen zu lernen, empfehle ich den Rundgang.
-        </p>
-        <p>
-        Wir sind dankbar für Vorschläge, Anregungen und Kritik. - Daniel und Roman
-        </p>
+        <h3>Anmeldungen: Teilnahme, Warteliste</h3>
+        <div class="epoch category20" id="signupChart" style="height: 300px;">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h3>Mails in Warteschlange</h3>
+        <div class="epoch category20" id="queueChart" style="height: 300px;">
+        </div>
     </div>
 </div>
 {% endblock internal_body %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    "use strict";
+
+    // we have to put a dummy (now, 0) into empty chart's values otherwise it crashes.. wut
+    var dummyObj = {'time': {{ now }}, 'y': 0};
+
+    var signupChart = $('#signupChart').epoch({
+        type: 'time.area',
+        fps: 60,
+        data: [ {'label': 'Aktiv', 'values': [ dummyObj ]}, {'label': 'Wartend', 'values': [ dummyObj ]} ],
+        axes: ['right', 'bottom', 'left']
+    });
+
+    var queueChart = $('#queueChart').epoch({
+        type: 'time.line',
+        fps: 60,
+        data: [ {'label': 'In Warteschlange', 'values': [ dummyObj ]} ],
+        axes: ['right', 'bottom', 'left']
+    });
+
+
+    function loadSignupData() {  
+        jQuery.getJSON('{{ rt_signup_url }}', function(data) {
+            signupChart.push(data);
+            setTimeout(function(){ loadSignupData(); }, 1000);
+        });
+    }
+
+    function loadQueueData() {  
+        jQuery.getJSON('{{ rt_queue_url }}', function(data) {
+            queueChart.push(data);
+            setTimeout(function(){ loadQueueData(); }, 1000);
+        });
+    }
+
+    loadSignupData();
+    loadQueueData();
+</script>
+{% endblock scripts %}
 {# vim: set tabstop=4 shiftwidth=4 expandtab: #}

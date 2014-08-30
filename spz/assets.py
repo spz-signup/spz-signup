@@ -49,6 +49,8 @@ ie_js = Bundle('js/html5shiv.js',
 # Tooling bundles
 tools_js = Bundle('js/persona.js',
                   'js/bootstrap-sortable.js',
+                  'js/d3-3.4.11.min.js',
+                  'js/epoch.min.js',
                   filters='rjsmin', output='js/packed_tools.js')
 
 
@@ -60,6 +62,7 @@ all_css = Bundle('css/bootstrap.min.css',
                  filters='rcssmin', output='css/packed.css')
 
 tools_css = Bundle('css/bootstrap-sortable.css',
+                   'css/epoch.min.css',
                    filters='rcssmin', output='css/packed_tools.css')
 
 

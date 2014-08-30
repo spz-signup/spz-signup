@@ -9,16 +9,18 @@ import socket
 import re
 import csv
 import StringIO
+import calendar
 from datetime import datetime
 
 from redis import ConnectionError
 
 from sqlalchemy import func, not_
+from sqlalchemy.exc import SQLAlchemyError
 
-from flask import request, redirect, render_template, url_for, flash, g, make_response
+from flask import request, redirect, render_template, url_for, flash, g, make_response, abort, json
 from flask.ext.mail import Message
 
-from spz import app, models, mail, db, token
+from spz import app, models, mail, db, token, cache
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm, UniqueForm
 from spz.util.Encoding import UnicodeWriter
@@ -102,7 +104,11 @@ def licenses():
 
 @templated('internal/overview.html')
 def internal():
-    return None
+    # UNIX timestamp
+    ts = calendar.timegm(datetime.utcnow().timetuple())
+
+    return dict(rt_signup_url=url_for('rt_signups'), rt_queue_url=url_for('rt_queue'),
+                signups_init=rt_signups(), queue_init=rt_queue(), now=ts)
 
 
 @auth_required
@@ -638,5 +644,40 @@ def unique():
 
     return dict(form=form)
 
+
+# TODO(daniel): refactor real time API: move into separate module once it get's more interesting
+
+@auth_required
+@cache.cached(key_prefix='rt_queue', timeout=1)
+def rt_queue():
+    # UNIX timestamp
+    ts = calendar.timegm(datetime.utcnow().timetuple())
+
+    try:
+        in_queue = len(queue.jobs)
+    except ConnectionError:
+        in_queue = 0
+        #abort(503)  # Service Unavailable
+
+    rv = json.dumps([{'time': ts, 'y': in_queue}])
+    return rv
+
+
+@auth_required
+@cache.cached(key_prefix='rt_signups', timeout=1)
+def rt_signups():
+    # UNIX timestamp
+    ts = calendar.timegm(datetime.utcnow().timetuple())
+
+    try:
+        # TODO(daniel): merge into one query?
+        num_active = models.Attendance.query.filter_by(waiting=False).count()
+        num_waiting = models.Attendance.query.filter_by(waiting=True).count()
+    except SQLAlchemyError:
+        num_active, num_waiting = 0
+        #abort(503)  # Service Unavailable
+
+    rv = json.dumps([{'time': ts, 'y': num_active}, {'time': ts, 'y': num_waiting}])
+    return rv
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
