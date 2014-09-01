@@ -71,10 +71,10 @@
 		"signup_end_iso_utc": "2014-09-30T19:00:00.Z",
 		"courses": [
 			{ "level": "B1: Intermediate 2", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-			{ "level": "B2: Upper Intermediate", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+			{ "level": "B2: Upper Intermediate", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
 			{ "level": "B2/C1: Presentation Skills", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
 			{ "level": "B2/C1: TOEFL iBT Vorbereitung", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
-			{ "level": "C1: Advanced", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
+			{ "level": "C1: Advanced", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
 		]
 	},
 	{
