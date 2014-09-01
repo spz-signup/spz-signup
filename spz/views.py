@@ -674,7 +674,7 @@ def rt_signups():
         num_active = models.Attendance.query.filter_by(waiting=False).count()
         num_waiting = models.Attendance.query.filter_by(waiting=True).count()
     except SQLAlchemyError:
-        num_active, num_waiting = 0
+        num_active, num_waiting = 0, 0
         #abort(503)  # Service Unavailable
 
     rv = json.dumps([{'time': ts, 'y': num_active}, {'time': ts, 'y': num_waiting}])
