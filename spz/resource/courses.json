@@ -3,8 +3,8 @@
 	{
 		"name": "Arabisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
 			{ "level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
@@ -13,8 +13,8 @@
 	{
 		"name": "Chinesisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
@@ -25,8 +25,8 @@
 	{
 		"name": "English",
 		"reply_to" : "englisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
 			{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
@@ -80,8 +80,8 @@
 	{
 		"name": "Französisch",
 		"reply_to" : "franzoesisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
 			{ "level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
@@ -103,8 +103,8 @@
 	{
 		"name": "Italienisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
@@ -115,8 +115,8 @@
 	{
 		"name": "Japanisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
@@ -128,8 +128,8 @@
 	{
 		"name": "Portugiesisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
@@ -141,8 +141,8 @@
 	{
 		"name": "Russisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
@@ -153,8 +153,8 @@
 	{
 		"name": "Schwedisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
 			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
@@ -165,8 +165,8 @@
 	{
 		"name": "Spanisch",
 		"reply_to" : "spanisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"] },
 			{ "level": "2", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h"] },
@@ -188,8 +188,8 @@
 	{
 		"name": "Polnisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 			{ "level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
@@ -199,8 +199,8 @@
 	{
 		"name": "Niederländisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 			{"level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
@@ -209,8 +209,8 @@
 	{
 		"name": "Türkisch",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 				{ "level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
@@ -219,8 +219,8 @@
 	{
 		"name": "Latein",
 		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-6T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-6T19:00:00.Z",
+		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
+		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
 		"courses": [
 			{ "level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 			{ "level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
