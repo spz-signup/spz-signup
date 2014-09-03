@@ -492,7 +492,8 @@ def origins_breakdown():
     rv = db.session.query(models.Origin, func.count()) \
                    .join(models.Applicant, models.Attendance) \
                    .filter(not_(models.Attendance.waiting)) \
-                   .group_by(models.Origin)
+                   .group_by(models.Origin) \
+                   .order_by(models.Origin.name)
 
     return dict(origins_breakdown=rv)
 
