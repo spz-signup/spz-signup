@@ -39,7 +39,7 @@ for name, bundle in bundles.iteritems():
 
 # Configuration loading
 app.config.from_pyfile('development.cfg')
-#app.config.from_pyfile('production.cfg')
+# app.config.from_pyfile('production.cfg')
 
 
 # Set up logging before anything else, in order to catch early errors

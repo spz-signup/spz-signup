@@ -82,7 +82,7 @@ def index():
                                                waiting=waiting, date=datetime.now()))
 
             # TODO(daniel): exceptions in work queue -- currently stored in 'failed' queue
-            #mail.send(msg) -- this is synchronous
+            # mail.send(msg) -- this is synchronous
             queue.enqueue(async_send, msg)
 
             flash(u'Eine Bestätigungsmail wird innerhalb der kommenden Stunden an {0} verschickt'.format(applicant.mail), 'success')

@@ -246,7 +246,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         self.semester.data = self.applicant.semester
 
         in_courses_ids = map(lambda attendance: attendance.course.id, applicant.attendances)
-        self.add_to.choices = filter(lambda (idx, _): not idx in in_courses_ids, self.add_to.choices)
+        self.add_to.choices = filter(lambda (idx, _): idx not in in_courses_ids, self.add_to.choices)
         self.remove_from.choices = filter(lambda (idx, _): idx in in_courses_ids, self.remove_from.choices)
 
     def get_applicant(self):
