@@ -126,10 +126,6 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/duplicates', views.duplicates, ['GET']),
 
-          # JSON returning real-time API
-          ('/internal/rt/queue', views.rt_queue, ['GET']),
-          ('/internal/rt/signups', views.rt_signups, ['GET']),
-
           ('/_auth/login', auth.login_handler, ['GET', 'POST']),
           ('/_auth/logout', auth.logout_handler, ['POST'])]
 
