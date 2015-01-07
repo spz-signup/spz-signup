@@ -297,7 +297,7 @@ class Language(db.Model):
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
 
-        return '{0} Tage {1} Stunden {2} Minuten'.format(delta.days, hours, minutes)  # XXX: plural
+        return '{0} Tage {1} Stunden {2} Minuten und einige Sekunden'.format(delta.days, hours, minutes)  # XXX: plural
 
     # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
     def get_waiting_attendances(self):
