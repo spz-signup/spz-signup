@@ -518,7 +518,7 @@ def task_queue():
         except IndexError:
             payload = job.args
 
-        task = {'id': job.id, 'status': job.status, 'created_at': job.created_at, 'payload': payload}
+        task = {'id': job.id, 'status': job.get_status(), 'created_at': job.created_at, 'payload': payload}
         tasks.append(task)
 
     return dict(tasks=tasks)
