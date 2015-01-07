@@ -270,7 +270,6 @@ def export_language(language_id):
 @templated('internal/lists.html')
 def lists():
     # list of tuple (lang, aggregated number of courses, aggregated number of seats)
-    # XXX: optimize query, takes 'too long'
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
                           .join(models.Course, models.Language.courses) \
                           .group_by(models.Language) \
