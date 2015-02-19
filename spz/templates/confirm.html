@@ -21,17 +21,6 @@ Ihre Registrierung war erfolgreich
             <div class="panel-body">
                 <ul class="list-unstyled">
                     <li>Belegungsnummer: <strong>A{{ attendance.applicant.id }}C{{ attendance.course.id }}</strong></li>
-                    {% if attendance.waiting %}
-                    <li>Auf Warteliste</li>
-                    {% else %}
-                    <li>Fester Platz</li>
-                    {% if attendance.has_to_pay %}
-                    {% set amount = attendance.course.price if not attendance.applicant.discounted else attendance.course.price / 2 %}
-                    <li>Zu zahlen sind: <strong>{{ amount }} Euro</strong></li>
-                    {% else %}
-                    <li>Gebührenfrei</li>
-                    {% endif%}
-                    {% endif %}
                 </ul>
             </div>
         </div>
