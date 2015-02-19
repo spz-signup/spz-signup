@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 from redis import ConnectionError
 
-from sqlalchemy import func, not_
+from sqlalchemy import orm, func, not_
 
 from flask import request, redirect, render_template, url_for, flash, g, make_response
 from flask.ext.mail import Message
@@ -591,17 +591,18 @@ def restock_fcfs():
 def restock_rnd():
     form = RestockFormRnd()
     if form.validate_on_submit():
-        to_assign = db.session.query(models.Attendance) \
-                              .filter_by(waiting=True) \
-                              .all()
+        # eager loading, see (search for 'subqueryload'): http://docs.sqlalchemy.org/en/rel_0_9/orm/loading_relationships.html
+        to_assign = models.Attendance.query \
+                                     .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
+                                     .filter_by(waiting=True) \
+                                     .all()
 
         # TODO: filter the random selection range, e.g.:
 
                               #.filter(models.Attendance.registered.between(models.Language.signup_begin,
                               #                                             models.Language.signup_begin + timedelta(hours=app.config["RANDOM_WINDOW_OPEN_FOR"]))) \
 
-        # TODO: let database calculate this; otherwise this takes a huge amount of time (probably ~90% is this line):
-        # func.div(_, 1.0), func.count for (attendance, weight) tuples
+        # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
         weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
 
         stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'failed': 'no'}
@@ -636,7 +637,7 @@ def restock_rnd():
             stats['failed'] = 'yes'
 
         # TODO: send mails
-        flash('{} Teilnahmen von {} wurden zugewisen (fehlgeschlagen: {}) davon sind {} zu zahlen'
+        flash('{} Teilnahmen von {} wurden zugewiesen (fehlgeschlagen: {}) davon sind {} zu zahlen'
               .format(stats['filled'], stats['all'], stats['failed'], stats['paying']), 'success')
 
     return dict(form=form)
