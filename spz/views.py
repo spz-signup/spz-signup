@@ -71,24 +71,6 @@ def index():
             flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'danger')
             return dict(form=form)
 
-        # Send confirmation mail now
-        try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'],
-                          reply_to=course.language.reply_to,
-                          recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(course.full_name()),
-                          body=render_template('mails/confirmationmail.html',
-                                               applicant=applicant, course=course, has_to_pay=has_to_pay,
-                                               waiting=waiting, date=datetime.now()))
-
-            # TODO(daniel): exceptions in work queue -- currently stored in 'failed' queue
-            # mail.send(msg) -- this is synchronous
-            queue.enqueue(async_send, msg)
-
-            flash(u'Eine Bestätigungsmail wird innerhalb der kommenden Stunden an {0} verschickt'.format(applicant.mail), 'success')
-        except (AssertionError, socket.error, ConnectionError) as e:
-            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
-
         # Finally redirect the user to an confirmation page, too
         return render_template('confirm.html', applicant=applicant, course=course)
 
