@@ -49,8 +49,7 @@ def upcoming_courses_to_choicelist():
 
     upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
 
-    return [(course.id, u'{0} {1}'.format(course.full_name(), u' (Warteliste)' if course.is_full() else u''))
-            for course in upcoming]
+    return [(course.id, u'{0}'.format(course.full_name())) for course in upcoming]
 
 
 @cache.cached(key_prefix='all_courses')

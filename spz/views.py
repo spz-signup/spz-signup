@@ -9,7 +9,7 @@ import socket
 import re
 import csv
 import StringIO
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from redis import ConnectionError
 
@@ -22,6 +22,7 @@ from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm
 from spz.util.Encoding import UnicodeWriter
+from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
 from spz.async import queue, async_send
 
 
@@ -40,10 +41,6 @@ def index():
         # signup at all times only with token or privileged users
         if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail) and not g.access:
             flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()), 'danger')
-            return dict(form=form)
-
-        if course.is_overbooked():
-            flash(u'Der gewünschte Kurs inklusive Warteliste ist bereits ausgebucht', 'danger')
             return dict(form=form)
 
         if not course.is_allowed(applicant):
@@ -335,9 +332,6 @@ def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
         db.session.commit()
         flash(u'Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
 
-        if course.is_overbooked():
-            flash(u'Der Kurs ist eigentlich überbucht. Teilnehmer wurde trotzdem eingetragen.', 'warning')
-
         if not course.is_allowed(applicant):
             flash(u'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
 
@@ -565,11 +559,11 @@ def restock_fcfs():
         except Exception as e:
             db.session.rollback()
             flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'danger')
-            return redirect(url_for('restock'))
+            return redirect(url_for('restock_fcfs'))
 
         if len(restocked_attendances) == 0:
             flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind', 'warning')
-            return redirect(url_for('restock'))
+            return redirect(url_for('restock_fcfs'))
 
         try:
             with mail.connect() as conn:
@@ -597,7 +591,53 @@ def restock_fcfs():
 def restock_rnd():
     form = RestockFormRnd()
     if form.validate_on_submit():
-        flash('Yup, I\'m working on it!', 'success')
+        to_assign = db.session.query(models.Attendance) \
+                              .filter_by(waiting=True) \
+                              .all()
+
+        # TODO: filter the random selection range, e.g.:
+
+                              #.filter(models.Attendance.registered.between(models.Language.signup_begin,
+                              #                                             models.Language.signup_begin + timedelta(hours=app.config["RANDOM_WINDOW_OPEN_FOR"]))) \
+
+        # TODO: let database calculate this; otherwise this takes a huge amount of time (probably ~90% is this line):
+        # func.div(_, 1.0), func.count for (attendance, weight) tuples
+        weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
+
+        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'failed': 'no'}
+
+        while to_assign:
+            assert len(to_assign) == len(weights)
+
+            # weighted random selection
+            gen = WeightedRandomGenerator(weights)
+            idx = gen.next()
+
+            # remove attendance and weight from possible candidates as to not select again;  guarantees termination
+            attendance = to_assign.pop(idx)
+            del weights[idx]
+
+            if attendance.applicant.active_in_parallel_course(attendance.course):
+                continue
+
+            if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
+                continue
+
+            attendance.has_to_pay = attendance.applicant.has_to_pay()
+            attendance.waiting = False
+
+            stats['filled'] += 1
+            stats['paying'] += 1 if attendance.has_to_pay else 0
+
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            stats['failed'] = 'yes'
+
+        # TODO: send mails
+        flash('{} Teilnahmen von {} wurden zugewisen (fehlgeschlagen: {}) davon sind {} zu zahlen'
+              .format(stats['filled'], stats['all'], stats['failed'], stats['paying']), 'success')
 
     return dict(form=form)
 

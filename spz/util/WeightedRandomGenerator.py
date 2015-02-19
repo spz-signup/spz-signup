@@ -28,6 +28,7 @@ class WeightedRandomGenerator(object):
         self.totals = []
         running_total = 0
 
+        assert len(weights) > 0, "Weights required"
         assert all(w > 0 for w in weights), "Only positive weights allowed"
 
         for w in weights:
@@ -40,5 +41,6 @@ class WeightedRandomGenerator(object):
 
     def __call__(self):
         return self.next()
+
 
 # vim: set tabstop=4 shiftwidth=4 expandtab:
