@@ -20,7 +20,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockForm, PretermForm, UniqueForm
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm
 from spz.util.Encoding import UnicodeWriter
 from spz.async import queue, async_send
 
@@ -546,10 +546,11 @@ def duplicates():
     return dict(doppelganger=doppelganger)
 
 
+# This is the first-come-first-served policy view
 @auth_required
-@templated('internal/restock.html')
-def restock():
-    form = RestockForm()
+@templated('internal/restock_fcfs.html')
+def restock_fcfs():
+    form = RestockFormFCFS()
 
     if form.validate_on_submit():
         courses = form.get_courses()
@@ -586,6 +587,17 @@ def restock():
 
         except (AssertionError, socket.error) as e:
             flash(u'Mails konnten nicht verschickt werden: {0}'.format(e), 'danger')
+
+    return dict(form=form)
+
+
+# This is the weighted-random-selection policy view
+@auth_required
+@templated('internal/restock_rnd.html')
+def restock_rnd():
+    form = RestockFormRnd()
+    if form.validate_on_submit():
+        flash('Yup, I\'m working on it!', 'success')
 
     return dict(form=form)
 

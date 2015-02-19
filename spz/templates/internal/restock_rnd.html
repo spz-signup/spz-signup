@@ -1,8 +1,7 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_option %}
 
 {% block caption %}
-Nachrücker
+Auffüllen (RND)
 {% endblock caption %}
 
 {% block internal_body %}
@@ -12,8 +11,8 @@ Nachrücker
             <form class="form-horizontal" method="post">
                 {{ form.hidden_tag() }}
                 <fieldset>
-                    <legend>Fülle Restplätze folgender Sprache</legend>
-                    {{ render_option(form.language, help='Basierend auf sequentiellen Eintreffen der Teilnahmen.') }}
+                    <legend>Fülle System mit Teilnahmen mittels Zufallsprinzip</legend>
+                    {# XXX: Nothing to select here, yet #}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">

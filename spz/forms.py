@@ -341,8 +341,16 @@ class LanguageForm(Form):
         return models.Language.query.get(self.language.data).courses
 
 
-class RestockForm(LanguageForm):
-    """Represents a form to fill languages and courses with waiting applicants.
+class RestockFormFCFS(LanguageForm):
+    """Represents a form to fill languages and courses with waiting applicants, respecting their signup timestamp.
+       This is the first-come-first-serve policy.
+    """
+    pass
+
+
+class RestockFormRnd(Form):
+    """Represents a form to fill languages and courses with waiting applicants, using weighted random selection from all attendances.
+        This is the weighted-random policy.
     """
     pass
 
