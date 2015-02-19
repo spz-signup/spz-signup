@@ -54,15 +54,11 @@ def index():
             flash(u'Sie sind bereits im Kurs oder nehmen aktiv an einem Parallelkurs teil', 'danger')
             return dict(form=form)
 
-        # Save the state in order to use it after the transaction is commited
-        # If we use the applicant or course state for the mail below, other transactions could have happened in between
-        waiting = course.is_full()
-        has_to_pay = applicant.has_to_pay()
-
         # Run the final insert isolated in a transaction, with rollback semantics
+        # As of 2015, we simply put everyone into the waiting list by default and then randomly insert, see #39
         try:
             applicant.add_course_attendance(course, form.get_graduation(),
-                                            waiting=waiting, has_to_pay=has_to_pay)
+                                            waiting=True, has_to_pay=False)
 
             db.session.add(applicant)
             db.session.commit()
