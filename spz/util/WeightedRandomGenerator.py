@@ -10,7 +10,7 @@ import bisect
 class WeightedRandomGenerator(object):
     """
     Returns a random index with a weighted probability.
-    Floating point weights; don't have to add up to 1 or 100 or anything in particular.
+    Positive floating point weights; don't have to add up to 1 or 100 or anything in particular.
 
     Taken from http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python
 
@@ -27,6 +27,8 @@ class WeightedRandomGenerator(object):
     def __init__(self, weights):
         self.totals = []
         running_total = 0
+
+        assert all(w > 0 for w in weights), "Only positive weights allowed"
 
         for w in weights:
             running_total += w
