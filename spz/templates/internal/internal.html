@@ -17,9 +17,13 @@
 <li><a href="{{ url_for('outstanding') }}"><span class="glyphicon glyphicon-warning-sign"></span> Offene Beträge</a></li>
 <li><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
 <li><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
+{% if g.access == 'unrestricted' %}
 <li><a href="{{ url_for('restock_rnd') }}"><span class="glyphicon glyphicon-sort-by-attributes"></span> Auffüllen (RND)</a></li>
+{% endif %}
 <li><a href="{{ url_for('restock_fcfs') }}"><span class="glyphicon glyphicon-sort-by-order"></span> Auffüllen (FCFS)</a></li>
+{% if g.access == 'unrestricted' %}
 <li><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
+{% endif %}
 <li><a href="{{ url_for('unique') }}"><span class="glyphicon glyphicon-remove"></span> Wartelisten Bereinigen</a></li>
 {% endif %}
 {% endblock navbar %}
