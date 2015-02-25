@@ -288,11 +288,19 @@ class Language(db.Model):
 
     def is_open_for_signup(self):
         now = datetime.utcnow()
-        return self.signup_begin < now < self.signup_end
+        # management wants the system to be: open a few hours, then closed "overnight" for random selection, then open again..
+        # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
+        rnd = self.signup_begin < now < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'])
+        fcfs = (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) < now < self.signup_end
+        return rnd or fcfs
 
     def until_signup_fmt(self):
         now = datetime.utcnow()
         delta = self.signup_begin - now
+
+        # here we are in the closed window period; calculate delta to open again
+        if delta.total_seconds() < 0:
+            delta = (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) - now
 
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
