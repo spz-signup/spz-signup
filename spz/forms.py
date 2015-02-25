@@ -47,7 +47,7 @@ def upcoming_courses_to_choicelist():
     available = models.Course.query.join(models.Language.courses) \
                                    .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
-    upcoming = filter(lambda course: course.language.signup_end.date() >= datetime.utcnow().date(), available)
+    upcoming = filter(lambda course: course.language.signup_end >= datetime.utcnow(), available)
 
     return [(course.id, u'{0}'.format(course.full_name())) for course in upcoming]
 
