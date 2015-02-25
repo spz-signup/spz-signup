@@ -596,16 +596,16 @@ def restock_rnd():
                                      .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
                                      .filter_by(waiting=True) \
                                      .all()
-
-        # TODO: filter the random selection range, e.g.:
-
-                              #.filter(models.Attendance.registered.between(models.Language.signup_begin,
-                              #                                             models.Language.signup_begin + timedelta(hours=app.config["RANDOM_WINDOW_OPEN_FOR"]))) \
+                                     #.filter(models.Attendance.registered.between(models.Language.signup_begin,
+                                     #                                             models.Language.signup_begin + timedelta(hours=app.config["RANDOM_WINDOW_OPEN_FOR"]))) \
 
         # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
         weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
 
-        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'del_overbooked': 0, 'del_parallel': 0}
+        # keep track of which attendances we set to active/waiting
+        handled_attendances = []
+
+        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'del_overbooked': 0}
 
         while to_assign:
             assert len(to_assign) == len(weights)
@@ -624,33 +624,43 @@ def restock_rnd():
                 stats['del_overbooked'] += 1
                 continue
 
-            # no chance to get into course, delete attendance
             if attendance.applicant.active_in_parallel_course(attendance.course):
-                db.session.delete(attendance)
-                stats['del_parallel'] += 1
                 continue
 
             # keep default waiting status
             if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
+                # XXX: send mails here, too? This implies sending mails every time we restock_rnd; multiple mails for waiting lists.
+                #handled_attendances.append(attendance)
                 continue
 
             attendance.has_to_pay = attendance.applicant.has_to_pay()
             attendance.waiting = False
-
-            stats['filled'] += 1
-            stats['paying'] += 1 if attendance.has_to_pay else 0
+            handled_attendances.append(attendance)
 
         try:
             db.session.commit()
+            flash(u'{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.' \
+                    u'Teilnahmen gelöscht da Kurs überbucht: {3}' \
+                    .format(sum([1 for a in handled_attendances if not a.waiting]), stats['all'],
+                            sum([1 for a in handled_attendances if a.has_to_pay]), stats['del_overbooked']), 'success')
         except Exception as e:
             db.session.rollback()
             flash(u'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'danger')
             return redirect(url_for('restock_rnd'))
 
-        # TODO: send mails
-        flash(u'{0} Teilnahmen (von {1} Wartenden) konnten zugewiesen werden. Davon sind {2} Zahlende.' \
-                u'Teilnahmen gelöscht: {3} (da überbucht), {4} (da bereits aktiv in Parallelkurs)' \
-                .format(stats['filled'], stats['all'], stats['paying'], stats['del_overbooked'], stats['del_parallel']), 'success')
+        # Send mails (async) only if the commit was successfull -- be conservative here
+        try:
+            for attendance in handled_attendances:
+                msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=attendance.course.language.reply_to, recipients=[attendance.applicant.mail],
+                              subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(attendance.course.full_name()),
+                              body=render_template('mails/confirmationmail.html', applicant=attendance.applicant, course=attendance.course,
+                                                   has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+                queue.enqueue(async_send, msg)
+
+            if handled_attendances:  # only show if there are attendances that we handled
+                flash(u'Mails erfolgreich verschickt', 'success')
+        except (AssertionError, socket.error, ConnectionError) as e:
+            flash(u'Mails wurden nicht verschickt: {0}'.format(e), 'danger')
 
     return dict(form=form)
 
