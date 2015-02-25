@@ -605,7 +605,7 @@ def restock_rnd():
         # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
         weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
 
-        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'failed': 'no'}
+        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'del_overbooked': 0, 'del_parallel': 0}
 
         while to_assign:
             assert len(to_assign) == len(weights)
@@ -618,9 +618,19 @@ def restock_rnd():
             attendance = to_assign.pop(idx)
             del weights[idx]
 
-            if attendance.applicant.active_in_parallel_course(attendance.course):
+            # no chance to get into course; management wants us to delete the attendance completely from the system
+            if attendance.course.is_overbooked():
+                db.session.delete(attendance)
+                stats['del_overbooked'] += 1
                 continue
 
+            # no chance to get into course, delete attendance
+            if attendance.applicant.active_in_parallel_course(attendance.course):
+                db.session.delete(attendance)
+                stats['del_parallel'] += 1
+                continue
+
+            # keep default waiting status
             if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
                 continue
 
@@ -632,13 +642,15 @@ def restock_rnd():
 
         try:
             db.session.commit()
-        except Exception:
+        except Exception as e:
             db.session.rollback()
-            stats['failed'] = 'yes'
+            flash(u'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'danger')
+            return redirect(url_for('restock_rnd'))
 
         # TODO: send mails
-        flash('{} Teilnahmen von {} wurden zugewiesen (fehlgeschlagen: {}) davon sind {} zu zahlen'
-              .format(stats['filled'], stats['all'], stats['failed'], stats['paying']), 'success')
+        flash(u'{0} Teilnahmen (von {1} Wartenden) konnten zugewiesen werden. Davon sind {2} Zahlende.' \
+                u'Teilnahmen gelöscht: {3} (da überbucht), {4} (da bereits aktiv in Parallelkurs)' \
+                .format(stats['filled'], stats['all'], stats['paying'], stats['del_overbooked'], stats['del_parallel']), 'success')
 
     return dict(form=form)
 
