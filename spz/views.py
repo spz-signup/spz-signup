@@ -596,8 +596,13 @@ def restock_rnd():
                                      .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
                                      .filter_by(waiting=True) \
                                      .all()
-                                     #.filter(models.Attendance.registered.between(models.Language.signup_begin,
-                                     #                                             models.Language.signup_begin + timedelta(hours=app.config["RANDOM_WINDOW_OPEN_FOR"]))) \
+
+        # Interval filtering in Python instead of SQL because it's not portable (across SQLite, Postgres, ..) implementable in standard SQL
+        # See: https://groups.google.com/forum/#!msg/sqlalchemy/AneqcriykeI/j4sayzZP1qQJ
+        w_open = app.config['RANDOM_WINDOW_OPEN_FOR']
+        between = lambda x, lhs, rhs: lhs < x < rhs
+        to_assign = [att for att in to_assign
+                     if between(att.registered, att.course.language.signup_begin, att.course.language.signup_begin + w_open)]
 
         # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
         weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
