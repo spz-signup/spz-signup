@@ -1,229 +1,229 @@
 {
 	"languages": [
-	{
-		"name": "Arabisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Chinesisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "English",
-		"reply_to" : "englisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{"level": "A2 Elementary 1", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
-			{"level": "A2 Elementary 2", "limit": 20, "price": 60, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
-			{"level": "B1 Engineering", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
-			{"level": "B1 Intermediate 1", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
-			{"level": "B1 Intermediate 2", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
-			{"level": "B1 Science", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-			{"level": "for Business Communication", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
-			{"level": "in Everyday Situations", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-			{"level": "Grammar Review", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-			{"level": "Business Leadership B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "Business Studies B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "B2: Science and Technology", "limit": 16, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b"] },
-			{"level": "B2: Upper Intermediate", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"] },
-			{"level": "B2: Engineering", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "for Work B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d"] },
-			{"level": "Grammar in Context", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "Intercultural Communication B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "Presentation Skills B2", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "Writing Skills B2", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "for Architecture", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
-			{"level": "TOEFL iBT Vorbereitung", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
-			{"level": "Business Leadership C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Business Studies 1 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Business Studies 2 C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Discussion & Debate C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "C1: Advanced", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"] },
-			{"level": "for Engineers C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "for Work C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"] },
-			{"level": "Intercultural Communication C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Issues in Science & Technology C1", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Presentation Skills C1", "limit": 15, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Scientific Writing C1", "limit": 20, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-			{"level": "Discussion and Debate B2", "limit": 20, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{"level": "C2: Proficiency", "limit": 20, "price": 60, "rating_lowest": 92, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "English Intensive",
-		"reply_to" : "englisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-09-02T19:00:00.Z",
-		"signup_end_iso_utc": "2014-09-30T19:00:00.Z",
-		"courses": [
-			{ "level": "B1: Intermediate 2", "limit": 20, "price": 60, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-			{ "level": "B2: Upper Intermediate", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-			{ "level": "B2/C1: Presentation Skills", "limit": 15, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
-			{ "level": "B2/C1: TOEFL iBT Vorbereitung", "limit": 18, "price": 60, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
-			{ "level": "C1: Advanced", "limit": 18, "price": 60, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Französisch",
-		"reply_to" : "franzoesisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "3", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "4", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "5", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "6", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "7-8", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Grammatik ", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "Fit für Frankreich", "limit": 18, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
-			{ "level": "für alle Fälle", "limit": 18 , "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Energie und Umwelt", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Kunst und Kultur", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Aktuelle Themen plus", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "für Business und Marketing", "limit": 18, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Express+3", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Italienisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Japanisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Konversation", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Portugiesisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "5", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Russisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Schwedisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
-			{ "level": "2", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "3", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "4", "limit": 23, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Spanisch",
-		"reply_to" : "spanisch@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"] },
-			{ "level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h"] },
-			{ "level": "3", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
-			{ "level": "4", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
-			{ "level": "5", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "rápido 1", "limit": 22, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "rápido 2", "limit": 22, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-			{ "level": "Mejora tu oído!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Mejora tu habla!", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Profesional", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Gramática", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Auslandsvorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Temas de actualidad", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "DELE-Vorbereitungskurs", "limit": 20, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Polnisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "Konversation", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Niederländisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{"level": "1", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{"level": "2", "limit": 25, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Türkisch",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-				{ "level": "1", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-				{ "level": "2", "limit": 22, "price": 60, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	},
-	{
-		"name": "Latein",
-		"reply_to" : "info@spz.kit.edu",
-		"signup_begin_iso_utc": "2014-10-15T19:00:00.Z",
-		"signup_end_iso_utc": "2014-12-15T19:00:00.Z",
-		"courses": [
-			{ "level": "1", "limit": 25, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-			{ "level": "2", "limit": 20, "price": 120, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
-		]
-	}
+		{
+			"name": "Arabisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "2", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Chinesisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "English",
+			"reply_to" : "englisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{"level": "A2 Elementary 1", "limit": 20, "price": 90, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
+				{"level": "A2 Elementary 2", "limit": 20, "price": 90, "rating_lowest": 20, "rating_highest": 49, "alternative": [""] },
+				{"level": "B1 Engineering", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
+				{"level": "B1 Intermediate 1", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
+				{"level": "B1 Intermediate 2", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
+				{"level": "B1 Science", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
+				{"level": "for Business Communication", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": ["a", "b"] },
+				{"level": "in Everyday Situations", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
+				{"level": "Grammar Review", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
+				{"level": "Business Leadership B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "Business Studies B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "B2: Science and Technology", "limit": 15, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"] },
+				{"level": "B2: Upper Intermediate", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d"] },
+				{"level": "B2: Engineering", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "for Work B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d"] },
+				{"level": "Grammar in Context", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "Intercultural Communication B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "Presentation Skills B2", "limit": 15, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "Writing Skills B2", "limit": 18, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "for Architecture", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
+				{"level": "TOEFL iBT Vorbereitung", "limit": 18, "price": 90, "rating_lowest": 65, "rating_highest": 100, "alternative": [""] },
+				{"level": "Business Leadership C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Business Studies 1 C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Business Studies 2 C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Discussion & Debate C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "C1: Advanced", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
+				{"level": "for Engineers C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "for Work C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": ["a", "b"] },
+				{"level": "Intercultural Communication C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Issues in Science & Technology C1", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Presentation Skills C1", "limit": 15, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Scientific Writing C1", "limit": 20, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{"level": "Discussion and Debate B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{"level": "C2: Proficiency", "limit": 20, "price": 90, "rating_lowest": 92, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "English Intensive",
+			"reply_to" : "englisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-03-03T17:00:00.Z",
+			"signup_end_iso_utc": "2015-04-03T16:00:00.Z",
+			"courses": [
+				{ "level": "B1: Intermediate 1 - Intensive", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
+				{ "level": "B2: Upper Intermediate - Intensive", "limit": 18, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{ "level": "B2: Science and Technology", "limit": 16, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{ "level": "C1: For Work - Intensive", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{ "level": "C1: Advanced - Intensive", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Französisch",
+			"reply_to" : "franzoesisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
+				{ "level": "2", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "3", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "4", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "5", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "6", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "7-8", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "Grammatik ", "limit": 22, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "Fit für Frankreich", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
+				{ "level": "für alle Fälle", "limit": 20 , "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Energie und Umwelt", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Kunst und Kultur", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Aktuelle Themen", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "für Business und Marketing", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Express+3", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Italienisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Japanisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d","e"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "5", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Portugiesisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "5", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Russisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Schwedisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d"] },
+				{ "level": "2", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "3", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "4", "limit": 23, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Spanisch",
+			"reply_to" : "spanisch@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"] },
+				{ "level": "2", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e", "f", "g", "h"] },
+				{ "level": "3", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c", "d", "e"] },
+				{ "level": "4", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
+				{ "level": "5", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "rápido 1", "limit": 22, "price": 180, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "rápido 2", "limit": 22, "price": 180, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "Mejora tu oído!", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Mejora tu habla!", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Profesional", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Gramática", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Auslandsvorbereitungskurs", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "Temas de actualidad", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "DELE-Vorbereitungskurs", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Polnisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "2", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "für Fortgeschrittene", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Niederländisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{"level": "1", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{"level": "2", "limit": 25, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Türkisch",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "2", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		},
+		{
+			"name": "Latein",
+			"reply_to" : "info@spz.kit.edu",
+			"signup_begin_iso_utc": "2015-04-08T16:00:00.Z",
+			"signup_end_iso_utc": "2015-07-08T16:00:00.Z",
+			"courses": [
+				{ "level": "1", "limit": 25, "price": 180, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
+				{ "level": "2", "limit": 20, "price": 180, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+			]
+		}
 	]
 }
