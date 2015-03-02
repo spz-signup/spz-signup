@@ -162,6 +162,8 @@ class NotificationForm(Form):
     mail_bcc = TextField('BCC', [validators.Optional()])
     mail_courses = SelectMultipleField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
     mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int)
+    only_active = BooleanField('Nur an Aktive')
+    only_have_to_pay = BooleanField('Nur an nicht Bezahlte')
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
@@ -176,7 +178,15 @@ class NotificationForm(Form):
     def get_recipients(self):
         flatten = lambda x: sum(x, [])
         attendances = flatten([course.attendances for course in self.get_courses()])  # single list of attendances
-        recipients = [attendance.applicant.mail.encode('utf-8') for attendance in attendances if not attendance.waiting]
+
+        if self.only_active.data:
+            attendances = [att for att in attendances if not att.waiting]
+
+        if self.only_have_to_pay.data:
+            attendances = [att for att in attendances if not att.waiting and att.has_to_pay
+                           and not att.applicant.discounted and att.amountpaid < att.course.price]
+
+        recipients = [attendance.applicant.mail.encode('utf-8') for attendance in attendances]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
 
     def get_body(self):

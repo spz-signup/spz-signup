@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_textarea, render_option %}
+{% from 'formhelpers.html' import render_input, render_textarea, render_option, render_boolean %}
 
 {% block caption %}
 Mail Zentrale
@@ -24,7 +24,9 @@ Mail Zentrale
                     {{ render_textarea(form.mail_body) }}
                 </fieldset>
                     <legend>Empfänger der Mail</legend>
-                    {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an aktive Kursteilnehmer, unbeachtet ihres Bezahlstatus') }}
+                    {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
+                    {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
+                    {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
