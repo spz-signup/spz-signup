@@ -1,18 +1,18 @@
 Sprachenzentrum des KIT
 -----------------------
 
-{{ 'Herr' if attendance.applicant.sex else 'Frau' }}: {{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }}
-Bewerberkreis: {{ attendance.applicant.origin.name }}
-E-Mail Adresse: {{ attendance.applicant.mail }}
-Kurs: {{ attendance.course.full_name() }}
+{{ 'Herr' if applicant.sex else 'Frau' }}: {{ applicant.first_name ~ ' ' ~ applicant.last_name }}
+Bewerberkreis: {{ applicant.origin.name }}
+E-Mail Adresse: {{ applicant.mail }}
+Kurs: {{ course.full_name() }}
 
 
-Sehr geehrt{{ 'er Herr' if attendance.applicant.sex else 'e Frau' }} {{ attendance.applicant.first_name ~ ' ' ~ attendance.applicant.last_name }},
+Sehr geehrt{{ 'er Herr' if applicant.sex else 'e Frau' }} {{ applicant.first_name ~ ' ' ~ applicant.last_name }},
 
 im Zuge des Nachrückverfahrens haben Sie einen Platz im oben genannten
 Sprachkurs erhalten.
 
-Wenn Sie immatrikuliert{{ 'er' if attendance.applicant.sex else 'e' }} Studierend{{ 'er' if attendance.applicant.sex else 'e' }} am KIT sind und in diesem Semester
+Wenn Sie immatrikuliert{{ 'er' if applicant.sex else 'e' }} Studierend{{ 'er' if applicant.sex else 'e' }} am KIT sind und in diesem Semester
 an maximal einem Sprachkurs (inklusive diesem) teilnehmen, dürfen Sie einfach zum nächsten Kurstermin erscheinen.
 
 Andernfalls zahlen Sie bitte den Kurs zu den auf der Homepage genannten

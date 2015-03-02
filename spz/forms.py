@@ -224,6 +224,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     add_to = SelectField(u'Teilnahme hinzufügen', [validators.Optional()], coerce=int, choices=[])
     remove_from = SelectField(u'Teilnahme löschen', [validators.Optional()], coerce=int, choices=[])
+    send_mail = BooleanField(u'Mail verschicken')
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
@@ -271,6 +272,9 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     def get_semester(self):
         return self.semester.data if self.semester.data else None
+
+    def get_send_mail(self):
+        return self.send_mail.data
 
 
 class StatusForm(Form):

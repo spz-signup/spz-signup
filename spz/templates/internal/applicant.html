@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_option %}
+{% from 'formhelpers.html' import render_input, render_option, render_boolean %}
 
 {% block caption %}
 Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
@@ -54,6 +54,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
             <fieldset>
                 {{ render_option(form.remove_from, help='Aus folgendem Kurs entfernen') }}
                 {{ render_option(form.add_to, help='Zu folgendem Kurs hinzufügen') }}
+                {{ render_boolean(form.send_mail) }}
             </fieldset>
 
 			<fieldset>

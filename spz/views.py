@@ -284,13 +284,14 @@ def applicant(id):
 
             add_to = form.get_add_to()
             remove_from = form.get_remove_from()
+            notify = form.get_send_mail()
 
             if add_to and remove_from:
                 flash(u'Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen', 'danger')
             elif add_to:
-                return redirect(url_for('add_attendance', applicant_id=applicant.id, course_id=add_to.id))
+                return add_attendance(applicant_id=applicant.id, course_id=add_to.id, notify=notify)
             elif remove_from:
-                return redirect(url_for('remove_attendance', applicant_id=applicant.id, course_id=remove_from.id))
+                return remove_attendance(applicant_id=applicant.id, course_id=remove_from.id, notify=notify)
 
         except Exception as e:
             db.session.rollback()
@@ -318,7 +319,7 @@ def search_applicant():
 
 
 @auth_required
-def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
+def add_attendance(applicant_id, course_id, notify):
     applicant = models.Applicant.query.get_or_404(applicant_id)
     course = models.Course.query.get_or_404(course_id)
 
@@ -335,29 +336,50 @@ def add_attendance(applicant_id, course_id):  # TODO: make forms, csrf
         if not course.is_allowed(applicant):
             flash(u'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
 
-        return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
     except Exception as e:
         db.session.rollback()
         flash(u'Der Teilnehmer konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'danger')
+        return redirect(url_for('applicant', id=applicant_id))
 
-    return redirect(url_for('applicant', id=applicant_id))
+    if notify:
+        try:
+            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
+                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                          body=render_template('mails/restockmail.html', applicant=applicant, course=course))
+            queue.enqueue(async_send, msg)
+            flash(u'Mail erfolgreich verschickt', 'success')
+        except (AssertionError, socket.error, ConnectionError) as e:
+            flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
+
+    return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
 
 
 @auth_required
-def remove_attendance(applicant_id, course_id):  # TODO: make forms, csrf
+def remove_attendance(applicant_id, course_id, notify):
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
+    applicant = attendance.applicant
+    course = attendance.course
 
     try:
         attendance.applicant.remove_course_attendance(attendance.course)
         db.session.commit()
         flash(u'Der Bewerber wurde aus dem Kurs genommen', 'success')
-        return redirect(url_for('applicant', id=applicant_id))
     except Exception as e:
         db.session.rollback()
         flash(u'Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'danger')
         return redirect(url_for('applicant', id=applicant_id))
 
-    return redirect(url_for('internal'))
+    if notify:
+        try:
+            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
+                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                          body=render_template('mails/kickoutmail.html', applicant=applicant, course=course))
+            queue.enqueue(async_send, msg)
+            flash(u'Mail erfolgreich verschickt', 'success')
+        except (AssertionError, socket.error, ConnectionError) as e:
+            flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
+
+    return redirect(url_for('applicant', id=applicant_id))
 
 
 @auth_required
