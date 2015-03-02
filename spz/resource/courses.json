@@ -42,7 +42,7 @@
 				{"level": "B2: Science and Technology", "limit": 15, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"] },
 				{"level": "B2: Upper Intermediate", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d"] },
 				{"level": "B2: Engineering", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-				{"level": "for Work B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c", "d"] },
+				{"level": "for Work B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": ["a", "b", "c"] },
 				{"level": "Grammar in Context", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
 				{"level": "Intercultural Communication B2", "limit": 20, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
 				{"level": "Presentation Skills B2", "limit": 15, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
@@ -70,11 +70,11 @@
 			"signup_begin_iso_utc": "2015-03-03T17:00:00.Z",
 			"signup_end_iso_utc": "2015-04-03T16:00:00.Z",
 			"courses": [
-				{ "level": "B1: Intermediate 1 - Intensive", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
-				{ "level": "B2: Upper Intermediate - Intensive", "limit": 18, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
+				{ "level": "B1: Intermediate 1", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
+				{ "level": "B2: Upper Intermediate", "limit": 18, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
 				{ "level": "B2: Science and Technology", "limit": 16, "price": 90, "rating_lowest": 65, "rating_highest": 79, "alternative": [""] },
-				{ "level": "C1: For Work - Intensive", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
-				{ "level": "C1: Advanced - Intensive", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
+				{ "level": "C1: For Work", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] },
+				{ "level": "C1: Advanced", "limit": 18, "price": 90, "rating_lowest": 80, "rating_highest": 100, "alternative": [""] }
 			]
 		},
 		{
