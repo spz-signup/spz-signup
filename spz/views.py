@@ -51,6 +51,10 @@ def index():
             flash(u'Sie sind bereits im Kurs oder nehmen aktiv an einem Parallelkurs teil', 'danger')
             return dict(form=form)
 
+        if applicant.over_limit():
+            flash(u'Sie haben das Limit an Bewerbungen bereits erreicht', 'danger')
+            return dict(form=form)
+
         # Run the final insert isolated in a transaction, with rollback semantics
         # As of 2015, we simply put everyone into the waiting list by default and then randomly insert, see #39
         try:

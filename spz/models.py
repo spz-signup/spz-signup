@@ -165,6 +165,13 @@ class Applicant(db.Model):
 
         return len(active_parallel) > 0
 
+    # Management wants us to limit the global amount of attendances one is allowed to have.. so what can I do?
+    def over_limit(self):
+        now = datetime.utcnow()
+        # at least do not count in courses that are already over..
+        running = [att for att in self.attendances if att.course.language.signup_end >= now]
+        return len(running) >= app.config['MAX_ATTENDANCES']
+
 
 @total_ordering
 class Course(db.Model):
