@@ -610,7 +610,7 @@ def restock_rnd():
         # keep track of which attendances we set to active/waiting
         handled_attendances = []
 
-        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign), 'del_overbooked': 0}
+        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign)}
 
         while to_assign:
             assert len(to_assign) == len(weights)
@@ -623,10 +623,8 @@ def restock_rnd():
             attendance = to_assign.pop(idx)
             del weights[idx]
 
-            # no chance to get into course; management wants us to delete the attendance completely from the system
+            # no chance to get into course
             if attendance.course.is_overbooked():
-                db.session.delete(attendance)
-                stats['del_overbooked'] += 1
                 continue
 
             if attendance.applicant.active_in_parallel_course(attendance.course):
@@ -635,7 +633,7 @@ def restock_rnd():
             # keep default waiting status
             if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
                 # XXX: send mails here, too? This implies sending mails every time we restock_rnd; multiple mails for waiting lists.
-                #handled_attendances.append(attendance)
+                # handled_attendances.append(attendance)
                 continue
 
             attendance.has_to_pay = attendance.applicant.has_to_pay()
@@ -644,10 +642,9 @@ def restock_rnd():
 
         try:
             db.session.commit()
-            flash(u'{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.' \
-                    u'Teilnahmen gelöscht da Kurs überbucht: {3}' \
-                    .format(sum([1 for a in handled_attendances if not a.waiting]), stats['all'],
-                            sum([1 for a in handled_attendances if a.has_to_pay]), stats['del_overbooked']), 'success')
+            flash(u'{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.'
+                  .format(sum([1 for a in handled_attendances if not a.waiting]), stats['all'],
+                          sum([1 for a in handled_attendances if a.has_to_pay])), 'success')
         except Exception as e:
             db.session.rollback()
             flash(u'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'danger')
