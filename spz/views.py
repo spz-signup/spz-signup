@@ -332,8 +332,8 @@ def add_attendance(applicant_id, course_id, notify):
         return redirect(url_for('applicant', id=applicant_id))
 
     try:
-        # Graduation optional, waits and pays by default
-        applicant.add_course_attendance(course, None, True, True)
+        # Graduation optional, does not wait (!) and pays by default
+        applicant.add_course_attendance(course, None, False, True)
         db.session.commit()
         flash(u'Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
 
@@ -648,10 +648,6 @@ def restock_rnd():
             # remove attendance and weight from possible candidates as to not select again;  guarantees termination
             attendance = to_assign.pop(idx)
             del weights[idx]
-
-            # no chance to get into course
-            if attendance.course.is_overbooked():
-                continue
 
             if attendance.applicant.active_in_parallel_course(attendance.course):
                 continue
