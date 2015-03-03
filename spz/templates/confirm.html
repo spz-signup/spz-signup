@@ -10,7 +10,7 @@ Ihre Registrierung war erfolgreich
     <div class="col-lg-8 col-lg-offset-2">
         <p>
         {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie haben sich für den Kurs <strong>{{ course.full_name() }}</strong> beworben.
-        Sie werden per Mail benachrichtigt, falls Sie einen Kursplatz erhalten.
+        Sie werden per Mail benachrichtigt, falls Sie einen Kursplatz erhalten oder auf der Warteliste sind.
         </p>
 
         {% for attendance in applicant.attendances %}
