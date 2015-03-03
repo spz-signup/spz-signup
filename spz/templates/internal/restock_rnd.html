@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import render_boolean %}
 
 {% block caption %}
 Auffüllen (RND)
@@ -12,7 +13,7 @@ Auffüllen (RND)
                 {{ form.hidden_tag() }}
                 <fieldset>
                     <legend>Fülle System mit Teilnahmen mittels Zufallsprinzip</legend>
-                    {# XXX: Nothing to select here, yet #}
+                    {{ render_boolean(form.notify_waiting, help='Zusätzlich Mail für alle wartende Teilnahmen im System schicken') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">

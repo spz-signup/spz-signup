@@ -365,7 +365,7 @@ class RestockFormRnd(Form):
     """Represents a form to fill languages and courses with waiting applicants, using weighted random selection from all attendances.
         This is the weighted-random policy.
     """
-    pass
+    notify_waiting = BooleanField('Mail an Wartende verschicken')
 
 
 class UniqueForm(LanguageForm):

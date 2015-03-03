@@ -633,7 +633,7 @@ def restock_rnd():
 
         # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
         now = datetime.utcnow()
-        weights = [1.0 / max(1.0, len([att for att in attendance.applicant.attendances if att.course.signup_end >= now])) for attendance in to_assign]
+        weights = [1.0 / max(1.0, len([att for att in attendance.applicant.attendances if att.course.language.signup_end >= now])) for attendance in to_assign]
 
         # keep track of which attendances we set to active/waiting
         handled_attendances = []
@@ -656,8 +656,8 @@ def restock_rnd():
 
             # keep default waiting status
             if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
-                # XXX: send mails here, too? This implies sending mails every time we restock_rnd; multiple mails for waiting lists.
-                # handled_attendances.append(attendance)
+                if form.notify_waiting.data:
+                    handled_attendances.append(attendance)
                 continue
 
             attendance.has_to_pay = attendance.applicant.has_to_pay()
