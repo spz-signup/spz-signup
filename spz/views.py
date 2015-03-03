@@ -616,6 +616,7 @@ def restock_fcfs():
 @templated('internal/restock_rnd.html')
 def restock_rnd():
     form = RestockFormRnd()
+
     if form.validate_on_submit():
         # eager loading, see (search for 'subqueryload'): http://docs.sqlalchemy.org/en/rel_0_9/orm/loading_relationships.html
         to_assign = models.Attendance.query \
@@ -631,7 +632,8 @@ def restock_rnd():
                      if between(att.registered, att.course.language.signup_begin, att.course.language.signup_begin + w_open)]
 
         # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
-        weights = [1.0 / len(attendance.applicant.attendances) for attendance in to_assign]
+        now = datetime.utcnow()
+        weights = [1.0 / max(1.0, len([att for att in attendance.applicant.attendances if att.course.signup_end >= now])) for attendance in to_assign]
 
         # keep track of which attendances we set to active/waiting
         handled_attendances = []
