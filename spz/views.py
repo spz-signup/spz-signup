@@ -332,8 +332,7 @@ def add_attendance(applicant_id, course_id, notify):
         return redirect(url_for('applicant', id=applicant_id))
 
     try:
-        # Graduation optional, does not wait (!) and pays by default
-        applicant.add_course_attendance(course, None, False, True)
+        applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
         db.session.commit()
         flash(u'Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
 
@@ -457,6 +456,18 @@ def status(applicant_id, course_id):
             db.session.rollback()
             flash(u'Der Status konnte nicht aktualisiert werden: {0}'.format(e), 'danger')
             return dict(form=form, attendance=attendance)
+
+        if form.notify_change.data:
+            try:
+                course = attendance.course
+                applicant = attendance.applicant
+                msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
+                              subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                              body=render_template('mails/restockmail.html', applicant=applicant, course=course))
+                queue.enqueue(async_send, msg)
+                flash(u'Mail erfolgreich verschickt', 'success')
+            except (AssertionError, socket.error, ConnectionError) as e:
+                flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
     form.populate(attendance)
     return dict(form=form, attendance=attendance)

@@ -300,6 +300,7 @@ class StatusForm(Form):
     discounted = BooleanField(u'Ermäßigt')
     paidbycash = BooleanField(u'Zahlungsart: Bar')
     amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
+    notify_change = BooleanField(u'Mail verschicken')
 
     def __init__(self, *args, **kwargs):
         super(StatusForm, self).__init__(*args, **kwargs)
