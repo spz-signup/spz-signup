@@ -463,7 +463,8 @@ def status(applicant_id, course_id):
                 applicant = attendance.applicant
                 msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
                               subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                              body=render_template('mails/restockmail.html', applicant=applicant, course=course))
+                              body=render_template('mails/confirmationmail.html', applicant=applicant, course=course,
+                                                   has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
                 queue.enqueue(async_send, msg)
                 flash(u'Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
