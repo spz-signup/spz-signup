@@ -90,14 +90,14 @@
 				{ "level": "5", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
 				{ "level": "6", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "7-8", "limit": 22, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
-				{ "level": "Grammatik ", "limit": 22, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
+				{ "level": "Grammatik", "limit": 22, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "Fit für Frankreich", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b", "c"] },
 				{ "level": "für alle Fälle", "limit": 20 , "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "Energie und Umwelt", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "Kunst und Kultur", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
 				{ "level": "Aktuelle Themen", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": ["a", "b"] },
 				{ "level": "für Business und Marketing", "limit": 20, "price": 90, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] },
-				{ "level": "Express+3", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
+				{ "level": "Diskussion und Textproduktion", "limit": 20, "price": 135, "rating_lowest": 0, "rating_highest": 100, "alternative": [""] }
 			]
 		},
 		{
