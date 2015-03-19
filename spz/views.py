@@ -610,7 +610,8 @@ def restock_fcfs():
                                   reply_to=attendance.course.language.reply_to,
                                   subject=u'[Sprachenzentrum] Freier Platz im Kurs {0}'.
                                           format(attendance.course.full_name()),
-                                  body=render_template('mails/restockmail.html', applicant=attendance.applicant, course=attendance.course))
+                                  body=render_template('mails/confirmationmail.html', applicant=attendance.applicant, course=attendance.course,
+                                                       has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
 
                     conn.send(msg)
 
