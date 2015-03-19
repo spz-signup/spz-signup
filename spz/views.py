@@ -39,7 +39,8 @@ def index():
         one_time_token = request.args.get('token', None)
 
         # signup at all times only with token or privileged users
-        if not course.language.is_open_for_signup() and not token.validate(one_time_token, applicant.mail) and not g.access:
+        preterm = token.validate(one_time_token, applicant.mail)
+        if not course.language.is_open_for_signup() and not preterm and not g.access:
             flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()), 'danger')
             return dict(form=form)
 
@@ -58,8 +59,9 @@ def index():
         # Run the final insert isolated in a transaction, with rollback semantics
         # As of 2015, we simply put everyone into the waiting list by default and then randomly insert, see #39
         try:
-            applicant.add_course_attendance(course, form.get_graduation(),
-                                            waiting=True, has_to_pay=False)
+            waiting = not preterm
+            attendance = applicant.add_course_attendance(course, form.get_graduation(),
+                                                         waiting=waiting, has_to_pay=applicant.has_to_pay())
 
             db.session.add(applicant)
             db.session.commit()
@@ -67,6 +69,16 @@ def index():
             db.session.rollback()
             flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'danger')
             return dict(form=form)
+
+        # Preterm signups are in by default and management wants us to send mail immediately
+        try:
+            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
+                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                          body=render_template('mails/confirmationmail.html', applicant=applicant, course=course,
+                                               has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+            queue.enqueue(async_send, msg)
+        except (AssertionError, socket.error, ConnectionError) as e:
+            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
         # Finally redirect the user to an confirmation page, too
         return render_template('confirm.html', applicant=applicant, course=course)

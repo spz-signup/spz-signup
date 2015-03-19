@@ -135,6 +135,7 @@ class Applicant(db.Model):
     def add_course_attendance(self, *args, **kwargs):
         attendance = Attendance(*args, **kwargs)
         self.attendances.append(attendance)
+        return attendance
 
     def remove_course_attendance(self, course):
         self.attendances = filter(lambda attendance: attendance.course != course, self.attendances)
