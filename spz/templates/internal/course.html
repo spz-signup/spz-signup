@@ -17,6 +17,7 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
                     <th>E-Mail</th>
                     <th>Identifikation</th>
                     <th>Status</th>
+                    <th>Herkunft</th>
                     <th>Nachrücken</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
 {% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro;{% endif %}
 </a>
                     </td>
+                    <td>{{ attendance.applicant.origin.name }}</td>
                     <td>{% if attendance.registered < (attendance.course.language.signup_begin + config.RANDOM_WINDOW_OPEN_FOR) %}Zufall{% else %}First-Come-First-Served{% endif %}
                     </td>
                 </tr>

@@ -40,7 +40,7 @@ Sprache: {{ language.name }}
                     <td>{{ course.limit }}</td>
                     <td>{{ course.limit - course.get_active_attendances()|count }}</td>
                     <td>{{ course.attendances|count }}</td>
-                    <td>{{ course.get_active_attendances()|count }}{% if course.is_full() %} (voll){% endif %}</td>
+                    <td>{{ course.get_active_attendances()|count }}</td>
                     <td>{{ course.get_waiting_attendances()|count }}</td>
                     <td>{{ course.get_paying_attendances()|count }}</td>
                     <td><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
