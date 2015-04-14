@@ -221,7 +221,7 @@ class Course(db.Model):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
     def is_full(self):
-        return len(self.attendances) >= self.limit
+        return len(self.get_active_attendances()) >= self.limit
 
     def is_overbooked(self):
         return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
@@ -437,7 +437,7 @@ class Approval(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(10), nullable=False)  # tag may be not unique, multiple tests taken
-    percent = db.Column(db.Integer, nullable=False)
+    percent = db.Column(db.Integer, nullable=False) # XXX: checkConstraint 0 <= p <= 100
 
     def __init__(self, tag, percent):
         self.tag = tag
