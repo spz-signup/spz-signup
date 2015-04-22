@@ -27,6 +27,7 @@ Mail Zentrale
                     {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
                     {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
                     {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
+                    {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
                 </fieldset>
                 <fieldset>
                     <div class="form-group">

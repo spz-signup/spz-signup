@@ -165,6 +165,7 @@ class NotificationForm(Form):
     mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int)
     only_active = BooleanField('Nur an Aktive')
     only_have_to_pay = BooleanField('Nur an nicht Bezahlte')
+    only_waiting = BooleanField('Nur an Wartende')
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
@@ -182,6 +183,9 @@ class NotificationForm(Form):
 
         if self.only_active.data:
             attendances = [att for att in attendances if not att.waiting]
+
+        if self.only_waiting.data:
+            attendances = [att for att in attendances if att.waiting]
 
         if self.only_have_to_pay.data:
             attendances = [att for att in attendances if not att.waiting and att.has_to_pay
