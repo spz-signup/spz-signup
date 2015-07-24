@@ -34,10 +34,11 @@ all_js = Bundle('js/jquery-1.11.1.min.js',
                 'js/mailcheck.1.1.0.min.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
-                'js/parsley-1.1.16-de.js',
-                'js/parsley-1.1.16.min.js',
-                'js/moment.2.0.0.min.js',
+                'js/parsley-de.js',
+                'js/parsley.min.js',
+                'js/moment.min.js',
                 'js/bootstrap.min.js',
+                'js/select2.min.js',
                 filters='rjsmin', output='js/packed.js')
 
 # Internet Explorer specific Javascript workarounds
@@ -55,8 +56,10 @@ tools_js = Bundle('js/persona.js',
 # Stylesheet bundles:
 
 all_css = Bundle('css/bootstrap.min.css',
-                 'css/sidebar.css',
+                 'css/select2.min.css',
+                 'css/simple-sidebar.css',
                  'css/scrollbars.css',
+                 'css/spz.css',
                  filters='rcssmin', output='css/packed.css')
 
 tools_css = Bundle('css/bootstrap-sortable.css',

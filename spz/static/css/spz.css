@@ -1,0 +1,21 @@
+/* fix from https://github.com/IronSummitMedia/startbootstrap-simple-sidebar/issues/9 */
+@media (min-width: 768px) {
+    .container {
+        width: 480px;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        width: 710px;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 920px;
+    }
+}
+
+/* sidebar scrollbar fix */
+#scollbar-wrapper {
+    overflow-x: hidden;
+}

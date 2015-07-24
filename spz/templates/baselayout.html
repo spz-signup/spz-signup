@@ -99,23 +99,26 @@
     {% block scripts %}
     <script>
         "use strict";
-        $("#menu-toggle").click(function(e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("active");
+
+        $(document).ready(function(){
+            $('select').select2({
+                width: '100%'
+            });
+
+            $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+
+            $('.fmt-datetime').each(function (idx, elem) {
+                var $elem = $(elem);
+                var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
+                $elem.text(fmt);
+            });
         });
 
         // contributors welcome :)
         console.log('It seems like you are interested in how this project works.\nFeel free to check it out at: https://github.com/spz-signup/spz-signup\nIssues and/or Pull Request welcome! :)');
-    </script>
-
-    <script>
-        "use strict";
-
-        $('.fmt-datetime').each(function (idx, elem) {
-            var $elem = $(elem);
-            var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
-            $elem.text(fmt);
-        });
     </script>
     {% endblock scripts %}
 </html>

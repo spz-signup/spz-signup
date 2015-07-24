@@ -54,11 +54,13 @@ Anmeldung
     "use strict";
 
     $('#signup').parsley({
-        errors: {
-            errorsWrapper: '<ul class="list-unstyled"></ul>'
-        }
+        classHandler: function(field) {
+            return field.parent.parent;
+        },
+        errorClass: 'has-error',
+        errorsWrapper: '<ul class="list-unstyled"></ul>'
     });
-    
+
     function check_and_change_kit_visibilty(){
         if ($('#origin').find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').show();
