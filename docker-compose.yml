@@ -1,0 +1,10 @@
+web:
+  build: .
+  command: python runserver -H 0.0.0.0
+  ports:
+    - "8080:8080"
+  volumes:
+    - ./spz:/home/spz/code/spz:ro
+    - ./util:/home/spz/code/util:ro
+    - /home/spz/code/spz/static
+  read_only: true
