@@ -7,43 +7,41 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
-                <tr>
-                    <th>Anrede</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>E-Mail</th>
-                    <th>Identifikation</th>
-                    <th>Status</th>
-                    <th>Herkunft</th>
-                    <th>Nachrücken</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for attendance in course.attendances %}
-                <tr>
-                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
-                    <td><a href="mailto:{{ attendance.applicant.mail }}">{{ attendance.applicant.mail }}</a></td>
-                    <td>{{ attendance.applicant.tag }}</td>
-                    <td>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>E-Mail</th>
+                <th>Identifikation</th>
+                <th>Status</th>
+                <th>Herkunft</th>
+                <th>Nachrücken</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in course.attendances %}
+            <tr>
+                <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
+                <td><a href="mailto:{{ attendance.applicant.mail }}">{{ attendance.applicant.mail }}</a></td>
+                <td>{{ attendance.applicant.tag }}</td>
+                <td>
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
 {{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
 {% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
 {% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
 {% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro;{% endif %}
 </a>
-                    </td>
-                    <td>{{ attendance.applicant.origin.name }}</td>
-                    <td>{% if attendance.registered < (attendance.course.language.signup_begin + config.RANDOM_WINDOW_OPEN_FOR) %}Zufall{% else %}First-Come-First-Served{% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </td>
+                <td>{{ attendance.applicant.origin.name }}</td>
+                <td>{% if attendance.registered < (attendance.course.language.signup_begin + config.RANDOM_WINDOW_OPEN_FOR) %}Zufall{% else %}First-Come-First-Served{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}

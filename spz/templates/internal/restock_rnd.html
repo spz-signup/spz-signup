@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_boolean %}
+{% from 'formhelpers.html' import render_boolean, render_submit %}
 
 {% block caption %}
 Auffüllen (RND)
@@ -7,24 +7,11 @@ Auffüllen (RND)
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    <legend>Fülle System mit Teilnahmen mittels Zufallsprinzip</legend>
-                    {{ render_boolean(form.notify_waiting, help='Zusätzlich Mail für alle wartende Teilnahmen im System schicken') }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Abschicken</button>
-                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <form class="ui form" method="post">
+        {{ form.hidden_tag() }}
+        <h3 class="ui dividing header">Fülle System mit Teilnahmen mittels Zufallsprinzip</h3>
+        {{ render_boolean(form.notify_waiting, help='Zusätzlich Mail für alle wartende Teilnahmen im System schicken') }}
+        {{ render_submit() }}
+    </form>
 </div>
 {% endblock internal_body %}

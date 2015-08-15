@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import render_input, render_option %}
+{% from 'formhelpers.html' import render_input, render_option, render_radio, render_submit %}
 
 {% block caption %}
 Anmeldung
@@ -8,42 +8,35 @@ Anmeldung
 
 {% block body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form id="signup" class="form-horizontal" method="post" data-persist="garlic">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    <legend>Persönliche Angaben</legend>
-                    {{ render_option(form.sex) }}
-                    {{ render_input(form.first_name, placeholder='Max') }}
-                    {{ render_input(form.last_name, placeholder='Mustermann') }}
-                    {{ render_input(form.phone) }}
-                    {# mail needs an help-block because we write the suggestion in it #}
-                    {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"', help=' ') }}
-                    {{ render_option(form.origin) }}
-                    {{ render_input(form.tag, required=False, help='Falls Sie kein KIT-Studierender sind und einen Englischkurs belegen wollen, tragen Sie hier die Ihnen vom Sprachenzentrum erteilte ID ein. Mitarbeiter müssen Ihren KIT-Account (login) eintragen.') }}
-                </fieldset>
-                <fieldset class="kit-only">
-                    <legend>Angaben für Studierende des KIT</legend>
-                    {{ render_option(form.degree, required=False) }}
-                    {{ render_input(form.semester, placeholder='1', type='number', required=False, required_extras='step="1" type="range" min="1" max="26"') }}
-                    {{ render_option(form.graduation, required=False) }}
-                </fieldset>
-                <fieldset>
-                    <legend>Kurswahl</legend>
-                    {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus') }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Anmelden</button>
-                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+        <form id="signup" class="ui form" method="post" data-persist="garlic">
+            {{ form.hidden_tag() }}
+            <h3 class="ui dividing header">Persönliche Angaben</h3>
+            <div class="grouped fields">
+                {{ render_radio(form.sex, icon='heterosexual') }}
+                {{ render_input(form.first_name, placeholder='Max', icon='user') }}
+                {{ render_input(form.last_name, placeholder='Mustermann', icon='users') }}
+            </div>
+            <div class="grouped fields">
+                {{ render_input(form.phone, placeholder='0 1521 1234 678', icon='mobile') }}
+                {# mail needs an help-block because we write the suggestion in it #}
+                {{ render_input(form.mail, placeholder='max.mustermann@example.com', required_extras='data-type="email" data-trigger="change"', help=' ', icon='mail outline') }}
+            </div>
+            <div class="grouped fields">
+                {{ render_option(form.origin, icon='leaf') }}
+                {{ render_input(form.tag, required=False, help='Falls Sie kein KIT-Studierender sind und einen Englischkurs belegen wollen, tragen Sie hier die Ihnen vom Sprachenzentrum erteilte ID ein. Mitarbeiter müssen Ihren KIT-Account (login) eintragen.', icon='barcode') }}
+            </div>
+            <div class="kit-only">
+                <h3 class="ui dividing header">Angaben für Studierende des KIT</h3>
+                <div class="grouped fields">
+                    {{ render_option(form.degree, required=False, icon='student') }}
+                    {{ render_input(form.semester, placeholder='1', type='number', required=False, required_extras='step="1" type="range" min="1" max="26"', icon='calendar') }}
+                </div>
+                {{ render_radio(form.graduation, required=False, icon='crosshairs') }}
+            </div>
+            <h3 class="ui dividing header">Kurswahl</h3>
+            {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus', icon='cube') }}
+            {{ render_submit(submit='Absenden') }}
+        </form>
 </div>
 {% endblock body %}
 
@@ -53,19 +46,91 @@ Anmeldung
 <script>
     "use strict";
 
-    $('#signup').parsley({
-        classHandler: function(field) {
-            return field.parent.parent;
+    $('.ui.form').form({
+        fields: {
+            sex: {
+                identifier: 'sex',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie ein Geschlecht an.'
+                    }
+                ]
+            },
+            first_name: {
+                identifier: 'first_name',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie einen Vornamen ein.'
+                    }
+                ]
+            },
+            last_name: {
+                identifier: 'last_name',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie einen Nachnamen ein.'
+                    }
+                ]
+            },
+            phone: {
+                identifier: 'phone',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie eine Telefonnumer ein.'
+                    }
+                ]
+            },
+            mail: {
+                identifier: 'mail',
+                rules: [
+                    {
+                        type: 'email',
+                        prompt: 'Bitte geben Sie eine gültige E-Mail Adresse ein.'
+                    }
+                ]
+            },
+            origin: {
+                identifier: 'origin',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie Ihren Bewerberkreis an.'
+                    }
+                ]
+            },
+            semester: {
+                identifier: 'semester',
+                rules: [
+                    {
+                        type: 'integer[1..26]',
+                        prompt: 'Anzahl der Fachsemester muss zwischen 1 und 26 liegen.'
+                    }
+                ]
+            },
+            course: {
+                identifier: 'course',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte wählen Sie einen Kurs.'
+                    }
+                ]
+            },
         },
-        errorClass: 'has-error',
-        errorsWrapper: '<ul class="list-unstyled"></ul>'
+        on: 'blur',
+        inline: true,
+        transition: 'slide down'
     });
 
     function check_and_change_kit_visibilty(){
         if ($('#origin').find('option:selected:contains(\'Fakultät\')').length > 0) {
-            $('.kit-only').show();
+            $('.kit-only').slideDown();
         } else {
-            $('.kit-only').hide();
+            $('.kit-only').slideUp();
         }
     }
     $(document).ready(function(){
@@ -81,16 +146,18 @@ Anmeldung
             topLevelDomains: mailcheckDomains['topLevelDomains'],
 
             suggested: function(element, suggestion) {
-                $('#mail').parent().children('.help-block').html('Meinten Sie <em><a id=\'suggestion\'>' + suggestion['full'] + '</a></em>?');
+                var div = $('<div>', {class: 'suggestion-container'});
+                $(div).html('Meinten Sie <em><a id=\'suggestion\'>' + suggestion['full'] + '</a></em>?');
+                $('#mail').parent().parent().children('.help-block').append(div);
 
                 $('#suggestion').click(function(e) {
                     $('#mail').val($('#suggestion').text());
-                    $('#mail').parent().children('.help-block').empty();
+                    $('.suggestion-container').remove();
                 });
             },
 
             empty: function(element) {
-                $('#mail').parent().children('.help-block').empty();
+                $('.suggestion-container').remove();
             }
         });
     });

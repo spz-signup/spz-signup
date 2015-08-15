@@ -7,17 +7,15 @@ Statistiken
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-        <a href="{{ url_for('free_courses') }}" class="list-group-item">
-            <p class="list-group-item-text text-info">Restplätze nach Kurse</p>
-        </a>
-        <a href="{{ url_for('origins_breakdown') }}" class="list-group-item">
-            <p class="list-group-item-text text-info">Aufteilung nach Herkunft</p>
-        </a>
-        <a href="{{ url_for('task_queue') }}" class="list-group-item">
-            <p class="list-group-item-text text-info">Warteschlange</p>
-        </a>
-    </div>
+    <a href="{{ url_for('free_courses') }}">
+        <button class="ui button" type="button">Restplätze nach Kurse</button>
+    </a>
+    <a href="{{ url_for('origins_breakdown') }}">
+        <button class="ui button" type="button">Aufteilung nach Herkunft</button>
+    </a>
+    <a href="{{ url_for('task_queue') }}">
+        <button class="ui button" type="button">Warteschlange</button>
+    </a>
 </div>
 
 {% endblock internal_body %}

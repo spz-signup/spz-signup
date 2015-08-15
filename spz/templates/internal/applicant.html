@@ -8,65 +8,52 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-		<form class="form-horizontal" method="post">
-			{{ form.hidden_tag() }}
-			<fieldset>
-				<legend>Persönliche Angaben</legend>
-                {{ render_option(form.sex) }}
-				{{ render_input(form.first_name, required=False) }}
-				{{ render_input(form.last_name, required=False) }}
-				{{ render_input(form.phone, required=False) }}
-				{{ render_input(form.mail, required=False) }}
-				{{ render_input(form.tag, required=False) }}
-				{{ render_option(form.origin) }}
+    <form class="ui form" method="post">
+        {{ form.hidden_tag() }}
+        <h3 class="ui dividing header">Persönliche Angaben</h3>
+        {{ render_option(form.sex) }}
+        {{ render_input(form.first_name, required=False) }}
+        {{ render_input(form.last_name, required=False) }}
+        {{ render_input(form.phone, required=False) }}
+        {{ render_input(form.mail, required=False) }}
+        {{ render_input(form.tag, required=False) }}
+        {{ render_option(form.origin) }}
 
-                {{ render_option(form.degree) }}
-                {{ render_input(form.semester) }}
-			</fieldset>
+        {{ render_option(form.degree) }}
+        {{ render_input(form.semester) }}
 
-            {% if form.get_attendances() %}
-            <legend>Teilnahmen</legend>
-            <table class="table table-striped sortable">
-                <tbody>
-				{% for attendance in form.get_attendances() %}
-                    <tr>
-                        <td>
-							<a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name() }} </a>
-                        </td>
-                        <td>
-                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
-                        </td>
-                        <td>
-<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
-{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
-{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
-{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro; {% endif %}
-</a>
-                        </td>
-                    </tr>
-				{% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
+        {% if form.get_attendances() %}
+        <h3 class="ui dividing header">Teilnahmen</h3>
+        <table class="ui sortable compact small table">
+            <tbody>
+                {% for attendance in form.get_attendances() %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name() }} </a>
+                    </td>
+                    <td>
+                        {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
+                            {% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
+                            {% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
+                            {% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro; {% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
 
-            <fieldset>
-                {{ render_option(form.remove_from, help='Aus folgendem Kurs entfernen') }}
-                {{ render_option(form.add_to, help='Zu folgendem Kurs hinzufügen') }}
-                {{ render_boolean(form.send_mail) }}
-            </fieldset>
+        {{ render_option(form.remove_from, help='Aus folgendem Kurs entfernen') }}
+        {{ render_option(form.add_to, help='Zu folgendem Kurs hinzufügen') }}
+        {{ render_boolean(form.send_mail) }}
 
-			<fieldset>
-				<div class="form-group">
-					<div class="col-lg-8 col-lg-offset-2">
-						<button id="confirm" type="submit" class="btn btn-primary">Änderungen speichern</button>
-					</div>
-				</div>
-			</fieldset>
-
-		</form>
-    </div>
+        <button id="confirm" type="submit" class="fluid ui positive button">Änderungen speichern</button>
+    </form>
 </div>
 {% endblock internal_body %}
 

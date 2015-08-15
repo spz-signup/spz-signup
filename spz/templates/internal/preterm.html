@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input %}
+{% from 'formhelpers.html' import render_input, render_submit %}
 
 {% block caption %}
 Prioritäranmeldungen
@@ -8,64 +8,49 @@ Prioritäranmeldungen
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    {{ render_input(form.mail, help="Mail für prioritäre Anmeldungsberechtigung") }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Token erstellen</button>
-                            <button type="reset" class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+    <form class="ui form" method="post">
+        {{ form.hidden_tag() }}
+        {{ render_input(form.mail, help="Mail für prioritäre Anmeldungsberechtigung") }}
+        {{ render_submit(submit='Token erstellen') }}
+    </form>
+    {% if token %}
+    <div class="panel panel-primary }}">
+        <div class="panel-heading">
+            <h3 class="panel-title">Token URL für {{ form.mail.data }}</h3>
         </div>
-        {% if token %}
-        <div class="panel panel-primary }}">
-            <div class="panel-heading">
-                <h3 class="panel-title">Token URL für {{ form.mail.data }}</h3>
-            </div>
-            <div class="panel-body">
-                <textarea class="form-control" readonly="readonly">{{ url_for('index', token=token, _external=True) }}</textarea>
-            </div>
+        <div class="panel-body">
+            <textarea class="form-control" readonly="readonly">{{ url_for('index', token=token, _external=True) }}</textarea>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 </div>
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
-                <tr>
-                    <th>Anrede</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>E-Mail</th>
-                    <th>Matrikelnummer</th>
-                    <th>Kurswunsch</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for attendance in preterm_signups %}
-                <tr>
-                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
-                    <td>{{ attendance.applicant.mail }}</td>
-                    <td>{{ attendance.applicant.tag }}</td>
-                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>E-Mail</th>
+                <th>Matrikelnummer</th>
+                <th>Kurswunsch</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in preterm_signups %}
+            <tr>
+                <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
+                <td>{{ attendance.applicant.mail }}</td>
+                <td>{{ attendance.applicant.tag }}</td>
+                <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                        {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}

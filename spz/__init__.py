@@ -17,6 +17,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail
 from flask.ext.cache import Cache
 
+from jinja2 import Markup
+
 from spz import assets
 
 
@@ -28,6 +30,10 @@ class CustomFlask(Flask):
     jinja_options = dict(Flask.jinja_options, trim_blocks=True, lstrip_blocks=True, auto_reload=False)
 
 app = CustomFlask(__name__, instance_relative_config=True)
+
+
+# add `include_raw` Jinja helper
+app.jinja_env.globals['include_raw'] = lambda filename : Markup(app.jinja_loader.get_source(app.jinja_env, filename)[0])
 
 
 # Assets handling; keep the spz.assets module in sync with the static directory

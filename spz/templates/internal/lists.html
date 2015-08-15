@@ -7,57 +7,55 @@ Sprachen
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
-                <tr>
-                    <th>Sprache</th>
-                    <th>Kurse</th>
-                    <th>Plätze</th>
-                    <th>Warteliste</th>
-                    <th>Aktive</th>
-                    <th>Zahlende</th>
-                    <th>Kurs-L.</th>
-                    <th>Anw.-L.</th>
-                    <th>Daten</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% set sums = {'courses_t': 0, 'seats_t': 0, 'waiting_t': 0, 'active_t': 0, 'paying_t': 0} %}
-                {% for language, courses, seats in lang_misc %}
-                <tr>
-                    <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
-                    <td>{{ courses }}</td>
-                    <td>{{ seats }}</td>
-                    <td>{{ language.get_waiting_attendances()|count }}</td>
-                    <td>{{ language.get_active_attendances()|count }}</td>
-                    <td>{{ language.get_paying_attendances()|count }}</td>
-                    <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
-                    <td><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">PDF</button></a></td>
-                    <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
-                </tr>
-                {% if sums.update({
-                    'courses_t': sums['courses_t'] + courses,
-                    'seats_t': sums['seats_t'] + seats,
-                    'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count,
-                    'active_t': sums['active_t'] + language.get_active_attendances()|count,
-                    'paying_t': sums['paying_t'] + language.get_paying_attendances()|count
-                }) %}
-                {% endif %}
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>&Sigma;</th>
-                    <td>{{ sums['courses_t'] }}</td>
-                    <td>{{ sums['seats_t'] }}</td>
-                    <td>{{ sums['waiting_t'] }}</td>
-                    <td>{{ sums['active_t'] }}</td>
-                    <td>{{ sums['paying_t'] }}</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Sprache</th>
+                <th>Kurse</th>
+                <th>Plätze</th>
+                <th>Warteliste</th>
+                <th>Aktive</th>
+                <th>Zahlende</th>
+                <th>Kurs-L.</th>
+                <th>Anw.-L.</th>
+                <th>Daten</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set sums = {'courses_t': 0, 'seats_t': 0, 'waiting_t': 0, 'active_t': 0, 'paying_t': 0} %}
+            {% for language, courses, seats in lang_misc %}
+            <tr>
+                <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
+                <td>{{ courses }}</td>
+                <td>{{ seats }}</td>
+                <td>{{ language.get_waiting_attendances()|count }}</td>
+                <td>{{ language.get_active_attendances()|count }}</td>
+                <td>{{ language.get_paying_attendances()|count }}</td>
+                <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
+                <td><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
+                <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="ui button">CSV</button></a></td>
+            </tr>
+            {% if sums.update({
+                'courses_t': sums['courses_t'] + courses,
+                'seats_t': sums['seats_t'] + seats,
+                'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count,
+                'active_t': sums['active_t'] + language.get_active_attendances()|count,
+                'paying_t': sums['paying_t'] + language.get_paying_attendances()|count
+            }) %}
+            {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>&Sigma;</th>
+                <td>{{ sums['courses_t'] }}</td>
+                <td>{{ sums['seats_t'] }}</td>
+                <td>{{ sums['waiting_t'] }}</td>
+                <td>{{ sums['active_t'] }}</td>
+                <td>{{ sums['paying_t'] }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 {% endblock internal_body %}

@@ -22,103 +22,106 @@
         {% endblock head %}
     </head>
     <body>
-        <div id="wrapper">
-            <div id="sidebar-wrapper">
-                <ul class="sidebar-nav">
-                    {% block navbar %}
-                    <li class="sidebar-brand"><a href="{{ url_for('index') }}">Anmeldung</a></li>
-                    <li><a href="http://www.spz.kit.edu/"><span class="glyphicon glyphicon-home"></span> Sprachenzentrum</a></li>
-                    <li><a href="http://www.spz.kit.edu/angebot.php"><span class="glyphicon glyphicon-globe"></span> Kursangebot</a></li>
-                    <li><a href="http://www.spz.kit.edu/223.php"><span class="glyphicon glyphicon-list-alt"></span> Englischtest</a></li>
-                    <li><a href="http://www.spz.kit.edu/gebuehren.php"><span class="glyphicon glyphicon-euro"></span> Gebühren</a></li>
-                    <li><a href="http://www.spz.kit.edu/257.php"><span class="glyphicon glyphicon-calendar"></span> Barzahlungstermine</a></li>
-                    <li><a href="http://www.spz.kit.edu/253.php"><span class="glyphicon glyphicon-info-sign"></span> Informationen</a></li>
-                    {% endblock navbar %}
-                </ul>
+        <div class="ui grid">
+            <div class="three wide computer four wide tablet sixteen wide table column ui vertical menu inverted">
+                {% block navbar %}
+                    <div class="item">
+                        <div class="item">
+                            <h1>KIT Sprachenzentrum</h1>
+                        </div>
+                        <a class="item" href="{{ url_for('index') }}">Anmeldung</a>
+                        <a class="item" href="http://www.spz.kit.edu/"><span class="glyphicon glyphicon-home"></span> Sprachenzentrum</a>
+                        <a class="item" href="http://www.spz.kit.edu/angebot.php"><span class="glyphicon glyphicon-globe"></span> Kursangebot</a>
+                        <a class="item" href="http://www.spz.kit.edu/223.php"><span class="glyphicon glyphicon-list-alt"></span> Englischtest</a>
+                        <a class="item" href="http://www.spz.kit.edu/gebuehren.php"><span class="glyphicon glyphicon-euro"></span> Gebühren</a>
+                        <a class="item" href="http://www.spz.kit.edu/257.php"><span class="glyphicon glyphicon-calendar"></span> Barzahlungstermine</a>
+                        <a class="item" href="http://www.spz.kit.edu/253.php"><span class="glyphicon glyphicon-info-sign"></span> Informationen</a>
+                    </div>
+                {% endblock navbar %}
             </div>
-            <div id="page-content-wrapper">
-                <div class="content-header">
-                    <h1>
-                        <a id="menu-toggle" href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>
-                        {% block caption %}
-                        Anmeldung
-                        {% endblock caption %}
-                    </h1>
-                    {% block subcaption %}
-                    {% endblock subcaption %}
-                </div>
-                <div class="page-content inset">
-                    <div class="container">
+            <div class="main thirteen wide computer twelve wide tablet sixteen wide table column">
+                <div class="ui container">
+                    <div class="ui centered grid">
                         <div class="row">
-                            <div class="col-lg-12">
-                                {% block alert %}
-                                {% with messages = get_flashed_messages(with_categories=true) %}
-                                {% if messages %}
-                                {% for category, message in messages %}
-                                <div class="alert alert-{{ category }}">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    {{ message }}
+                            <div class="ui left aligned column">
+                                <div class="ui grid">
+                                    <div class="row">
+                                        <h1 class="ui header">
+                                            {% block caption %}
+                                            Anmeldung
+                                            {% endblock caption %}
+                                        </h1>
+                                        {% block subcaption %}
+                                        {% endblock subcaption %}
+                                        {% block alert %}
+                                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                            {% if messages %}
+                                                {% for category, message in messages %}
+                                                    <div class="ui {{ category }} message">
+                                                        <i class="close icon"></i>
+                                                        {{ message }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
+                                        {% endblock alert %}
+                                    </div>
+                                    {% block body %}
+                                    {% endblock body %}
+                                    <div class="two column row">
+                                        <div class="left aligned column">
+                                            <small>
+                                                <a href="{{ url_for('licenses') }}">Lizenzen</a>
+                                                &middot;
+                                                <a href="https://github.com/spz-signup/spz-signup">GitHub</a>
+                                            </small>
+                                        </div>
+                                        <div class="right aligned column">
+                                            <small>
+                                                <a href="#top">Nach oben</a>
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                                {% endblock alert %}
                             </div>
                         </div>
-                        <hr>
-                        {% block body %}
-                        {% endblock body %}
-                        <hr>
-                        <div class="row">
-                            &nbsp;
-                        </div>
-                        <footer>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <small>
-                                    <p class="pull-left">
-                                        <a href="{{ url_for('licenses') }}">Lizenzen</a>
-                                        &middot;
-                                        <a href="https://github.com/spz-signup/spz-signup">GitHub</a>
-                                    </p>
-                                    <p class="pull-right"><a href="#top">Nach oben</a></p>
-                                </small>
-                            </div>
-                        </div>
-                        </footer>
                     </div>
                 </div>
             </div>
         </div>
+
+        {% assets "all_js" %}
+        <script src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+
+        {% block scripts %}
+        <script>
+            "use strict";
+
+            $(window).load(function(){
+                $('.ui.dropdown').dropdown({
+                    fullTextSearch: true
+                });
+                window.setTimeout(function(){
+                    $('.ui.selection.dropdown .menu').css('width', 'calc(100% + 2px)');
+                }, 200);
+
+                $('.message .close').on('click', function() {
+                    $(this).closest('.message').transition('fade');
+                });
+
+                $('.ui.checkbox').checkbox();
+
+                $('.fmt-datetime').each(function (idx, elem) {
+                    var $elem = $(elem);
+                    var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
+                    $elem.text(fmt);
+                });
+            });
+
+            // contributors welcome :)
+            console.log('It seems like you are interested in how this project works.\nFeel free to check it out at: https://github.com/spz-signup/spz-signup\nIssues and/or Pull Request welcome! :)');
+        </script>
+        {% endblock scripts %}
     </body>
-
-    {% assets "all_js" %}
-    <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-    {% block scripts %}
-    <script>
-        "use strict";
-
-        $(document).ready(function(){
-            $('select').select2({
-                width: '100%'
-            });
-
-            $("#menu-toggle").click(function(e) {
-                e.preventDefault();
-                $("#wrapper").toggleClass("toggled");
-            });
-
-            $('.fmt-datetime').each(function (idx, elem) {
-                var $elem = $(elem);
-                var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
-                $elem.text(fmt);
-            });
-        });
-
-        // contributors welcome :)
-        console.log('It seems like you are interested in how this project works.\nFeel free to check it out at: https://github.com/spz-signup/spz-signup\nIssues and/or Pull Request welcome! :)');
-    </script>
-    {% endblock scripts %}
 </html>

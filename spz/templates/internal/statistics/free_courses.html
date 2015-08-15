@@ -7,29 +7,27 @@ Restplätze
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Kurs</th>
+                <th>Angebot</th>
+                <th>Restplätze</th>
+                <th>Warteliste</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                {% if course.limit > course.get_active_attendances()|count %}
                 <tr>
-                    <th>Kurs</th>
-                    <th>Angebot</th>
-                    <th>Restplätze</th>
-                    <th>Warteliste</th>
+                    <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.full_name() }}</a></td>
+                    <td>{{ course.limit }}</td>
+                    <td>{{ course.limit - course.get_active_attendances()|count }}</td>
+                    <td>{{ course.get_waiting_attendances()|count }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for course in courses %}
-                    {% if course.limit > course.get_active_attendances()|count %}
-                    <tr>
-                        <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.full_name() }}</a></td>
-                        <td>{{ course.limit }}</td>
-                        <td>{{ course.limit - course.get_active_attendances()|count }}</td>
-                        <td>{{ course.get_waiting_attendances()|count }}</td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}

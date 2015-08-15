@@ -30,15 +30,12 @@ register_filter(RCSSMin)
 
 # Javascript bundles:
 
-all_js = Bundle('js/jquery-1.11.1.min.js',
+all_js = Bundle('js/jquery-2.1.4.js',
+                'js/semantic.js',
                 'js/mailcheck.1.1.0.min.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
-                'js/parsley-de.js',
-                'js/parsley.min.js',
                 'js/moment.min.js',
-                'js/bootstrap.min.js',
-                'js/select2.min.js',
                 filters='rjsmin', output='js/packed.js')
 
 # Internet Explorer specific Javascript workarounds
@@ -49,21 +46,15 @@ ie_js = Bundle('js/html5shiv.js',
 
 # Tooling bundles
 tools_js = Bundle('js/persona.js',
-                  'js/bootstrap-sortable.js',
+                  'js/jquery.tablesort.js',
                   filters='rjsmin', output='js/packed_tools.js')
 
 
 # Stylesheet bundles:
 
-all_css = Bundle('css/bootstrap.min.css',
-                 'css/select2.min.css',
-                 'css/simple-sidebar.css',
-                 'css/scrollbars.css',
+all_css = Bundle('css/semantic.css',
                  'css/spz.css',
                  filters='rcssmin', output='css/packed.css')
-
-tools_css = Bundle('css/bootstrap-sortable.css',
-                   filters='rcssmin', output='css/packed_tools.css')
 
 
 # Hide concrete loading method inside this module

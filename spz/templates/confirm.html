@@ -7,20 +7,14 @@ Ihre Registrierung war erfolgreich
 
 {% block body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <p>
+    <p>
         {{ applicant.first_name ~ ' ' ~ applicant.last_name }} -- Sie haben sich für den Kurs <strong>{{ course.full_name() }}</strong> beworben.
         Sie werden per Mail benachrichtigt, falls Sie einen Kursplatz erhalten oder auf der Warteliste sind.
-        </p>
+    </p>
 
-        {% for attendance in applicant.attendances %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ attendance.course.full_name() }}</h3>
-            </div>
-            {# no panel-body for now; no information to show #}
-        </div>
-        {% endfor %}
-    </div>
+    {% for attendance in applicant.attendances %}
+        <h3 class="ui dividing header">{{ attendance.course.full_name() }}</h3>
+        {# no panel-body for now; no information to show #}
+    {% endfor %}
 </div>
 {% endblock body %}

@@ -7,41 +7,40 @@ Lizenzen
 
 {% block body %}
 <div class="row">
-    <div class="col-lg-12">
-        <div class="list-group">
-            <a href="{{ url_for('static', filename='licenses/bootstrap.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Bootstrap 3</h4>
-                <p class="list-group-item-text">getbootstrap.com</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/jquery.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">jQuery</h4>
-                <p class="list-group-item-text">jquery.com</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/parsleyjs.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Parsley.js</h4>
-                <p class="list-group-item-text">parsleyjs.org</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/garlicjs.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Garlic.js</h4>
-                <p class="list-group-item-text">garlicjs.org</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/momentjs.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">moment.js</h4>
-                <p class="list-group-item-text">momentjs.com</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/mailcheckjs.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">mailcheck.js</h4>
-                <p class="list-group-item-text">github.com/Kicksend/mailcheck</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/flatly.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Flatly</h4>
-                <p class="list-group-item-text">github.com/thomaspark/bootswatch</p>
-            </a>
-            <a href="{{ url_for('static', filename='licenses/bootstrap-sortable.txt') }}" class="list-group-item">
-                <h4 class="list-group-item-heading">Bootstrap-Sortable</h4>
-                <p class="list-group-item-text">github.com/drvic10k/bootstrap-sortable</p>
-            </a>
-        </div>
+    <h4 class="ui dividing header">Semantic UI</h4>
+    <a href="http://semantic-ui.com/">semantic-ui.com</a>
+    <div class="license">
+        <pre>
+{{ include_raw('licenses/semantic.txt') }}
+        </pre>
+    </div>
+    <h4 class="ui dividing header">jQuery</h4>
+    <a href="https://jquery.com/">jquery.com</a>
+    <div class="license">
+        <pre>
+{{ include_raw('licenses/jquery.txt') }}
+        </pre>
+    </div>
+    <h4 class="ui dividing header">Garlic.js</h4>
+    <a href="http://garlicjs.org/">garlicjs.org</a>
+    <div class="license">
+        <pre>
+{{ include_raw('licenses/garlicjs.txt') }}
+        </pre>
+    </div>
+    <h4 class="ui dividing header">moment.js</h4>
+    <a href="http://momentjs.com/">momentjs.com</a>
+    <div class="license">
+        <pre>
+{{ include_raw('licenses/momentjs.txt') }}
+        </pre>
+    </div>
+    <h4 class="ui dividing header">mailcheck.js</h4>
+    <a href="https://github.com/mailcheck/mailcheck">github.com/mailcheck/mailcheck</a>
+    <div class="license">
+        <pre>
+{{ include_raw('licenses/mailcheckjs.txt') }}
+        </pre>
     </div>
 </div>
 {% endblock body %}

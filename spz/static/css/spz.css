@@ -1,21 +1,111 @@
-/* fix from https://github.com/IronSummitMedia/startbootstrap-simple-sidebar/issues/9 */
-@media (min-width: 768px) {
-    .container {
-        width: 480px;
-    }
-}
-@media (min-width: 992px) {
-    .container {
-        width: 710px;
-    }
-}
-@media (min-width: 1200px) {
-    .container {
-        width: 920px;
-    }
+body {
+    background: #333 none repeat scroll 0% 0%;
 }
 
-/* sidebar scrollbar fix */
-#scollbar-wrapper {
-    overflow-x: hidden;
+.main {
+    background: white;
+    border-bottom-left-radius: 6px;
+}
+
+.main > .container {
+    padding: 2em;
+}
+
+.main > .container > .grid > .row {
+    max-width: 700px;
+}
+
+.help-block {
+    color: #767676;
+    display: block;
+    width: 100%;
+}
+
+.ui.form,
+.ui.header {
+    width: 100%;
+}
+
+.ui.label {
+    min-width: 25%;
+    text-align: right;
+}
+
+.ui.label > .icon {
+    float: left;
+    margin: 0 -1.5em 0 0.5em;
+    transform: scale(1.4);
+    width: 1em;
+}
+
+.ui.label > label {
+    margin-left: 2.5em;
+}
+
+.ui.form .required.fields > .ui.labeled > .ui.label::after,
+.ui.form .required.field > .ui.labeled > .ui.label::after {
+    margin: -0.2em 0em 0em 0.2em;
+    content: "*";
+    color: #DB2828;
+}
+
+.ui.form .fields > .ui.labeled > .field {
+    height: 1em;
+    padding: 0.785714em;
+}
+
+.kit-only {
+    display: inline-block;
+    width: 100%;
+}
+
+.ui.labeled.input > .ui.search.dropdown {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.ui.form .grouped.fields > .field,
+.ui.form .grouped.fields > .inline.fields {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ui.form .grouped.fields > .field > .labeled.input > .label,
+.ui.form .grouped.fields > .inline.fields > .labeled.input > .label {
+    border-top: 1px solid rgba(34, 36, 38, 0.15);
+    border-radius: 0;
+}
+
+.ui.form .grouped.fields > .field > .labeled.input > input,
+.ui.form .grouped.fields > .field > .labeled.input > .ui.search.dropdown {
+    border-bottom: none;
+}
+
+.ui.form .grouped.fields > *:last-child > .labeled.input > input,
+.ui.form .grouped.fields > *:last-child > .labeled.input > .ui.search.dropdown {
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15) !important;
+}
+
+.ui.form .grouped.fields > *:first-child > .labeled.input > .label {
+    border-top: none !important;
+    border-top-left-radius: 0.285714rem !important;
+}
+.ui.form .grouped.fields > *:last-child > .labeled.input > .label {
+    border-bottom-left-radius: 0.285714rem !important;
+}
+
+.ui.compact.small.table {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.ui.form .inline.fields > .ui.labeled.input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.license {
+    width: 100%;
 }

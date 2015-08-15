@@ -6,37 +6,35 @@ Offene Beträge
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
-                <tr>
-                    <th>Anrede</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>E-Mail</th>
-                    <th>Zahlstatus</th>
-                    <th>Kurswunsch</th>
-                    <th>Sprache</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for attendance in outstanding %}
-                <tr>
-                    <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
-                    <td>{{ attendance.applicant.mail }}</td>
-                    <td>{{ attendance.amountpaid ~ '/' ~ attendance.course.price }}</td>
-                    <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-                            {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
-                        </a>
-                    </td>
-                    <td><a href="{{ url_for('language', id=attendance.course.language.id) }}">{{ attendance.course.language.name }}</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>E-Mail</th>
+                <th>Zahlstatus</th>
+                <th>Kurswunsch</th>
+                <th>Sprache</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in outstanding %}
+            <tr>
+                <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
+                <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
+                <td>{{ attendance.applicant.mail }}</td>
+                <td>{{ attendance.amountpaid ~ '/' ~ attendance.course.price }}</td>
+                <td><a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                        {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}
+                    </a>
+                </td>
+                <td><a href="{{ url_for('language', id=attendance.course.language.id) }}">{{ attendance.course.language.name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock internal_body %}

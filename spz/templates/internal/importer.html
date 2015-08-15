@@ -7,22 +7,21 @@ Importieren
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-6">
-        <h3>Matrikelnummern</h3>
-        <form method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
-            <input type="file" name="file_name">
-            <button type="submit" class="btn btn-primary">Einlesen</button>
-            <span class="help-block">Zeilenweiser Aufbau, bitte ohne Header: ID -- z.b. 123</span>
-        </form>
-    </div>
-    <div class="col-lg-6">
-        <h3>Englischtest Ergebnisse</h3>
-        <form method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
-            <input type="file" name="file_name"><br>
-            <input type="checkbox" name="delete_old">Bisherige Einträge löschen<br>
-            <button type="submit" class="btn btn-primary">Einlesen</button>
-            <span class="help-block">Zeilenweiser Aufbau, bitte ohne Header: ID;Prozent -- z.b. 123;99</span>
-        </form>
-    </div>
+    <h3 class="ui dividing header">Matrikelnummern</h3>
+    <form class="ui form" method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
+        <input type="file" name="file_name">
+        <button type="submit" class="fluid ui positive button">Einlesen</button>
+        <span class="help-block">Zeilenweiser Aufbau, bitte ohne Header: ID -- z.b. 123</span>
+    </form>
+    <h3 class="ui dividing header">Englischtest Ergebnisse</h3>
+    <form class="ui form" method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
+        <input type="file" name="file_name">
+        <div class="ui toggle checkbox">
+            <input type="checkbox" name="delete_old">
+            <label for="delete_old">Bisherige Einträge löschen</label>
+        </div>
+        <button type="submit" class="ui fluid positive button">Einlesen</button>
+        <span class="help-block">Zeilenweiser Aufbau, bitte ohne Header: ID;Prozent -- z.b. 123;99</span>
+    </form>
 </div>
 {% endblock internal_body %}

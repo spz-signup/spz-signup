@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_textarea, render_option, render_boolean %}
+{% from 'formhelpers.html' import render_input, render_textarea, render_option, render_boolean, render_submit %}
 
 {% block caption %}
 Mail Zentrale
@@ -8,38 +8,22 @@ Mail Zentrale
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post" id="confirm">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    <legend>Optionale Angaben</legend>
-                    {{ render_input(form.mail_cc, required=False) }}
-                    {{ render_input(form.mail_bcc, required=False) }}
-                </fieldset>
-                <fieldset>
-                    <legend>Benötigte Angaben</legend>
-                    {{ render_option(form.mail_reply_to) }}
-                    {{ render_input(form.mail_subject) }}
-                    {{ render_textarea(form.mail_body) }}
-                </fieldset>
-                    <legend>Empfänger der Mail</legend>
-                    {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
-                    {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
-                    {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
-                    {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Abschicken</button>
-                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <form class="ui form" method="post" id="confirm">
+        {{ form.hidden_tag() }}
+        <h3 class="ui dividing header">Optionale Angaben</h3>
+        {{ render_input(form.mail_cc, required=False) }}
+        {{ render_input(form.mail_bcc, required=False) }}
+        <h3 class="ui dividing header">Benötigte Angaben</h3>
+        {{ render_option(form.mail_reply_to) }}
+        {{ render_input(form.mail_subject) }}
+        {{ render_textarea(form.mail_body) }}
+        <h3 class="ui dividing header">Empfänger der Mail</h3>
+        {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
+        {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
+        {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
+        {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
+        {{ render_submit(submit='Abschicken') }}
+    </form>
 </div>
 {% endblock internal_body %}
 

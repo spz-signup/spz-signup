@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_boolean, render_option %}
+{% from 'formhelpers.html' import render_input, render_boolean, render_option, render_submit %}
 
 {% block caption %}
 <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.full_name() }}</a>
@@ -8,36 +8,24 @@
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    <legend>Teilnahmestatus: {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}</legend>
-                    <p>Anmeldedatum: <span class="fmt-datetime">{{ form.registered.data }}</span></p>
-                    {% if form.payingdate.data %}
-                    <p>Letzte Änderung: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
-                    {% endif %}
-                    {{ render_option(form.graduation) }}
-                    {{ render_boolean(form.waiting) }}
-                    {{ render_boolean(form.has_to_pay) }}
-                    {{ render_boolean(form.discounted) }}
-                    {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }}
-                    {{ render_input(form.amountpaid, type='number', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
-                    {{ render_boolean(form.notify_change, help='Teilnehmer per Mail über Nachrückung benachrichtigen') }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-10 col-lg-offset-1">
-                            <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-                            <button type="reset" class="btn btn-default">Zurücksetzen</button>
-                            <a href="{{ url_for('print_bill', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}"><button type="button" class="btn btn-info">Quittung</button></a>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <form class="ui form" method="post">
+        {{ form.hidden_tag() }}
+        <h3 class="ui dividing header">Teilnahmestatus: {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id }}</h3>
+        <p>Anmeldedatum: <span class="fmt-datetime">{{ form.registered.data }}</span></p>
+        {% if form.payingdate.data %}
+        <p>Letzte Änderung: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
+        {% endif %}
+        {{ render_option(form.graduation) }}
+        {{ render_boolean(form.waiting) }}
+        {{ render_boolean(form.has_to_pay) }}
+        {{ render_boolean(form.discounted) }}
+        {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }}
+        {{ render_input(form.amountpaid, type='number', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
+        {{ render_boolean(form.notify_change, help='Teilnehmer per Mail über Nachrückung benachrichtigen') }}
+        {{ render_submit(submit='Änderung speichern') }}
+        <div class="ui section divider"></div>
+        <a href="{{ url_for('print_bill', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}"><button type="button" class="ui fluid button">Quittung</button></a>
+    </form>
 </div>
 {% endblock internal_body %}
 

@@ -7,23 +7,27 @@
 {% endblock head %}
 
 {% block navbar %}
-<li class="sidebar-brand"><a href="{{ url_for('internal') }}">Interner Bereich</a></li>
-{% if g.user and g.access %}
-<li><a href="{{ url_for('importer') }}" ><span class="glyphicon glyphicon-import"></span> Importieren</a></li>
-<li><a href="{{ url_for('lists') }}"><span class="glyphicon glyphicon-list"></span> Kurslisten</a></li>
-<li><a href="{{ url_for('notifications') }}"><span class="glyphicon glyphicon-envelope"></span> Mail Zentrale</a></li>
-<li><a href="{{ url_for('search_applicant') }}"><span class="glyphicon glyphicon-search"></span> Bewerbersuche</a></li>
-<li><a href="{{ url_for('payments') }}"><span class="glyphicon glyphicon-euro"></span> Zahlungen</a></li>
-<li><a href="{{ url_for('outstanding') }}"><span class="glyphicon glyphicon-warning-sign"></span> Offene Beträge</a></li>
-<li><a href="{{ url_for('statistics') }}"><span class="glyphicon glyphicon-book"></span> Statistiken</a></li>
-<li><a href="{{ url_for('duplicates') }}"><span class="glyphicon glyphicon-random"></span> Doppelgänger</a></li>
-{% if g.access == 'unrestricted' %}
-<li><a href="{{ url_for('restock_rnd') }}"><span class="glyphicon glyphicon-sort-by-attributes"></span> Auffüllen (RND)</a></li>
-<li><a href="{{ url_for('restock_fcfs') }}"><span class="glyphicon glyphicon-sort-by-order"></span> Auffüllen (FCFS)</a></li>
-<li><a href="{{ url_for('preterm') }}"><span class="glyphicon glyphicon-star"></span> Prioritäranmeldungen</a></li>
-{% endif %}
-<li><a href="{{ url_for('unique') }}"><span class="glyphicon glyphicon-remove"></span> Wartelisten Bereinigen</a></li>
-{% endif %}
+<div class="item">
+    <div class="item">
+        <h1><a href="{{ url_for('internal') }}">Interner Bereich</a></h1>
+    </div>
+    {% if g.user and g.access %}
+    <a class="item" href="{{ url_for('importer') }}" ><i class="folder open icon"></i> Importieren</a>
+    <a class="item" href="{{ url_for('lists') }}"><i class="list icon"></i> Kurslisten</a>
+    <a class="item" href="{{ url_for('notifications') }}"><i class="mail icon"></i> Mail Zentrale</a>
+    <a class="item" href="{{ url_for('search_applicant') }}"><i class="search icon"></i> Bewerbersuche</a>
+    <a class="item" href="{{ url_for('payments') }}"><i class="euro icon"></i> Zahlungen</a>
+    <a class="item" href="{{ url_for('outstanding') }}"><i class="warning sign icon"></i> Offene Beträge</a>
+    <a class="item" href="{{ url_for('statistics') }}"><i class="pie chart icon"></i> Statistiken</a>
+    <a class="item" href="{{ url_for('duplicates') }}"><i class="random icon"></i> Doppelgänger</a>
+    {% if g.access == 'unrestricted' %}
+    <a class="item" href="{{ url_for('restock_rnd') }}"><i class="sort content ascending icon"></i> Auffüllen (RND)</a>
+    <a class="item" href="{{ url_for('restock_fcfs') }}"><i class="sort numeric ascending icon"></i> Auffüllen (FCFS)</a>
+    <a class="item" href="{{ url_for('preterm') }}"><i class="star icon"></i> Prioritäranmeldungen</a>
+    {% endif %}
+    <a class="item" href="{{ url_for('unique') }}"><i class="trash icon"></i> Wartelisten Bereinigen</a>
+    {% endif %}
+</div>
 {% endblock navbar %}
 
 
@@ -51,6 +55,13 @@ Interner Bereich
 
 {% block scripts %}
 {{ super() }}
+<script>
+    "use strict";
+
+    $(window).load(function(){
+        $('.ui.table.sortable').tablesort();
+    });
+</script>
 
 {% assets "tools_js" %}
 <script src="{{ ASSET_URL }}"></script>

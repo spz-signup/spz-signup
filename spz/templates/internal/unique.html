@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_option %}
+{% from 'formhelpers.html' import render_option, render_submit %}
 
 {% block caption %}
 Wartelisten Bereinigen
@@ -7,24 +7,11 @@ Wartelisten Bereinigen
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    <legend>Bereinige Kurse von wartenden Teilnahmen mit aktivem Parallelkurs folgender Sprache</legend>
-                    {{ render_option(form.language) }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Abschicken</button>
-                            <button type="reset"  class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <form class="ui form" method="post">
+    {{ form.hidden_tag() }}
+    <h3 class="ui dividing header">Bereinige Kurse von wartenden Teilnahmen mit aktivem Parallelkurs folgender Sprache</h3>
+    {{ render_option(form.language) }}
+    {{ render_submit() }}
+    </form>
 </div>
 {% endblock internal_body %}

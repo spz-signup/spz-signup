@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input %}
+{% from 'formhelpers.html' import render_input, render_submit %}
 
 {% block caption %}
 Bewerbersuche
@@ -8,51 +8,37 @@ Bewerbersuche
 
 {% block internal_body %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="well">
-            <form class="form-horizontal" method="post">
-                {{ form.hidden_tag() }}
-                <fieldset>
-                    {{ render_input(form.token, help="Suchen nach Vorname, Nachname, Mail und Matrikelnummer") }}
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-2">
-                            <button type="submit" class="btn btn-primary">Suche starten</button>
-                            <button type="reset" class="btn btn-default">Zurücksetzen</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <form class="ui form" method="post">
+        {{ form.hidden_tag() }}
+        {{ render_input(form.token, help="Suchen nach Vorname, Nachname, Mail und Matrikelnummer") }}
+        {{ render_submit(submit='Suche starten') }}
+    </form>
 </div>
 <div class="row">
-    <div class="col-lg-12">
-        <table class="table table-striped sortable">
-            <thead>
-                <tr>
-                    <th>Anrede</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>E-Mail</th>
-                    <th>Matrikelnummer</th>
-                    <th>Kurswünsche</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for applicant in applicants %}
-                <tr>
-                    <td>{{ 'Herr' if applicant.sex else 'Frau' }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }}</a></td>
-                    <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.last_name }}</a></td>
-                    <td>{{ applicant.mail }}</td>
-                    <td>{{ applicant.tag }}</td>
-                    <td><a href="{{ url_for('applicant_attendances', id=applicant.id)}}">{{ applicant.attendances|count }}</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <h3 class="ui dividing header">Bewerber</h3>
+    <table class="ui sortable compact small table">
+        <thead>
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>E-Mail</th>
+                <th>Matrikelnummer</th>
+                <th>Kurswünsche</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for applicant in applicants %}
+            <tr>
+                <td>{{ 'Herr' if applicant.sex else 'Frau' }}</a></td>
+                <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }}</a></td>
+                <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.last_name }}</a></td>
+                <td>{{ applicant.mail }}</td>
+                <td>{{ applicant.tag }}</td>
+                <td><a href="{{ url_for('applicant_attendances', id=applicant.id)}}">{{ applicant.attendances|count }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}
