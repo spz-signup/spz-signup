@@ -16,7 +16,7 @@ web:
         - redis:redis
 worker:
     build: .
-    command: rqworker --host redis
+    command: rqworker --url redis://redis:6379/0
     volumes_from:
         - web
     read_only: true

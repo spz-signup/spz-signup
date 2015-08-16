@@ -16,8 +16,7 @@ RUN apt-get update && \
 
 # install requirements
 COPY requirements.txt /home/spz/code/requirements.txt
-RUN pip install -U -r requirements.txt && \
-    pip install psycopg2
+RUN pip install -U -r requirements.txt
 
 # copy code
 COPY . /home/spz/code
