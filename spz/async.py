@@ -11,8 +11,14 @@ from rq import Queue
 from spz import app, mail
 
 
-# TODO(daniel): config: custom host, port, db, pw -- dummy queue for testing?
-queue = Queue(connection=Redis())
+queue = Queue(
+    connection=Redis(
+        host=app.config.get('REDIS_HOST', 'localhost'),
+        port=app.config.get('REDIS_PORT', 6379),
+        db=app.config.get('REDIS_DB', 0),
+        password=app.config.get('REDIS_PASSWORD', None)
+    )
+)
 
 # Async tasks
 

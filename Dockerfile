@@ -2,20 +2,22 @@
 FROM python:2.7
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
-# upgrade system
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    pip install -U pip
-
 # create user
 RUN useradd --home-dir /home/spz --create-home --shell /bin/bash --uid 1000 spz
 
 # set workdir
 WORKDIR /home/spz/code
 
+# upgrade system
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y postgresql-client && \
+    pip install -U pip
+
 # install requirements
 COPY requirements.txt /home/spz/code/requirements.txt
-RUN pip install -U -r requirements.txt
+RUN pip install -U -r requirements.txt && \
+    pip install psycopg2
 
 # copy code
 COPY . /home/spz/code

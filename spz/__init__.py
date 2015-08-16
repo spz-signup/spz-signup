@@ -9,6 +9,8 @@
       Some code analyzers may flag view imports as unused, because they are only imported for their side effects.
 """
 
+import os
+
 from flask import Flask, session, g
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -38,8 +40,11 @@ for name, bundle in bundles.iteritems():
 
 
 # Configuration loading
-app.config.from_pyfile('development.cfg')
-# app.config.from_pyfile('production.cfg')
+if 'SPZ_CFG_FILE' in os.environ:
+    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])
+else:
+    app.config.from_pyfile('development.cfg')
+    # app.config.from_pyfile('production.cfg')
 
 
 # Set up logging before anything else, in order to catch early errors

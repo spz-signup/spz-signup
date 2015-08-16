@@ -1,10 +1,50 @@
 web:
-  build: .
-  command: python runserver -H 0.0.0.0
-  ports:
-    - "8080:8080"
-  volumes:
-    - ./spz:/home/spz/code/spz:ro
-    - ./util:/home/spz/code/util:ro
-    - /home/spz/code/spz/static
-  read_only: true
+    build: .
+    command: python runserver -H 0.0.0.0
+    ports:
+        - "127.0.0.1:8080:8080"
+    volumes:
+        - ./spz:/home/spz/code/spz:ro
+        - ./util:/home/spz/code/util:ro
+        - /home/spz/code/spz/static
+    read_only: true
+    environment:
+        - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+    links:
+        - mail:mail
+        - postgres:postgres
+        - redis:redis
+worker:
+    build: .
+    command: rqworker --host redis
+    volumes_from:
+        - web
+    read_only: true
+    environment:
+        - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+    links:
+        - mail:mail
+        - postgres:postgres
+        - redis:redis
+redis:
+    image: redis
+    ports:
+        - "127.0.0.1:26379:6379"
+    read_only: true
+postgres:
+    image: postgres
+    ports:
+        - "127.0.0.1:25432:5432"
+    volumes:
+        - /run/postgresql
+        - /tmp
+    read_only: true
+    environment:
+        - POSTGRES_PASSWORD=mysecretpassword
+mail:
+    image: djfarrelly/maildev
+    ports:
+        - "127.0.0.1:8081:80"
+    volumes:
+        - /tmp
+    read_only: true
