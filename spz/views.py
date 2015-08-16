@@ -72,10 +72,21 @@ def index():
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                          body=render_template('mails/confirmationmail.html', applicant=applicant, course=course,
-                                               has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+            msg = Message(
+                sender=app.config['PRIMARY_MAIL'],
+                reply_to=course.language.reply_to,
+                recipients=[applicant.mail],
+                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                body=render_template(
+                    'mails/confirmationmail.html',
+                    applicant=applicant,
+                    course=course,
+                    has_to_pay=attendance.has_to_pay,
+                    waiting=attendance.waiting,
+                    date=datetime.now()
+                ),
+                charset='utf-8'
+            )
             queue.enqueue(async_send, msg)
         except (AssertionError, socket.error, ConnectionError) as e:
             flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
@@ -167,8 +178,16 @@ def notifications():
         try:
             with mail.connect() as conn:
                 for recipient in form.get_recipients():
-                    msg = Message(sender=g.user, recipients=[recipient], subject=form.get_subject(),
-                                  body=form.get_body(), cc=form.get_cc(), bcc=form.get_bcc(), reply_to=form.get_reply_to())
+                    msg = Message(
+                        sender=g.user,
+                        recipients=[recipient],
+                        subject=form.get_subject(),
+                        body=form.get_body(),
+                        cc=form.get_cc(),
+                        bcc=form.get_bcc(),
+                        reply_to=form.get_reply_to(),
+                        charset='utf-8'
+                    )
 
                     conn.send(msg)
 
@@ -358,9 +377,18 @@ def add_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                          body=render_template('mails/restockmail.html', applicant=applicant, course=course))
+            msg = Message(
+                sender=app.config['PRIMARY_MAIL'],
+                reply_to=course.language.reply_to,
+                recipients=[applicant.mail],
+                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                body=render_template(
+                    'mails/restockmail.html',
+                    applicant=applicant,
+                    course=course
+                ),
+                charset='utf-8'
+            )
             queue.enqueue(async_send, msg)
             flash(u'Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
@@ -386,9 +414,18 @@ def remove_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
-                          subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                          body=render_template('mails/kickoutmail.html', applicant=applicant, course=course))
+            msg = Message(
+                sender=app.config['PRIMARY_MAIL'],
+                reply_to=course.language.reply_to,
+                recipients=[applicant.mail],
+                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                body=render_template(
+                    'mails/kickoutmail.html',
+                    applicant=applicant,
+                    course=course
+                ),
+                charset='utf-8'
+            )
             queue.enqueue(async_send, msg)
             flash(u'Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
@@ -473,10 +510,21 @@ def status(applicant_id, course_id):
             try:
                 course = attendance.course
                 applicant = attendance.applicant
-                msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=course.language.reply_to, recipients=[applicant.mail],
-                              subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                              body=render_template('mails/confirmationmail.html', applicant=applicant, course=course,
-                                                   has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+                msg = Message(
+                    sender=app.config['PRIMARY_MAIL'],
+                    reply_to=course.language.reply_to,
+                    recipients=[applicant.mail],
+                    subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
+                    body=render_template(
+                        'mails/confirmationmail.html',
+                        applicant=applicant,
+                        course=course,
+                        has_to_pay=attendance.has_to_pay,
+                        waiting=attendance.waiting,
+                        date=datetime.now()
+                    ),
+                    charset='utf-8'
+                )
                 queue.enqueue(async_send, msg)
                 flash(u'Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
@@ -557,10 +605,13 @@ def preterm():
         token = form.get_token()
 
         try:
-            msg = Message(sender=app.config['PRIMARY_MAIL'],
-                          recipients=[form.mail.data.encode('utf-8')],
-                          subject=u'[Sprachenzentrum] URL für prioritäre Anmeldung',
-                          body=u'{0}'.format(url_for('index', token=token, _external=True)))
+            msg = Message(
+                sender=app.config['PRIMARY_MAIL'],
+                recipients=[form.mail.data.encode('utf-8')],
+                subject=u'[Sprachenzentrum] URL für prioritäre Anmeldung',
+                body=u'{0}'.format(url_for('index', token=token, _external=True)),
+                charset='utf-8'
+            )
 
             mail.send(msg)
             flash(u'Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
@@ -618,12 +669,21 @@ def restock_fcfs():
         try:
             with mail.connect() as conn:
                 for attendance in restocked_attendances:
-                    msg = Message(sender=g.user, recipients=[attendance.applicant.mail],
-                                  reply_to=attendance.course.language.reply_to,
-                                  subject=u'[Sprachenzentrum] Freier Platz im Kurs {0}'.
-                                          format(attendance.course.full_name()),
-                                  body=render_template('mails/confirmationmail.html', applicant=attendance.applicant, course=attendance.course,
-                                                       has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+                    msg = Message(
+                        sender=g.user,
+                        recipients=[attendance.applicant.mail],
+                        reply_to=attendance.course.language.reply_to,
+                        subject=u'[Sprachenzentrum] Freier Platz im Kurs {0}'.format(attendance.course.full_name()),
+                        body=render_template(
+                            'mails/confirmationmail.html',
+                            applicant=attendance.applicant,
+                            course=attendance.course,
+                            has_to_pay=attendance.has_to_pay,
+                            waiting=attendance.waiting,
+                            date=datetime.now()
+                        ),
+                        charset='utf-8'
+                    )
 
                     conn.send(msg)
 
@@ -702,10 +762,21 @@ def restock_rnd():
         # Send mails (async) only if the commit was successfull -- be conservative here
         try:
             for attendance in handled_attendances:
-                msg = Message(sender=app.config['PRIMARY_MAIL'], reply_to=attendance.course.language.reply_to, recipients=[attendance.applicant.mail],
-                              subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(attendance.course.full_name()),
-                              body=render_template('mails/confirmationmail.html', applicant=attendance.applicant, course=attendance.course,
-                                                   has_to_pay=attendance.has_to_pay, waiting=attendance.waiting, date=datetime.now()))
+                msg = Message(
+                    sender=app.config['PRIMARY_MAIL'],
+                    reply_to=attendance.course.language.reply_to,
+                    recipients=[attendance.applicant.mail],
+                    subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(attendance.course.full_name()),
+                    body=render_template(
+                        'mails/confirmationmail.html',
+                        applicant=attendance.applicant,
+                        course=attendance.course,
+                        has_to_pay=attendance.has_to_pay,
+                        waiting=attendance.waiting,
+                        date=datetime.now()
+                    ),
+                    charset='utf-8'
+                )
                 queue.enqueue(async_send, msg)
 
             if handled_attendances:  # only show if there are attendances that we handled
