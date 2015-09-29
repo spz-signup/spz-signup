@@ -80,11 +80,18 @@ body {
 .ui.form .grouped.fields > .field > .labeled.input > input,
 .ui.form .grouped.fields > .field > .labeled.input > .ui.search.dropdown {
     border-bottom: none;
+    border-radius: 0;
+}
+
+.ui.form .grouped.fields > *:first-child > .labeled.input > input,
+.ui.form .grouped.fields > *:first-child > .labeled.input > .ui.search.dropdown {
+    border-top-right-radius: 0.285714rem !important;
 }
 
 .ui.form .grouped.fields > *:last-child > .labeled.input > input,
 .ui.form .grouped.fields > *:last-child > .labeled.input > .ui.search.dropdown {
     border-bottom: 1px solid rgba(34, 36, 38, 0.15) !important;
+    border-bottom-right-radius: 0.285714rem !important;
 }
 
 .ui.form .grouped.fields > *:first-child > .labeled.input > .label {
