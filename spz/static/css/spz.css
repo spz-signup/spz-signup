@@ -1,3 +1,6 @@
+/***************************************
+ **** Sidebar **************************
+ **************************************/
 body {
     background: #333 none repeat scroll 0% 0%;
 }
@@ -15,12 +18,24 @@ body {
     max-width: 700px;
 }
 
+/***************************************
+ **** Help/Error Annotations ***********
+ **************************************/
 .help-block {
     color: #767676;
     display: block;
     width: 100%;
 }
 
+.ui.form .ui.pointing.label,
+.ui.form .ui.label[class*="pointing above"] {
+    margin-top: 0.6666em !important;
+    margin-bottom: 1em;
+}
+
+/***************************************
+ **** Fill-width Inputs ****************
+ **************************************/
 .ui.form,
 .ui.header {
     width: 100%;
@@ -29,6 +44,12 @@ body {
 .ui.label {
     min-width: 25%;
     text-align: right;
+    cursor: default;
+}
+
+.kit-only {
+    display: inline-block;
+    width: 100%;
 }
 
 .ui.label > .icon {
@@ -42,11 +63,8 @@ body {
     margin-left: 2.5em;
 }
 
-.ui.form .required.fields > .ui.labeled > .ui.label::after,
-.ui.form .required.field > .ui.labeled > .ui.label::after {
-    margin: -0.2em 0em 0em 0.2em;
-    content: "*";
-    color: #DB2828;
+.ui.form .grouped.fields > .inline.fields > .labeled.input {
+    width: 100%;
 }
 
 .ui.form .fields > .ui.labeled > .field {
@@ -54,11 +72,33 @@ body {
     padding: 0.785714em;
 }
 
-.kit-only {
-    display: inline-block;
+.ui.form .inline.fields > .ui.labeled.input {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
 }
 
+.ui.form .ui.search.dropdown > .search {
+    width: 100% !important;
+}
+
+.ui.message {
+    width: 100%;
+}
+
+/***************************************
+ **** Required Fields ******************
+ **************************************/
+.ui.form .required.fields > .ui.labeled > .ui.label::after,
+.ui.form .required.field > .ui.labeled > .ui.label::after {
+    margin: -0.2em 0em 0em 0.2em;
+    content: "*";
+    color: #DB2828;
+}
+
+/***************************************
+ **** Grouped Inputs *******************
+ **************************************/
 .ui.labeled.input > .ui.search.dropdown {
     border-left: none;
     border-top-left-radius: 0;
@@ -102,17 +142,26 @@ body {
     border-bottom-left-radius: 0.285714rem !important;
 }
 
+/***************************************
+ **** Centered Oversized Tables ********
+ **************************************/
 .ui.compact.small.table {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.ui.form .inline.fields > .ui.labeled.input {
-    display: flex;
-    flex-wrap: wrap;
+.ui.compact.small.table .ui.button {
+    font-size: 0.9em;
 }
 
+/***************************************
+ **** Misc *****************************
+ **************************************/
 .license {
     width: 100%;
+}
+
+a > strong:only-child {
+    display: inline-block;
 }

@@ -7,7 +7,7 @@ Sprachen
 
 {% block internal_body %}
 <div class="row">
-    <table class="ui sortable compact small table">
+    <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>
                 <th>Sprache</th>
@@ -25,7 +25,7 @@ Sprachen
             {% set sums = {'courses_t': 0, 'seats_t': 0, 'waiting_t': 0, 'active_t': 0, 'paying_t': 0} %}
             {% for language, courses, seats in lang_misc %}
             <tr>
-                <td><a href="{{ url_for('language', id=language.id) }}">{{ language.name }}</a></td>
+                <td><a href="{{ url_for('language', id=language.id) }}"><strong>{{ language.name }}</strong></a></td>
                 <td>{{ courses }}</td>
                 <td>{{ seats }}</td>
                 <td>{{ language.get_waiting_attendances()|count }}</td>
@@ -48,12 +48,14 @@ Sprachen
         <tfoot>
             <tr>
                 <th>&Sigma;</th>
-                <td>{{ sums['courses_t'] }}</td>
-                <td>{{ sums['seats_t'] }}</td>
-                <td>{{ sums['waiting_t'] }}</td>
-                <td>{{ sums['active_t'] }}</td>
-                <td>{{ sums['paying_t'] }}</td>
-                <td></td>
+                <th>{{ sums['courses_t'] }}</th>
+                <th>{{ sums['seats_t'] }}</th>
+                <th>{{ sums['waiting_t'] }}</th>
+                <th>{{ sums['active_t'] }}</th>
+                <th>{{ sums['paying_t'] }}</th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
         </tfoot>
     </table>

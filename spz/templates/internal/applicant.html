@@ -24,7 +24,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 
         {% if form.get_attendances() %}
         <h3 class="ui dividing header">Teilnahmen</h3>
-        <table class="ui sortable compact small table">
+        <table class="ui selectable sortable compact small striped table">
             <tbody>
                 {% for attendance in form.get_attendances() %}
                 <tr>
