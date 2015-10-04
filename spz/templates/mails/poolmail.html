@@ -1,0 +1,46 @@
+Sprachenzentrum des KIT
+-----------------------
+
+{{ 'Herr' if applicant.sex else 'Frau' }}: {{ applicant.first_name ~ ' ' ~ applicant.last_name }}
+Bewerberkreis: {{ applicant.origin.name }}
+E-Mail Adresse: {{ applicant.mail }}
+
+Sie haben sich am {{ date.strftime('%d.%m.%Y') }} für den folgenden Sprachkurs
+am Sprachenzentrum des KIT angemeldet:
+
+Kurs: {{ course.full_name() }}
+{# TODO: ugly hack. refactor it! #}
+Semester: {{ 'SS ' ~ date.year if (3 <= date.month < 9) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
+
+Bitte beachten Sie folgende Hinweise:
+
+
+Sie sind im Verlosungspool.
+
+Nach der Verlosung werden alle Anmelder/innen per autom. Mail darüber
+informiert, ob sie einen festen Kursplatz oder einen Wartelistenplatz zugelost
+bekommen haben.
+
+Der Mailversand erfolgt blockweise und kann einige Stunden in Anspruch nehmen.
+Bitte sehen Sie deshalb von Rückfragen ab, bis die Mail bei Ihnen eingegangen
+ist.
+
+Bitte beachten Sie unsere Homepage: www.spz.kit.edu
+
+
+Die zuständigen Fachbereiche erreichen Sie unter:
+
+Englisch <englisch@spz.kit.edu>
+Französisch <franzoesisch@spz.kit.edu>
+Spanisch <spanisch@spz.kit.edu>
+andere Sprachen <info@spz.kit.edu>
+
+
+Mit freundlichen Grüßen,
+Ihr SpZ-Team
+
+
+
+
+
+Dieses Schreiben wurde maschinell erstellt und ist ohne Unterschrift gültig.

@@ -78,7 +78,7 @@ def index():
                 recipients=[applicant.mail],
                 subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
                 body=render_template(
-                    'mails/confirmationmail.html',
+                    'mails/confirmationmail.html' if preterm else 'mails/poolmail.html',
                     applicant=applicant,
                     course=course,
                     has_to_pay=attendance.has_to_pay,
