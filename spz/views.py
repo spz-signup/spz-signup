@@ -22,6 +22,7 @@ from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm
 from spz.util.Encoding import UnicodeWriter
+from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
 from spz.async import queue, async_send
 
@@ -121,19 +122,24 @@ def registrations():
         fp = request.files['file_name']
 
         if fp:
-            unique_registrations = {models.Registration(line.rstrip('\r\n')) for line in fp}
+            mime = mime_from_filepointer(fp)
+            if mime == 'text/plain':
+                unique_registrations = {models.Registration(line.rstrip('\r\n')) for line in fp}
 
-            try:
-                num_deleted = models.Registration.query.delete()
-                db.session.add_all(unique_registrations)
-                db.session.commit()
-                flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
-                      .format(num_deleted, len(unique_registrations)), 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
+                try:
+                    num_deleted = models.Registration.query.delete()
+                    db.session.add_all(unique_registrations)
+                    db.session.commit()
+                    flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                          .format(num_deleted, len(unique_registrations)), 'success')
+                except Exception as e:
+                    db.session.rollback()
+                    flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
 
-            return redirect(url_for('importer'))
+                return redirect(url_for('importer'))
+
+            flash(u'Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
+            return None
 
     flash(u'Datei konnte nicht gelesen werden', 'danger')
     return None
@@ -147,23 +153,28 @@ def approvals():
         fp = request.files['file_name']
 
         if fp:
-            try:
-                filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
+            mime = mime_from_filepointer(fp)
+            if mime == 'text/plain':
+                try:
+                    filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
 
-                num_deleted = 0
-                if request.form.getlist("delete_old"):  # XXX: hardcoded?. Write a form!
-                    num_deleted = models.Approval.query.delete()
+                    num_deleted = 0
+                    if request.form.getlist("delete_old"):  # XXX: hardcoded?. Write a form!
+                        num_deleted = models.Approval.query.delete()
 
-                approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
-                db.session.add_all(approvals)
-                db.session.commit()
-                flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
-                      .format(num_deleted, len(approvals)), 'success')
-            except Exception as e:  # csv, index or db could go wrong here..
-                db.session.rollback()
-                flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
+                    approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
+                    db.session.add_all(approvals)
+                    db.session.commit()
+                    flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                          .format(num_deleted, len(approvals)), 'success')
+                except Exception as e:  # csv, index or db could go wrong here..
+                    db.session.rollback()
+                    flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'danger')
 
-            return redirect(url_for('importer'))
+                return redirect(url_for('importer'))
+
+            flash(u'Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
+            return None
 
     flash(u'Datei konnte nicht gelesen werden', 'danger')
     return None
