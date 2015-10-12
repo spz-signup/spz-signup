@@ -448,6 +448,3 @@ class Approval(db.Model):
 
     def __lt__(self, other):
         return self.percent < other.percent
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

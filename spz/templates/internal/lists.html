@@ -37,11 +37,11 @@ Sprachen
                     <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="btn btn-primary btn-xs">CSV</button></a></td>
                 </tr>
                 {% if sums.update({
-                    'courses_t': sums['courses_t'] + courses, 
-                    'seats_t': sums['seats_t'] + seats, 
-                    'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count, 
-                    'active_t': sums['active_t'] + language.get_active_attendances()|count, 
-                    'paying_t': sums['paying_t'] + language.get_paying_attendances()|count 
+                    'courses_t': sums['courses_t'] + courses,
+                    'seats_t': sums['seats_t'] + seats,
+                    'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count,
+                    'active_t': sums['active_t'] + language.get_active_attendances()|count,
+                    'paying_t': sums['paying_t'] + language.get_paying_attendances()|count
                 }) %}
                 {% endif %}
                 {% endfor %}
@@ -61,5 +61,3 @@ Sprachen
     </div>
 </div>
 {% endblock internal_body %}
-
-{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

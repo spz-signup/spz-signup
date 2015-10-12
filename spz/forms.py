@@ -389,6 +389,3 @@ class PretermForm(Form):
 
     def get_token(self):
         return token.generate(self.mail.data)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

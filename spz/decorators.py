@@ -43,6 +43,3 @@ def auth_required(f):
             return redirect(url_for('internal'))
         return f(*args, **kwargs)
     return decorated_function
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

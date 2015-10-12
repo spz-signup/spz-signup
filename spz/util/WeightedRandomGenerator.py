@@ -41,6 +41,3 @@ class WeightedRandomGenerator(object):
 
     def __call__(self):
         return self.next()
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

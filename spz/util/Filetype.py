@@ -15,5 +15,3 @@ def mime_from_filepointer(fp):
     mime = magic.from_buffer(data, mime=True).decode('utf-8')
     fp.seek(pos)
     return mime
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

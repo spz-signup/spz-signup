@@ -75,6 +75,3 @@ def get_bundles():
     loader = PythonAssetsLoader(__name__)
 
     return loader.load_bundles()
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

@@ -13,6 +13,3 @@ from spz import app
 
 
 CGIHandler().run(app)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

@@ -89,6 +89,3 @@ if __name__ == '__main__':
         print('Import OK.')
     else:
         print('Aborting: {0} did not match token {1}'.format(user_in, token))
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

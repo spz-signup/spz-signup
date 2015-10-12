@@ -18,6 +18,3 @@
 
 
 from spz import app as application
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

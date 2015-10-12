@@ -148,6 +148,3 @@ handlers = [(404, errorhandlers.page_not_found),
 
 for errno, handler in handlers:
     app.register_error_handler(errno, handler)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

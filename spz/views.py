@@ -823,6 +823,3 @@ def unique():
             return redirect(url_for('unique'))
 
     return dict(form=form)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

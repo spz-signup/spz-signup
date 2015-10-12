@@ -24,7 +24,7 @@ Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applica
                         <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name() }} </a></td>
                         <td>
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }} 
+{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
 {% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
 {% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
 {% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
@@ -40,5 +40,3 @@ Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applica
 </div>
 
 {% endblock internal_body %}
-
-{# vim: set tabstop=4 shiftwidth=4 expandtab: #}

@@ -46,6 +46,3 @@ def validate(token, mail, max_age=timedelta(weeks=2).total_seconds(), signer=Sig
     same = payload.lower() == mail.lower()
 
     return ok and same and not found
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

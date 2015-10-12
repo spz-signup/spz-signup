@@ -40,6 +40,3 @@ def logout_handler():
     """
     session.clear()
     return 'OK'
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

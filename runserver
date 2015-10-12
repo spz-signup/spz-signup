@@ -35,6 +35,3 @@ if __name__ == '__main__':
         app.wsgi_app = LintMiddleware(app.wsgi_app)
 
     app.run(host=args.host, port=args.port)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

@@ -30,6 +30,3 @@ def async_send(msg):
 
     # XXX: hack: artificially slow down the mail queue -- search for better way
     sleep(2)
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

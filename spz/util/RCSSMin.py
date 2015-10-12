@@ -20,6 +20,3 @@ class RCSSMin(Filter):
 
     def output(self, _in, out, **kw):
         out.write(cssmin(_in.read()))
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

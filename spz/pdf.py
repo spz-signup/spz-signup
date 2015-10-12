@@ -80,7 +80,7 @@ def list_presence (pdflist, course):
     pdflist.cell(0, 10, u'{0}'.format(course.full_name()), 0, 1, 'C')
     pdflist.set_font('Arial','',10)
     height = 6
-    
+
     idx = 1
     for c, h in zip(column, header):
         pdflist.cell(c, height, h, 1)
@@ -104,7 +104,7 @@ def print_course_presence(course_id):
     pdflist = PresenceGenerator('L','mm','A4')
     course = models.Course.query.get_or_404(course_id)
     list_presence (pdflist, course)
-    
+
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
     resp = make_response(buf.getvalue())
@@ -146,7 +146,7 @@ def list_course (pdflist, course):
 
     pdflist.set_font('Arial','',10)
     height = 6
-    
+
     idx = 1
     for c, h in zip(column, header):
         pdflist.cell(c, height, h, 1)
@@ -164,7 +164,7 @@ def list_course (pdflist, course):
 def print_course(course_id):
     pdflist = CourseGenerator('L','mm','A4')
     course = models.Course.query.get_or_404(course_id)
-    list_course (pdflist, course)   
+    list_course (pdflist, course)
 
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
@@ -180,7 +180,7 @@ def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
     pdflist = CourseGenerator('L','mm','A4')
     for course in language.courses:
-        list_course (pdflist, course)   
+        list_course (pdflist, course)
 
     buf = StringIO.StringIO()
     buf.write(pdflist.output('','S'))
@@ -296,6 +296,3 @@ def print_bill(applicant_id, course_id):
     resp.mimetype = 'application/pdf'
 
     return resp
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

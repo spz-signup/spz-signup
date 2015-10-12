@@ -31,6 +31,3 @@ def page_gone(e):
 
 def not_found(e):
     return render_error(500, u'Interner Fehler')
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

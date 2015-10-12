@@ -18,6 +18,3 @@ from spz import app
 
 if __name__ == '__main__':
     WSGIServer(app, bindAddress='/path/to/fcgi.sock').run()
-
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:
