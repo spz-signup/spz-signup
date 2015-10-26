@@ -1,10 +1,6 @@
-Sprachenzentrum des KIT
------------------------
+{% extends 'mails/basemail.html' %}
 
-Sehr geehrt{{ 'er Herr' if applicant.sex else 'e Frau' }} {{ applicant.first_name ~ ' ' ~ applicant.last_name }},
-
-Sie hatten sich für den Sprachkurs {{ course.full_name() }} am Sprachenzentrum des KIT angemeldet.
-
+{% block message %}
 Wir mussten Sie heute von der Kursliste streichen, da mindestens einer
 der folgenden Gründe zutrifft:
 
@@ -20,20 +16,4 @@ der folgenden Gründe zutrifft:
   Kurstermin unentschuldigt nicht erschienen.
 
 Ihr Kursplatz wurde durch eine/n Nachrücker/in besetzt.
-
-Bei Rückfragen wenden Sie sich bitte an den jeweiligen Fachbereich:
-
-Englisch <englisch@spz.kit.edu>
-Französisch <franzoesisch@spz.kit.edu>
-Spanisch <spanisch@spz.kit.edu>
-andere Sprachen <info@spz.kit.edu>
-
-
-Mit freundlichen Grüßen,
-Ihr SpZ-Team
-
-
-
-
-
-Dieses Schreiben wurde maschinell erstellt und ist ohne Unterschrift gültig.
+{% endblock message %}

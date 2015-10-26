@@ -21,15 +21,62 @@ from flask.ext.mail import Message
 from spz import app, models, mail, db, token
 from spz.decorators import templated, auth_required
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm
+from spz.models import Attendance
 from spz.util.Encoding import UnicodeWriter
 from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
 from spz.async import queue, async_send
 
 
+def generate_status_mail(applicant, course, time=None, restock=False):
+    """Generate mail to notify applicants about their new attendance status."""
+    time = time or datetime.utcnow()
+    attendance = Attendance.query.filter(Attendance.applicant_id == applicant.id, Attendance.course_id == course.id).first()
+
+    if attendance:
+        # applicant is (somehow) registered for this course
+        if attendance.waiting:
+            # applicant is waiting, let's figure out if we are in RND or FCFS phase
+            if course.language.is_open_for_signup_rnd(time):
+                subject_status = u'Verlosungspool'
+                template = 'mails/poolmail.html'
+            else:
+                subject_status = u'Warteliste'
+                template = 'mails/waitinglistmail.html'
+        else:
+            # :) applicant is signed up for the course
+            # let's differ according to the reason (normal procedure or manual restock)
+            if restock:
+                subject_status = u'Platz durch Nachrückverfahren'
+                template = 'mails/restockmail.html'
+            else:
+                subject_status = u'Erfolgreiche Anmeldung'
+                template = 'mails/registeredmail.html'
+    else:
+        # no registration exists => assuming she got kicked out
+        subject_status = u'Platzverlust'
+        template = 'mails/kickoutmail.html'
+
+    return Message(
+        sender=app.config['PRIMARY_MAIL'],
+        reply_to=course.language.reply_to,
+        recipients=[applicant.mail],
+        subject=u'[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name(), subject_status),
+        body=render_template(
+            template,
+            applicant=applicant,
+            course=course,
+            has_to_pay=attendance.has_to_pay if attendance else False,
+            date=datetime.now()
+        ),
+        charset='utf-8'
+    )
+
+
 @templated('signup.html')
 def index():
     form = SignupForm()
+    time = datetime.utcnow()
 
     if g.access:
         flash(u'Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
@@ -41,7 +88,7 @@ def index():
 
         # signup at all times only with token or privileged users
         preterm = token.validate(one_time_token, applicant.mail)
-        if not course.language.is_open_for_signup() and not preterm and not g.access:
+        if not course.language.is_open_for_signup(time) and not preterm and not g.access:
             flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()), 'danger')
             return dict(form=form)
 
@@ -73,22 +120,7 @@ def index():
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
-            msg = Message(
-                sender=app.config['PRIMARY_MAIL'],
-                reply_to=course.language.reply_to,
-                recipients=[applicant.mail],
-                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                body=render_template(
-                    'mails/confirmationmail.html' if preterm else 'mails/poolmail.html',
-                    applicant=applicant,
-                    course=course,
-                    has_to_pay=attendance.has_to_pay,
-                    waiting=attendance.waiting,
-                    date=datetime.now()
-                ),
-                charset='utf-8'
-            )
-            queue.enqueue(async_send, msg)
+            queue.enqueue(async_send, generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
             flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'danger')
 
@@ -388,19 +420,7 @@ def add_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            msg = Message(
-                sender=app.config['PRIMARY_MAIL'],
-                reply_to=course.language.reply_to,
-                recipients=[applicant.mail],
-                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                body=render_template(
-                    'mails/restockmail.html',
-                    applicant=applicant,
-                    course=course
-                ),
-                charset='utf-8'
-            )
-            queue.enqueue(async_send, msg)
+            queue.enqueue(async_send, generate_status_mail(applicant, course, restock=True))
             flash(u'Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
@@ -425,19 +445,7 @@ def remove_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            msg = Message(
-                sender=app.config['PRIMARY_MAIL'],
-                reply_to=course.language.reply_to,
-                recipients=[applicant.mail],
-                subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                body=render_template(
-                    'mails/kickoutmail.html',
-                    applicant=applicant,
-                    course=course
-                ),
-                charset='utf-8'
-            )
-            queue.enqueue(async_send, msg)
+            queue.enqueue(async_send, generate_status_mail(applicant, course))
             flash(u'Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
@@ -521,22 +529,7 @@ def status(applicant_id, course_id):
             try:
                 course = attendance.course
                 applicant = attendance.applicant
-                msg = Message(
-                    sender=app.config['PRIMARY_MAIL'],
-                    reply_to=course.language.reply_to,
-                    recipients=[applicant.mail],
-                    subject=u'[Sprachenzentrum] Kurs {0}'.format(course.full_name()),
-                    body=render_template(
-                        'mails/confirmationmail.html',
-                        applicant=applicant,
-                        course=course,
-                        has_to_pay=attendance.has_to_pay,
-                        waiting=attendance.waiting,
-                        date=datetime.now()
-                    ),
-                    charset='utf-8'
-                )
-                queue.enqueue(async_send, msg)
+                queue.enqueue(async_send, generate_status_mail(applicant, course))
                 flash(u'Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
                 flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'danger')
@@ -680,23 +673,7 @@ def restock_fcfs():
         try:
             with mail.connect() as conn:
                 for attendance in restocked_attendances:
-                    msg = Message(
-                        sender=g.user,
-                        recipients=[attendance.applicant.mail],
-                        reply_to=attendance.course.language.reply_to,
-                        subject=u'[Sprachenzentrum] Freier Platz im Kurs {0}'.format(attendance.course.full_name()),
-                        body=render_template(
-                            'mails/confirmationmail.html',
-                            applicant=attendance.applicant,
-                            course=attendance.course,
-                            has_to_pay=attendance.has_to_pay,
-                            waiting=attendance.waiting,
-                            date=datetime.now()
-                        ),
-                        charset='utf-8'
-                    )
-
-                    conn.send(msg)
+                    conn.send(generate_status_mail(attendance.applicant, attendance.course))
 
             flash(u'Mails erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
@@ -773,22 +750,7 @@ def restock_rnd():
         # Send mails (async) only if the commit was successfull -- be conservative here
         try:
             for attendance in handled_attendances:
-                msg = Message(
-                    sender=app.config['PRIMARY_MAIL'],
-                    reply_to=attendance.course.language.reply_to,
-                    recipients=[attendance.applicant.mail],
-                    subject=u'[Sprachenzentrum] Anmeldung für Kurs {0}'.format(attendance.course.full_name()),
-                    body=render_template(
-                        'mails/confirmationmail.html',
-                        applicant=attendance.applicant,
-                        course=attendance.course,
-                        has_to_pay=attendance.has_to_pay,
-                        waiting=attendance.waiting,
-                        date=datetime.now()
-                    ),
-                    charset='utf-8'
-                )
-                queue.enqueue(async_send, msg)
+                queue.enqueue(async_send, generate_status_mail(attendance.applicant, attendance.course))
 
             if handled_attendances:  # only show if there are attendances that we handled
                 flash(u'Mails erfolgreich verschickt', 'success')

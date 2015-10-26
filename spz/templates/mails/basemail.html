@@ -1,0 +1,29 @@
+Sprachenzentrum des KIT
+-----------------------
+
+Sehr geehrte{{ 'r Herr' if applicant.sex else ' Frau' }}: {{ applicant.first_name ~ ' ' ~ applicant.last_name }},
+
+bitte beachten Sie folgende Neuigkeit zu ihrer Anmeldung:
+    Bewerberkreis: {{ applicant.origin.name }}
+    E-Mail Adresse: {{ applicant.mail }}
+{# TODO: ugly hack. refactor it! #}
+    Semester: {{ 'SS ' ~ date.year if (3 <= date.month < 9) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
+
+
+{% block message %}
+{% endblock message %}
+
+
+Die zuständigen Fachbereiche erreichen Sie unter:
+    Englisch <englisch@spz.kit.edu>
+    Französisch <franzoesisch@spz.kit.edu>
+    Spanisch <spanisch@spz.kit.edu>
+    andere Sprachen <info@spz.kit.edu>
+
+
+Mit freundlichen Grüßen,
+Ihr SpZ-Team
+
+
+
+Dieses Schreiben wurde maschinell erstellt und ist ohne Unterschrift gültig.

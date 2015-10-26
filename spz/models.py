@@ -294,13 +294,16 @@ class Language(db.Model):
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
 
-    def is_open_for_signup(self):
-        now = datetime.utcnow()
+    def is_open_for_signup_rnd(self, time):
+        return self.signup_begin < time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'])
+
+    def is_open_for_signup_fcfs(self, time):
+        return (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) < time < self.signup_end
+
+    def is_open_for_signup(self, time):
         # management wants the system to be: open a few hours, then closed "overnight" for random selection, then open again..
         # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
-        rnd = self.signup_begin < now < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'])
-        fcfs = (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) < now < self.signup_end
-        return rnd or fcfs
+        return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
 
     def until_signup_fmt(self):
         now = datetime.utcnow()
