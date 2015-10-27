@@ -46,6 +46,27 @@ body {
     text-align: right;
     cursor: default;
 }
+@media (max-width: 1000px) {
+    .ui.label {
+        min-width: 33%;
+    }
+}
+@media (max-width: 600px) {
+    .ui.label {
+        width: 45%;
+    }
+    .ui.form .grouped.fields .ui.labeled > input {
+        width: 55%;
+    }
+    .ui.form .grouped.fields .ui.labeled > .field,
+    .ui.form .inline.fields .ui.labeled > .field {
+        padding-left: 0.2em;
+    }
+    .ui.form .grouped.fields .ui.labeled > .field > .ui.checkbox > label,
+    .ui.form .inline.fields .ui.labeled > .field > .ui.checkbox > label {
+        padding-left: 1.1em;
+    }
+}
 
 .kit-only {
     display: inline-block;

@@ -80,14 +80,14 @@ class SignupForm(Form):
     phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
     mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
                                  validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
-    origin = SelectField(u'Bewerberkreis', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+    origin = SelectField(u'Bewerber&shy;kreis', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
 
-    tag = TextField(u'Matrikelnummer', [validators.Optional(),
+    tag = TextField(u'Matrikel&shy;nummer', [validators.Optional(),
                                         validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField(u'Studienabschluss', [validators.Optional()], coerce=int)
-    graduation = SelectField(u'Kursabschluss', [validators.Optional()], coerce=int)
-    semester = IntegerField(u'Fachsemester', [validators.Optional()])
+    degree = SelectField(u'Studien&shy;abschluss', [validators.Optional()], coerce=int)
+    graduation = SelectField(u'Kurs&shy;abschluss', [validators.Optional()], coerce=int)
+    semester = IntegerField(u'Fach&shy;semester', [validators.Optional()])
     course = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
