@@ -295,7 +295,7 @@ class Language(db.Model):
         return self.name.lower() < other.name.lower()
 
     def is_open_for_signup_rnd(self, time):
-        return self.signup_begin < time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'])
+        return self.signup_begin < time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR']) < self.signup_end
 
     def is_open_for_signup_fcfs(self, time):
         return (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) < time < self.signup_end
