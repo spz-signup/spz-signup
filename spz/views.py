@@ -73,6 +73,25 @@ def generate_status_mail(applicant, course, time=None, restock=False):
     )
 
 
+def check_precondition_with_auth(cond, msg, auth=False):
+    """Check precondition and flash message if not satisfied.
+
+    Returns True (=error) when the condition is not satisfied.
+
+    Condition check can be overwritten when `auth` is True in which case no
+    error is returned and only a warning will be shown to the user.
+    """
+    if not cond:
+        if auth:
+            flash(u'{0} (Überschrieben durch Fachleiterzugang!)'.format(msg), 'warning')
+            return False
+        else:
+            flash(msg, 'danger')
+            return True
+    else:
+        return False
+
+
 @templated('signup.html')
 def index():
     form = SignupForm()
@@ -88,20 +107,27 @@ def index():
 
         # signup at all times only with token or privileged users
         preterm = token.validate(one_time_token, applicant.mail)
-        if not course.language.is_open_for_signup(time) and not preterm and not g.access:
-            flash(u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()), 'danger')
-            return dict(form=form)
-
-        if not course.is_allowed(applicant):
-            flash(u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen', 'danger')
-            return dict(form=form)
-
-        if applicant.in_course(course) or applicant.active_in_parallel_course(course):
-            flash(u'Sie sind bereits im Kurs oder nehmen aktiv an einem Parallelkurs teil', 'danger')
-            return dict(form=form)
-
-        if applicant.over_limit():
-            flash(u'Sie haben das Limit an Bewerbungen bereits erreicht', 'danger')
+        err = check_precondition_with_auth(
+            course.language.is_open_for_signup(time) or preterm,
+            u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
+            g.access
+        )
+        err |= check_precondition_with_auth(
+            course.is_allowed(applicant),
+            u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen',
+            g.access
+        )
+        err |= check_precondition_with_auth(
+            not applicant.in_course(course) and not applicant.active_in_parallel_course(course),
+            u'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet',
+            g.access
+        )
+        err |= check_precondition_with_auth(
+            not applicant.over_limit(),
+            u'Sie haben das Limit an Bewerbungen bereits erreicht',
+            g.access
+        )
+        if err:
             return dict(form=form)
 
         # Run the final insert isolated in a transaction, with rollback semantics
