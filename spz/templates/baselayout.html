@@ -117,6 +117,12 @@
                     var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
                     $elem.text(fmt);
                 });
+
+                $('button[type=reset]').on('click', function() {
+                    var form = $(this).closest('form');
+                    $('input[type=radio]', form).removeAttr('checked');
+                    $('.ui.dropdown', form).dropdown('clear');
+                });
             });
 
             // contributors welcome :)
