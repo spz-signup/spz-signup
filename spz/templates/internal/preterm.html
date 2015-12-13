@@ -12,17 +12,13 @@ Prioritäranmeldungen
         {{ form.hidden_tag() }}
         {{ render_input(form.mail, help="Mail für prioritäre Anmeldungsberechtigung") }}
         {{ render_submit(submit='Token erstellen') }}
+        {% if token %}
+        <div class="field">
+            <label>Token URL für {{ form.mail.data }}</label>
+            <textarea readonly="readonly">{{ url_for('index', token=token, _external=True) }}</textarea>
+        </div>
+        {% endif %}
     </form>
-    {% if token %}
-    <div class="panel panel-primary }}">
-        <div class="panel-heading">
-            <h3 class="panel-title">Token URL für {{ form.mail.data }}</h3>
-        </div>
-        <div class="panel-body">
-            <textarea class="form-control" readonly="readonly">{{ url_for('index', token=token, _external=True) }}</textarea>
-        </div>
-    </div>
-    {% endif %}
 </div>
 <div class="row">
     <table class="ui selectable sortable compact small striped table">
