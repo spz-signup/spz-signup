@@ -10,6 +10,8 @@ Anmeldung
 <div class="row">
         <form id="signup" class="ui form" method="post" data-persist="garlic">
             {{ form.hidden_tag() }}
+            <h3 class="ui dividing header">Kurswahl</h3>
+            {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus', icon='cube') }}
             <h3 class="ui dividing header">Persönliche Angaben</h3>
             <div class="grouped fields">
                 {{ render_radio(form.sex, icon='heterosexual') }}
@@ -33,8 +35,6 @@ Anmeldung
                 </div>
                 {{ render_radio(form.graduation, required=False, icon='crosshairs') }}
             </div>
-            <h3 class="ui dividing header">Kurswahl</h3>
-            {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus', icon='cube') }}
             {{ render_submit(submit='Absenden') }}
         </form>
 </div>
