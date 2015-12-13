@@ -434,10 +434,18 @@ class Registration(db.Model):
     def cleartext_to_salted(cleartext):
         """Convert cleartext unicode data to salted binary data."""
         # WARNING: changing these parameter invalides the entire table!
+        # INFO: buflen is in bytes, not bits! So this is a 256bit output
+        #       which is higher than the current (2015-12) recommendation
+        #       of 128bit. We use 2 lanes and 1MB of memory. One pass has
+        #       to be enough, because otherwise we need to much time while
+        #       importing.
         return argon2_hash(
             cleartext.lower().encode('utf8'),
             app.config['ARGON2_SALT'],
             buflen=32,
+            t=1,
+            p=2,
+            m=(1 << 10)
         )
 
     @staticmethod
