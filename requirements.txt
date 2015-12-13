@@ -29,3 +29,4 @@ rjsmin==1.0.10
 rq==0.5.4
 webassets==0.10.1
 wsgiref==0.1.2
+argon2==0.1.9

@@ -5,8 +5,11 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
+from binascii import hexlify
 from datetime import datetime
 from functools import total_ordering
+
+from argon2 import argon2_hash
 
 from sqlalchemy import func
 
@@ -141,8 +144,7 @@ class Applicant(db.Model):
         self.attendances = filter(lambda attendance: attendance.course != course, self.attendances)
 
     def is_student(self):
-        registered = Registration.query.filter(func.lower(Registration.number) == func.lower(self.tag)).first()
-        return True if registered else False
+        return Registration.exists(self.tag)
 
     def best_rating(self):
         results = [approval.percent for approval in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag))]
@@ -403,15 +405,18 @@ class Registration(db.Model):
     """Registration number for a :py:class:`Applicant` that is a student.
 
        :param number: The registration number
+
+       Date is stored hashed+salted, so there is no way to get numbers from this
+       model. You can only check if a certain, known number is stored in this
+       table.
     """
 
     __tablename__ = 'registration'
 
-    id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.String(10), unique=True, nullable=False)
+    salted = db.Column(db.Binary(32), primary_key=True)
 
-    def __init__(self, number):
-        self.number = number
+    def __init__(self, salted):
+        self.salted = salted
 
     def __eq__(self, other):
         return self.number.lower() == other.number.lower()
@@ -423,7 +428,30 @@ class Registration(db.Model):
         return hash(self.__repr__())
 
     def __repr__(self):
-        return '<Registration %r>' % self.number
+        return '<Registration %r>' % hexlify(self.salted)
+
+    @staticmethod
+    def cleartext_to_salted(cleartext):
+        """Convert cleartext unicode data to salted binary data."""
+        # WARNING: changing these parameter invalides the entire table!
+        return argon2_hash(
+            cleartext.lower().encode('utf8'),
+            app.config['ARGON2_SALT'],
+            buflen=32,
+        )
+
+    @staticmethod
+    def from_cleartext(cleartext):
+        """Return Registration instance from given cleartext string."""
+        return Registration(Registration.cleartext_to_salted(cleartext))
+
+    @staticmethod
+    def exists(cleartext):
+        """Checks if, for a given cleartext string, we store any valid registration."""
+        registered = Registration.query.filter(
+            Registration.salted == Registration.cleartext_to_salted(cleartext)
+        ).first()
+        return True if registered else False
 
 
 # XXX: This should hold a ref to the specific language the rating is for

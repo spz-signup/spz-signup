@@ -182,7 +182,21 @@ def registrations():
         if fp:
             mime = mime_from_filepointer(fp)
             if mime == 'text/plain':
-                unique_registrations = {models.Registration(line.rstrip('\r\n')) for line in fp}
+                # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
+                # and duplicates
+                stripped_lines = (
+                    line.rstrip('\r').rstrip('\n').rstrip('\r').strip()
+                    for line in fp
+                )
+                filtered_lines = (
+                    line
+                    for line in stripped_lines
+                    if line
+                )
+                unique_registrations = {
+                    models.Registration.from_cleartext(line.rstrip('\r\n'))
+                    for line in filtered_lines
+                }
 
                 try:
                     num_deleted = models.Registration.query.delete()
@@ -217,7 +231,7 @@ def approvals():
                     filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
 
                     num_deleted = 0
-                    if request.form.getlist("delete_old"):  # XXX: hardcoded?. Write a form!
+                    if request.form.getlist("delete_old"):
                         num_deleted = models.Approval.query.delete()
 
                     approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
