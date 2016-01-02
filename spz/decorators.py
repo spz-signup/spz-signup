@@ -8,7 +8,7 @@
 
 from functools import wraps
 
-from flask import request, render_template, redirect, url_for, g
+from flask import request, render_template
 
 
 def templated(template=None):
@@ -30,16 +30,3 @@ def templated(template=None):
             return render_template(template_name, **ctx)
         return decorated_function
     return decorator
-
-
-def auth_required(f):
-    """Checks the authentication status of the current user and redirects to the index on unauthenticated access.
-
-       .. seealso:: The :py:mod:`spz.auth` module
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None or g.access is None:
-            return redirect(url_for('internal'))
-        return f(*args, **kwargs)
-    return decorated_function

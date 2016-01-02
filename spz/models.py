@@ -8,18 +8,39 @@
 from binascii import hexlify
 from datetime import datetime
 from functools import total_ordering
+import random
+import string
 
 from argon2 import argon2_hash
 
-from sqlalchemy import func
+from sqlalchemy import and_, func
 
 from spz import app, db
+import spz.models
 
 
 # Ressources:
 # http://docs.sqlalchemy.org/en/rel_0_8/core/schema.html#sqlalchemy.schema.Column
 # http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
 # http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
+
+
+def hash_secret(s):
+    """Hash secret, case-sensitive string to binary data."""
+    # WARNING: changing these parameter invalides the entire table!
+    # INFO: buflen is in bytes, not bits! So this is a 256bit output
+    #       which is higher than the current (2015-12) recommendation
+    #       of 128bit. We use 2 lanes and 1MB of memory. One pass has
+    #       to be enough, because otherwise we need to much time while
+    #       importing.
+    return argon2_hash(
+        s.encode('utf8'),
+        app.config['ARGON2_SALT'],
+        buflen=32,
+        t=1,
+        p=2,
+        m=(1 << 10)
+    )
 
 
 @total_ordering
@@ -433,20 +454,7 @@ class Registration(db.Model):
     @staticmethod
     def cleartext_to_salted(cleartext):
         """Convert cleartext unicode data to salted binary data."""
-        # WARNING: changing these parameter invalides the entire table!
-        # INFO: buflen is in bytes, not bits! So this is a 256bit output
-        #       which is higher than the current (2015-12) recommendation
-        #       of 128bit. We use 2 lanes and 1MB of memory. One pass has
-        #       to be enough, because otherwise we need to much time while
-        #       importing.
-        return argon2_hash(
-            cleartext.lower().encode('utf8'),
-            app.config['ARGON2_SALT'],
-            buflen=32,
-            t=1,
-            p=2,
-            m=(1 << 10)
-        )
+        return hash_secret(cleartext.lower())
 
     @staticmethod
     def from_cleartext(cleartext):
@@ -487,3 +495,96 @@ class Approval(db.Model):
 
     def __lt__(self, other):
         return self.percent < other.percent
+
+
+class User(db.Model):
+    """User for internal UI
+
+       :param id: User ID, the email address most of the time.
+       :param pwsalted: Salted password data.
+    """
+
+    __tablename__ = 'user'
+
+    id = db.Column(db.String(20), primary_key=True)
+    active = db.Column(db.Boolean, default=True)
+    pwsalted = db.Column(db.Binary(32), nullable=True)
+
+    def __init__(self, id):
+        """Create new, active user without password."""
+        self.id = id
+        self.pwsalted = None
+
+    def reset_password(self):
+        """Reset password to random one and return it."""
+        # choose random password
+        rng = random.SystemRandom()
+        pw = ''.join(
+            rng.choice(string.ascii_letters + string.digits)
+            for _ in range(0, 16)
+        )
+        self.pwsalted = hash_secret(pw)
+        return pw
+
+    def get_id(self):
+        """Return user ID"""
+        return self.id
+
+    @property
+    def is_active(self):
+        """Report if user is active."""
+        return self.active
+
+    @property
+    def is_anonymous(self):
+        """Report if user is anonymous.
+
+        This will return False everytime.
+        """
+        return False
+
+    @property
+    def is_authenticated(self):
+        """Report if user is authenticated.
+
+        This always returns True because we do not store that state.
+
+        Also: we enable multiple systems to be locked in as the same user,
+        because accounts might be shared amongst people.
+        """
+        return True
+
+    def get_auth_token(self):
+        """Get token that can be used to authentificate a user."""
+        return token.generate(self.id, 'users')
+
+    @staticmethod
+    def get_by_token(tokenstring):
+        """Return user by token string.
+
+        Returns None if one of the following is true:
+            - token is invalid
+            - token is outdated
+            - user does not exist.
+        """
+        id = token.validate_multi(tokenstring, 'users')
+        if id:
+            return User.query.filter(func.lower(User.id) == func.lower(id)).first()
+        else:
+            return None
+
+    @staticmethod
+    def get_by_login(id, pw):
+        """Return user by ID and password.
+
+        Returns None if one of the following is true:
+            - ID does not exist
+            - salted PW in database is set to None (i.e. no PW assigned)
+            - password does not match (case-sensitive match!)
+        """
+        salted = hash_secret(pw)
+        return User.query.filter(and_(
+            func.lower(User.id) == func.lower(id),
+            User.pwsalted != None,
+            User.pwsalted == salted
+        )).first()

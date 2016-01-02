@@ -16,11 +16,12 @@ from redis import ConnectionError
 from sqlalchemy import orm, func, not_
 
 from flask import request, redirect, render_template, url_for, flash, g, make_response
+from flask.ext.login import login_required, login_user, logout_user
 from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
-from spz.decorators import templated, auth_required
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm
+from spz.decorators import templated
+from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm, LoginForm
 from spz.models import Attendance
 from spz.util.Encoding import UnicodeWriter
 from spz.util.Filetype import mime_from_filepointer
@@ -106,7 +107,14 @@ def index():
         one_time_token = request.args.get('token', None)
 
         # signup at all times only with token or privileged users
-        preterm = token.validate(one_time_token, applicant.mail)
+        preterm = applicant.mail \
+                and token.validate_once(
+                    token=one_time_token,
+                    payload_wanted=applicant.mail,
+                    namespace='preterm',
+                    db_obj=models.Applicant,
+                    db_column=models.Applicant.mail
+                )
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
@@ -166,13 +174,13 @@ def internal():
     return None
 
 
-@auth_required
+@login_required
 @templated('internal/importer.html')
 def importer():
     return None
 
 
-@auth_required
+@login_required
 @templated('internal/importer.html')
 def registrations():
     if request.method == 'POST':
@@ -217,7 +225,7 @@ def registrations():
     return None
 
 
-@auth_required
+@login_required
 @templated('internal/importer.html')
 def approvals():
     if request.method == 'POST':
@@ -252,7 +260,7 @@ def approvals():
     return None
 
 
-@auth_required
+@login_required
 @templated('internal/notifications.html')
 def notifications():
     form = NotificationForm()
@@ -283,7 +291,7 @@ def notifications():
     return dict(form=form)
 
 
-@auth_required
+@login_required
 def export_course(course_id):
     course = models.Course.query.get_or_404(course_id)
 
@@ -314,7 +322,7 @@ def export_course(course_id):
     return resp
 
 
-@auth_required
+@login_required
 def export_language(language_id):
     language = models.Language.query.get_or_404(language_id)
 
@@ -353,7 +361,7 @@ def export_language(language_id):
     return resp
 
 
-@auth_required
+@login_required
 @templated('internal/lists.html')
 def lists():
     # list of tuple (lang, aggregated number of courses, aggregated number of seats)
@@ -366,19 +374,19 @@ def lists():
     return dict(lang_misc=lang_misc)
 
 
-@auth_required
+@login_required
 @templated('internal/language.html')
 def language(id):
     return dict(language=models.Language.query.get_or_404(id))
 
 
-@auth_required
+@login_required
 @templated('internal/course.html')
 def course(id):
     return dict(course=models.Course.query.get_or_404(id))
 
 
-@auth_required
+@login_required
 @templated('internal/applicant.html')
 def applicant(id):
     applicant = models.Applicant.query.get_or_404(id)
@@ -420,7 +428,7 @@ def applicant(id):
     return dict(form=form)
 
 
-@auth_required
+@login_required
 @templated('internal/applicants/search_applicant.html')
 def search_applicant():
     form = SearchForm()
@@ -436,7 +444,7 @@ def search_applicant():
     return dict(form=form, applicants=applicants)
 
 
-@auth_required
+@login_required
 def add_attendance(applicant_id, course_id, notify):
     applicant = models.Applicant.query.get_or_404(applicant_id)
     course = models.Course.query.get_or_404(course_id)
@@ -468,7 +476,7 @@ def add_attendance(applicant_id, course_id, notify):
     return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
 
 
-@auth_required
+@login_required
 def remove_attendance(applicant_id, course_id, notify):
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
     applicant = attendance.applicant
@@ -493,13 +501,13 @@ def remove_attendance(applicant_id, course_id, notify):
     return redirect(url_for('applicant', id=applicant_id))
 
 
-@auth_required
+@login_required
 @templated('internal/applicants/applicant_attendances.html')
 def applicant_attendances(id):
     return dict(applicant=models.Applicant.query.get_or_404(id))
 
 
-@auth_required
+@login_required
 @templated('internal/payments.html')
 def payments():
     form = PaymentForm()
@@ -529,7 +537,7 @@ def payments():
     return dict(form=form, stats=stats)
 
 
-@auth_required
+@login_required
 @templated('internal/outstanding.html')
 def outstanding():
     # XXX: discounted /2
@@ -543,7 +551,7 @@ def outstanding():
     return dict(outstanding=outstanding)
 
 
-@auth_required
+@login_required
 @templated('internal/status.html')
 def status(applicant_id, course_id):
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
@@ -578,13 +586,13 @@ def status(applicant_id, course_id):
     return dict(form=form, attendance=attendance)
 
 
-@auth_required
+@login_required
 @templated('internal/statistics.html')
 def statistics():
     return None
 
 
-@auth_required
+@login_required
 @templated('internal/statistics/free_courses.html')
 def free_courses():
     rv = models.Course.query.join(models.Language.courses) \
@@ -593,7 +601,7 @@ def free_courses():
     return dict(courses=rv)
 
 
-@auth_required
+@login_required
 @templated('internal/statistics/origins_breakdown.html')
 def origins_breakdown():
     rv = db.session.query(models.Origin, func.count()) \
@@ -605,7 +613,7 @@ def origins_breakdown():
     return dict(origins_breakdown=rv)
 
 
-@auth_required
+@login_required
 @templated('internal/statistics/task_queue.html')
 def task_queue():
     jobs = []
@@ -638,7 +646,7 @@ def task_queue():
     return dict(tasks=tasks)
 
 
-@auth_required
+@login_required
 @templated('internal/preterm.html')
 def preterm():
     form = PretermForm()
@@ -672,7 +680,7 @@ def preterm():
     return dict(form=form, token=token, preterm_signups=attendances)
 
 
-@auth_required
+@login_required
 @templated('internal/duplicates.html')
 def duplicates():
     taglist = db.session.query(models.Applicant.tag) \
@@ -686,7 +694,7 @@ def duplicates():
 
 
 # This is the first-come-first-served policy view
-@auth_required
+@login_required
 @templated('internal/restock_fcfs.html')
 def restock_fcfs():
     form = RestockFormFCFS()
@@ -725,7 +733,7 @@ def restock_fcfs():
 
 
 # This is the weighted-random-selection policy view
-@auth_required
+@login_required
 @templated('internal/restock_rnd.html')
 def restock_rnd():
     form = RestockFormRnd()
@@ -800,7 +808,7 @@ def restock_rnd():
     return dict(form=form)
 
 
-@auth_required
+@login_required
 @templated('internal/unique.html')
 def unique():
     form = UniqueForm()
@@ -825,3 +833,23 @@ def unique():
             return redirect(url_for('unique'))
 
     return dict(form=form)
+
+
+@templated('internal/login.html')
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = models.User.get_by_login(form.user.data, form.password.data)
+        if user:
+            login_user(user)
+            return redirect(url_for('internal'))
+        flash(u'Du kommst hier net rein!', 'negative')
+
+    return dict(form=form)
+
+
+@templated('internal/logout.html')
+def logout():
+    logout_user()
+    return dict()

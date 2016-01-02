@@ -8,9 +8,9 @@ from datetime import datetime
 from fpdf import FPDF
 
 from flask import make_response
+from flask.ext.login import login_required
 
 from spz import models
-from spz.decorators import auth_required
 
 
 class BasePDF(FPDF):
@@ -99,7 +99,7 @@ def list_presence (pdflist, course):
     return
 
 
-@auth_required
+@login_required
 def print_course_presence(course_id):
     pdflist = PresenceGenerator('L','mm','A4')
     course = models.Course.query.get_or_404(course_id)
@@ -114,7 +114,7 @@ def print_course_presence(course_id):
     return resp
 
 
-@auth_required
+@login_required
 def print_language_presence(language_id):
     language = models.Language.query.get_or_404(language_id)
     pdflist = PresenceGenerator('L','mm','A4')
@@ -160,7 +160,7 @@ def list_course (pdflist, course):
     return
 
 
-@auth_required
+@login_required
 def print_course(course_id):
     pdflist = CourseGenerator('L','mm','A4')
     course = models.Course.query.get_or_404(course_id)
@@ -175,7 +175,7 @@ def print_course(course_id):
     return resp
 
 
-@auth_required
+@login_required
 def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
     pdflist = CourseGenerator('L','mm','A4')
@@ -191,7 +191,7 @@ def print_language(language_id):
     return resp
 
 
-@auth_required
+@login_required
 def print_bill(applicant_id, course_id):
     class BillGenerator(FPDF):
         def header(this):

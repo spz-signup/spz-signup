@@ -5,7 +5,7 @@
    Registers error handlers for the most common errors.
 """
 
-from flask import render_template
+from flask import flash, redirect, render_template, url_for
 
 
 def render_error(errorcode, errormessage):
@@ -31,3 +31,8 @@ def page_gone(e):
 
 def not_found(e):
     return render_error(500, u'Interner Fehler')
+
+
+def unauthorized(e):
+    flash(u'Bitte einloggen!', 'warning')
+    return redirect(url_for('login'))

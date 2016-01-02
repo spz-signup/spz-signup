@@ -39,9 +39,9 @@ Interner Bereich
 {% block subcaption %}
 {% if g.user %}
 <div class="pull-right">Angemeldet als <strong>{{ g.user }}</strong>
-(<a href="#" class="signout">Abmelden</a>)</div>
+(<a href="{{ url_for('logout')  }}" class="signout">Abmelden</a>)</div>
 {% else %}
-<div class="pull-right">Nicht angemeldet. <a href="#" class="signin">Anmelden</a></div>
+<div class="pull-right">Nicht angemeldet. <a href="{{ url_for('login') }}" class="signin">Anmelden</a></div>
 {% endif %}
 {% endblock subcaption %}
 
@@ -67,10 +67,8 @@ Interner Bereich
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
-<script src="{{ config.PERSONA_JS }}"></script>
 <script>
     var $URL_ROOT = {{ request.url_root|tojson }};
     var $CURRENT_USER = {{ g.user|tojson }};
 </script>
-<script src="{{ url_for('static', filename='js/persona.js') }}"></script>
 {% endblock scripts %}

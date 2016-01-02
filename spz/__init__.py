@@ -14,6 +14,7 @@ import os
 from flask import Flask, session, g
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.login import LoginManager, current_user
 from flask.ext.mail import Mail
 from flask.ext.cache import Cache
 
@@ -30,6 +31,23 @@ class CustomFlask(Flask):
     jinja_options = dict(Flask.jinja_options, trim_blocks=True, lstrip_blocks=True, auto_reload=False)
 
 app = CustomFlask(__name__, instance_relative_config=True)
+
+
+# set up login system
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def login_by_id(id):
+    # local imports to avoid import before config
+    from spz.models import User
+    return User.query.filter(User.id == id).first()
+
+@login_manager.token_loader
+def login_by_token(tokenstring):
+    # local imports to avoid import before config
+    from spz.models import User
+    return User.get_by_token(tokenstring)
 
 
 # add `include_raw` Jinja helper
@@ -71,23 +89,27 @@ cache = Cache(app, config=app.config['CACHE_CONFIG'])
 
 
 # Register all views here
-from spz import views, errorhandlers, auth, pdf
+from spz import views, errorhandlers, pdf
 
 
-# Authentication
+# Permission handling
 @app.before_request
-def get_current_user():
-    mail = session.get('email', None)
-    acl = app.config['ACCESS_CONTROL']
+def detect_permission_level():
+    if not current_user.is_anonymous:
+        mail = current_user.id
+        acl = app.config['ACCESS_CONTROL']
 
-    if mail in acl['unrestricted']:
-        g.access = 'unrestricted'
-    elif mail in acl['restricted']:
-        g.access = 'restricted'
+        if mail in acl['unrestricted']:
+            g.access = 'unrestricted'
+        elif mail in acl['restricted']:
+            g.access = 'restricted'
+        else:
+            g.access = None
+
+        g.user = mail
     else:
         g.access = None
-
-    g.user = mail
+        g.user = None
 
 
 routes = [('/', views.index, ['GET', 'POST']),
@@ -140,17 +162,21 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/duplicates', views.duplicates, ['GET']),
 
-          ('/_auth/login', auth.login_handler, ['GET', 'POST']),
-          ('/_auth/logout', auth.logout_handler, ['POST'])]
+          ('/internal/login', views.login, ['GET', 'POST']),
+          ('/internal/logout', views.logout, ['GET', 'POST']),
+]
 
 for rule, view_func, methods in routes:
     app.add_url_rule(rule, view_func=view_func, methods=methods)
 
 
-handlers = [(404, errorhandlers.page_not_found),
-            (403, errorhandlers.page_forbidden),
-            (410, errorhandlers.page_gone),
-            (500, errorhandlers.not_found)]
+handlers = [
+    (401, errorhandlers.unauthorized),
+    (404, errorhandlers.page_not_found),
+    (403, errorhandlers.page_forbidden),
+    (410, errorhandlers.page_gone),
+    (500, errorhandlers.not_found),
+]
 
 for errno, handler in handlers:
     app.register_error_handler(errno, handler)

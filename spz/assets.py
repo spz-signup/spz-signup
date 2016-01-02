@@ -45,8 +45,7 @@ ie_js = Bundle('js/html5shiv.js',
 
 
 # Tooling bundles
-tools_js = Bundle('js/persona.js',
-                  'js/jquery.tablesort.js',
+tools_js = Bundle('js/jquery.tablesort.js',
                   filters='rjsmin', output='js/packed_tools.js')
 
 

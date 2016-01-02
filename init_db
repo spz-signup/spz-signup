@@ -27,6 +27,18 @@ def validate_resources():
 
 
 def insert_resources():
+    all_accounts = set()
+    for _aci_level, aci_list in app.config.get('ACCESS_CONTROL').iteritems():
+        for account in aci_list:
+            all_accounts.add(account)
+
+    print("create user accounts:")
+    for account in all_accounts:
+        user = User(account)
+        pw = user.reset_password()
+        print('  {} : {}'.format(user.id, pw))
+        db.session.add(user)
+
     with app.open_resource('resource/degrees.json') as fd:
         res = json.load(fd)
 

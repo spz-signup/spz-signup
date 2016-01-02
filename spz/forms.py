@@ -388,4 +388,12 @@ class PretermForm(Form):
                                  validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
 
     def get_token(self):
-        return token.generate(self.mail.data)
+        return token.generate(self.mail.data, namespace='preterm')
+
+
+class LoginForm(Form):
+    """Represents the login form the the internal partsPasswort
+    """
+
+    user = TextField(u'User', [validators.Required(u'User muss angegeben werden')])
+    password = TextField(u'Passwort', [validators.Required(u'Passwort muss angegeben werden')])
