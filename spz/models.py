@@ -506,7 +506,7 @@ class User(db.Model):
 
     __tablename__ = 'user'
 
-    id = db.Column(db.String(20), primary_key=True)
+    id = db.Column(db.String(120), primary_key=True)
     active = db.Column(db.Boolean, default=True)
     pwsalted = db.Column(db.Binary(32), nullable=True)
 
