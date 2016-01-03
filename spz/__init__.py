@@ -36,6 +36,7 @@ app = CustomFlask(__name__, instance_relative_config=True)
 # set up login system
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.session_protection = 'strong'
 
 @login_manager.user_loader
 def login_by_id(id):
