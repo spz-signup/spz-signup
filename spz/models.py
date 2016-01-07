@@ -13,7 +13,7 @@ import string
 
 from argon2 import argon2_hash
 
-from sqlalchemy import and_, func
+from sqlalchemy import and_, between, func
 
 from spz import app, db
 import spz.models
@@ -68,10 +68,12 @@ class Attendance(db.Model):
     waiting = db.Column(db.Boolean)
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
-    amountpaid = db.Column(db.Integer, db.CheckConstraint('amountpaid >= 0'), nullable=False)
+    amountpaid = db.Column(db.Integer, nullable=False)
 
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())
+
+    amountpaid_constraint = db.CheckConstraint(amountpaid >= 0)
 
     def __init__(self, course, graduation, waiting, has_to_pay):
         self.course = course
@@ -213,17 +215,24 @@ class Course(db.Model):
     """
 
     __tablename__ = 'course'
-    __table_args__ = (db.UniqueConstraint('language_id', 'level', 'alternative'),
-                      db.CheckConstraint('rating_highest >= rating_lowest'))
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     level = db.Column(db.String(120))
     alternative = db.Column(db.String(10), nullable=False)
-    limit = db.Column(db.Integer, db.CheckConstraint('"limit" > 0'), nullable=False)  # limit is SQL keyword
-    price = db.Column(db.Integer, db.CheckConstraint('price > 0'), nullable=False)
-    rating_highest = db.Column(db.Integer, db.CheckConstraint('rating_highest >= 0'), nullable=False)
-    rating_lowest = db.Column(db.Integer, db.CheckConstraint('rating_lowest >= 0'), nullable=False)
+    limit = db.Column(db.Integer, nullable=False)  # limit is SQL keyword
+    price = db.Column(db.Integer, nullable=False)
+    rating_highest = db.Column(db.Integer, nullable=False)
+    rating_lowest = db.Column(db.Integer, nullable=False)
+
+    unique_constraint = db.UniqueConstraint(language_id, level, alternative)
+    limit_constraint = db.CheckConstraint(limit > 0)
+    price_constraint = db.CheckConstraint(price > 0)
+    rating_constraint = db.CheckConstraint(and_(
+        between(rating_highest, 0, 100),
+        between(rating_lowest, 0, 100),
+        rating_lowest <= rating_highest
+    ))
 
     def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest):
         self.language = language
@@ -293,7 +302,6 @@ class Language(db.Model):
     """
 
     __tablename__ = 'language'
-    __table_args__ = (db.CheckConstraint('signup_end > signup_begin'),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
@@ -304,6 +312,8 @@ class Language(db.Model):
     # See: http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.Interval
     signup_begin = db.Column(db.DateTime())
     signup_end = db.Column(db.DateTime())
+
+    signup_constraint = db.CheckConstraint(signup_end > signup_begin)
 
     def __init__(self, name, reply_to, signup_begin, signup_end):
         self.name = name
@@ -484,7 +494,9 @@ class Approval(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(10), nullable=False)  # tag may be not unique, multiple tests taken
-    percent = db.Column(db.Integer, nullable=False) # XXX: checkConstraint 0 <= p <= 100
+    percent = db.Column(db.Integer, nullable=False)
+
+    percent_constraint = db.CheckConstraint(between(percent, 0, 100))
 
     def __init__(self, tag, percent):
         self.tag = tag
