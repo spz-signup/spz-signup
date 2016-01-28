@@ -25,12 +25,37 @@ import spz.models
 # http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
 
 
-def hash_secret(s):
-    """Hash secret, case-sensitive string to binary data."""
+def hash_secret_strong(s):
+    """Hash secret, case-sensitive string to binary data.
+
+    This is the strong version which should be used for passwords but not for
+    huge data sets like indentification numbers.
+    """
     # WARNING: changing these parameter invalides the entire table!
     # INFO: buflen is in bytes, not bits! So this is a 256bit output
     #       which is higher than the current (2015-12) recommendation
-    #       of 128bit. We use 2 lanes and 1MB of memory. One pass has
+    #       of 128bit. We use 2 lanes and 4MB of memory. 4 passes seems
+    #       to be a good choice.
+    return argon2_hash(
+        s.encode('utf8'),
+        app.config['ARGON2_SALT'],
+        buflen=32,
+        t=4,
+        p=2,
+        m=(1 << 12)
+    )
+
+
+def hash_secret_weak(s):
+    """Hash secret, case-sensitive string to binary data.
+
+    This is the weak version which should be used for large data sets like
+    identifiers, but NOT for passwords!
+    """
+    # WARNING: changing these parameter invalides the entire table!
+    # INFO: buflen is in bytes, not bits! So this is a 256bit output
+    #       which is higher than the current (2015-12) recommendation
+    #       of 128bit. We use 2 lanes and 64KB of memory. One pass has
     #       to be enough, because otherwise we need to much time while
     #       importing.
     return argon2_hash(
@@ -39,7 +64,7 @@ def hash_secret(s):
         buflen=32,
         t=1,
         p=2,
-        m=(1 << 10)
+        m=(1 << 6)
     )
 
 
@@ -464,7 +489,7 @@ class Registration(db.Model):
     @staticmethod
     def cleartext_to_salted(cleartext):
         """Convert cleartext unicode data to salted binary data."""
-        return hash_secret(cleartext.lower())
+        return hash_secret_weak(cleartext.lower())
 
     @staticmethod
     def from_cleartext(cleartext):
@@ -535,7 +560,7 @@ class User(db.Model):
             rng.choice(string.ascii_letters + string.digits)
             for _ in range(0, 16)
         )
-        self.pwsalted = hash_secret(pw)
+        self.pwsalted = hash_secret_strong(pw)
         return pw
 
     def get_id(self):
@@ -594,7 +619,7 @@ class User(db.Model):
             - salted PW in database is set to None (i.e. no PW assigned)
             - password does not match (case-sensitive match!)
         """
-        salted = hash_secret(pw)
+        salted = hash_secret_strong(pw)
         return User.query.filter(and_(
             func.lower(User.id) == func.lower(id),
             User.pwsalted != None,
