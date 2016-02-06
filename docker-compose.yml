@@ -1,50 +1,63 @@
-web:
-    build: .
-    command: python runserver -H 0.0.0.0
-    ports:
-        - "127.0.0.1:8080:8080"
-    volumes:
-        - ./spz:/home/spz/code/spz:ro
-        - ./util:/home/spz/code/util:ro
-        - /home/spz/code/spz/static
-    read_only: true
-    environment:
-        - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
-    links:
-        - mail:mail
-        - postgres:postgres
-        - redis:redis
-worker:
-    build: .
-    command: rqworker --url redis://redis:6379/0
-    volumes_from:
-        - web
-    read_only: true
-    environment:
-        - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
-    links:
-        - mail:mail
-        - postgres:postgres
-        - redis:redis
-redis:
-    image: redis
-    ports:
-        - "127.0.0.1:26379:6379"
-    read_only: true
-postgres:
-    image: postgres
-    ports:
-        - "127.0.0.1:25432:5432"
-    volumes:
-        - /run/postgresql
-        - /tmp
-    read_only: true
-    environment:
-        - POSTGRES_PASSWORD=mysecretpassword
-mail:
-    image: djfarrelly/maildev
-    ports:
-        - "127.0.0.1:8081:80"
-    volumes:
-        - /tmp
-    read_only: true
+version: '2'
+services:
+    web:
+        build: .
+        command: python runserver -H 0.0.0.0
+        ports:
+            - "127.0.0.1:8080:8080"
+        volumes:
+            - ./spz:/home/spz/code/spz:ro
+            - ./util:/home/spz/code/util:ro
+            - data_static:/home/spz/code/spz/static
+        read_only: true
+        environment:
+            - MAIL_PORT=tcp://mail:25
+            - POSTGRES_PORT=tcp://postgres:5432
+            - REDIS_PORT=tcp://redis:6379
+            - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+        links:
+            - mail
+            - postgres
+            - redis
+    worker:
+        build: .
+        command: rqworker --url redis://redis:6379/0
+        volumes_from:
+            - web
+        read_only: true
+        environment:
+            - MAIL_PORT=tcp://mail:25
+            - POSTGRES_PORT=tcp://postgres:5432
+            - REDIS_PORT=tcp://redis:6379
+            - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+        links:
+            - mail
+            - postgres
+            - redis
+    redis:
+        image: redis
+        ports:
+            - "127.0.0.1:26379:6379"
+        read_only: true
+    postgres:
+        image: postgres
+        ports:
+            - "127.0.0.1:25432:5432"
+        volumes:
+            - data_postgres:/run/postgresql
+            - tmp_postgres:/tmp
+        read_only: true
+        environment:
+            - POSTGRES_PASSWORD=mysecretpassword
+    mail:
+        image: djfarrelly/maildev
+        ports:
+            - "127.0.0.1:8081:80"
+        volumes:
+            - tmp_mail:/tmp
+        read_only: true
+volumes:
+    data_postgres: {}
+    data_static: {}
+    tmp_mail: {}
+    tmp_postgres: {}

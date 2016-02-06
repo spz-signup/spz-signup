@@ -77,7 +77,7 @@ wait_for_services() {
 }
 
 init() {
-    PGPASSWORD=mysecretpassword psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -c "CREATE DATABASE spz;"
+    PGPASSWORD=mysecretpassword psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
 }
 
