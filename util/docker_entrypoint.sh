@@ -18,8 +18,13 @@ test_connection_by_protocol()  {
     port=$(echo $2 | sed 's/[^:]*://')
     printf "$1://$address:$port..."
 
-    # use builtin bash function
-    timeout 1 bash -c "cat < /dev/null > /dev/$1/$address/$port" 2> /dev/null
+    # use builtin bash function,
+    # emulate `timeout` because our busybox version does not return exit
+    # code of its child
+    bash -c "cat < /dev/null > /dev/$1/$address/$port" 2> /dev/null &
+    pid=$!
+    bash -c "sleep 1; kill $pid" 2> /dev/null &
+    wait $pid
     if [ $? == 0 ]; then
         echo YES
         return 1

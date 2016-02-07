@@ -35,7 +35,7 @@ services:
             - postgres
             - redis
     redis:
-        image: redis
+        image: redis:alpine
         command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"

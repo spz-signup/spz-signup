@@ -1,17 +1,18 @@
 # base information
-FROM python:2.7
+FROM python:2.7-alpine
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # create user
-RUN useradd --home-dir /home/spz --create-home --shell /bin/bash --uid 1000 spz
+RUN adduser -h /home/spz -s /bin/bash -u 1000 -D spz
 
 # set workdir
 WORKDIR /home/spz/code
 
 # upgrade system
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y postgresql-client && \
+RUN apk update && \
+    apk upgrade && \
+    apk add bash file gcc musl-dev postgresql-client postgresql-dev && \
+    ln -s /usr/lib/libmagic.so.1 /usr/lib/libmagic.so && \
     pip install -U pip
 
 # install requirements
