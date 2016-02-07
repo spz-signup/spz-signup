@@ -36,15 +36,19 @@ services:
             - redis
     redis:
         image: redis
+        command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"
+        volumes:
+            - data_redis:/data
         read_only: true
     postgres:
         image: postgres
         ports:
             - "127.0.0.1:25432:5432"
         volumes:
-            - data_postgres:/run/postgresql
+            - data_postgres:/var/lib/postgres/data
+            - run_postgres:/run/postgresql
             - tmp_postgres:/tmp
         read_only: true
         environment:
@@ -58,6 +62,8 @@ services:
         read_only: true
 volumes:
     data_postgres: {}
+    data_redis: {}
     data_static: {}
+    run_postgres: {}
     tmp_mail: {}
     tmp_postgres: {}
