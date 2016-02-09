@@ -1,14 +1,16 @@
 version: '2'
 services:
-    web:
-        build: .
-        command: python runserver -H 0.0.0.0
+    uwsgi:
+        build: images/spz
+        command: uwsgi --ini /home/spz/code/uwsgi.ini
         ports:
-            - "127.0.0.1:8080:8080"
+            - "127.0.0.1:3031:3031"
         volumes:
-            - ./spz:/home/spz/code/spz:ro
-            - ./util:/home/spz/code/util:ro
+            - ./images/spz/spz:/home/spz/code/spz:ro
+            - ./images/spz/util:/home/spz/code/util:ro
             - data_static:/home/spz/code/spz/static
+            - state_spz:/state
+            - tmp_spz:/tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -19,11 +21,11 @@ services:
             - mail
             - postgres
             - redis
-    worker:
-        build: .
+    rqworker:
+        build: images/spz
         command: rqworker --url redis://redis:6379/0
         volumes_from:
-            - web
+            - uwsgi
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -43,7 +45,7 @@ services:
             - data_redis:/data
         read_only: true
     postgres:
-        image: postgres
+        build: images/postgres
         ports:
             - "127.0.0.1:25432:5432"
         volumes:
@@ -60,10 +62,26 @@ services:
         volumes:
             - tmp_mail:/tmp
         read_only: true
+    nginx:
+        build: images/nginx
+        ports:
+            - "127.0.0.1:80:80"
+            - "127.0.0.1:443:443"
+        volumes:
+            - cache_nginx:/var/cache/nginx
+            - data_static:/static
+            - tmp_nginx:/tmp
+        read_only: true
+        links:
+            - uwsgi
 volumes:
+    cache_nginx: {}
     data_postgres: {}
     data_redis: {}
     data_static: {}
     run_postgres: {}
+    state_spz: {}
     tmp_mail: {}
+    tmp_nginx: {}
     tmp_postgres: {}
+    tmp_spz: {}

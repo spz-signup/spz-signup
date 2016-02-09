@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-FILE_LOCK=/home/spz/lock
-FILE_DONE=/home/spz/initialized
-FILE_PROCESS=/home/spz/inprocess
+FILE_LOCK=/state/lock
+FILE_DONE=/state/initialized
+FILE_PROCESS=/state/inprocess
 
 # echo function for stderr
 echoerr() { echo "$@" 1>&2; }
@@ -82,8 +82,12 @@ wait_for_services() {
 }
 
 init() {
+    echo "run global first run init"
+
     PGPASSWORD=mysecretpassword psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
+
+    echo "finished initialization"
 }
 
 wait_for_services

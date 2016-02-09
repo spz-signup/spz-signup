@@ -11,7 +11,7 @@ WORKDIR /home/spz/code
 # upgrade system
 RUN apk update && \
     apk upgrade && \
-    apk add bash file gcc musl-dev postgresql-client postgresql-dev && \
+    apk add bash file gcc musl-dev postgresql-client postgresql-dev uwsgi-python && \
     ln -s /usr/lib/libmagic.so.1 /usr/lib/libmagic.so && \
     pip install -U pip
 
@@ -21,10 +21,11 @@ RUN pip install -U -r requirements.txt
 
 # copy code
 COPY . /home/spz/code
-RUN chown -R spz:spz /home/spz/code
+RUN mkdir /state && \
+    chown -R spz:spz /home/spz/code /state
 
 # security and volumes
-VOLUME /home/spz
+VOLUME ["/home/spz/code/spz/static", "/state"]
 USER 1000
 
 # set entry point
