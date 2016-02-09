@@ -21,6 +21,9 @@ services:
             - mail
             - postgres
             - redis
+        networks:
+            - front
+            - back
     rqworker:
         build: images/spz
         command: rqworker --url redis://redis:6379/0
@@ -36,6 +39,8 @@ services:
             - mail
             - postgres
             - redis
+        networks:
+            - back
     redis:
         image: redis:alpine
         command: redis-server --appendonly yes
@@ -44,6 +49,8 @@ services:
         volumes:
             - data_redis:/data
         read_only: true
+        networks:
+            - back
     postgres:
         build: images/postgres
         ports:
@@ -55,6 +62,8 @@ services:
         read_only: true
         environment:
             - POSTGRES_PASSWORD=mysecretpassword
+        networks:
+            - back
     mail:
         image: djfarrelly/maildev
         ports:
@@ -62,6 +71,8 @@ services:
         volumes:
             - tmp_mail:/tmp
         read_only: true
+        networks:
+            - back
     nginx:
         build: images/nginx
         ports:
@@ -72,6 +83,8 @@ services:
             - data_static:/static
             - tmp_nginx:/tmp
         read_only: true
+        networks:
+            - front
         links:
             - uwsgi
 volumes:
@@ -85,3 +98,6 @@ volumes:
     tmp_nginx: {}
     tmp_postgres: {}
     tmp_spz: {}
+networks:
+    front: {}
+    back: {}
