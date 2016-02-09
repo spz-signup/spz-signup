@@ -42,7 +42,7 @@ services:
         networks:
             - back
     redis:
-        image: redis:alpine
+        image: redis
         command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"
@@ -80,7 +80,7 @@ services:
             - "127.0.0.1:443:443"
         volumes:
             - cache_nginx:/var/cache/nginx
-            - data_static:/static
+            - data_static:/static:ro
             - tmp_nginx:/tmp
         read_only: true
         networks:
