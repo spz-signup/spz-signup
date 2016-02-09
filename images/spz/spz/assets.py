@@ -51,7 +51,8 @@ tools_js = Bundle('js/jquery.tablesort.js',
 
 # Stylesheet bundles:
 
-all_css = Bundle('css/semantic.css',
+all_css = Bundle('css/lato.css',
+                 'css/semantic.css',
                  'css/spz.css',
                  filters='rcssmin', output='css/packed.css')
 
