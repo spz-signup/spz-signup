@@ -18,21 +18,21 @@ def render_error(errorcode, errormessage):
 
 
 def page_not_found(e):
-    return render_error(404, u'Seite nicht gefunden')
+    return render_error(404, 'Seite nicht gefunden')
 
 
 def page_forbidden(e):
-    return render_error(403, u'Keine Berechtigung')
+    return render_error(403, 'Keine Berechtigung')
 
 
 def page_gone(e):
-    return render_error(410, u'Seite wurde entfernt')
+    return render_error(410, 'Seite wurde entfernt')
 
 
 def not_found(e):
-    return render_error(500, u'Interner Fehler')
+    return render_error(500, 'Interner Fehler')
 
 
 def unauthorized(e):
-    flash(u'Bitte einloggen!', 'warning')
+    flash('Bitte einloggen!', 'warning')
     return redirect(url_for('login'))

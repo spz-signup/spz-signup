@@ -8,7 +8,7 @@
 import socket
 import re
 import csv
-import StringIO
+import io
 from datetime import datetime, timedelta
 
 from redis import ConnectionError
@@ -39,30 +39,30 @@ def generate_status_mail(applicant, course, time=None, restock=False):
         if attendance.waiting:
             # applicant is waiting, let's figure out if we are in RND or FCFS phase
             if course.language.is_open_for_signup_rnd(time):
-                subject_status = u'Verlosungspool'
+                subject_status = 'Verlosungspool'
                 template = 'mails/poolmail.html'
             else:
-                subject_status = u'Warteliste'
+                subject_status = 'Warteliste'
                 template = 'mails/waitinglistmail.html'
         else:
             # :) applicant is signed up for the course
             # let's differ according to the reason (normal procedure or manual restock)
             if restock:
-                subject_status = u'Platz durch Nachrückverfahren'
+                subject_status = 'Platz durch Nachrückverfahren'
                 template = 'mails/restockmail.html'
             else:
-                subject_status = u'Erfolgreiche Anmeldung'
+                subject_status = 'Erfolgreiche Anmeldung'
                 template = 'mails/registeredmail.html'
     else:
         # no registration exists => assuming she got kicked out
-        subject_status = u'Platzverlust'
+        subject_status = 'Platzverlust'
         template = 'mails/kickoutmail.html'
 
     return Message(
         sender=app.config['PRIMARY_MAIL'],
         reply_to=course.language.reply_to,
         recipients=[applicant.mail],
-        subject=u'[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name(), subject_status),
+        subject='[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name(), subject_status),
         body=render_template(
             template,
             applicant=applicant,
@@ -84,7 +84,7 @@ def check_precondition_with_auth(cond, msg, auth=False):
     """
     if not cond:
         if auth:
-            flash(u'{0} (Überschrieben durch Fachleiterzugang!)'.format(msg), 'warning')
+            flash('{0} (Überschrieben durch Fachleiterzugang!)'.format(msg), 'warning')
             return False
         else:
             flash(msg, 'negative')
@@ -99,7 +99,7 @@ def index():
     time = datetime.utcnow()
 
     if g.access:
-        flash(u'Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
+        flash('Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
@@ -117,22 +117,22 @@ def index():
                 )
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
-            u'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
+            'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
             g.access
         )
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
-            u'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen',
+            'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen',
             g.access
         )
         err |= check_precondition_with_auth(
             not applicant.in_course(course) and not applicant.active_in_parallel_course(course),
-            u'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet',
+            'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet',
             g.access
         )
         err |= check_precondition_with_auth(
             not applicant.over_limit(),
-            u'Sie haben das Limit an Bewerbungen bereits erreicht',
+            'Sie haben das Limit an Bewerbungen bereits erreicht',
             g.access
         )
         if err:
@@ -149,14 +149,14 @@ def index():
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            flash(u'Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'negative')
+            flash('Ihre Kurswahl konnte nicht registriert werden: {0}'.format(e), 'negative')
             return dict(form=form)
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
             queue.enqueue(async_send, generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
         # Finally redirect the user to an confirmation page, too
         return render_template('confirm.html', applicant=applicant, course=course)
@@ -210,18 +210,18 @@ def registrations():
                     num_deleted = models.Registration.query.delete()
                     db.session.add_all(unique_registrations)
                     db.session.commit()
-                    flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                    flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
                           .format(num_deleted, len(unique_registrations)), 'success')
                 except Exception as e:
                     db.session.rollback()
-                    flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
+                    flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
 
                 return redirect(url_for('importer'))
 
-            flash(u'Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
+            flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
             return None
 
-    flash(u'Datei konnte nicht gelesen werden', 'negative')
+    flash('Datei konnte nicht gelesen werden', 'negative')
     return None
 
 
@@ -245,18 +245,18 @@ def approvals():
                     approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
                     db.session.add_all(approvals)
                     db.session.commit()
-                    flash(u'Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                    flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
                           .format(num_deleted, len(approvals)), 'success')
                 except Exception as e:  # csv, index or db could go wrong here..
                     db.session.rollback()
-                    flash(u'Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
+                    flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
 
                 return redirect(url_for('importer'))
 
-            flash(u'Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
+            flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
             return None
 
-    flash(u'Datei konnte nicht gelesen werden', 'negative')
+    flash('Datei konnte nicht gelesen werden', 'negative')
     return None
 
 
@@ -282,11 +282,11 @@ def notifications():
 
                     conn.send(msg)
 
-            flash(u'Mail erfolgreich verschickt', 'success')
+            flash('Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
 
         except (AssertionError, socket.error) as e:
-            flash(u'Mail wurde nicht verschickt: {0}'.format(e), 'negative')
+            flash('Mail wurde nicht verschickt: {0}'.format(e), 'negative')
 
     return dict(form=form)
 
@@ -298,25 +298,25 @@ def export_course(course_id):
     active_no_debt = [attendance.applicant for attendance in course.attendances
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
-    buf = StringIO.StringIO()
+    buf = io.StringIO()
     out = UnicodeWriter(buf, delimiter=';')
 
     # XXX: header -- not standardized
-    out.writerow([u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail', u'Matrikelnummer',
-                  u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
+    out.writerow(['Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail', 'Matrikelnummer',
+                  'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
 
-    maybe = lambda x: x if x else u''
+    maybe = lambda x: x if x else ''
 
     idx = 1
     for applicant in active_no_debt:
-        out.writerow([u'{0}'.format(idx), u'{0}'.format(applicant.id), applicant.first_name,
+        out.writerow(['{0}'.format(idx), '{0}'.format(applicant.id), applicant.first_name,
                       applicant.last_name, applicant.mail, maybe(applicant.tag), maybe(applicant.phone),
-                      applicant.degree.name if applicant.degree else u'', u'{0}'.format(maybe(applicant.semester)),
-                      applicant.origin.name if applicant.origin else u''])
+                      applicant.degree.name if applicant.degree else '', '{0}'.format(maybe(applicant.semester)),
+                      applicant.origin.name if applicant.origin else ''])
         idx += 1
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(course.full_name())
+    resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste {0}.csv"'.format(course.full_name())
     resp.mimetype = 'text/csv'
 
     return resp
@@ -326,14 +326,14 @@ def export_course(course_id):
 def export_language(language_id):
     language = models.Language.query.get_or_404(language_id)
 
-    buf = StringIO.StringIO()
+    buf = io.StringIO()
     out = UnicodeWriter(buf, delimiter=';')
 
     # XXX: header -- not standardized
-    out.writerow([u'Kurs', u'Kursplatz', u'Bewerbernummer', u'Vorname', u'Nachname', u'Mail',
-                  u'Matrikelnummer', u'Telefon', u'Studienabschluss', u'Semester', u'Bewerberkreis'])
+    out.writerow(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
+                  'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
 
-    maybe = lambda x: x if x else u''
+    maybe = lambda x: x if x else ''
 
     for course in language.courses:
         active_no_debt = [attendance.applicant for attendance in course.attendances
@@ -341,21 +341,21 @@ def export_language(language_id):
 
         idx = 1
         for applicant in active_no_debt:
-            out.writerow([u'{0}'.format(course.full_name()),
-                          u'{0}'.format(idx),
-                          u'{0}'.format(applicant.id),
+            out.writerow(['{0}'.format(course.full_name()),
+                          '{0}'.format(idx),
+                          '{0}'.format(applicant.id),
                           applicant.first_name,
                           applicant.last_name,
                           applicant.mail,
                           maybe(applicant.tag),
                           maybe(applicant.phone),
-                          applicant.degree.name if applicant.degree else u'',
-                          u'{0}'.format(maybe(applicant.semester)),
-                          applicant.origin.name if applicant.origin else u''])
+                          applicant.degree.name if applicant.degree else '',
+                          '{0}'.format(maybe(applicant.semester)),
+                          applicant.origin.name if applicant.origin else ''])
             idx += 1
 
     resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = u'attachment; filename="Kursliste {0}.csv"'.format(language.name)
+    resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste {0}.csv"'.format(language.name)
     resp.mimetype = 'text/csv'
 
     return resp
@@ -406,14 +406,14 @@ def applicant(id):
             applicant.semester = form.get_semester()
 
             db.session.commit()
-            flash(u'Der Bewerber wurde aktualisiert', 'success')
+            flash('Der Bewerber wurde aktualisiert', 'success')
 
             add_to = form.get_add_to()
             remove_from = form.get_remove_from()
             notify = form.get_send_mail()
 
             if add_to and remove_from:
-                flash(u'Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen', 'negative')
+                flash('Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen', 'negative')
             elif add_to:
                 return add_attendance(applicant_id=applicant.id, course_id=add_to.id, notify=notify)
             elif remove_from:
@@ -421,7 +421,7 @@ def applicant(id):
 
         except Exception as e:
             db.session.rollback()
-            flash(u'Der Bewerber konnte nicht aktualisiert werden: {0}'.format(e), 'negative')
+            flash('Der Bewerber konnte nicht aktualisiert werden: {0}'.format(e), 'negative')
             return dict(form=form)
 
     form.populate(applicant)
@@ -436,10 +436,10 @@ def search_applicant():
     applicants = []
 
     if form.validate_on_submit():
-        applicants = models.Applicant.query.filter(models.Applicant.first_name.like(u'%{0}%'.format(form.token.data))
-                                                   | models.Applicant.last_name.like(u'%{0}%'.format(form.token.data))
-                                                   | models.Applicant.mail.like(u'%{0}%'.format(form.token.data))
-                                                   | models.Applicant.tag.like(u'%{0}%'.format(form.token.data)))
+        applicants = models.Applicant.query.filter(models.Applicant.first_name.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.last_name.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.mail.like('%{0}%'.format(form.token.data))
+                                                   | models.Applicant.tag.like('%{0}%'.format(form.token.data)))
 
     return dict(form=form, applicants=applicants)
 
@@ -450,28 +450,28 @@ def add_attendance(applicant_id, course_id, notify):
     course = models.Course.query.get_or_404(course_id)
 
     if applicant.in_course(course) or applicant.active_in_parallel_course(course):
-        flash(u'Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil', 'negative')
+        flash('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil', 'negative')
         return redirect(url_for('applicant', id=applicant_id))
 
     try:
         applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
         db.session.commit()
-        flash(u'Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
+        flash('Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
 
         if not course.is_allowed(applicant):
-            flash(u'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
+            flash('Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
 
     except Exception as e:
         db.session.rollback()
-        flash(u'Der Teilnehmer konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'negative')
+        flash('Der Teilnehmer konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'negative')
         return redirect(url_for('applicant', id=applicant_id))
 
     if notify:
         try:
             queue.enqueue(async_send, generate_status_mail(applicant, course, restock=True))
-            flash(u'Mail erfolgreich verschickt', 'success')
+            flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
     return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
 
@@ -485,18 +485,18 @@ def remove_attendance(applicant_id, course_id, notify):
     try:
         attendance.applicant.remove_course_attendance(attendance.course)
         db.session.commit()
-        flash(u'Der Bewerber wurde aus dem Kurs genommen', 'success')
+        flash('Der Bewerber wurde aus dem Kurs genommen', 'success')
     except Exception as e:
         db.session.rollback()
-        flash(u'Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'negative')
+        flash('Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'negative')
         return redirect(url_for('applicant', id=applicant_id))
 
     if notify:
         try:
             queue.enqueue(async_send, generate_status_mail(applicant, course))
-            flash(u'Mail erfolgreich verschickt', 'success')
+            flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
     return redirect(url_for('applicant', id=applicant_id))
 
@@ -520,7 +520,7 @@ def payments():
             a_id, c_id = match.group('a_id', 'c_id')
             return redirect(url_for('status', applicant_id=a_id, course_id=c_id))
 
-        flash(u'Belegungsnummer ungültig', 'negative')
+        flash('Belegungsnummer ungültig', 'negative')
 
     stat_list = db.session.query(models.Attendance.paidbycash,
                                  func.sum(models.Attendance.amountpaid),
@@ -532,7 +532,7 @@ def payments():
                           .group_by(models.Attendance.paidbycash)
 
     desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
-    stats = [dict(zip(desc, tup)) for tup in stat_list]
+    stats = [dict(list(zip(desc, tup))) for tup in stat_list]
 
     return dict(form=form, stats=stats)
 
@@ -567,10 +567,10 @@ def status(applicant_id, course_id):
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
             db.session.commit()
-            flash(u'Der Status wurde aktualisiert', 'success')
+            flash('Der Status wurde aktualisiert', 'success')
         except Exception as e:
             db.session.rollback()
-            flash(u'Der Status konnte nicht aktualisiert werden: {0}'.format(e), 'negative')
+            flash('Der Status konnte nicht aktualisiert werden: {0}'.format(e), 'negative')
             return dict(form=form, attendance=attendance)
 
         if form.notify_change.data:
@@ -578,9 +578,9 @@ def status(applicant_id, course_id):
                 course = attendance.course
                 applicant = attendance.applicant
                 queue.enqueue(async_send, generate_status_mail(applicant, course))
-                flash(u'Mail erfolgreich verschickt', 'success')
+                flash('Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
-                flash(u'Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+                flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
     form.populate(attendance)
     return dict(form=form, attendance=attendance)
@@ -620,7 +620,7 @@ def task_queue():
     try:
         jobs = queue.jobs
     except ConnectionError as e:
-        flash(u'Jobabfrage nicht möglich: {0}'.format(e), 'warning')
+        flash('Jobabfrage nicht möglich: {0}'.format(e), 'warning')
 
     tasks = []
     for job in jobs:
@@ -631,7 +631,7 @@ def task_queue():
 
             # if the argument is a flask.ext.Message we know how to get its most interesting information
             if isinstance(args, Message):
-                payload = u'{0}, {1}'.format(args.recipients, args.subject)
+                payload = '{0}, {1}'.format(args.recipients, args.subject)
 
             # otherwise we have to show the description for now -- XXX: support more tasks
             else:
@@ -660,16 +660,16 @@ def preterm():
             msg = Message(
                 sender=app.config['PRIMARY_MAIL'],
                 recipients=[form.mail.data.encode('utf-8')],
-                subject=u'[Sprachenzentrum] URL für prioritäre Anmeldung',
-                body=u'{0}'.format(url_for('index', token=token, _external=True)),
+                subject='[Sprachenzentrum] URL für prioritäre Anmeldung',
+                body='{0}'.format(url_for('index', token=token, _external=True)),
                 charset='utf-8'
             )
 
             mail.send(msg)
-            flash(u'Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
+            flash('Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
 
         except (AssertionError, socket.error) as e:
-            flash(u'Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
     # always show preterm signups in this view
     attendances = models.Attendance.query \
@@ -688,7 +688,7 @@ def duplicates():
                         .group_by(models.Applicant.tag) \
                         .having(func.count(models.Applicant.id) > 1)
 
-    doppelganger = [models.Applicant.query.filter_by(tag=duptag) for duptag in map(lambda tup: tup[0], taglist)]
+    doppelganger = [models.Applicant.query.filter_by(tag=duptag) for duptag in [tup[0] for tup in taglist]]
 
     return dict(doppelganger=doppelganger)
 
@@ -708,14 +708,14 @@ def restock_fcfs():
                 restocked_attendances.extend(course.restock())
 
             db.session.commit()
-            flash(u'Kurse bestmöglichst mit Nachrückern gefüllt', 'success')
+            flash('Kurse bestmöglichst mit Nachrückern gefüllt', 'success')
         except Exception as e:
             db.session.rollback()
-            flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'negative')
+            flash('Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'negative')
             return redirect(url_for('restock_fcfs'))
 
         if len(restocked_attendances) == 0:
-            flash(u'Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind', 'negative')
+            flash('Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind', 'negative')
             return redirect(url_for('restock_fcfs'))
 
         try:
@@ -723,11 +723,11 @@ def restock_fcfs():
                 for attendance in restocked_attendances:
                     conn.send(generate_status_mail(attendance.applicant, attendance.course))
 
-            flash(u'Mails erfolgreich verschickt', 'success')
+            flash('Mails erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
 
         except (AssertionError, socket.error) as e:
-            flash(u'Mails konnten nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Mails konnten nicht verschickt werden: {0}'.format(e), 'negative')
 
     return dict(form=form)
 
@@ -766,7 +766,7 @@ def restock_rnd():
 
             # weighted random selection
             gen = WeightedRandomGenerator(weights)
-            idx = gen.next()
+            idx = next(gen)
 
             # remove attendance and weight from possible candidates as to not select again;  guarantees termination
             attendance = to_assign.pop(idx)
@@ -787,12 +787,12 @@ def restock_rnd():
 
         try:
             db.session.commit()
-            flash(u'{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.'
+            flash('{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.'
                   .format(sum([1 for a in handled_attendances if not a.waiting]), stats['all'],
                           sum([1 for a in handled_attendances if a.has_to_pay])), 'success')
         except Exception as e:
             db.session.rollback()
-            flash(u'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'negative')
+            flash('Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'negative')
             return redirect(url_for('restock_rnd'))
 
         # Send mails (async) only if the commit was successfull -- be conservative here
@@ -801,9 +801,9 @@ def restock_rnd():
                 queue.enqueue(async_send, generate_status_mail(attendance.applicant, attendance.course))
 
             if handled_attendances:  # only show if there are attendances that we handled
-                flash(u'Mails erfolgreich verschickt', 'success')
+                flash('Mails erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(u'Mails wurden nicht verschickt: {0}'.format(e), 'negative')
+            flash('Mails wurden nicht verschickt: {0}'.format(e), 'negative')
 
     return dict(form=form)
 
@@ -826,10 +826,10 @@ def unique():
                 deleted += 1
 
             db.session.commit()
-            flash(u'Kurse von {0} wartenden Teilnahmen mit aktiven Parallelkurs bereinigt'.format(deleted), 'success')
+            flash('Kurse von {0} wartenden Teilnahmen mit aktiven Parallelkurs bereinigt'.format(deleted), 'success')
         except Exception as e:
             db.session.rollback()
-            flash(u'Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: {0}'.format(e), 'negative')
+            flash('Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: {0}'.format(e), 'negative')
             return redirect(url_for('unique'))
 
     return dict(form=form)
@@ -844,7 +844,7 @@ def login():
         if user:
             login_user(user)
             return redirect(url_for('internal'))
-        flash(u'Du kommst hier net rein!', 'negative')
+        flash('Du kommst hier net rein!', 'negative')
 
     return dict(form=form)
 

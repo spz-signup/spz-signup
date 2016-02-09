@@ -12,8 +12,7 @@ Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
-fpdf==1.7.2
-functools32==3.2.3.post2
+-e git+https://github.com/reingart/pyfpdf.git#egg=fpdf
 ipython==4.0.1
 itsdangerous==0.24
 Jinja2==2.8

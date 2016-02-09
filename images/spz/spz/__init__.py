@@ -60,7 +60,7 @@ assets_env = Environment(app)
 
 bundles = assets.get_bundles()
 
-for name, bundle in bundles.iteritems():
+for name, bundle in bundles.items():
     assets_env.register(name, bundle)
 
 

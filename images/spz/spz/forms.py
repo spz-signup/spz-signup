@@ -32,13 +32,13 @@ def graduations_to_choicelist():
 
 @cache.cached(key_prefix='origins')
 def origins_to_choicelist():
-    return [(x.id, u'{0}'.format(x.name))
+    return [(x.id, '{0}'.format(x.name))
             for x in models.Origin.query.order_by(models.Origin.id.asc())]
 
 
 @cache.cached(key_prefix='languages')
 def languages_to_choicelist():
-    return [(x.id, u'{0}'.format(x.name))
+    return [(x.id, '{0}'.format(x.name))
             for x in models.Language.query.order_by(models.Language.name.asc())]
 
 
@@ -47,9 +47,9 @@ def upcoming_courses_to_choicelist():
     available = models.Course.query.join(models.Language.courses) \
                                    .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
-    upcoming = filter(lambda course: course.language.signup_end >= datetime.utcnow(), available)
+    upcoming = [course for course in available if course.language.signup_end >= datetime.utcnow()]
 
-    return [(course.id, u'{0} {1}'.format(course.full_name(), u' (Warteliste)' if course.is_full() else u''))
+    return [(course.id, '{0} {1}'.format(course.full_name(), ' (Warteliste)' if course.is_full() else ''))
             for course in upcoming]
 
 
@@ -58,7 +58,7 @@ def all_courses_to_choicelist():
     courses = models.Course.query.join(models.Language.courses) \
                                  .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
-    return [(course.id, u'{0}'.format(course.full_name()))
+    return [(course.id, '{0}'.format(course.full_name()))
             for course in courses]
 
 
@@ -72,23 +72,23 @@ class SignupForm(Form):
     """
 
     # This should be a BooleanField, because of select-between-two semantics
-    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')],
-                      choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
+    sex = SelectField('Anrede', [validators.Required('Anrede muss angegeben werden')],
+                      choices=[(1, 'Herr'), (2, 'Frau')], coerce=int)
 
-    first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
-    last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
-    phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
-    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
-                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
-    origin = SelectField(u'Bewerber&shy;kreis', [validators.Required(u'Herkunft muss angegeben werden')], coerce=int)
+    first_name = TextField('Vorname', [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')])
+    last_name = TextField('Nachname', [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')])
+    phone = TextField('Telefon', [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
+    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'),
+                                 validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
+    origin = SelectField('Bewerber&shy;kreis', [validators.Required('Herkunft muss angegeben werden')], coerce=int)
 
-    tag = TextField(u'Matrikel&shy;nummer', [validators.Optional(),
-                                        validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+    tag = TextField('Matrikel&shy;nummer', [validators.Optional(),
+                                        validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
 
-    degree = SelectField(u'Studien&shy;abschluss', [validators.Optional()], coerce=int)
-    graduation = SelectField(u'Kurs&shy;abschluss', [validators.Optional()], coerce=int)
-    semester = IntegerField(u'Fach&shy;semester', [validators.Optional()])
-    course = SelectField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
+    degree = SelectField('Studien&shy;abschluss', [validators.Optional()], coerce=int)
+    graduation = SelectField('Kurs&shy;abschluss', [validators.Optional()], coerce=int)
+    semester = IntegerField('Fach&shy;semester', [validators.Optional()])
+    course = SelectField('Kurse', [validators.Required('Kurs muss angegeben werden')], coerce=int)
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
@@ -157,12 +157,12 @@ class NotificationForm(Form):
        The field's length are limited on purpose.
     """
 
-    mail_subject = TextField('Betreff', [validators.Length(1, 200, u'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
-    mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, u'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
+    mail_subject = TextField('Betreff', [validators.Length(1, 200, 'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
+    mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, 'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
     mail_cc = TextField('CC', [validators.Optional()])
     mail_bcc = TextField('BCC', [validators.Optional()])
-    mail_courses = SelectMultipleField(u'Kurse', [validators.Required(u'Kurs muss angegeben werden')], coerce=int)
-    mail_reply_to = SelectField('Antwort an', [validators.Required(u'Reply-To muss angegeben werden')], coerce=int)
+    mail_courses = SelectMultipleField('Kurse', [validators.Required('Kurs muss angegeben werden')], coerce=int)
+    mail_reply_to = SelectField('Antwort an', [validators.Required('Reply-To muss angegeben werden')], coerce=int)
     only_active = BooleanField('Nur an Aktive')
     only_have_to_pay = BooleanField('Nur an nicht Bezahlte')
     only_waiting = BooleanField('Nur an Wartende')
@@ -224,22 +224,22 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     """
     applicant = None  # really needed?
-    first_name = TextField(u'Vorname', [validators.Length(1, 60, u'Länge muss zwischen 1 und 60 Zeichen sein')])
-    last_name = TextField(u'Nachname', [validators.Length(1, 60, u'Länge muss zwischen 1 and 60 sein')])
-    phone = TextField(u'Telefon', [validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
-    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'), validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
-    tag = TextField(u'Matrikelnummer', [validators.Optional(), validators.Length(max=20, message=u'Länge darf maximal 20 Zeichen sein')])
+    first_name = TextField('Vorname', [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')])
+    last_name = TextField('Nachname', [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')])
+    phone = TextField('Telefon', [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
+    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'), validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
+    tag = TextField('Matrikelnummer', [validators.Optional(), validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
 
-    origin = SelectField(u'Bewerberkreis', [validators.Required(u'Bewerberkreis muss angegeben werden')], coerce=int)
+    origin = SelectField('Bewerberkreis', [validators.Required('Bewerberkreis muss angegeben werden')], coerce=int)
 
-    sex = SelectField(u'Anrede', [validators.Required(u'Anrede muss angegeben werden')],
-                      choices=[(1, u'Herr'), (2, u'Frau')], coerce=int)
-    degree = SelectField(u'Studienabschluss', [validators.Optional()], coerce=int)
-    semester = IntegerField(u'Fachsemester', [validators.Optional()])
+    sex = SelectField('Anrede', [validators.Required('Anrede muss angegeben werden')],
+                      choices=[(1, 'Herr'), (2, 'Frau')], coerce=int)
+    degree = SelectField('Studienabschluss', [validators.Optional()], coerce=int)
+    semester = IntegerField('Fachsemester', [validators.Optional()])
 
-    add_to = SelectField(u'Teilnahme hinzufügen', [validators.Optional()], coerce=int, choices=[])
-    remove_from = SelectField(u'Teilnahme löschen', [validators.Optional()], coerce=int, choices=[])
-    send_mail = BooleanField(u'Mail verschicken')
+    add_to = SelectField('Teilnahme hinzufügen', [validators.Optional()], coerce=int, choices=[])
+    remove_from = SelectField('Teilnahme löschen', [validators.Optional()], coerce=int, choices=[])
+    send_mail = BooleanField('Mail verschicken')
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
@@ -260,9 +260,9 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         self.degree.data = self.applicant.degree.id if self.applicant.degree else None
         self.semester.data = self.applicant.semester
 
-        in_courses_ids = map(lambda attendance: attendance.course.id, applicant.attendances)
-        self.add_to.choices = filter(lambda (idx, _): idx not in in_courses_ids, self.add_to.choices)
-        self.remove_from.choices = filter(lambda (idx, _): idx in in_courses_ids, self.remove_from.choices)
+        in_courses_ids = [attendance.course.id for attendance in applicant.attendances]
+        self.add_to.choices = [idx__ for idx__ in self.add_to.choices if idx__[0] not in in_courses_ids]
+        self.remove_from.choices = [idx__1 for idx__1 in self.remove_from.choices if idx__1[0] in in_courses_ids]
 
     def get_applicant(self):
         return self.applicant
@@ -297,15 +297,15 @@ class StatusForm(Form):
 
     """
 
-    graduation = SelectField(u'Kursabschluss', [validators.Optional()], coerce=int)
-    registered = TextField(u'Registrierungsdatum')
-    payingdate = TextField(u'Zahlungsdatum')
-    waiting = BooleanField(u'Warteliste')
-    has_to_pay = BooleanField(u'Zahlungspflichtig')
-    discounted = BooleanField(u'Ermäßigt')
-    paidbycash = BooleanField(u'Zahlungsart: Bar')
-    amountpaid = IntegerField(u'Zahlbetrag', [validators.NumberRange(min=0, message=u'Keine negativen Beträge')])
-    notify_change = BooleanField(u'Mail verschicken')
+    graduation = SelectField('Kursabschluss', [validators.Optional()], coerce=int)
+    registered = TextField('Registrierungsdatum')
+    payingdate = TextField('Zahlungsdatum')
+    waiting = BooleanField('Warteliste')
+    has_to_pay = BooleanField('Zahlungspflichtig')
+    discounted = BooleanField('Ermäßigt')
+    paidbycash = BooleanField('Zahlungsart: Bar')
+    amountpaid = IntegerField('Zahlbetrag', [validators.NumberRange(min=0, message='Keine negativen Beträge')])
+    notify_change = BooleanField('Mail verschicken')
 
     def __init__(self, *args, **kwargs):
         super(StatusForm, self).__init__(*args, **kwargs)
@@ -333,21 +333,21 @@ class PaymentForm(Form):
 
     """
 
-    confirmation_code = TextField('Code', [validators.Length(min=4, message=u'Länge muss mindestens 4 Zeichen lang sein')])
+    confirmation_code = TextField('Code', [validators.Length(min=4, message='Länge muss mindestens 4 Zeichen lang sein')])
 
 
 class SearchForm(Form):
     """Represents a form to search for specific applicants.
     """
 
-    token = TextField(u'Suchen', [validators.Required(u'Suchparameter muss angegeben werden')])
+    token = TextField('Suchen', [validators.Required('Suchparameter muss angegeben werden')])
 
 
 class LanguageForm(Form):
     """Represents a form for working with courses based on the user's language selection.
     """
 
-    language = SelectField(u'Sprache', [validators.Required(u'Die Sprache muss angegeben werden')], coerce=int)
+    language = SelectField('Sprache', [validators.Required('Die Sprache muss angegeben werden')], coerce=int)
 
     def __init__(self, *args, **kwargs):
         super(LanguageForm, self).__init__(*args, **kwargs)
@@ -384,8 +384,8 @@ class PretermForm(Form):
     """Represents a form to generate a preterm signup token.
     """
 
-    mail = TextField(u'E-Mail', [validators.Email(u'Valide Mail Adresse wird benötigt'),
-                                 validators.Length(max=120, message=u'Länge muss zwischen 1 und 120 Zeichen sein')])
+    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'),
+                                 validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
 
     def get_token(self):
         return token.generate(self.mail.data, namespace='preterm')
@@ -395,5 +395,5 @@ class LoginForm(Form):
     """Represents the login form the the internal partsPasswort
     """
 
-    user = TextField(u'User', [validators.Required(u'User muss angegeben werden')])
-    password = TextField(u'Passwort', [validators.Required(u'Passwort muss angegeben werden')])
+    user = TextField('User', [validators.Required('User muss angegeben werden')])
+    password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])

@@ -1,5 +1,5 @@
 # base information
-FROM python:2.7-slim
+FROM python:3.5-slim
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # create user
@@ -11,7 +11,7 @@ WORKDIR /home/spz/code
 # upgrade system and install requirements (normal and build)
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends gcc libmagic1 libpq-dev postgresql-client && \
+    apt-get install -y --no-install-recommends gcc git libmagic1 libpq-dev postgresql-client && \
     pip install -U pip --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 

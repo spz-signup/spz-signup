@@ -28,7 +28,7 @@ def validate_resources():
 
 def insert_resources():
     all_accounts = set()
-    for _aci_level, aci_list in app.config.get('ACCESS_CONTROL').iteritems():
+    for _aci_level, aci_list in app.config.get('ACCESS_CONTROL').items():
         for account in aci_list:
             all_accounts.add(account)
 
@@ -85,9 +85,9 @@ if __name__ == '__main__':
         sys.exit()
 
     # Request polite confirmation
-    token = uuid4().get_hex()[:5]  # repeat random token of arbitrary length
+    token = uuid4().hex[:5]  # repeat random token of arbitrary length
     try:
-        user_in = raw_input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'.format(db, token))
+        user_in = input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'.format(db, token))
     except EOFError:
         # OK, not an interactive process, try something else
         if 'YES_I_KNOW_THAT_WORLD_ENDS_NOW' in os.environ:

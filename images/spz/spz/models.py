@@ -189,7 +189,7 @@ class Applicant(db.Model):
         return attendance
 
     def remove_course_attendance(self, course):
-        self.attendances = filter(lambda attendance: attendance.course != course, self.attendances)
+        self.attendances = [attendance for attendance in self.attendances if attendance.course != course]
 
     def is_student(self):
         return Registration.exists(self.tag)
@@ -200,7 +200,7 @@ class Applicant(db.Model):
         return best
 
     def has_to_pay(self):
-        attends = len(filter(lambda attendance: not attendance.waiting, self.attendances))
+        attends = len([attendance for attendance in self.attendances if not attendance.waiting])
         return not self.is_student() or attends > 0
 
     def in_course(self, course):
@@ -211,8 +211,7 @@ class Applicant(db.Model):
         active_in_courses = [attendance.course for attendance in self.attendances
                              if attendance.course != course and not attendance.waiting]
 
-        active_parallel = filter(lambda crs: crs.language == course.language and crs.level == course.level,
-                                 active_in_courses)
+        active_parallel = [crs for crs in active_in_courses if crs.language == course.language and crs.level == course.level]
 
         return len(active_parallel) > 0
 
@@ -284,16 +283,16 @@ class Course(db.Model):
         return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
 
     def get_waiting_attendances(self):
-        return filter(lambda attendance: attendance.waiting, self.attendances)
+        return [attendance for attendance in self.attendances if attendance.waiting]
 
     def get_active_attendances(self):
-        return filter(lambda attendance: not attendance.waiting, self.attendances)
+        return [attendance for attendance in self.attendances if not attendance.waiting]
 
     def get_paying_attendances(self):
-        return filter(lambda attendance: not attendance.waiting and attendance.has_to_pay, self.attendances)
+        return [attendance for attendance in self.attendances if not attendance.waiting and attendance.has_to_pay]
 
     def get_free_attendances(self):
-        return filter(lambda attendance: not attendance.waiting and not attendance.has_to_pay, self.attendances)
+        return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
 
     def restock(self):
         # Negative number of free seats may happen if s.o. manually added an attendance
@@ -301,7 +300,7 @@ class Course(db.Model):
         waiting = self.get_waiting_attendances()
 
         # avoid restocking applicants already active in a parallel course
-        waiting = filter(lambda attendance: not attendance.applicant.active_in_parallel_course(self), waiting)
+        waiting = [attendance for attendance in waiting if not attendance.applicant.active_in_parallel_course(self)]
 
         to_move = waiting[:num_free]
 
@@ -314,7 +313,7 @@ class Course(db.Model):
         return to_move
 
     def full_name(self):
-        return u'{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
+        return '{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
 
 
 @total_ordering
@@ -378,16 +377,16 @@ class Language(db.Model):
 
     # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
     def get_waiting_attendances(self):
-        return sum(map(lambda course: course.get_waiting_attendances(), self.courses), [])
+        return sum([course.get_waiting_attendances() for course in self.courses], [])
 
     def get_active_attendances(self):
-        return sum(map(lambda course: course.get_active_attendances(), self.courses), [])
+        return sum([course.get_active_attendances() for course in self.courses], [])
 
     def get_paying_attendances(self):
-        return sum(map(lambda course: course.get_paying_attendances(), self.courses), [])
+        return sum([course.get_paying_attendances() for course in self.courses], [])
 
     def get_free_attendances(self):
-        return sum(map(lambda course: course.get_free_attendances(), self.courses), [])
+        return sum([course.get_free_attendances() for course in self.courses], [])
 
 
 @total_ordering

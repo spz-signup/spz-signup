@@ -35,9 +35,9 @@ class WeightedRandomGenerator(object):
             running_total += w
             self.totals.append(running_total)
 
-    def next(self):
+    def __next__(self):
         rnd = random.random() * self.totals[-1]
         return bisect.bisect_right(self.totals, rnd)
 
     def __call__(self):
-        return self.next()
+        return next(self)
