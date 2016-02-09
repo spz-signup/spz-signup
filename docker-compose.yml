@@ -49,7 +49,7 @@ services:
         ports:
             - "127.0.0.1:25432:5432"
         volumes:
-            - data_postgres:/var/lib/postgres/data
+            - data_postgres:/var/lib/postgresql/data
             - run_postgres:/run/postgresql
             - tmp_postgres:/tmp
         read_only: true
