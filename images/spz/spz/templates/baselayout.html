@@ -118,10 +118,15 @@
                     $elem.text(fmt);
                 });
 
-                $('button[type=reset]').on('click', function() {
+                $('button[type=reset]').on('click', function(evt) {
                     var form = $(this).closest('form');
-                    $('input[type=radio]', form).removeAttr('checked');
-                    $('.ui.dropdown', form).dropdown('clear');
+
+                    // that somehow seems required to really clear all fields
+                    window.setTimeout(function(){
+                        $('input[type=radio]', form).removeAttr('checked');
+                        $('input[type=text]', form).val('');
+                        $('.ui.dropdown', form).dropdown('clear');
+                    }, 10);
                 });
             });
 
