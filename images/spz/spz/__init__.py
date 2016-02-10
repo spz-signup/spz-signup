@@ -129,9 +129,9 @@ def detect_permission_level():
 routes = [('/', views.index, ['GET', 'POST']),
           ('/licenses', views.licenses, ['GET']),
 
-          ('/internal', views.internal, ['GET']),
+          ('/internal/', views.internal, ['GET']),
 
-          ('/internal/import', views.importer, ['GET']),
+          ('/internal/import/', views.importer, ['GET']),
           ('/internal/import/registrations', views.registrations, ['GET', 'POST']),
           ('/internal/import/approvals', views.approvals, ['GET', 'POST']),
 
@@ -169,7 +169,7 @@ routes = [('/', views.index, ['GET', 'POST']),
 
           ('/internal/preterm', views.preterm, ['GET', 'POST']),
 
-          ('/internal/statistics', views.statistics, ['GET']),
+          ('/internal/statistics/', views.statistics, ['GET']),
           ('/internal/statistics/free_courses', views.free_courses, ['GET']),
           ('/internal/statistics/origins_breakdown', views.origins_breakdown, ['GET']),
           ('/internal/statistics/task_queue', views.task_queue, ['GET']),
