@@ -13,22 +13,28 @@ Informationen zur Warteschlange
 
 {% block internal_body %}
 <div class="row">
+    <div class="ui warning message">
+        <div class="header">
+            Imkomplette Liste!
+        </div>
+        Aus technischen Grünen werden zur Zeit nur einige Tasks (ca. 10) in dieser Liste angezeigt.
+    </div>
     <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Status</th>
-                <th>Erstellt</th>
+                <th>Priorität</th>
                 <th>Payload</th>
+                <th>Gestartet</th>
             </tr>
         </thead>
         <tbody>
             {% for task in tasks %}
                 <tr>
                     <td>{{ task.id }}</a></td>
-                    <td>{{ task.status }}</td>
-                    <td class="fmt-datetime">{{ task.created_at }}</td>
+                    <td>{{ task.priority }}</a></td>
                     <td>{{ task.payload }}</td>
+                    <td class="fmt-datetime">{{ task.started }}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -25,7 +25,7 @@ from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, P
 from spz.models import Attendance
 from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
-from spz.async import queue, async_send
+from spz.async import async_send, cel
 
 
 def generate_status_mail(applicant, course, time=None, restock=False):
@@ -154,7 +154,7 @@ def index():
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
-            queue.enqueue(async_send, generate_status_mail(applicant, course, time))
+            async_send.delay(generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
@@ -468,7 +468,7 @@ def add_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            queue.enqueue(async_send, generate_status_mail(applicant, course, restock=True))
+            async_send.delay(generate_status_mail(applicant, course, restock=True))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -493,7 +493,7 @@ def remove_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            queue.enqueue(async_send, generate_status_mail(applicant, course))
+            async_send.delay(generate_status_mail(applicant, course))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -577,7 +577,7 @@ def status(applicant_id, course_id):
             try:
                 course = attendance.course
                 applicant = attendance.applicant
-                queue.enqueue(async_send, generate_status_mail(applicant, course))
+                async_send.delay(generate_status_mail(applicant, course))
                 flash('Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
                 flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -618,29 +618,18 @@ def origins_breakdown():
 def task_queue():
     jobs = []
     try:
-        jobs = queue.jobs
+        i = cel.control.inspect()
+        everything = i.scheduled()
+        jobs = everything[next(iter(everything.keys()))]
     except ConnectionError as e:
         flash('Jobabfrage nicht möglich: {0}'.format(e), 'warning')
 
     tasks = []
     for job in jobs:
-        payload = ''
+        request = job['request']
+        payload = '{}({}, {})'.format(request['name'], request['args'], request['kwargs'])
 
-        try:
-            args = job.args[0]
-
-            # if the argument is a flask.ext.Message we know how to get its most interesting information
-            if isinstance(args, Message):
-                payload = '{0}, {1}'.format(args.recipients, args.subject)
-
-            # otherwise we have to show the description for now -- XXX: support more tasks
-            else:
-                payload = args
-
-        except IndexError:
-            payload = job.args
-
-        task = {'id': job.id, 'status': job.get_status(), 'created_at': job.created_at, 'payload': payload}
+        task = {'id': request['id'], 'started': request['time_start'], 'payload': payload, 'priority': job['priority']}
         tasks.append(task)
 
     return dict(tasks=tasks)

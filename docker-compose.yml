@@ -24,9 +24,9 @@ services:
         networks:
             - front
             - back
-    rqworker:
+    celery:
         build: images/spz
-        command: rqworker --url redis://redis:6379/0
+        command: celery -A spz.async.cel worker --loglevel=INFO --autoreload
         volumes_from:
             - uwsgi
         read_only: true
