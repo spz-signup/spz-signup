@@ -191,18 +191,18 @@ class NotificationForm(Form):
             attendances = [att for att in attendances if not att.waiting and att.has_to_pay
                            and not att.applicant.discounted and att.amountpaid < att.course.price]
 
-        recipients = [attendance.applicant.mail.encode('utf-8') for attendance in attendances]
+        recipients = [attendance.applicant.mail for attendance in attendances]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
 
     def get_body(self):
-        return self.mail_body.data.encode('utf-8')
+        return self.mail_body.data
 
     def get_subject(self):
-        return self.mail_subject.data.encode('utf-8')
+        return self.mail_subject.data
 
     @staticmethod
     def _unique_mails_from_str(s):
-        return list(set([mail.strip().encode('utf-8') for mail in s.split(',') if '@' in mail]))  # XXX
+        return list(set([mail.strip() for mail in s.split(',') if '@' in mail]))  # XXX
 
     def get_cc(self):
         return self._unique_mails_from_str(self.mail_cc.data)
@@ -216,7 +216,7 @@ class NotificationForm(Form):
     @staticmethod
     def _reply_to_choices():
         # Start index by 1 instead of 0, for the form submitting to be consistent
-        return [(idx, mail.encode('utf-8')) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
+        return [(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
 
 
 class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here

@@ -23,7 +23,6 @@ from spz import app, models, mail, db, token
 from spz.decorators import templated
 from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm, LoginForm
 from spz.models import Attendance
-from spz.util.Encoding import UnicodeWriter
 from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
 from spz.async import queue, async_send
@@ -193,8 +192,8 @@ def registrations():
                 # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
                 # and duplicates
                 stripped_lines = (
-                    line.rstrip('\r').rstrip('\n').rstrip('\r').strip()
-                    for line in fp
+                    line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
+                    for line in fp.readlines()
                 )
                 filtered_lines = (
                     line
@@ -202,7 +201,7 @@ def registrations():
                     if line
                 )
                 unique_registrations = {
-                    models.Registration.from_cleartext(line.rstrip('\r\n'))
+                    models.Registration.from_cleartext(line)
                     for line in filtered_lines
                 }
 
@@ -299,7 +298,7 @@ def export_course(course_id):
                       if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
     buf = io.StringIO()
-    out = UnicodeWriter(buf, delimiter=';')
+    out = csv.writer(buf, delimiter=";", dialect=csv.excel)
 
     # XXX: header -- not standardized
     out.writerow(['Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail', 'Matrikelnummer',
@@ -327,7 +326,7 @@ def export_language(language_id):
     language = models.Language.query.get_or_404(language_id)
 
     buf = io.StringIO()
-    out = UnicodeWriter(buf, delimiter=';')
+    out = csv.writer(buf, delimiter=";", dialect=csv.excel)
 
     # XXX: header -- not standardized
     out.writerow(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
@@ -659,7 +658,7 @@ def preterm():
         try:
             msg = Message(
                 sender=app.config['PRIMARY_MAIL'],
-                recipients=[form.mail.data.encode('utf-8')],
+                recipients=[form.mail.data],
                 subject='[Sprachenzentrum] URL für prioritäre Anmeldung',
                 body='{0}'.format(url_for('index', token=token, _external=True)),
                 charset='utf-8'
