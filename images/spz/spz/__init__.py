@@ -79,6 +79,19 @@ if not app.debug:
     app.logger.addHandler(file_handler)
 
 
+# modify app for uwsgi
+if app.debug:
+    from werkzeug.debug import DebuggedApplication
+    app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
+elif args.profiling:
+    from werkzeug.contrib.profiler import ProfilerMiddleware
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app)
+
+elif args.linting:
+    from werkzeug.contrib.lint import LintMiddleware
+    app.wsgi_app = LintMiddleware(app.wsgi_app)
+
+
 # Database handling
 db = SQLAlchemy(app)
 
