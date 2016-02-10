@@ -31,6 +31,9 @@ def hash_secret_strong(s):
     This is the strong version which should be used for passwords but not for
     huge data sets like indentification numbers.
     """
+    if not s:
+        s = ''
+
     # WARNING: changing these parameter invalides the entire table!
     # INFO: buflen is in bytes, not bits! So this is a 256bit output
     #       which is higher than the current (2015-12) recommendation
@@ -52,6 +55,9 @@ def hash_secret_weak(s):
     This is the weak version which should be used for large data sets like
     identifiers, but NOT for passwords!
     """
+    if not s:
+        s = ''
+
     # WARNING: changing these parameter invalides the entire table!
     # INFO: buflen is in bytes, not bits! So this is a 256bit output
     #       which is higher than the current (2015-12) recommendation
@@ -488,7 +494,10 @@ class Registration(db.Model):
     @staticmethod
     def cleartext_to_salted(cleartext):
         """Convert cleartext unicode data to salted binary data."""
-        return hash_secret_weak(cleartext.lower())
+        if cleartext:
+            return hash_secret_weak(cleartext.lower())
+        else:
+            return hash_secret_weak('')
 
     @staticmethod
     def from_cleartext(cleartext):

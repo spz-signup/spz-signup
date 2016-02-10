@@ -107,11 +107,12 @@ def index():
 
         # signup at all times only with token or privileged users
         preterm = applicant.mail \
+                and one_time_token \
                 and token.validate_once(
                     token=one_time_token,
                     payload_wanted=applicant.mail,
                     namespace='preterm',
-                    db_obj=models.Applicant,
+                    db_model=models.Applicant,
                     db_column=models.Applicant.mail
                 )
         err = check_precondition_with_auth(

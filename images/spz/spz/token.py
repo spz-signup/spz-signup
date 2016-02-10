@@ -62,7 +62,7 @@ def validate_multi(token, namespace=None, max_age=timedelta(weeks=2).total_secon
     return payload_extracted
 
 
-def validate_ones(token, payload_wanted, db_model, db_column, max_age=timedelta(weeks=2).total_seconds(), namespace=None):
+def validate_once(token, payload_wanted, db_model, db_column, max_age=timedelta(weeks=2).total_seconds(), namespace=None):
     """Validates a payload-specific one-time-token.
 
        Additional checking is done for its integrity and expiration, defaulting to one week.
