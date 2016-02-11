@@ -542,23 +542,40 @@ class Approval(db.Model):
         return self.percent < other.percent
 
 
+# helper table for User<--[admin]-->Language N:M relationship
+admin_table = db.Table('admin', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('language_id', db.Integer, db.ForeignKey('language.id')),
+)
+
+
 class User(db.Model):
     """User for internal UI
 
-       :param id: User ID, the email address most of the time.
+       :param id: User ID, for internal usage.
+       :param email: Qualified user mail address.
+       :param active: Describes if user is able to login.
+       :param superuser: Users with that property have unlimited access.
        :param pwsalted: Salted password data.
+       :param languages: For non-superusers that are the languages they have access to.
     """
 
     __tablename__ = 'user'
 
-    id = db.Column(db.String(120), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True)
     active = db.Column(db.Boolean, default=True)
+    superuser = db.Column(db.Boolean, default=False)
     pwsalted = db.Column(db.Binary(32), nullable=True)
+    languages = db.relationship('Language', secondary='admin', backref='admins')
 
-    def __init__(self, id):
-        """Create new, active user without password."""
-        self.id = id
+    def __init__(self, email, active, superuser, languages):
+        """Create new user without password."""
+        self.email = email
+        self.active = active
+        self.superuser = superuser
         self.pwsalted = None
+        self.languages = languages
 
     def reset_password(self):
         """Reset password to random one and return it."""
@@ -619,17 +636,17 @@ class User(db.Model):
             return None
 
     @staticmethod
-    def get_by_login(id, pw):
-        """Return user by ID and password.
+    def get_by_login(email, pw):
+        """Return user by email and password.
 
         Returns None if one of the following is true:
-            - ID does not exist
+            - email does not exist
             - salted PW in database is set to None (i.e. no PW assigned)
             - password does not match (case-sensitive match!)
         """
         salted = hash_secret_strong(pw)
         return User.query.filter(and_(
-            func.lower(User.id) == func.lower(id),
+            func.lower(User.email) == func.lower(email),
             User.pwsalted != None,
             User.pwsalted == salted
         )).first()

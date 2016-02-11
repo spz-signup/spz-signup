@@ -110,15 +110,13 @@ from spz import views, errorhandlers, pdf
 @app.before_request
 def detect_permission_level():
     if not current_user.is_anonymous:
-        mail = current_user.id
-        acl = app.config['ACCESS_CONTROL']
+        # XXX: remove this, it's legacy!
+        mail = current_user.email
 
-        if mail in acl['unrestricted']:
+        if current_user.superuser:
             g.access = 'unrestricted'
-        elif mail in acl['restricted']:
-            g.access = 'restricted'
         else:
-            g.access = None
+            g.access = 'restricted'
 
         g.user = mail
     else:

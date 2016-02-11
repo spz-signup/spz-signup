@@ -14,7 +14,7 @@ from spz.models import *  # Keep this import, otherwise the create_all call won'
 
 
 def validate_resources():
-    resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations')
+    resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations', 'users')
 
     for fname in resources:
         with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, \
@@ -27,18 +27,6 @@ def validate_resources():
 
 
 def insert_resources():
-    all_accounts = set()
-    for _aci_level, aci_list in app.config.get('ACCESS_CONTROL').items():
-        for account in aci_list:
-            all_accounts.add(account)
-
-    print("create user accounts:")
-    for account in all_accounts:
-        user = User(account)
-        pw = user.reset_password()
-        print('  {} : {}'.format(user.id, pw))
-        db.session.add(user)
-
     with app.open_resource('resource/degrees.json') as fd:
         res = json.load(fd)
 
@@ -70,6 +58,30 @@ def insert_resources():
                     db.session.add(Course(ref_lang, level=course["level"], alternative=alt, limit=course["limit"],
                                           price=course["price"], rating_lowest=course["rating_lowest"],
                                           rating_highest=course["rating_highest"]))
+
+    db.session.commit()
+
+    with app.open_resource('resource/users.json') as fd:
+        res = json.load(fd)
+
+        print("create user accounts:")
+        for user in res["users"]:
+            ref_langs = []
+            for lang_name in user["languages"]:
+                lang = Language.query.filter(Language.name == lang_name).first()
+                if lang:
+                    ref_langs.append(lang)
+                else:
+                    print("  WARNING: language {} does not exist (user={})".format(lang_name, user["email"]))
+            u = User(
+                email=user["email"],
+                active=user["active"],
+                superuser=user["superuser"],
+                languages=ref_langs
+            )
+            pw = u.reset_password()
+            print('  {} : {}'.format(u.email, pw))
+            db.session.add(u)
 
     db.session.commit()
 

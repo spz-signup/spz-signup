@@ -1,0 +1,58 @@
+{
+    "users": [
+        {
+            "email": "marco@crepererum.net",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "roman@zukowsky.de",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "frank.forstmeyer@kit.edu",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "silvia.buecher@kit.edu",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "daniel@trvx.org",
+            "active": false,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "donald.richardson@kit.edu",
+            "active": true,
+            "superuser": false,
+            "languages": ["English", "English Intensive"]
+        },
+        {
+            "email": "angela.althen@kit.edu",
+            "active": true,
+            "superuser": false,
+            "languages": ["English", "English Intensive"]
+        },
+        {
+            "email": "franzoesisch@spz.kit.edu",
+            "active": true,
+            "superuser": false,
+            "languages": ["Französisch"]
+        },
+        {
+            "email": "spanisch@spz.kit.edu",
+            "active": true,
+            "superuser": false,
+            "languages": ["Spanisch"]
+        }
+    ]
+}
