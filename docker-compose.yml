@@ -2,7 +2,7 @@ version: '2'
 services:
     uwsgi:
         build: images/spz
-        command: uwsgi --ini /home/spz/code/uwsgi.ini
+        command: uwsgi --ini /home/spz/code/uwsgi.ini --workers 8 --threads 4
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
@@ -24,9 +24,11 @@ services:
         networks:
             - front
             - back
+        restart: unless-stopped
+        cpuset: "0,1"
     celery:
         build: images/spz
-        command: celery -A spz.async.cel worker --loglevel=INFO --autoreload
+        command: celery -A spz.async.cel worker --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
         read_only: true
@@ -41,6 +43,8 @@ services:
             - redis
         networks:
             - back
+        restart: unless-stopped
+        cpuset: "2"
     redis:
         image: redis
         command: redis-server --appendonly yes
@@ -51,6 +55,8 @@ services:
         read_only: true
         networks:
             - back
+        restart: unless-stopped
+        cpuset: "3"
     postgres:
         build: images/postgres
         ports:
@@ -64,6 +70,8 @@ services:
             - POSTGRES_PASSWORD=mysecretpassword
         networks:
             - back
+        restart: unless-stopped
+        cpuset: "3"
     mail:
         image: djfarrelly/maildev
         ports:
@@ -73,8 +81,11 @@ services:
         read_only: true
         networks:
             - back
+        restart: unless-stopped
+        cpuset: "2"
     nginx:
         build: images/nginx
+        command: nginx -g "worker_processes 16;"
         ports:
             - "127.0.0.1:80:80"
             - "127.0.0.1:443:443"
@@ -87,6 +98,8 @@ services:
             - front
         links:
             - uwsgi
+        restart: unless-stopped
+        cpuset: "0"
 volumes:
     cache_nginx: {}
     data_postgres: {}

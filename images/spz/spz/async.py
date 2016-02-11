@@ -27,7 +27,7 @@ cel = make_celery(app)
 
 # Async tasks
 
-@cel.task(bind=True, rate_limit="2/s")
+@cel.task(bind=True, rate_limit="30/m")
 def async_send(msg):
     try:
         mail.send(msg)
