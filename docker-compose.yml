@@ -16,7 +16,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
         links:
             - mail
             - postgres
@@ -36,7 +36,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/docker.cfg
+            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
         links:
             - mail
             - postgres
