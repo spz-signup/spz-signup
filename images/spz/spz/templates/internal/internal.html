@@ -32,7 +32,7 @@ Interner Bereich
 
 {% block subcaption %}
 {% if current_user.is_authenticated %}
-<div class="pull-right">Angemeldet als <strong>{{ current_user.email }} ({% if current_user.superuser %}SUPERUSER{% else %}{{ current_user.languages|map(attribute='name')|join(', ') }}{% endif %})</strong>
+<div class="pull-right">Angemeldet als <strong>{{ current_user.email }} ({% if current_user.superuser %}SUPERUSER{% else %}{{ current_user.languages|sort|map(attribute='name')|join(', ') }}{% endif %})</strong>
 (<a href="{{ url_for('logout')  }}" class="signout">Abmelden</a>)</div>
 {% else %}
 <div class="pull-right">Nicht angemeldet. <a href="{{ url_for('login') }}" class="signin">Anmelden</a></div>
