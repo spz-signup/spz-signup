@@ -12,9 +12,13 @@ Ihre Registrierung war erfolgreich
         Sie werden per Mail benachrichtigt, falls Sie einen Kursplatz erhalten oder auf der Warteliste sind.
     </p>
 
-    {% for attendance in applicant.attendances %}
-        <h3 class="ui dividing header">{{ attendance.course.full_name() }}</h3>
-        {# no panel-body for now; no information to show #}
-    {% endfor %}
+
+    <h3 class="ui dividing header">Registrierte Kurse</h3>
+    <p>Sie sind jetzt für folgende Kurse registriert (Warteliset, Zufallspool oder Erfolgreich):</p>
+    <ul>
+        {% for attendance in applicant.attendances %}
+            <li>{{ attendance.course.full_name() }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock body %}
