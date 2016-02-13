@@ -13,6 +13,8 @@ from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, T
 
 from spz import app, models, cache, token
 
+import phonenumbers
+
 
 class TagDependingOnOrigin(object):
     """Helper validator if origin requires validatation of registration."""
@@ -33,6 +35,23 @@ class RequiredDependingOnOrigin(validators.Required):
         o = form.get_origin()
         if o and o.validate_registration:
             super(RequiredDependingOnOrigin, self).__call__(form, field)
+
+
+class PhoneValidator(object):
+    """Validates phone numbers."""
+
+    def __call__(self, form, field):
+        valid = True
+        try:
+            x = phonenumbers.parse(field.data, 'DE')
+            if not phonenumbers.is_valid_number(x):
+                valid = False
+        except Exception:
+            # XXX: by more specific about exception
+            valid = False
+
+        if not valid:
+            raise validators.ValidationError('Ungültige Telefonnummer')
 
 
 # Cacheable helpers for database fields that are not supposed to change often or quickly
@@ -110,7 +129,10 @@ class SignupForm(Form):
     )
     phone = TextField(
         'Telefon',
-        [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')]
+        [
+            validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein'),
+            PhoneValidator()
+        ]
     )
     mail = TextField(
         'E-Mail',

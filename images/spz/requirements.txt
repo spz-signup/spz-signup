@@ -21,6 +21,7 @@ jsonschema==2.5.1
 MarkupSafe==0.23
 mccabe==0.3.1
 pep8==1.6.2
+phonenumbers==7.2.5
 psycopg2==2.6.1
 pyinotify==0.9.6
 pyflakes==1.0.0
