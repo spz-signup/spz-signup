@@ -3,9 +3,9 @@
 {% block navbar %}
 <div class="item">
     <div class="item">
-        <h1><a href="{{ url_for('internal') }}">Interner Bereich</a></h1>
+        <a href="{{ url_for('internal') }}"><h1>Interner Bereich</h1></a>
     </div>
-    {% if g.user and g.access %}
+    {% if current_user.is_authenticated %}
     <a class="item" href="{{ url_for('importer') }}" ><i class="folder open icon"></i> Importieren</a>
     <a class="item" href="{{ url_for('lists') }}"><i class="list icon"></i> Kurslisten</a>
     <a class="item" href="{{ url_for('notifications') }}"><i class="mail icon"></i> Mail Zentrale</a>
@@ -14,7 +14,7 @@
     <a class="item" href="{{ url_for('outstanding') }}"><i class="warning sign icon"></i> Offene Beträge</a>
     <a class="item" href="{{ url_for('statistics') }}"><i class="pie chart icon"></i> Statistiken</a>
     <a class="item" href="{{ url_for('duplicates') }}"><i class="random icon"></i> Doppelgänger</a>
-    {% if g.access == 'unrestricted' %}
+    {% if current_user.superuser %}
     <a class="item" href="{{ url_for('restock_rnd') }}"><i class="sort content ascending icon"></i> Auffüllen (RND)</a>
     <a class="item" href="{{ url_for('restock_fcfs') }}"><i class="sort numeric ascending icon"></i> Auffüllen (FCFS)</a>
     <a class="item" href="{{ url_for('preterm') }}"><i class="star icon"></i> Prioritär&shy;anmeldungen</a>
@@ -31,8 +31,8 @@ Interner Bereich
 
 
 {% block subcaption %}
-{% if g.user %}
-<div class="pull-right">Angemeldet als <strong>{{ g.user }}</strong>
+{% if current_user.is_authenticated %}
+<div class="pull-right">Angemeldet als <strong>{{ current_user.email }} ({% if current_user.superuser %}SUPERUSER{% else %}{{ current_user.languages|map(attribute='name')|join(', ') }}{% endif %})</strong>
 (<a href="{{ url_for('logout')  }}" class="signout">Abmelden</a>)</div>
 {% else %}
 <div class="pull-right">Nicht angemeldet. <a href="{{ url_for('login') }}" class="signin">Anmelden</a></div>
@@ -41,7 +41,7 @@ Interner Bereich
 
 
 {% block body %}
-{% if g.user and g.access %}
+{% if current_user.is_authenticated %}
 {% block internal_body %}{% endblock internal_body %}
 {% endif %}
 {% endblock body %}
@@ -61,8 +61,4 @@ Interner Bereich
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
-<script>
-    var $URL_ROOT = {{ request.url_root|tojson }};
-    var $CURRENT_USER = {{ g.user|tojson }};
-</script>
 {% endblock scripts %}

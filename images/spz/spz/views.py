@@ -16,7 +16,7 @@ from redis import ConnectionError
 from sqlalchemy import orm, func, not_
 
 from flask import request, redirect, render_template, url_for, flash, g, make_response
-from flask.ext.login import login_required, login_user, logout_user
+from flask.ext.login import current_user, login_required, login_user, logout_user
 from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
@@ -97,13 +97,14 @@ def index():
     form = SignupForm()
     time = datetime.utcnow()
 
-    if g.access:
+    if current_user.is_authenticated:
         flash('Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
         one_time_token = request.args.get('token', None)
+        user_has_special_rights = current_user.is_authenticated and current_user.can_edit_course(course)
 
         # signup at all times only with token or privileged users
         preterm = applicant.mail \
@@ -118,22 +119,22 @@ def index():
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
-            g.access
+            user_has_special_rights
         )
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen',
-            g.access
+            user_has_special_rights
         )
         err |= check_precondition_with_auth(
             not applicant.in_course(course) and not applicant.active_in_parallel_course(course),
             'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet',
-            g.access
+            user_has_special_rights
         )
         err |= check_precondition_with_auth(
             not applicant.over_limit(),
             'Sie haben das Limit an Bewerbungen bereits erreicht',
-            g.access
+            user_has_special_rights
         )
         if err:
             return dict(form=form)
@@ -270,7 +271,7 @@ def notifications():
             with mail.connect() as conn:
                 for recipient in form.get_recipients():
                     msg = Message(
-                        sender=g.user,
+                        sender=current_user.email,
                         recipients=[recipient],
                         subject=form.get_subject(),
                         body=form.get_body(),
@@ -838,7 +839,7 @@ def login():
     return dict(form=form)
 
 
-@templated('internal/logout.html')
 def logout():
     logout_user()
-    return dict()
+    flash('Tschau!', 'success')
+    return redirect(url_for('login'))

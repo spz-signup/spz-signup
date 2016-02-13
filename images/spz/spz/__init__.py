@@ -106,24 +106,6 @@ cache = Cache(app, config=app.config['CACHE_CONFIG'])
 from spz import views, errorhandlers, pdf
 
 
-# Permission handling
-@app.before_request
-def detect_permission_level():
-    if not current_user.is_anonymous:
-        # XXX: remove this, it's legacy!
-        mail = current_user.email
-
-        if current_user.superuser:
-            g.access = 'unrestricted'
-        else:
-            g.access = 'restricted'
-
-        g.user = mail
-    else:
-        g.access = None
-        g.user = None
-
-
 routes = [('/', views.index, ['GET', 'POST']),
           ('/licenses', views.licenses, ['GET']),
 

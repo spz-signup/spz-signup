@@ -592,6 +592,10 @@ class User(db.Model):
         """Return user ID"""
         return self.id
 
+    def can_edit_course(self, course):
+        """Check if user can edit/admin a specific course."""
+        return self.superuser or (course.language in self.languages)
+
     @property
     def is_active(self):
         """Report if user is active."""
