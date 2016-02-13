@@ -788,7 +788,7 @@ def restock_rnd():
         # Send mails (async) only if the commit was successfull -- be conservative here
         try:
             for attendance in handled_attendances:
-                queue.enqueue(async_send, generate_status_mail(attendance.applicant, attendance.course))
+                async_send.delay(generate_status_mail(attendance.applicant, attendance.course))
 
             if handled_attendances:  # only show if there are attendances that we handled
                 flash('Mails erfolgreich verschickt', 'success')
