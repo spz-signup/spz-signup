@@ -43,7 +43,10 @@ def insert_resources():
         res = json.load(fd)
 
         for origin in res["origins"]:
-            db.session.add(Origin(origin))
+            db.session.add(Origin(
+                name=origin["name"],
+                validate_registration=origin["validate_registration"]
+            ))
 
     with app.open_resource('resource/courses.json') as fd:
         res = json.load(fd)

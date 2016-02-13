@@ -444,15 +444,18 @@ class Origin(db.Model):
     """Represents the origin of a :py:class:`Applicant`.
 
        :param name: The origin's name
+       :param validate_registration: do people of this origin have to provide a valid registration number?
     """
 
     __tablename__ = 'origin'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
+    validate_registration = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, validate_registration):
         self.name = name
+        self.validate_registration = validate_registration
 
     def __repr__(self):
         return '<Origin %r>' % self.name

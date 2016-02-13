@@ -1,21 +1,72 @@
 {
-	"origins": [
-		"KIT (Fakultät Architektur)",
-		"KIT (Fakultät Bauingenieur-, Geo- und Umweltwissenschaften)",
-		"KIT (Fakultät Chemie und Biowissenschaften)",
-		"KIT (Fakultät Chemieingenieurwesen und Verfahrenstechnik)",
-		"KIT (Fakultät Elektrotechnik und Informationstechnik)",
-		"KIT (Fakultät Geistes- und Sozialwissenschaften)",
-		"KIT (Fakultät Informatik)",
-		"KIT (Fakultät Maschinenbau)",
-		"KIT (Fakultät Mathematik)",
-		"KIT (Fakultät Physik)",
-		"KIT (Fakultät Wirtschaftswissenschaften)",
-		"KIT (Mitarbeiter)",
-		"Hochschule Karlsruhe",
-		"PH Karlsruhe",
-		"HfG Karlsruhe",
-		"Musikhochschule Karlsruhe",
-		"Sonstige"
-	]
+    "origins": [
+        {
+            "name": "KIT (Fakultät Architektur)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Bauingenieur-, Geo- und Umweltwissenschaften)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Chemie und Biowissenschaften)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Chemieingenieurwesen und Verfahrenstechnik)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Elektrotechnik und Informationstechnik)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Geistes- und Sozialwissenschaften)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Informatik)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Maschinenbau)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Mathematik)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Physik)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Fakultät Wirtschaftswissenschaften)",
+            "validate_registration": true
+        },
+        {
+            "name": "KIT (Mitarbeiter)",
+            "validate_registration": false
+        },
+        {
+            "name": "Hochschule Karlsruhe",
+            "validate_registration": false
+        },
+        {
+            "name": "PH Karlsruhe",
+            "validate_registration": false
+        },
+        {
+            "name": "HfG Karlsruhe",
+            "validate_registration": false
+        },
+        {
+            "name": "Musikhochschule Karlsruhe",
+            "validate_registration": false
+        },
+        {
+            "name": "Sonstige",
+            "validate_registration": false
+        }
+    ]
 }

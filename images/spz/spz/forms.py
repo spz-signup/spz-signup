@@ -14,6 +14,27 @@ from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, T
 from spz import app, models, cache, token
 
 
+class TagDependingOnOrigin(object):
+    """Helper validator if origin requires validatation of registration."""
+
+    def __call__(self, form, field):
+        o = form.get_origin()
+        if o and o.validate_registration and not models.Registration.exists(field.data):
+            raise validators.ValidationError('Ungültige Matrikelnummer')
+
+
+class RequiredDependingOnOrigin(validators.Required):
+    """Helper validator if origin requires validatation of registration."""
+
+    def __init__(self, *args, **kwargs):
+        super(RequiredDependingOnOrigin, self).__init__(*args, **kwargs)
+
+    def __call__(self, form, field):
+        o = form.get_origin()
+        if o and o.validate_registration:
+            super(RequiredDependingOnOrigin, self).__call__(form, field)
+
+
 # Cacheable helpers for database fields that are not supposed to change often or quickly
 # Do not specify a timeout; so the default one (from the configuration) gets picked up
 
@@ -72,23 +93,76 @@ class SignupForm(Form):
     """
 
     # This should be a BooleanField, because of select-between-two semantics
-    sex = SelectField('Anrede', [validators.Required('Anrede muss angegeben werden')],
-                      choices=[(1, 'Herr'), (2, 'Frau')], coerce=int)
+    sex = SelectField(
+        'Anrede',
+        [validators.Required('Anrede muss angegeben werden')],
+        choices=[(1, 'Herr'), (2, 'Frau')],
+        coerce=int
+    )
 
-    first_name = TextField('Vorname', [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')])
-    last_name = TextField('Nachname', [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')])
-    phone = TextField('Telefon', [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
-    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'),
-                                 validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
-    origin = SelectField('Bewerber&shy;kreis', [validators.Required('Herkunft muss angegeben werden')], coerce=int)
+    first_name = TextField(
+        'Vorname',
+        [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
+    )
+    last_name = TextField(
+        'Nachname',
+        [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
+    )
+    phone = TextField(
+        'Telefon',
+        [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')]
+    )
+    mail = TextField(
+        'E-Mail',
+        [
+            validators.Email('Valide Mail Adresse wird benötigt'),
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+        ]
+    )
+    origin = SelectField(
+        'Bewerber&shy;kreis',
+        [validators.Required('Herkunft muss angegeben werden')],
+        coerce=int
+    )
 
-    tag = TextField('Matrikel&shy;nummer', [validators.Optional(),
-                                        validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
+    tag = TextField(
+        'Matrikel&shy;nummer',
+        [
+            validators.Required('Matrikelnummer muss angegeben werden'),
+            TagDependingOnOrigin(),
+            validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')
+        ]
+    )
 
-    degree = SelectField('Studien&shy;abschluss', [validators.Optional()], coerce=int)
-    graduation = SelectField('Kurs&shy;abschluss', [validators.Optional()], coerce=int)
-    semester = IntegerField('Fach&shy;semester', [validators.Optional()])
-    course = SelectField('Kurse', [validators.Required('Kurs muss angegeben werden')], coerce=int)
+    degree = SelectField(
+        'Studien&shy;abschluss',
+        [
+            RequiredDependingOnOrigin('Angabe des Studienabschlusses ist für Sie Pflicht'),
+            validators.Optional()
+        ],
+        coerce=int
+    )
+    graduation = SelectField(
+        'Kurs&shy;abschluss',
+        [
+            RequiredDependingOnOrigin('Angabe des Abschlusses ist für Sie Pflicht'),
+            validators.Optional()
+        ],
+        coerce=int
+    )
+    semester = IntegerField(
+        'Fach&shy;semester',
+        [
+            RequiredDependingOnOrigin('Angabe des Fachsemesters ist für Sie Pflicht'),
+            validators.Optional(),
+            validators.NumberRange(min=1, max=26, message='Anzahl der Fachsemester muss zwischen 1 und 26 liegen')
+        ]
+    )
+    course = SelectField(
+        'Kurse',
+        [validators.Required('Kurs muss angegeben werden')],
+        coerce=int
+    )
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField

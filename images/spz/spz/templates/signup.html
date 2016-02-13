@@ -127,14 +127,15 @@ Anmeldung
         transition: 'slide down'
     });
 
-    function check_and_change_kit_visibilty(){
+    function check_and_change_kit_visibilty() {
+        // XXX: read this from our server data
         if ($('#origin').find('option:selected:contains(\'Fakultät\')').length > 0) {
             $('.kit-only').slideDown();
         } else {
             $('.kit-only').slideUp();
         }
     }
-    $(document).ready(function(){
+    $(document).ready(function() {
         check_and_change_kit_visibilty();
     });
     $('#origin').change(function() {

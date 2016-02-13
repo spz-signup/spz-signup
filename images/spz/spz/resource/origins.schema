@@ -1,15 +1,24 @@
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
-		"title": "Origins",
-		"type": "object",
-		"properties": {
-			"origins": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				},
-				"uniqueItems": true
-			}
-		},
-		"required": [ "origins" ]
+    "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Origins",
+        "type": "object",
+        "properties": {
+            "origins": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "validate_registration": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [ "name", "validate_registration" ]
+                },
+                "uniqueItems": true
+            }
+        },
+        "required": [ "origins" ]
 }
