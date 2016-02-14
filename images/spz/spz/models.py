@@ -293,9 +293,6 @@ class Course(db.Model):
     def is_full(self):
         return len(self.get_active_attendances()) >= self.limit
 
-    def is_overbooked(self):
-        return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
-
     def get_waiting_attendances(self):
         return [attendance for attendance in self.attendances if attendance.waiting]
 
