@@ -29,8 +29,16 @@ cel = make_celery(app)
 # Async tasks
 
 
+@cel.task(bind=True, rate_limit="20/m")
+def async_send_slow(self, msg):
+    try:
+        mail.send(msg)
+    except Exception as e:
+        raise self.retry(exc=e)
+
+
 @cel.task(bind=True, rate_limit="30/m")
-def async_send(self, msg):
+def async_send_quick(self, msg):
     try:
         mail.send(msg)
     except Exception as e:

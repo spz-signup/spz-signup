@@ -19,13 +19,13 @@ from flask import request, redirect, render_template, url_for, flash, make_respo
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from flask.ext.mail import Message
 
-from spz import app, models, mail, db, token
+from spz import app, models, db, token
 from spz.decorators import templated
 from spz.forms import *  # NOQA
 from spz.models import Attendance
 from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
-from spz.async import async_send, cel
+from spz.async import async_send_slow, async_send_quick, cel
 
 
 def generate_status_mail(applicant, course, time=None, restock=False):
@@ -162,7 +162,7 @@ def index():
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
-            async_send.delay(generate_status_mail(applicant, course, time))
+            async_send_slow.delay(generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
@@ -275,9 +275,9 @@ def notifications():
 
     if form.validate_on_submit():
         try:
-            with mail.connect() as conn:
-                for recipient in form.get_recipients():
-                    msg = Message(
+            for recipient in form.get_recipients():
+                async_send_slow.delay(
+                    Message(
                         sender=current_user.email,
                         recipients=[recipient],
                         subject=form.get_subject(),
@@ -287,8 +287,7 @@ def notifications():
                         reply_to=form.get_reply_to(),
                         charset='utf-8'
                     )
-
-                    conn.send(msg)
+                )
 
             flash('Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
@@ -487,7 +486,7 @@ def add_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            async_send.delay(generate_status_mail(applicant, course, restock=True))
+            async_send_slow.delay(generate_status_mail(applicant, course, restock=True))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -512,7 +511,7 @@ def remove_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            async_send.delay(generate_status_mail(applicant, course))
+            async_send_slow.delay(generate_status_mail(applicant, course))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -596,7 +595,7 @@ def status(applicant_id, course_id):
             try:
                 course = attendance.course
                 applicant = attendance.applicant
-                async_send.delay(generate_status_mail(applicant, course))
+                async_send_quick.delay(generate_status_mail(applicant, course))
                 flash('Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
                 flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -665,15 +664,16 @@ def preterm():
         token = form.get_token()
 
         try:
-            msg = Message(
-                sender=app.config['PRIMARY_MAIL'],
-                recipients=[form.mail.data],
-                subject='[Sprachenzentrum] URL für prioritäre Anmeldung',
-                body='{0}'.format(url_for('index', token=token, _external=True)),
-                charset='utf-8'
+            async_send_quick.delay(
+                Message(
+                    sender=app.config['PRIMARY_MAIL'],
+                    recipients=[form.mail.data],
+                    subject='[Sprachenzentrum] URL für prioritäre Anmeldung',
+                    body='{0}'.format(url_for('index', token=token, _external=True)),
+                    charset='utf-8'
+                )
             )
 
-            mail.send(msg)
             flash('Eine Mail mit der Token URL wurde an {0} verschickt'.format(form.mail.data), 'success')
 
         except (AssertionError, socket.error) as e:
@@ -730,9 +730,10 @@ def restock_fcfs():
             return redirect(url_for('restock_fcfs'))
 
         try:
-            with mail.connect() as conn:
-                for attendance in restocked_attendances:
-                    conn.send(generate_status_mail(attendance.applicant, attendance.course))
+            for attendance in restocked_attendances:
+                async_send_slow.delay(
+                    generate_status_mail(attendance.applicant, attendance.course)
+                )
 
             flash('Mails erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))
@@ -835,7 +836,7 @@ def restock_rnd():
         # Send mails (async) only if the commit was successfull -- be conservative here
         try:
             for attendance in handled_attendances:
-                async_send.delay(generate_status_mail(attendance.applicant, attendance.course))
+                async_send_slow.delay(generate_status_mail(attendance.applicant, attendance.course))
 
             if handled_attendances:  # only show if there are attendances that we handled
                 flash('Mails erfolgreich verschickt', 'success')

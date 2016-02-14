@@ -26,9 +26,28 @@ services:
             - back
         restart: unless-stopped
         cpuset: "0,1"
-    celery:
+    celery_default:
         build: images/spz
-        command: celery -A spz.async.cel worker --loglevel=INFO --autoreload --concurrency 1
+        command: celery -A spz.async.cel worker -Q default --loglevel=INFO --autoreload --concurrency 1
+        volumes_from:
+            - uwsgi
+        read_only: true
+        environment:
+            - MAIL_PORT=tcp://mail:25
+            - POSTGRES_PORT=tcp://postgres:5432
+            - REDIS_PORT=tcp://redis:6379
+            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
+        links:
+            - mail
+            - postgres
+            - redis
+        networks:
+            - back
+        restart: unless-stopped
+        cpuset: "2"
+    celery_slow_mails:
+        build: images/spz
+        command: celery -A spz.async.cel worker -Q slow_mails --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
         read_only: true
