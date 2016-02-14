@@ -15,8 +15,7 @@ from argon2 import argon2_hash
 
 from sqlalchemy import and_, between, func
 
-from spz import app, db
-import spz.models
+from spz import app, db, token
 
 
 # Ressources:
@@ -201,7 +200,11 @@ class Applicant(db.Model):
         return Registration.exists(self.tag)
 
     def best_rating(self):
-        results = [approval.percent for approval in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag))]
+        results = [
+            approval.percent
+            for approval
+            in Approval.query.filter(func.lower(Approval.tag) == func.lower(self.tag))
+        ]
         best = max(results) if results else 0
         return best
 
@@ -217,7 +220,12 @@ class Applicant(db.Model):
         active_in_courses = [attendance.course for attendance in self.attendances
                              if attendance.course != course and not attendance.waiting]
 
-        active_parallel = [crs for crs in active_in_courses if crs.language == course.language and crs.level == course.level]
+        active_parallel = [
+            crs
+            for crs
+            in active_in_courses
+            if crs.language == course.language and crs.level == course.level
+        ]
 
         return len(active_parallel) > 0
 
@@ -361,10 +369,12 @@ class Language(db.Model):
         return self.signup_begin < time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR']) < self.signup_end
 
     def is_open_for_signup_fcfs(self, time):
-        return (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) < time < self.signup_end
+        begin = self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']
+        return begin < time < self.signup_end
 
     def is_open_for_signup(self, time):
-        # management wants the system to be: open a few hours, then closed "overnight" for random selection, then open again..
+        # management wants the system to be: open a few hours,
+        # then closed "overnight" for random selection, then open again.
         # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
         return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
 
@@ -374,7 +384,8 @@ class Language(db.Model):
 
         # here we are in the closed window period; calculate delta to open again
         if delta.total_seconds() < 0:
-            delta = (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']) - now
+            begin = self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']
+            delta = begin - now
 
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
@@ -546,7 +557,9 @@ class Approval(db.Model):
 
 
 # helper table for User<--[admin]-->Language N:M relationship
-admin_table = db.Table('admin', db.Model.metadata,
+admin_table = db.Table(
+    'admin',
+    db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('language_id', db.Integer, db.ForeignKey('language.id')),
 )
@@ -654,6 +667,6 @@ class User(db.Model):
         salted = hash_secret_strong(pw)
         return User.query.filter(and_(
             func.lower(User.email) == func.lower(email),
-            User.pwsalted != None,
+            User.pwsalted != None,  # NOQA
             User.pwsalted == salted
         )).first()

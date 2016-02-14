@@ -12,7 +12,6 @@ from sqlalchemy import func
 from itsdangerous import URLSafeTimedSerializer as Signer
 
 from spz import app
-import spz.models
 
 
 def get_default_signer(namespace=None):
@@ -62,7 +61,14 @@ def validate_multi(token, namespace=None, max_age=timedelta(weeks=2).total_secon
     return payload_extracted
 
 
-def validate_once(token, payload_wanted, db_model, db_column, max_age=timedelta(weeks=2).total_seconds(), namespace=None):
+def validate_once(
+            token,
+            payload_wanted,
+            db_model,
+            db_column,
+            max_age=timedelta(weeks=2).total_seconds(),
+            namespace=None
+        ):
     """Validates a payload-specific one-time-token.
 
        Additional checking is done for its integrity and expiration, defaulting to one week.
@@ -81,7 +87,8 @@ def validate_once(token, payload_wanted, db_model, db_column, max_age=timedelta(
     # token is only valid if it's associated payload_wanted is not already in the database
     # this way we're able to guarantee the token's one-time property
     # defaults to False if no payload was extracted
-    found = (not payload_extracted) or db_model.query.filter(func.lower(db_column) == func.lower(payload_extracted)).first()
+    found = (not payload_extracted) or \
+        db_model.query.filter(func.lower(db_column) == func.lower(payload_extracted)).first()
 
     # optional case insensitive mail address check, otherwise confusing!
     same = (not payload_wanted) or (payload_extracted and (payload_extracted.lower() == payload_wanted.lower()))

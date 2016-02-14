@@ -16,6 +16,22 @@ from spz import app, models, cache, token
 import phonenumbers
 
 
+__all__ = [
+    'ApplicantForm',
+    'LanguageForm',
+    'LoginForm',
+    'NotificationForm',
+    'PaymentForm',
+    'PretermForm',
+    'RestockFormFCFS',
+    'RestockFormRnd',
+    'SearchForm',
+    'SignupForm',
+    'StatusForm',
+    'UniqueForm',
+]
+
+
 class TagDependingOnOrigin(object):
     """Helper validator if origin requires validatation of registration."""
 
@@ -236,7 +252,9 @@ class SignupForm(Form):
 
     # Creates an applicant or returns it from the system, if already registered.
     def get_applicant(self):
-        existing = models.Applicant.query.filter(func.lower(models.Applicant.mail) == func.lower(self.get_mail())).first()
+        existing = models.Applicant.query.filter(
+            func.lower(models.Applicant.mail) == func.lower(self.get_mail())
+        ).first()
 
         if existing:  # XXX: Return the applicant based on the assumption that the mail _address_ alone is an identidy
             return existing
@@ -253,15 +271,41 @@ class NotificationForm(Form):
        The field's length are limited on purpose.
     """
 
-    mail_subject = TextField('Betreff', [validators.Length(1, 200, 'Betreff muss zwischen 1 und 200 Zeichen enthalten')])
-    mail_body = TextAreaField('Nachricht', [validators.Length(1, 2000, 'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')])
-    mail_cc = TextField('CC', [validators.Optional()])
-    mail_bcc = TextField('BCC', [validators.Optional()])
-    mail_courses = SelectMultipleField('Kurse', [validators.Required('Kurs muss angegeben werden')], coerce=int)
-    mail_reply_to = SelectField('Antwort an', [validators.Required('Reply-To muss angegeben werden')], coerce=int)
-    only_active = BooleanField('Nur an Aktive')
-    only_have_to_pay = BooleanField('Nur an nicht Bezahlte')
-    only_waiting = BooleanField('Nur an Wartende')
+    mail_subject = TextField(
+        'Betreff',
+        [validators.Length(1, 200, 'Betreff muss zwischen 1 und 200 Zeichen enthalten')]
+    )
+    mail_body = TextAreaField(
+        'Nachricht',
+        [validators.Length(1, 2000, 'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')]
+    )
+    mail_cc = TextField(
+        'CC',
+        [validators.Optional()]
+    )
+    mail_bcc = TextField(
+        'BCC',
+        [validators.Optional()]
+    )
+    mail_courses = SelectMultipleField(
+        'Kurse',
+        [validators.Required('Kurs muss angegeben werden')],
+        coerce=int
+    )
+    mail_reply_to = SelectField(
+        'Antwort an',
+        [validators.Required('Reply-To muss angegeben werden')],
+        coerce=int
+    )
+    only_active = BooleanField(
+        'Nur an Aktive'
+    )
+    only_have_to_pay = BooleanField(
+        'Nur an nicht Bezahlte'
+    )
+    only_waiting = BooleanField(
+        'Nur an Wartende'
+    )
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
@@ -274,7 +318,9 @@ class NotificationForm(Form):
 
     # TODO: refactor by using the course's get_active_attendances member function
     def get_recipients(self):
-        flatten = lambda x: sum(x, [])
+        def flatten(x):
+            return sum(x, [])
+
         attendances = flatten([course.attendances for course in self.get_courses()])  # single list of attendances
 
         if self.only_active.data:
@@ -284,8 +330,15 @@ class NotificationForm(Form):
             attendances = [att for att in attendances if att.waiting]
 
         if self.only_have_to_pay.data:
-            attendances = [att for att in attendances if not att.waiting and att.has_to_pay
-                           and not att.applicant.discounted and att.amountpaid < att.course.price]
+            attendances = [
+                att
+                for att
+                in attendances
+                if not att.waiting and
+                att.has_to_pay and
+                not att.applicant.discounted and
+                att.amountpaid < att.course.price
+            ]
 
         recipients = [attendance.applicant.mail for attendance in attendances]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
@@ -320,22 +373,70 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     """
     applicant = None  # really needed?
-    first_name = TextField('Vorname', [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')])
-    last_name = TextField('Nachname', [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')])
-    phone = TextField('Telefon', [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
-    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'), validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
-    tag = TextField('Matrikelnummer', [validators.Optional(), validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')])
+    first_name = TextField(
+        'Vorname',
+        [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
+    )
+    last_name = TextField(
+        'Nachname',
+        [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
+    )
+    phone = TextField(
+        'Telefon',
+        [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')]
+    )
+    mail = TextField(
+        'E-Mail',
+        [
+            validators.Email('Valide Mail Adresse wird benötigt'),
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+        ]
+    )
+    tag = TextField(
+        'Matrikelnummer',
+        [
+            validators.Optional(),
+            validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')
+        ]
+    )
 
-    origin = SelectField('Bewerberkreis', [validators.Required('Bewerberkreis muss angegeben werden')], coerce=int)
+    origin = SelectField(
+        'Bewerberkreis',
+        [validators.Required('Bewerberkreis muss angegeben werden')],
+        coerce=int
+    )
 
-    sex = SelectField('Anrede', [validators.Required('Anrede muss angegeben werden')],
-                      choices=[(1, 'Herr'), (2, 'Frau')], coerce=int)
-    degree = SelectField('Studienabschluss', [validators.Optional()], coerce=int)
-    semester = IntegerField('Fachsemester', [validators.Optional()])
+    sex = SelectField(
+        'Anrede',
+        [validators.Required('Anrede muss angegeben werden')],
+        choices=[(1, 'Herr'), (2, 'Frau')],
+        coerce=int
+    )
+    degree = SelectField(
+        'Studienabschluss',
+        [validators.Optional()],
+        coerce=int
+    )
+    semester = IntegerField(
+        'Fachsemester',
+        [validators.Optional()]
+    )
 
-    add_to = SelectField('Teilnahme hinzufügen', [validators.Optional()], coerce=int, choices=[])
-    remove_from = SelectField('Teilnahme löschen', [validators.Optional()], coerce=int, choices=[])
-    send_mail = BooleanField('Mail verschicken')
+    add_to = SelectField(
+        'Teilnahme hinzufügen',
+        [validators.Optional()],
+        coerce=int,
+        choices=[]
+    )
+    remove_from = SelectField(
+        'Teilnahme löschen',
+        [validators.Optional()],
+        coerce=int,
+        choices=[]
+    )
+    send_mail = BooleanField(
+        'Mail verschicken'
+    )
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
@@ -429,21 +530,31 @@ class PaymentForm(Form):
 
     """
 
-    confirmation_code = TextField('Code', [validators.Length(min=4, message='Länge muss mindestens 4 Zeichen lang sein')])
+    confirmation_code = TextField(
+        'Code',
+        [validators.Length(min=4, message='Länge muss mindestens 4 Zeichen lang sein')]
+    )
 
 
 class SearchForm(Form):
     """Represents a form to search for specific applicants.
     """
 
-    token = TextField('Suchen', [validators.Required('Suchparameter muss angegeben werden')])
+    token = TextField(
+        'Suchen',
+        [validators.Required('Suchparameter muss angegeben werden')]
+    )
 
 
 class LanguageForm(Form):
     """Represents a form for working with courses based on the user's language selection.
     """
 
-    language = SelectField('Sprache', [validators.Required('Die Sprache muss angegeben werden')], coerce=int)
+    language = SelectField(
+        'Sprache',
+        [validators.Required('Die Sprache muss angegeben werden')],
+        coerce=int
+    )
 
     def __init__(self, *args, **kwargs):
         super(LanguageForm, self).__init__(*args, **kwargs)
@@ -458,13 +569,15 @@ class LanguageForm(Form):
 
 class RestockFormFCFS(LanguageForm):
     """Represents a form to fill languages and courses with waiting applicants, respecting their signup timestamp.
+
        This is the first-come-first-serve policy.
     """
     pass
 
 
 class RestockFormRnd(Form):
-    """Represents a form to fill languages and courses with waiting applicants, using weighted random selection from all attendances.
+    """Represents form to fill languages+courses with waiting applicants, using weighted random selection.
+
         This is the weighted-random policy.
     """
     notify_waiting = BooleanField('Mail an Wartende verschicken')
@@ -480,8 +593,13 @@ class PretermForm(Form):
     """Represents a form to generate a preterm signup token.
     """
 
-    mail = TextField('E-Mail', [validators.Email('Valide Mail Adresse wird benötigt'),
-                                 validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')])
+    mail = TextField(
+        'E-Mail',
+        [
+            validators.Email('Valide Mail Adresse wird benötigt'),
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+        ]
+    )
 
     def get_token(self):
         return token.generate(self.mail.data, namespace='preterm')

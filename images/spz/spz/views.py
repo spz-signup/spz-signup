@@ -9,19 +9,19 @@ import socket
 import re
 import csv
 import io
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from redis import ConnectionError
 
 from sqlalchemy import orm, func, not_
 
-from flask import request, redirect, render_template, url_for, flash, g, make_response
+from flask import request, redirect, render_template, url_for, flash, make_response
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from flask.ext.mail import Message
 
 from spz import app, models, mail, db, token
 from spz.decorators import templated
-from spz.forms import SignupForm, NotificationForm, ApplicantForm, StatusForm, PaymentForm, SearchForm, RestockFormFCFS, RestockFormRnd, PretermForm, UniqueForm, LoginForm
+from spz.forms import *  # NOQA
 from spz.models import Attendance
 from spz.util.Filetype import mime_from_filepointer
 from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
@@ -31,7 +31,9 @@ from spz.async import async_send, cel
 def generate_status_mail(applicant, course, time=None, restock=False):
     """Generate mail to notify applicants about their new attendance status."""
     time = time or datetime.utcnow()
-    attendance = Attendance.query.filter(Attendance.applicant_id == applicant.id, Attendance.course_id == course.id).first()
+    attendance = Attendance.query \
+        .filter(Attendance.applicant_id == applicant.id, Attendance.course_id == course.id) \
+        .first()
 
     if attendance:
         # applicant is (somehow) registered for this course
@@ -107,18 +109,19 @@ def index():
         user_has_special_rights = current_user.is_authenticated and current_user.can_edit_course(course)
 
         # signup at all times only with token or privileged users
-        preterm = applicant.mail \
-                and one_time_token \
-                and token.validate_once(
-                    token=one_time_token,
-                    payload_wanted=applicant.mail,
-                    namespace='preterm',
-                    db_model=models.Applicant,
-                    db_column=models.Applicant.mail
-                )
+        preterm = applicant.mail and \
+            one_time_token and \
+            token.validate_once(
+                token=one_time_token,
+                payload_wanted=applicant.mail,
+                namespace='preterm',
+                db_model=models.Applicant,
+                db_column=models.Applicant.mail
+            )
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
-            'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in {0}'.format(course.language.until_signup_fmt()),
+            'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in '
+            '{0}'.format(course.language.until_signup_fmt()),
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
@@ -143,8 +146,12 @@ def index():
         # As of 2015, we simply put everyone into the waiting list by default and then randomly insert, see #39
         try:
             waiting = not preterm
-            attendance = applicant.add_course_attendance(course, form.get_graduation(),
-                                                         waiting=waiting, has_to_pay=applicant.has_to_pay())
+            applicant.add_course_attendance(
+                course,
+                form.get_graduation(),
+                waiting=waiting,
+                has_to_pay=applicant.has_to_pay()
+            )
 
             db.session.add(applicant)
             db.session.commit()
@@ -306,7 +313,8 @@ def export_course(course_id):
     out.writerow(['Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail', 'Matrikelnummer',
                   'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
 
-    maybe = lambda x: x if x else ''
+    def maybe(x):
+        return x if x else ''
 
     idx = 1
     for applicant in active_no_debt:
@@ -334,7 +342,8 @@ def export_language(language_id):
     out.writerow(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
                   'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
 
-    maybe = lambda x: x if x else ''
+    def maybe(x):
+        return x if x else ''
 
     for course in language.courses:
         active_no_debt = [attendance.applicant for attendance in course.attendances
@@ -367,10 +376,10 @@ def export_language(language_id):
 def lists():
     # list of tuple (lang, aggregated number of courses, aggregated number of seats)
     lang_misc = db.session.query(models.Language, func.count(models.Language.courses), func.sum(models.Course.limit)) \
-                          .join(models.Course, models.Language.courses) \
-                          .group_by(models.Language) \
-                          .order_by(models.Language.name) \
-                          .from_self()  # b/c of eager loading, see: http://thread.gmane.org/gmane.comp.python.sqlalchemy.user/36757
+        .join(models.Course, models.Language.courses) \
+        .group_by(models.Language) \
+        .order_by(models.Language.name) \
+        .from_self()  # b/c of eager loading, see: http://thread.gmane.org/gmane.comp.python.sqlalchemy.user/36757
 
     return dict(lang_misc=lang_misc)
 
@@ -414,7 +423,10 @@ def applicant(id):
             notify = form.get_send_mail()
 
             if add_to and remove_from:
-                flash('Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen', 'negative')
+                flash(
+                    'Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen',
+                    'negative'
+                )
             elif add_to:
                 return add_attendance(applicant_id=applicant.id, course_id=add_to.id, notify=notify)
             elif remove_from:
@@ -437,10 +449,12 @@ def search_applicant():
     applicants = []
 
     if form.validate_on_submit():
-        applicants = models.Applicant.query.filter(models.Applicant.first_name.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.last_name.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.mail.like('%{0}%'.format(form.token.data))
-                                                   | models.Applicant.tag.like('%{0}%'.format(form.token.data)))
+        applicants = models.Applicant.query.filter(
+            models.Applicant.first_name.like('%{0}%'.format(form.token.data)) |
+            models.Applicant.last_name.like('%{0}%'.format(form.token.data)) |
+            models.Applicant.mail.like('%{0}%'.format(form.token.data)) |
+            models.Applicant.tag.like('%{0}%'.format(form.token.data))
+        )
 
     return dict(form=form, applicants=applicants)
 
@@ -460,7 +474,11 @@ def add_attendance(applicant_id, course_id, notify):
         flash('Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
 
         if not course.is_allowed(applicant):
-            flash('Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. Teilnehmer wurde trotzdem eingetragen.', 'warning')
+            flash(
+                'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse.'
+                'Teilnehmer wurde trotzdem eingetragen.',
+                'warning'
+            )
 
     except Exception as e:
         db.session.rollback()
@@ -674,9 +692,9 @@ def preterm():
 @templated('internal/duplicates.html')
 def duplicates():
     taglist = db.session.query(models.Applicant.tag) \
-                        .filter(models.Applicant.tag != None, models.Applicant.tag != '') \
-                        .group_by(models.Applicant.tag) \
-                        .having(func.count(models.Applicant.id) > 1)
+        .filter(models.Applicant.tag is not None, models.Applicant.tag != '') \
+        .group_by(models.Applicant.tag) \
+        .having(func.count(models.Applicant.id) > 1)
 
     doppelganger = [models.Applicant.query.filter_by(tag=duptag) for duptag in [tup[0] for tup in taglist]]
 
@@ -705,7 +723,10 @@ def restock_fcfs():
             return redirect(url_for('restock_fcfs'))
 
         if len(restocked_attendances) == 0:
-            flash('Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind', 'negative')
+            flash(
+                'Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind',
+                'negative'
+            )
             return redirect(url_for('restock_fcfs'))
 
         try:
@@ -729,22 +750,44 @@ def restock_rnd():
     form = RestockFormRnd()
 
     if form.validate_on_submit():
-        # eager loading, see (search for 'subqueryload'): http://docs.sqlalchemy.org/en/rel_0_9/orm/loading_relationships.html
+        # eager loading, see (search for 'subqueryload'):
+        # http://docs.sqlalchemy.org/en/rel_0_9/orm/loading_relationships.html
         to_assign = models.Attendance.query \
-                                     .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
-                                     .filter_by(waiting=True) \
-                                     .all()
+            .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
+            .filter_by(waiting=True) \
+            .all()
 
-        # Interval filtering in Python instead of SQL because it's not portable (across SQLite, Postgres, ..) implementable in standard SQL
+        # Interval filtering in Python instead of SQL because it's not portable (across SQLite, Postgres, ..)
+        # implementable in standard SQL
         # See: https://groups.google.com/forum/#!msg/sqlalchemy/AneqcriykeI/j4sayzZP1qQJ
         w_open = app.config['RANDOM_WINDOW_OPEN_FOR']
-        between = lambda x, lhs, rhs: lhs < x < rhs
-        to_assign = [att for att in to_assign
-                     if between(att.registered, att.course.language.signup_begin, att.course.language.signup_begin + w_open)]
 
-        # (attendance, weight) tuples from query would be possible, too; eager loading already takes care of not issuing tons of sql queries here
+        def between(x, lhs, rhs):
+            return lhs < x < rhs
+
+        to_assign = [
+            att
+            for att
+            in to_assign
+            if between(att.registered, att.course.language.signup_begin, att.course.language.signup_begin + w_open)
+        ]
+
+        # (attendance, weight) tuples from query would be possible, too;
+        # eager loading already takes care of not issuing tons of sql queries here
         now = datetime.utcnow()
-        weights = [1.0 / max(1.0, len([att for att in attendance.applicant.attendances if att.course.language.signup_end >= now])) for attendance in to_assign]
+        weights = [
+            1.0 / max(
+                1.0,
+                len([
+                    att
+                    for att
+                    in attendance.applicant.attendances
+                    if att.course.language.signup_end >= now
+                ])
+            )
+            for attendance
+            in to_assign
+        ]
 
         # keep track of which attendances we set to active/waiting
         handled_attendances = []
@@ -782,7 +825,11 @@ def restock_rnd():
                           sum([1 for a in handled_attendances if a.has_to_pay])), 'success')
         except Exception as e:
             db.session.rollback()
-            flash('Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: {0}'.format(e), 'negative')
+            flash(
+                'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: '
+                '{0}'.format(e),
+                'negative'
+            )
             return redirect(url_for('restock_rnd'))
 
         # Send mails (async) only if the commit was successfull -- be conservative here
@@ -808,8 +855,14 @@ def unique():
         deleted = 0
 
         try:
-            waiting_but_active_parallel = [attendance for course in courses for attendance in course.get_waiting_attendances()
-                                           if attendance.applicant.active_in_parallel_course(course)]
+            waiting_but_active_parallel = [
+                attendance
+                for course
+                in courses
+                for attendance
+                in course.get_waiting_attendances()
+                if attendance.applicant.active_in_parallel_course(course)
+            ]
 
             for attendance in waiting_but_active_parallel:
                 db.session.delete(attendance)
@@ -819,7 +872,11 @@ def unique():
             flash('Kurse von {0} wartenden Teilnahmen mit aktiven Parallelkurs bereinigt'.format(deleted), 'success')
         except Exception as e:
             db.session.rollback()
-            flash('Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: {0}'.format(e), 'negative')
+            flash(
+                'Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: '
+                '{0}'.format(e),
+                'negative'
+            )
             return redirect(url_for('unique'))
 
     return dict(form=form)

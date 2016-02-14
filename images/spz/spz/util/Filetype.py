@@ -5,6 +5,7 @@
 
 import magic
 
+
 def mime_from_filepointer(fp):
     """Detect mime from filepointer.
 
