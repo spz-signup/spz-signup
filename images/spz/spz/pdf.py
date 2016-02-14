@@ -6,7 +6,7 @@
 from datetime import datetime
 from fpdf import FPDF
 
-from flask import make_response
+from flask import app, make_response
 from flask.ext.login import login_required
 
 from spz import models
@@ -14,16 +14,9 @@ from spz import models
 
 class BasePDF(FPDF):
     def header(self):
-        now = datetime.now()
-        if now.month < 3:
-            semester = 'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-        elif now.month < 9:
-            semester = 'Sommersemester {0}'.format(now.year)
-        else:
-            semester = 'Wintersemester {0}/{1}'.format(now.year, now.year+1)
         self.set_font('Arial', '', 10)
         self.cell(0, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
-        self.cell(0, 5, semester, 0, 1, 'R')
+        self.cell(0, 5, app.config['SEMESTER_NAME'], 0, 1, 'R')
         self.set_font('Arial', 'B', 10)
         self.cell(0, 5, 'Sprachenzentrum', 0)
 

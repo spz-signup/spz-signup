@@ -6,8 +6,7 @@ Sehr geehrte{{ 'r Herr' if applicant.sex else ' Frau' }}: {{ applicant.first_nam
 bitte beachten Sie folgende Neuigkeit zu ihrer Anmeldung:
     Bewerberkreis: {{ applicant.origin.name }}
     E-Mail Adresse: {{ applicant.mail }}
-{# TODO: ugly hack. refactor it! #}
-    Semester: {{ 'SS ' ~ date.year if (3 <= date.month < 9) else 'WS ' ~ date.year ~ '/' ~ (date.year + 1) }}
+    Semester: {{ config['SEMESTER_NAME'] }}
 
 
 {% block message %}
