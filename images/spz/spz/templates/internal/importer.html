@@ -1,5 +1,7 @@
 {% extends 'internal/internal.html' %}
 
+{% from 'formhelpers.html' import csrf_field %}
+
 {% block caption %}
 Importieren
 {% endblock caption %}
@@ -9,6 +11,7 @@ Importieren
 <div class="row">
     <h3 class="ui dividing header">Matrikelnummern</h3>
     <form class="ui form" method="post" action="{{ url_for('registrations') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
         <div class="ui message">
             <p>Zeilenweiser Aufbau, bitte ohne Header: ID -- z.b. 123</p>
             <strong>Der Import kann bis zu einer Minute Zeit in Anspruch nehmen. Daher bitte Geduld walten lassen und die Seite NICHT neu laden!</strong>
@@ -18,6 +21,7 @@ Importieren
     </form>
     <h3 class="ui dividing header">Englischtest Ergebnisse</h3>
     <form class="ui form" method="post" action="{{ url_for('approvals') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
         <div class="ui message">
             <p>Zeilenweiser Aufbau, bitte ohne Header: ID;Prozent -- z.b. 123;99</p>
         </div>
