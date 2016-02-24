@@ -201,3 +201,8 @@ a > strong:only-child {
 .ui.buttons .or {
     cursor: default;
 }
+
+.ui.grid > .row > p,
+.ui.grid > .row > ul {
+    width: 100%;
+}
