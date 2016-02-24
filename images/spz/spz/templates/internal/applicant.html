@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_option, render_boolean %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_option, render_boolean %}
 
 {% block caption %}
 Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
@@ -9,7 +9,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
 {% block internal_body %}
 <div class="row">
     <form class="ui form" method="post">
-        {{ form.hidden_tag() }}
+        {{ csrf_field() }}
         <h3 class="ui dividing header">Persönliche Angaben</h3>
         {{ render_option(form.sex) }}
         {{ render_input(form.first_name, required=False) }}

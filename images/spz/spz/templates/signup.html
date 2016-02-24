@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import render_input, render_option, render_radio, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_option, render_radio, render_submit %}
 
 {% block caption %}
 Anmeldung {{ config['SEMESTER_NAME'] }}
@@ -9,7 +9,7 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
 {% block body %}
 <div class="row">
         <form id="signup" class="ui form" method="post" data-persist="garlic">
-            {{ form.hidden_tag() }}
+            {{ csrf_field() }}
             <h3 class="ui dividing header">Kurswahl</h3>
             {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus', icon='cube') }}
             <h3 class="ui dividing header">Persönliche Angaben</h3>

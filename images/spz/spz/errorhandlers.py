@@ -36,3 +36,6 @@ def not_found(e):
 def unauthorized(e):
     flash('Bitte einloggen!', 'warning')
     return redirect(url_for('login'))
+
+def bad_request(e):
+    return render_error(400, 'Fehlerhafte Anfrage (evt. Verdacht auf CSRF)')

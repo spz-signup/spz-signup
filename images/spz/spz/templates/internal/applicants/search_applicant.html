@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit %}
 
 {% block caption %}
 Bewerbersuche
@@ -9,7 +9,7 @@ Bewerbersuche
 {% block internal_body %}
 <div class="row">
     <form class="ui form" method="post">
-        {{ form.hidden_tag() }}
+        {{ csrf_field() }}
         {{ render_input(form.token, help="Suchen nach Vorname, Nachname, Mail und Matrikelnummer") }}
         {{ render_submit(submit='Suche starten') }}
     </form>

@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_option, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_option, render_submit %}
 
 {% block caption %}
 Wartelisten Bereinigen
@@ -8,7 +8,7 @@ Wartelisten Bereinigen
 {% block internal_body %}
 <div class="row">
     <form class="ui form" method="post">
-    {{ form.hidden_tag() }}
+    {{ csrf_field() }}
     <h3 class="ui dividing header">Bereinige Kurse von wartenden Teilnahmen mit aktivem Parallelkurs folgender Sprache</h3>
     {{ render_option(form.language) }}
     {{ render_submit() }}

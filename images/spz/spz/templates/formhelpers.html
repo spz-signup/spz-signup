@@ -97,3 +97,7 @@
     <button type="reset"  class="ui button">Zurücksetzen</button>
 </div>
 {% endmacro %}
+
+{% macro csrf_field() %}
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" data-storage="false" />
+{% endmacro %}

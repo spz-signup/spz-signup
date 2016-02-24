@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit %}
 
 {% block caption %}
 Zahlungen
@@ -8,7 +8,7 @@ Zahlungen
 {% block internal_body %}
 <div class="row">
     <form class="ui form" method="post">
-        {{ form.hidden_tag() }}
+        {{ csrf_field() }}
         <h3 class="ui dividing header">Belegungsnummer</h3>
             {{ render_input(form.confirmation_code, placeholder='A#C#', help='Vom Zahlenden zu referenzieren') }}
         {{ render_submit(submit='Weiter') }}

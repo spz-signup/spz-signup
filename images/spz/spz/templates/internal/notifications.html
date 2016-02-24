@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_textarea, render_option, render_boolean, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_textarea, render_option, render_boolean, render_submit %}
 
 {% block caption %}
 Mail Zentrale
@@ -9,7 +9,7 @@ Mail Zentrale
 {% block internal_body %}
 <div class="row">
     <form class="ui form" method="post" id="confirm">
-        {{ form.hidden_tag() }}
+        {{ csrf_field() }}
         <h3 class="ui dividing header">Optionale Angaben</h3>
         {{ render_input(form.mail_cc, required=False) }}
         {{ render_input(form.mail_bcc, required=False) }}

@@ -17,6 +17,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from flask.ext.cache import Cache
+from flask.ext.wtf import CsrfProtect
 
 from jinja2 import Markup
 
@@ -51,6 +52,10 @@ def login_by_token(tokenstring):
     # local imports to avoid import before config
     from spz.models import User
     return User.get_by_token(tokenstring)
+
+
+# set up CSRF protection
+CsrfProtect(app)
 
 
 # add `include_raw` Jinja helper
@@ -163,6 +168,7 @@ for rule, view_func, methods in routes:
 
 
 handlers = [
+    (400, errorhandlers.bad_request),
     (401, errorhandlers.unauthorized),
     (404, errorhandlers.page_not_found),
     (403, errorhandlers.page_forbidden),
