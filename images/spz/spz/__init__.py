@@ -34,6 +34,14 @@ class CustomFlask(Flask):
 app = CustomFlask(__name__, instance_relative_config=True)
 
 
+# Configuration loading
+if 'SPZ_CFG_FILE' in os.environ:
+    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])
+else:
+    app.config.from_pyfile('development.cfg')
+    # app.config.from_pyfile('production.cfg')
+
+
 # set up login system
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -69,14 +77,6 @@ bundles = assets.get_bundles()
 
 for name, bundle in bundles.items():
     assets_env.register(name, bundle)
-
-
-# Configuration loading
-if 'SPZ_CFG_FILE' in os.environ:
-    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])
-else:
-    app.config.from_pyfile('development.cfg')
-    # app.config.from_pyfile('production.cfg')
 
 
 # Set up logging before anything else, in order to catch early errors
