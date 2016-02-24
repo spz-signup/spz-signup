@@ -103,8 +103,18 @@ def upcoming_courses_to_choicelist():
 
     upcoming = [course for course in available if course.language.signup_end >= datetime.utcnow()]
 
-    return [(course.id, '{0} {1}'.format(course.full_name(), ' (Warteliste)' if course.is_full() else ''))
-            for course in upcoming]
+    def generate_marker(course):
+        if course.is_overbooked():
+            return ' (Überbucht)'
+        elif course.is_full():
+            return ' (Warteliste)'
+        else:
+            return ''
+
+    return [
+        (course.id, '{0}{1}'.format(course.full_name(), generate_marker(course)))
+        for course in upcoming
+    ]
 
 
 @cache.cached(key_prefix='all_courses')

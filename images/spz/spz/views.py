@@ -91,6 +91,11 @@ def index():
             'Sie haben das Limit an Bewerbungen bereits erreicht',
             user_has_special_rights
         )
+        err |= check_precondition_with_auth(
+            not course.is_overbooked(),  # no transaction guarantees here, but overbooking is some sort of soft limit
+            'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen.',
+            user_has_special_rights
+        )
         if err:
             return dict(form=form)
 
