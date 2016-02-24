@@ -364,6 +364,9 @@ class Language(db.Model):
         # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
         return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
 
+    def is_upcoming(self, time):
+        return self.signup_end >= time
+
     def is_in_manual_mode(self, time):
         return time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['MANUAL_PERIOD'])
 

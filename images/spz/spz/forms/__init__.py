@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 
-"""The application's sign up forms.
+"""All application forms.
 
    Manages the mapping between database models and HTML forms.
 """
 
-from datetime import datetime
-
 from sqlalchemy import func
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, validators
+from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField
 
-from spz import app, models, cache, token
+from spz import app, models, token
 
-import phonenumbers
+from . import cached, validators
 
 
 __all__ = [
@@ -28,102 +26,6 @@ __all__ = [
     'StatusForm',
     'UniqueForm',
 ]
-
-
-class TagDependingOnOrigin(object):
-    """Helper validator if origin requires validatation of registration."""
-
-    def __call__(self, form, field):
-        o = form.get_origin()
-        if o and o.validate_registration and not models.Registration.exists(field.data):
-            raise validators.ValidationError('Ungültige Matrikelnummer')
-
-
-class RequiredDependingOnOrigin(validators.Required):
-    """Helper validator if origin requires validatation of registration."""
-
-    def __init__(self, *args, **kwargs):
-        super(RequiredDependingOnOrigin, self).__init__(*args, **kwargs)
-
-    def __call__(self, form, field):
-        o = form.get_origin()
-        if o and o.validate_registration:
-            super(RequiredDependingOnOrigin, self).__call__(form, field)
-
-
-class PhoneValidator(object):
-    """Validates phone numbers."""
-
-    def __call__(self, form, field):
-        valid = True
-        try:
-            x = phonenumbers.parse(field.data, 'DE')
-            if not phonenumbers.is_valid_number(x):
-                valid = False
-        except Exception:
-            # XXX: by more specific about exception
-            valid = False
-
-        if not valid:
-            raise validators.ValidationError('Ungültige Telefonnummer')
-
-
-# Cacheable helpers for database fields that are not supposed to change often or quickly
-# Do not specify a timeout; so the default one (from the configuration) gets picked up
-
-
-@cache.cached(key_prefix='degrees')
-def degrees_to_choicelist():
-    return [(x.id, x.name)
-            for x in models.Degree.query.order_by(models.Degree.id.asc())]
-
-
-@cache.cached(key_prefix='graduations')
-def graduations_to_choicelist():
-    return [(x.id, x.name)
-            for x in models.Graduation.query.order_by(models.Graduation.id.asc())]
-
-
-@cache.cached(key_prefix='origins')
-def origins_to_choicelist():
-    return [(x.id, '{0}'.format(x.name))
-            for x in models.Origin.query.order_by(models.Origin.id.asc())]
-
-
-@cache.cached(key_prefix='languages')
-def languages_to_choicelist():
-    return [(x.id, '{0}'.format(x.name))
-            for x in models.Language.query.order_by(models.Language.name.asc())]
-
-
-@cache.cached(key_prefix='upcoming_courses')
-def upcoming_courses_to_choicelist():
-    available = models.Course.query.join(models.Language.courses) \
-                                   .order_by(models.Language.name, models.Course.level, models.Course.alternative)
-
-    upcoming = [course for course in available if course.language.signup_end >= datetime.utcnow()]
-
-    def generate_marker(course):
-        if course.is_overbooked():
-            return ' (Überbucht)'
-        elif course.is_full():
-            return ' (Warteliste)'
-        else:
-            return ''
-
-    return [
-        (course.id, '{0}{1}'.format(course.full_name(), generate_marker(course)))
-        for course in upcoming
-    ]
-
-
-@cache.cached(key_prefix='all_courses')
-def all_courses_to_choicelist():
-    courses = models.Course.query.join(models.Language.courses) \
-                                 .order_by(models.Language.name, models.Course.level, models.Course.alternative)
-
-    return [(course.id, '{0}'.format(course.full_name()))
-            for course in courses]
 
 
 class SignupForm(Form):
@@ -155,7 +57,7 @@ class SignupForm(Form):
         'Telefon',
         [
             validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein'),
-            PhoneValidator()
+            validators.PhoneValidator()
         ]
     )
     mail = TextField(
@@ -175,7 +77,7 @@ class SignupForm(Form):
         'Matrikel&shy;nummer',
         [
             validators.Required('Matrikelnummer muss angegeben werden'),
-            TagDependingOnOrigin(),
+            validators.TagDependingOnOrigin(),
             validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')
         ]
     )
@@ -183,7 +85,7 @@ class SignupForm(Form):
     degree = SelectField(
         'Studien&shy;abschluss',
         [
-            RequiredDependingOnOrigin('Angabe des Studienabschlusses ist für Sie Pflicht'),
+            validators.RequiredDependingOnOrigin('Angabe des Studienabschlusses ist für Sie Pflicht'),
             validators.Optional()
         ],
         coerce=int
@@ -191,7 +93,7 @@ class SignupForm(Form):
     graduation = SelectField(
         'Kurs&shy;abschluss',
         [
-            RequiredDependingOnOrigin('Angabe des Abschlusses ist für Sie Pflicht'),
+            validators.RequiredDependingOnOrigin('Angabe des Abschlusses ist für Sie Pflicht'),
             validators.Optional()
         ],
         coerce=int
@@ -199,7 +101,7 @@ class SignupForm(Form):
     semester = IntegerField(
         'Fach&shy;semester',
         [
-            RequiredDependingOnOrigin('Angabe des Fachsemesters ist für Sie Pflicht'),
+            validators.RequiredDependingOnOrigin('Angabe des Fachsemesters ist für Sie Pflicht'),
             validators.Optional(),
             validators.NumberRange(min=1, max=26, message='Anzahl der Fachsemester muss zwischen 1 und 26 liegen')
         ]
@@ -217,10 +119,10 @@ class SignupForm(Form):
         self._populate()
 
     def _populate(self):
-        self.degree.choices = degrees_to_choicelist()
-        self.graduation.choices = graduations_to_choicelist()
-        self.origin.choices = origins_to_choicelist()
-        self.course.choices = upcoming_courses_to_choicelist()
+        self.degree.choices = cached.degrees_to_choicelist()
+        self.graduation.choices = cached.graduations_to_choicelist()
+        self.origin.choices = cached.origins_to_choicelist()
+        self.course.choices = cached.upcoming_courses_to_choicelist()
 
     # Accessors, to encapsulate the way the form represents and retrieves objects
     # This especially ensures that optional fields only get queried if a value is present
@@ -318,7 +220,7 @@ class NotificationForm(Form):
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
         # See SignupForm for this "trick"
-        self.mail_courses.choices = all_courses_to_choicelist()
+        self.mail_courses.choices = cached.all_courses_to_choicelist()
         self.mail_reply_to.choices = self._reply_to_choices()
 
     def get_courses(self):
@@ -448,10 +350,10 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     def __init__(self, *args, **kwargs):
         super(ApplicantForm, self).__init__(*args, **kwargs)
-        self.origin.choices = origins_to_choicelist()
-        self.degree.choices = degrees_to_choicelist()
-        self.add_to.choices = all_courses_to_choicelist()
-        self.remove_from.choices = all_courses_to_choicelist()
+        self.origin.choices = cached.origins_to_choicelist()
+        self.degree.choices = cached.degrees_to_choicelist()
+        self.add_to.choices = cached.all_courses_to_choicelist()
+        self.remove_from.choices = cached.all_courses_to_choicelist()
 
     def populate(self, applicant):
         self.applicant = applicant
@@ -517,7 +419,7 @@ class StatusForm(Form):
         self._populate()
 
     def _populate(self):
-        self.graduation.choices = graduations_to_choicelist()
+        self.graduation.choices = cached.graduations_to_choicelist()
 
     def populate(self, attendance):
         self.graduation.data = attendance.graduation.id if attendance.graduation else None
@@ -569,7 +471,7 @@ class LanguageForm(Form):
         self._populate()
 
     def _populate(self):
-        self.language.choices = languages_to_choicelist()
+        self.language.choices = cached.languages_to_choicelist()
 
     def get_courses(self):
         return models.Language.query.get(self.language.data).courses
