@@ -126,6 +126,7 @@
                         $('input[type=radio]', form).removeAttr('checked');
                         $('input[type=text]', form).val('');
                         $('.ui.dropdown', form).dropdown('clear');
+                        $('input', form).garlic('destroy');
                     }, 10);
                 });
             });
