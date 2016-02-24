@@ -5,6 +5,7 @@
 import phonenumbers
 
 from wtforms.validators import *  # NOQA
+from wtforms.validators import ValidationError
 
 from spz import models
 
