@@ -19,11 +19,10 @@ from flask import request, redirect, render_template, url_for, flash, make_respo
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from flask.ext.mail import Message
 
-from spz import app, models, db, token
+from spz import app, models, db, token, tasks
 from spz.decorators import templated
 from spz.forms import *  # NOQA
 from spz.util.Filetype import mime_from_filepointer
-from spz.async import async_send_slow, async_send_quick, cel
 from spz.mail import generate_status_mail
 
 
@@ -121,7 +120,7 @@ def index():
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
-            async_send_slow.delay(generate_status_mail(applicant, course, time))
+            tasks.send_slow.delay(generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
 
@@ -235,7 +234,7 @@ def notifications():
     if form.validate_on_submit():
         try:
             for recipient in form.get_recipients():
-                async_send_slow.delay(
+                tasks.send_slow.delay(
                     Message(
                         sender=current_user.email,
                         recipients=[recipient],
@@ -445,7 +444,7 @@ def add_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            async_send_slow.delay(generate_status_mail(applicant, course, restock=True))
+            tasks.send_slow.delay(generate_status_mail(applicant, course, restock=True))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -470,7 +469,7 @@ def remove_attendance(applicant_id, course_id, notify):
 
     if notify:
         try:
-            async_send_slow.delay(generate_status_mail(applicant, course))
+            tasks.send_slow.delay(generate_status_mail(applicant, course))
             flash('Mail erfolgreich verschickt', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -554,7 +553,7 @@ def status(applicant_id, course_id):
             try:
                 course = attendance.course
                 applicant = attendance.applicant
-                async_send_quick.delay(generate_status_mail(applicant, course))
+                tasks.send_quick.delay(generate_status_mail(applicant, course))
                 flash('Mail erfolgreich verschickt', 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
                 flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
@@ -595,21 +594,21 @@ def origins_breakdown():
 def task_queue():
     jobs = []
     try:
-        i = cel.control.inspect()
+        i = tasks.cel.control.inspect()
         everything = i.scheduled()
         jobs = everything[next(iter(everything.keys()))]
     except ConnectionError as e:
         flash('Jobabfrage nicht möglich: {0}'.format(e), 'warning')
 
-    tasks = []
+    work = []
     for job in jobs:
         request = job['request']
         payload = '{}({}, {})'.format(request['name'], request['args'], request['kwargs'])
 
         task = {'id': request['id'], 'started': request['time_start'], 'payload': payload, 'priority': job['priority']}
-        tasks.append(task)
+        work.append(task)
 
-    return dict(tasks=tasks)
+    return dict(tasks=work)
 
 
 @login_required
@@ -623,7 +622,7 @@ def preterm():
         token = form.get_token()
 
         try:
-            async_send_quick.delay(
+            tasks.send_quick.delay(
                 Message(
                     sender=app.config['PRIMARY_MAIL'],
                     recipients=[form.mail.data],

@@ -5,7 +5,7 @@ from redis import ConnectionError
 
 from sqlalchemy import orm
 
-from spz import app, async, db, models
+from spz import app, db, models, tasks
 
 from spz.mail import generate_status_mail
 
@@ -30,7 +30,7 @@ def send_mails(attendances):
             # consider this a restock if we already send out a "no, sorry" mail
             restock = informed_before_now
 
-            async.async_send_slow.delay(
+            tasks.send_slow.delay(
                 generate_status_mail(attendance.applicant, attendance.course, restock=restock),
             )
 

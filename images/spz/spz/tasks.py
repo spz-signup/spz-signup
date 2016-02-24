@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Asynchronouse task queue interface.
+"""Celery tasks.
 """
 
 from celery import Celery
@@ -8,6 +8,14 @@ from celery import Celery
 from spz import app, mail
 
 from spz.populate import populate_global
+
+
+__all__ = [
+    'cel',
+    'populate',
+    'send_slow',
+    'send_quick',
+]
 
 
 # http://flask.pocoo.org/docs/0.10/patterns/celery/
@@ -28,11 +36,9 @@ def make_celery(app):
 
 cel = make_celery(app)
 
-# Async tasks
-
 
 @cel.task(bind=True, rate_limit='20/m')
-def async_send_slow(self, msg):
+def send_slow(self, msg):
     try:
         mail.send(msg)
     except Exception as e:
@@ -40,7 +46,7 @@ def async_send_slow(self, msg):
 
 
 @cel.task(bind=True, rate_limit='30/m')
-def async_send_quick(self, msg):
+def send_quick(self, msg):
     try:
         mail.send(msg)
     except Exception as e:
@@ -48,7 +54,7 @@ def async_send_quick(self, msg):
 
 
 @cel.task(bind=True)
-def periodic_populate(self):
+def populate(self):
     try:
         populate_global()
     except Exception as e:

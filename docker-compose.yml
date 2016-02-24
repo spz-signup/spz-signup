@@ -28,7 +28,7 @@ services:
         cpuset: "0,1"
     celery_beat:
         build: images/spz
-        command: celery --app=spz.async.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
+        command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
             - uwsgi
         read_only: true
@@ -47,7 +47,7 @@ services:
         cpuset: "2"
     celery_default:
         build: images/spz
-        command: celery --app=spz.async.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
         read_only: true
@@ -66,7 +66,7 @@ services:
         cpuset: "2"
     celery_slow_mails:
         build: images/spz
-        command: celery --app=spz.async.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
         read_only: true
