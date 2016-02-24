@@ -83,20 +83,20 @@ def populate_generic(time, attendance_filter, idx_prepare, idx_select):
 
         if attendance.applicant.active_in_parallel_course(attendance.course):
             # XXX: how can this happen? should we send a message to someone?
-            attendance.informed_about_result = True
+            attendance.informed_about_rejection = True
             continue
 
         # keep default waiting status
         if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
-            if not attendance.informed_about_result:
-                handled_attendances.append((attendance, attendance.informed_about_result))
-                attendance.informed_about_result = True
+            if not attendance.informed_about_rejection:
+                handled_attendances.append((attendance, attendance.informed_about_rejection))
+                attendance.informed_about_rejection = True
             continue
 
         attendance.has_to_pay = attendance.applicant.has_to_pay()
         attendance.waiting = False
-        handled_attendances.append((attendance, attendance.informed_about_result))
-        attendance.informed_about_result = True
+        handled_attendances.append((attendance, attendance.informed_about_rejection))
+        attendance.informed_about_rejection = True
 
     try:
         db.session.commit()

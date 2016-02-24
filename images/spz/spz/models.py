@@ -81,7 +81,7 @@ class Attendance(db.Model):
        :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
        :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
-       :param informed_about_result: Tells us if we already send a "you're (not) in the course" mail
+       :param informed_about_rejection: Tells us if we already send a "you're (not) in the course" mail
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
