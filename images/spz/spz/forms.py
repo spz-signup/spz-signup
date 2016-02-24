@@ -23,8 +23,6 @@ __all__ = [
     'NotificationForm',
     'PaymentForm',
     'PretermForm',
-    'RestockFormFCFS',
-    'RestockFormRnd',
     'SearchForm',
     'SignupForm',
     'StatusForm',
@@ -565,22 +563,6 @@ class LanguageForm(Form):
 
     def get_courses(self):
         return models.Language.query.get(self.language.data).courses
-
-
-class RestockFormFCFS(LanguageForm):
-    """Represents a form to fill languages and courses with waiting applicants, respecting their signup timestamp.
-
-       This is the first-come-first-serve policy.
-    """
-    pass
-
-
-class RestockFormRnd(Form):
-    """Represents form to fill languages+courses with waiting applicants, using weighted random selection.
-
-        This is the weighted-random policy.
-    """
-    notify_waiting = BooleanField('Mail an Wartende verschicken')
 
 
 class UniqueForm(LanguageForm):

@@ -81,6 +81,7 @@ class Attendance(db.Model):
        :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
        :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
+       :param informed_about_result: Tells us if we already send a "you're (not) in the course" mail
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
     """
@@ -103,9 +104,11 @@ class Attendance(db.Model):
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())
 
+    informed_about_rejection = db.Column(db.Boolean, nullable=False, default=False)
+
     amountpaid_constraint = db.CheckConstraint(amountpaid >= 0)
 
-    def __init__(self, course, graduation, waiting, has_to_pay):
+    def __init__(self, course, graduation, waiting, has_to_pay, informed_about_rejection=False):
         self.course = course
         self.graduation = graduation
         self.waiting = waiting
@@ -113,6 +116,7 @@ class Attendance(db.Model):
         self.paidbycash = False
         self.amountpaid = 0
         self.payingdate = None
+        self.informed_about_rejection = informed_about_rejection
 
     def __repr__(self):
         return '<Attendance %r %r>' % (self.applicant, self.course)
@@ -305,24 +309,6 @@ class Course(db.Model):
     def get_free_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
 
-    def restock(self):
-        # Negative number of free seats may happen if s.o. manually added an attendance
-        num_free = max(self.limit - len(self.get_active_attendances()), 0)
-        waiting = self.get_waiting_attendances()
-
-        # avoid restocking applicants already active in a parallel course
-        waiting = [attendance for attendance in waiting if not attendance.applicant.active_in_parallel_course(self)]
-
-        to_move = waiting[:num_free]
-
-        # Check if an applicant has to pay before toggling the waiting status,
-        # otherwise he has to pay _from the status change_ on.
-        for attendance in to_move:
-            attendance.has_to_pay = attendance.applicant.has_to_pay()
-            attendance.waiting = False
-
-        return to_move
-
     def full_name(self):
         return '{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
 
@@ -374,6 +360,9 @@ class Language(db.Model):
         # then closed "overnight" for random selection, then open again.
         # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
         return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
+
+    def is_in_manual_mode(self, time):
+        return time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['MANUAL_PERIOD'])
 
     def until_signup_fmt(self):
         now = datetime.utcnow()

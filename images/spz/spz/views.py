@@ -13,7 +13,7 @@ from datetime import datetime
 
 from redis import ConnectionError
 
-from sqlalchemy import orm, func, not_
+from sqlalchemy import func, not_
 
 from flask import request, redirect, render_template, url_for, flash, make_response
 from flask.ext.login import current_user, login_required, login_user, logout_user
@@ -22,57 +22,9 @@ from flask.ext.mail import Message
 from spz import app, models, db, token
 from spz.decorators import templated
 from spz.forms import *  # NOQA
-from spz.models import Attendance
 from spz.util.Filetype import mime_from_filepointer
-from spz.util.WeightedRandomGenerator import WeightedRandomGenerator
 from spz.async import async_send_slow, async_send_quick, cel
-
-
-def generate_status_mail(applicant, course, time=None, restock=False):
-    """Generate mail to notify applicants about their new attendance status."""
-    time = time or datetime.utcnow()
-    attendance = Attendance.query \
-        .filter(Attendance.applicant_id == applicant.id, Attendance.course_id == course.id) \
-        .first()
-
-    if attendance:
-        # applicant is (somehow) registered for this course
-        if attendance.waiting:
-            # applicant is waiting, let's figure out if we are in RND or FCFS phase
-            if course.language.is_open_for_signup_rnd(time):
-                subject_status = 'Verlosungspool'
-                template = 'mails/poolmail.html'
-            else:
-                subject_status = 'Warteliste'
-                template = 'mails/waitinglistmail.html'
-        else:
-            # :) applicant is signed up for the course
-            # let's differ according to the reason (normal procedure or manual restock)
-            if restock:
-                subject_status = 'Platz durch Nachrückverfahren'
-                template = 'mails/restockmail.html'
-            else:
-                subject_status = 'Erfolgreiche Anmeldung'
-                template = 'mails/registeredmail.html'
-    else:
-        # no registration exists => assuming she got kicked out
-        subject_status = 'Platzverlust'
-        template = 'mails/kickoutmail.html'
-
-    return Message(
-        sender=app.config['PRIMARY_MAIL'],
-        reply_to=course.language.reply_to,
-        recipients=[applicant.mail],
-        subject='[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name(), subject_status),
-        body=render_template(
-            template,
-            applicant=applicant,
-            course=course,
-            has_to_pay=attendance.has_to_pay if attendance else False,
-            date=datetime.now()
-        ),
-        charset='utf-8'
-    )
+from spz.mail import generate_status_mail
 
 
 def check_precondition_with_auth(cond, msg, auth=False):
@@ -146,11 +98,13 @@ def index():
         # As of 2015, we simply put everyone into the waiting list by default and then randomly insert, see #39
         try:
             waiting = not preterm
+            informed_about_rejection = waiting and course.language.is_open_for_signup_fcfs(time)
             applicant.add_course_attendance(
                 course,
                 form.get_graduation(),
                 waiting=waiting,
-                has_to_pay=applicant.has_to_pay()
+                has_to_pay=applicant.has_to_pay(),
+                informed_about_rejection=informed_about_rejection
             )
 
             db.session.add(applicant)
@@ -699,151 +653,6 @@ def duplicates():
     doppelganger = [models.Applicant.query.filter_by(tag=duptag) for duptag in [tup[0] for tup in taglist]]
 
     return dict(doppelganger=doppelganger)
-
-
-# This is the first-come-first-served policy view
-@login_required
-@templated('internal/restock_fcfs.html')
-def restock_fcfs():
-    form = RestockFormFCFS()
-
-    if form.validate_on_submit():
-        courses = form.get_courses()
-        restocked_attendances = []
-
-        try:
-            for course in courses:
-                restocked_attendances.extend(course.restock())
-
-            db.session.commit()
-            flash('Kurse bestmöglichst mit Nachrückern gefüllt', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash('Die Kurse konnten nicht mit Nachrückern gefüllt werden: {0}'.format(e), 'negative')
-            return redirect(url_for('restock_fcfs'))
-
-        if len(restocked_attendances) == 0:
-            flash(
-                'Die Kurse konnten nicht mit Nachrückern gefüllt werden, da keine freien Plätze mehr vorhanden sind',
-                'negative'
-            )
-            return redirect(url_for('restock_fcfs'))
-
-        try:
-            for attendance in restocked_attendances:
-                async_send_slow.delay(
-                    generate_status_mail(attendance.applicant, attendance.course)
-                )
-
-            flash('Mails erfolgreich verschickt', 'success')
-            return redirect(url_for('internal'))
-
-        except (AssertionError, socket.error) as e:
-            flash('Mails konnten nicht verschickt werden: {0}'.format(e), 'negative')
-
-    return dict(form=form)
-
-
-# This is the weighted-random-selection policy view
-@login_required
-@templated('internal/restock_rnd.html')
-def restock_rnd():
-    form = RestockFormRnd()
-
-    if form.validate_on_submit():
-        # eager loading, see (search for 'subqueryload'):
-        # http://docs.sqlalchemy.org/en/rel_0_9/orm/loading_relationships.html
-        to_assign = models.Attendance.query \
-            .options(orm.subqueryload(models.Attendance.applicant).subqueryload(models.Applicant.attendances)) \
-            .filter_by(waiting=True) \
-            .all()
-
-        # Interval filtering in Python instead of SQL because it's not portable (across SQLite, Postgres, ..)
-        # implementable in standard SQL
-        # See: https://groups.google.com/forum/#!msg/sqlalchemy/AneqcriykeI/j4sayzZP1qQJ
-        w_open = app.config['RANDOM_WINDOW_OPEN_FOR']
-
-        def between(x, lhs, rhs):
-            return lhs < x < rhs
-
-        to_assign = [
-            att
-            for att
-            in to_assign
-            if between(att.registered, att.course.language.signup_begin, att.course.language.signup_begin + w_open)
-        ]
-
-        # (attendance, weight) tuples from query would be possible, too;
-        # eager loading already takes care of not issuing tons of sql queries here
-        now = datetime.utcnow()
-        weights = [
-            1.0 / max(
-                1.0,
-                len([
-                    att
-                    for att
-                    in attendance.applicant.attendances
-                    if att.course.language.signup_end >= now
-                ])
-            )
-            for attendance
-            in to_assign
-        ]
-
-        # keep track of which attendances we set to active/waiting
-        handled_attendances = []
-
-        stats = {'filled': 0, 'paying': 0, 'all': len(to_assign)}
-
-        while to_assign:
-            assert len(to_assign) == len(weights)
-
-            # weighted random selection
-            gen = WeightedRandomGenerator(weights)
-            idx = next(gen)
-
-            # remove attendance and weight from possible candidates as to not select again;  guarantees termination
-            attendance = to_assign.pop(idx)
-            del weights[idx]
-
-            if attendance.applicant.active_in_parallel_course(attendance.course):
-                continue
-
-            # keep default waiting status
-            if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
-                if form.notify_waiting.data:
-                    handled_attendances.append(attendance)
-                continue
-
-            attendance.has_to_pay = attendance.applicant.has_to_pay()
-            attendance.waiting = False
-            handled_attendances.append(attendance)
-
-        try:
-            db.session.commit()
-            flash('{0} Teilnahmen (von {1} Wartenden) konnten aktiviert werden. Davon sind zu zahlen: {2}.'
-                  .format(sum([1 for a in handled_attendances if not a.waiting]), stats['all'],
-                          sum([1 for a in handled_attendances if a.has_to_pay])), 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash(
-                'Das Füllen des Systems mit Teilnahmen nach dem Zufallsprinzip konnte nicht durchgeführt werden: '
-                '{0}'.format(e),
-                'negative'
-            )
-            return redirect(url_for('restock_rnd'))
-
-        # Send mails (async) only if the commit was successfull -- be conservative here
-        try:
-            for attendance in handled_attendances:
-                async_send_slow.delay(generate_status_mail(attendance.applicant, attendance.course))
-
-            if handled_attendances:  # only show if there are attendances that we handled
-                flash('Mails erfolgreich verschickt', 'success')
-        except (AssertionError, socket.error, ConnectionError) as e:
-            flash('Mails wurden nicht verschickt: {0}'.format(e), 'negative')
-
-    return dict(form=form)
 
 
 @login_required

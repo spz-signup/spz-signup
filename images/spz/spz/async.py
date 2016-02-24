@@ -7,6 +7,8 @@ from celery import Celery
 
 from spz import app, mail
 
+from spz.populate import populate_global
+
 
 # http://flask.pocoo.org/docs/0.10/patterns/celery/
 def make_celery(app):
@@ -29,7 +31,7 @@ cel = make_celery(app)
 # Async tasks
 
 
-@cel.task(bind=True, rate_limit="20/m")
+@cel.task(bind=True, rate_limit='20/m')
 def async_send_slow(self, msg):
     try:
         mail.send(msg)
@@ -37,9 +39,17 @@ def async_send_slow(self, msg):
         raise self.retry(exc=e)
 
 
-@cel.task(bind=True, rate_limit="30/m")
+@cel.task(bind=True, rate_limit='30/m')
 def async_send_quick(self, msg):
     try:
         mail.send(msg)
+    except Exception as e:
+        raise self.retry(exc=e)
+
+
+@cel.task(bind=True)
+def periodic_populate(self):
+    try:
+        populate_global()
     except Exception as e:
         raise self.retry(exc=e)

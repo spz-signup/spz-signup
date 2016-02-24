@@ -15,8 +15,6 @@
     <a class="item" href="{{ url_for('statistics') }}"><i class="pie chart icon"></i> Statistiken</a>
     <a class="item" href="{{ url_for('duplicates') }}"><i class="random icon"></i> Doppelgänger</a>
     {% if current_user.superuser %}
-    <a class="item" href="{{ url_for('restock_rnd') }}"><i class="sort content ascending icon"></i> Auffüllen (RND)</a>
-    <a class="item" href="{{ url_for('restock_fcfs') }}"><i class="sort numeric ascending icon"></i> Auffüllen (FCFS)</a>
     <a class="item" href="{{ url_for('preterm') }}"><i class="star icon"></i> Prioritär&shy;anmeldungen</a>
     {% endif %}
     <a class="item" href="{{ url_for('unique') }}"><i class="trash icon"></i> Wartelisten Bereinigen</a>

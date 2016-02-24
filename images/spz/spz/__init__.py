@@ -143,11 +143,6 @@ routes = [
     ('/internal/status/<int:applicant_id>/<int:course_id>', views.status, ['GET', 'POST']),
     ('/internal/print_bill/<int:applicant_id>/<int:course_id>', pdf.print_bill, ['GET']),
 
-    # First-come-first-serve selection
-    ('/internal/restock_fcfs', views.restock_fcfs, ['GET', 'POST']),
-    # Weighted random selection
-    ('/internal/restock_rnd', views.restock_rnd, ['GET', 'POST']),
-
     ('/internal/unique', views.unique, ['GET', 'POST']),
 
     ('/internal/preterm', views.preterm, ['GET', 'POST']),
