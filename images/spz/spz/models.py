@@ -151,7 +151,7 @@ class Applicant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     mail = db.Column(db.String(120), unique=True, nullable=False)
-    tag = db.Column(db.String(10), unique=False, nullable=True)  # XXX
+    tag = db.Column(db.String(30), unique=False, nullable=True)  # XXX
 
     sex = db.Column(db.Boolean)
 
@@ -532,7 +532,7 @@ class Approval(db.Model):
     __tablename__ = 'approval'
 
     id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String(10), nullable=False)  # tag may be not unique, multiple tests taken
+    tag = db.Column(db.String(30), nullable=False)  # tag may be not unique, multiple tests taken
     percent = db.Column(db.Integer, nullable=False)
 
     percent_constraint = db.CheckConstraint(between(percent, 0, 100))

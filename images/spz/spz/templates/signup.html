@@ -121,6 +121,15 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
                     }
                 ]
             },
+            tag: {
+                identifier: 'tag',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Bitte geben Sie eine Identifikationsnummer an.'
+                    }
+                ]
+            },
         },
         on: 'blur',
         inline: true,

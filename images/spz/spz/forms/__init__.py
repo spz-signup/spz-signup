@@ -78,7 +78,7 @@ class SignupForm(Form):
         [
             validators.Required('Matrikelnummer muss angegeben werden'),
             validators.TagDependingOnOrigin(),
-            validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')
+            validators.Length(max=30, message='Länge darf maximal 30 Zeichen sein')
         ]
     )
 
@@ -306,7 +306,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         'Matrikelnummer',
         [
             validators.Optional(),
-            validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')
+            validators.Length(max=30, message='Länge darf maximal 30 Zeichen sein')
         ]
     )
 
