@@ -87,6 +87,9 @@ init() {
     PGPASSWORD=mysecretpassword psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
 
+    python build_assets
+    gzip --keep --recursive --force spz/static
+
     echo "finished initialization"
 }
 
