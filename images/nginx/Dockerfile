@@ -1,5 +1,5 @@
 # base information
-FROM nginx
+FROM nginx:1.9
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # copy config + keys

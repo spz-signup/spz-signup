@@ -1,5 +1,5 @@
 # base information
-FROM postgres
+FROM postgres:9.4
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # copy config

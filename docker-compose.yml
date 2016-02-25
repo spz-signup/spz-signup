@@ -84,7 +84,7 @@ services:
         restart: unless-stopped
         cpuset: "2"
     redis:
-        image: redis
+        image: redis:3.0
         command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"
