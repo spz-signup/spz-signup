@@ -206,9 +206,11 @@ def approvals():
 
                     num_deleted = 0
                     if request.form.getlist("delete_old"):
-                        num_deleted = models.Approval.query.delete()
+                        # only remove sticky entries because
+                        num_deleted = models.Approval.query.filter(models.Approval.sticky == True).delete()
 
-                    approvals = [models.Approval(line[0], int(line[1])) for line in filecontent]
+                    # create list of sticky Approvals, so that background jobs don't remove them
+                    approvals = [models.Approval(line[0], int(line[1]), True) for line in filecontent]
                     db.session.add_all(approvals)
                     db.session.commit()
                     flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
