@@ -7,6 +7,7 @@ from celery import Celery
 
 from spz import app, mail
 
+from spz.iliasharvester import refresh
 from spz.populate import populate_global
 
 
@@ -15,6 +16,7 @@ __all__ = [
     'populate',
     'send_slow',
     'send_quick',
+    'sync_ilias',
 ]
 
 
@@ -53,9 +55,13 @@ def send_quick(self, msg):
         raise self.retry(exc=e)
 
 
-@cel.task(bind=True)
-def populate(self):
-    try:
-        populate_global()
-    except Exception as e:
-        raise self.retry(exc=e)
+@cel.task
+def populate():
+    # don't catch exception because task is stateless and will be rescheduled
+    populate_global()
+
+
+@cel.task
+def sync_ilias():
+    # don't catch exception because task is stateless and will be rescheduled
+    refresh()

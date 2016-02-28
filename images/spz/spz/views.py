@@ -72,27 +72,28 @@ def index():
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in '
-            '{0}'.format(course.language.until_signup_fmt()),
+            '{0}!'.format(course.language.until_signup_fmt()),
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
-            'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen',
+            'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
+            '(Hinweis: Der Datenabgleich mit Ilias kann bis zu 30 Minuten in Anspruch nehmen)',  # 2*15m, just in case
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
             not applicant.in_course(course) and not applicant.active_in_parallel_course(course),
-            'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet',
+            'Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet!',
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
             not applicant.over_limit(),
-            'Sie haben das Limit an Bewerbungen bereits erreicht',
+            'Sie haben das Limit an Bewerbungen bereits erreicht!',
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
             not course.is_overbooked(),  # no transaction guarantees here, but overbooking is some sort of soft limit
-            'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen.',
+            'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen!',
             user_has_special_rights
         )
         if err:
@@ -207,7 +208,7 @@ def approvals():
                     num_deleted = 0
                     if request.form.getlist("delete_old"):
                         # only remove sticky entries because
-                        num_deleted = models.Approval.query.filter(models.Approval.sticky == True).delete()
+                        num_deleted = models.Approval.query.filter(models.Approval.sticky == True).delete()  # NOQA
 
                     # create list of sticky Approvals, so that background jobs don't remove them
                     approvals = [models.Approval(line[0], int(line[1]), True) for line in filecontent]

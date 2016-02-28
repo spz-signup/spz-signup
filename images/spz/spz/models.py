@@ -210,7 +210,7 @@ class Applicant(db.Model):
             for approval
             in Approval.query.filter(and_(
                 func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.sticky == True
+                Approval.sticky == True  # NOQA
             ))
         ]
         if results_sticky:
@@ -221,7 +221,7 @@ class Applicant(db.Model):
             for approval
             in Approval.query.filter(and_(
                 func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.sticky == False
+                Approval.sticky == False  # NOQA
             ))
         ]
         if results_nonsticky:

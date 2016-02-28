@@ -30,6 +30,7 @@ python-magic==0.4.10
 pytz==2015.7
 rcssmin==1.0.6
 redis==2.10.5
+requests==2.9.1
 rjsmin==1.0.12
 six==1.10.0
 snowballstemmer==1.2.1
