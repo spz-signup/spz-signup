@@ -21,7 +21,7 @@ from flask.ext.mail import Message
 
 from spz import app, models, db, token, tasks
 from spz.decorators import templated
-from spz.forms import *  # NOQA
+import spz.forms as forms
 from spz.util.Filetype import mime_from_filepointer
 from spz.mail import generate_status_mail
 
@@ -47,7 +47,7 @@ def check_precondition_with_auth(cond, msg, auth=False):
 
 @templated('signup.html')
 def index():
-    form = SignupForm()
+    form = forms.SignupForm()
     time = datetime.utcnow()
 
     if current_user.is_authenticated:
@@ -246,7 +246,7 @@ def approvals():
 @login_required
 @templated('internal/notifications.html')
 def notifications():
-    form = NotificationForm()
+    form = forms.NotificationForm()
 
     if form.validate_on_submit():
         try:
@@ -374,7 +374,7 @@ def course(id):
 @templated('internal/applicant.html')
 def applicant(id):
     applicant = models.Applicant.query.get_or_404(id)
-    form = ApplicantForm()
+    form = forms.ApplicantForm()
 
     if form.validate_on_submit():
 
@@ -418,7 +418,7 @@ def applicant(id):
 @login_required
 @templated('internal/applicants/search_applicant.html')
 def search_applicant():
-    form = SearchForm()
+    form = forms.SearchForm()
 
     applicants = []
 
@@ -503,7 +503,7 @@ def applicant_attendances(id):
 @login_required
 @templated('internal/payments.html')
 def payments():
-    form = PaymentForm()
+    form = forms.PaymentForm()
 
     if form.validate_on_submit():
         code = form.confirmation_code.data
@@ -548,7 +548,7 @@ def outstanding():
 @templated('internal/status.html')
 def status(applicant_id, course_id):
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
-    form = StatusForm()
+    form = forms.StatusForm()
 
     if form.validate_on_submit():
         try:
@@ -631,7 +631,7 @@ def task_queue():
 @login_required
 @templated('internal/preterm.html')
 def preterm():
-    form = PretermForm()
+    form = forms.PretermForm()
 
     token = None
 
@@ -679,7 +679,7 @@ def duplicates():
 @login_required
 @templated('internal/unique.html')
 def unique():
-    form = UniqueForm()
+    form = forms.UniqueForm()
 
     if form.validate_on_submit():
         courses = form.get_courses()
@@ -715,7 +715,7 @@ def unique():
 
 @templated('internal/login.html')
 def login():
-    form = LoginForm()
+    form = forms.LoginForm()
 
     if form.validate_on_submit():
         user = models.User.get_by_login(form.user.data, form.password.data)

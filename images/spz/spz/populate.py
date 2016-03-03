@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Holds popuplation logic."""
+
 import socket
 from datetime import datetime
 

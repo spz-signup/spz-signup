@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Implements mail generators."""
+
 from datetime import datetime
 
 from flask import render_template

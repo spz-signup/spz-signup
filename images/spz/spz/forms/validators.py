@@ -19,7 +19,7 @@ class TagDependingOnOrigin(object):
             raise ValidationError('Ungültige Matrikelnummer')
 
 
-class RequiredDependingOnOrigin(Required):
+class RequiredDependingOnOrigin(Required):  # NOQA
     """Helper validator if origin requires validatation of registration."""
 
     def __init__(self, *args, **kwargs):
