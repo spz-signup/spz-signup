@@ -84,7 +84,7 @@ services:
         restart: unless-stopped
         cpuset: "2"
     redis:
-        image: redis:3.0
+        build: images/redis
         command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"
@@ -111,12 +111,12 @@ services:
         restart: unless-stopped
         cpuset: "3"
     mail:
-        image: djfarrelly/maildev
+        build: images/maildev
         ports:
             - "127.0.0.1:8081:80"
         volumes:
             - tmp_mail:/tmp
-        read_only: true
+#        read_only: true  # not possible because of PaX
         networks:
             - back
         restart: unless-stopped
