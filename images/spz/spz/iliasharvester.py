@@ -281,7 +281,14 @@ def parse_data(it):
         )
 
         # finally add approval to output list
-        approvals.append(models.Approval(tag, rating, False))
+        approvals.append(
+            models.Approval(
+                tag=tag,
+                percent=rating,
+                sticky=False,
+                priority=False
+            )
+        )
 
     return approvals
 

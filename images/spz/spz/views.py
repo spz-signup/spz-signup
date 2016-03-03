@@ -13,7 +13,7 @@ from datetime import datetime
 
 from redis import ConnectionError
 
-from sqlalchemy import func, not_
+from sqlalchemy import and_, func, not_
 
 from flask import request, redirect, render_template, url_for, flash, make_response
 from flask.ext.login import current_user, login_required, login_user, logout_user
@@ -205,13 +205,27 @@ def approvals():
                 try:
                     filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
 
+                    priority = bool(request.form.getlist("priority"))
+
                     num_deleted = 0
                     if request.form.getlist("delete_old"):
                         # only remove sticky entries because
-                        num_deleted = models.Approval.query.filter(models.Approval.sticky == True).delete()  # NOQA
+                        num_deleted = models.Approval.query.filter(and_(
+                            models.Approval.sticky == True,
+                            models.Approval.priority == priority
+                        )).delete()  # NOQA
 
                     # create list of sticky Approvals, so that background jobs don't remove them
-                    approvals = [models.Approval(line[0], int(line[1]), True) for line in filecontent]
+                    approvals = [
+                        models.Approval(
+                            tag=line[0],
+                            percent=int(line[1]),
+                            sticky=True,
+                            priority=priority
+                        )
+                        for line
+                        in filecontent
+                    ]
                     db.session.add_all(approvals)
                     db.session.commit()
                     flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'

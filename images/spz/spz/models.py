@@ -205,27 +205,27 @@ class Applicant(db.Model):
 
     def best_rating(self):
         """Results best rating, prioritize sticky entries."""
-        results_sticky = [
+        results_priority = [
             approval.percent
             for approval
             in Approval.query.filter(and_(
                 func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.sticky == True  # NOQA
+                Approval.priority == True  # NOQA
             ))
         ]
-        if results_sticky:
-            return max(results_sticky)
+        if results_priority:
+            return max(results_priority)
 
-        results_nonsticky = [
+        results_normal = [
             approval.percent
             for approval
             in Approval.query.filter(and_(
                 func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.sticky == False  # NOQA
+                Approval.priority == False  # NOQA
             ))
         ]
-        if results_nonsticky:
-            return max(results_nonsticky)
+        if results_normal:
+            return max(results_normal)
 
         return 0
 
@@ -545,10 +545,10 @@ class Approval(db.Model):
        :param tag: The registration number or other identification
        :param percent: applicant's level for English course
        :param sticky: describes that the entry is created for a special reason
+       :param priority: describes that the entry has a higher priority than normal ones
 
        sticky entries:
         - are considered manual data; they are there for a special reason
-        - have higher priority than non-sticky ones (e.g. for max/min calculation)
         - should never be removed by a bot / syncing service
 
        non-sticky entries:
@@ -563,13 +563,15 @@ class Approval(db.Model):
     tag = db.Column(db.String(30), nullable=False)  # tag may be not unique, multiple tests taken
     percent = db.Column(db.Integer, nullable=False)
     sticky = db.Column(db.Boolean, nullable=False, default=False)
+    priority = db.Column(db.Boolean, nullable=False, default=False)
 
     percent_constraint = db.CheckConstraint(between(percent, 0, 100))
 
-    def __init__(self, tag, percent, sticky):
+    def __init__(self, tag, percent, sticky, priority):
         self.tag = tag
         self.percent = percent
         self.sticky = sticky
+        self.priority = priority
 
     def __repr__(self):
         return '<Approval %r %r>' % (self.tag, self.percent)
