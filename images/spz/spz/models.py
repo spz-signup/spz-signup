@@ -397,8 +397,7 @@ class Language(db.Model):
         return self.rnd_begin < time < self.signup_rnd_end < self.signup_end
 
     def is_open_for_signup_fcfs(self, time):
-        begin = self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']
-        return begin < time < self.signup_end
+        return self.signup_fcfs_begin < time < self.signup_fcfs_end
 
     def is_open_for_signup(self, time):
         # management wants the system to be: open a few hours,
@@ -418,8 +417,7 @@ class Language(db.Model):
 
         # here we are in the closed window period; calculate delta to open again
         if delta.total_seconds() < 0:
-            begin = self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']
-            delta = begin - now
+            delta = self.signup_fcfs_begin - now
 
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
