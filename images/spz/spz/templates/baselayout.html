@@ -112,9 +112,16 @@
 
                 $('.ui.checkbox').checkbox();
 
+                moment.locale("de");
                 $('.fmt-datetime').each(function (idx, elem) {
                     var $elem = $(elem);
-                    var fmt = moment.utc($elem.text()).local().format('MMMM Do YYYY, HH:mm');
+                    var data = $elem.text();
+                    var fmt = moment.utc(data).local().format('Do MMMM YYYY, HH:mm');
+                    if (data === '0001-01-01 00:00:00') {
+                        fmt = '-∞';
+                    } else if (data === '9999-12-31 23:59:59.999999') {
+                        fmt = '+∞';
+                    }
                     $elem.text(fmt);
                 });
 

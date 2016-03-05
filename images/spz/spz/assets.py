@@ -36,6 +36,7 @@ all_js = Bundle('js/jquery-2.1.4.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
                 'js/moment.min.js',
+                'js/moment-de.js',
                 filters='rjsmin', output='js/packed.js')
 
 # Internet Explorer specific Javascript workarounds
