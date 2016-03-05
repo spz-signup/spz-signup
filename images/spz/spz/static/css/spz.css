@@ -206,3 +206,19 @@ a > strong:only-child {
 .ui.grid > .row > ul {
     width: 100%;
 }
+
+dl {
+    margin-top: 0.6em;
+}
+
+dt {
+    margin-top: 0.2em;
+}
+
+dt:first-child {
+    margin-top: 0;
+}
+
+dd {
+    margin-left: 2em;
+}

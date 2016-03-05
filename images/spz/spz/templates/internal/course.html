@@ -7,6 +7,23 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
 
 {% block internal_body %}
 <div class="row">
+    <div class="ui message">
+        <div class="header">Infos</div>
+        <dl>
+            <dt>Sprache &gt; exaktes Kurs-Level{% if course.alternative %} &gt; Alternative/Variante{% endif %}</dt>
+            <dd>{{ course.language.name }} &gt; {{ course.level }}{% if course.alternative %} &gt; {{ course.alternative }}{% endif %}</dd>
+            <dt>Kursgröße (maximal)</dt>
+            <dd>{{ course.limit }} Teilnehmer</dd>
+            <dt>Kosten (für nicht-gratis Teilnehmer)</dt>
+            <dd>{{ course.price }} €</dd>
+            {% if course.rating_lowest != 0 or course.rating_highest != 100 %}
+            <dt>Benötigtes Testergebnis (inklusive Grenzen)</dt>
+            <dd>{{ course.rating_lowest }}% &mdash; {{ course.rating_highest }}%</dd>
+            {% endif %}
+        </dl>
+    </div>
+</div>
+<div class="row">
     <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>

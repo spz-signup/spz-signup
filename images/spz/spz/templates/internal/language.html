@@ -6,12 +6,19 @@ Sprache: {{ language.name }}
 
 {% block internal_body %}
 <div class="row">
-    <dl>
-        <dt>Anmeldebeginn</dt>
-        <dd class="fmt-datetime">{{ language.signup_begin }}</dd>
-        <dt>Anmeldeschluss</dt>
-        <dd class="fmt-datetime">{{ language.signup_end }}</dd>
-    </dl>
+    <div class="ui message">
+        <div class="header">Infos</div>
+        <dl>
+            <dt>Zeitraum Anmeldung Verlosungspool</dt>
+            <dd><span class="fmt-datetime">{{ language.signup_rnd_begin }}</span> &mdash; <span class="fmt-datetime">{{ language.signup_rnd_end }}</span></dd>
+            <dt>Zeitraum manuelle Zuweisung</dt>
+            <dd><span class="fmt-datetime">{{ language.signup_manual_begin }}</span> &mdash; <span class="fmt-datetime">{{ language.signup_manual_end }}</span></dd>
+            <dt>Start automatische Zuweisung</dt>
+            <dd><span class="fmt-datetime">{{ language.signup_manual_end }}</span></dd>
+            <dt>Zeitraum Anmeldung FCFS</dt>
+            <dd><span class="fmt-datetime">{{ language.signup_fcfs_begin }}</span> &mdash; <span class="fmt-datetime">{{ language.signup_fcfs_end }}</span></dd>
+        </dl>
+    </div>
 </div>
 <div class="row">
     <table class="ui selectable sortable compact small striped table">

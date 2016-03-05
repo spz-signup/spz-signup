@@ -368,8 +368,33 @@ class Language(db.Model):
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
 
+    @property
+    def signup_rnd_begin(self):
+        return self.signup_begin
+
+    @property
+    def signup_rnd_end(self):
+        return self.signup_rnd_begin + app.config['RANDOM_WINDOW_OPEN_FOR']
+
+    @property
+    def signup_manual_begin(self):
+        # XXX: find something better
+        return datetime.min
+
+    @property
+    def signup_manual_end(self):
+        return self.signup_rnd_end + app.config['MANUAL_PERIOD']
+
+    @property
+    def signup_fcfs_begin(self):
+        return self.signup_rnd_end + app.config['RANDOM_WINDOW_CLOSED_FOR']
+
+    @property
+    def signup_fcfs_end(self):
+        return self.signup_end
+
     def is_open_for_signup_rnd(self, time):
-        return self.signup_begin < time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR']) < self.signup_end
+        return self.rnd_begin < time < self.signup_rnd_end < self.signup_end
 
     def is_open_for_signup_fcfs(self, time):
         begin = self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['RANDOM_WINDOW_CLOSED_FOR']
@@ -385,7 +410,7 @@ class Language(db.Model):
         return self.signup_end >= time
 
     def is_in_manual_mode(self, time):
-        return time < (self.signup_begin + app.config['RANDOM_WINDOW_OPEN_FOR'] + app.config['MANUAL_PERIOD'])
+        return time < self.signup_manual_end
 
     def until_signup_fmt(self):
         now = datetime.utcnow()
