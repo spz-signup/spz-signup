@@ -112,10 +112,10 @@ services:
         cpuset: "3"
     mail:
         build: images/maildev
-        ports:
-            - "127.0.0.1:8081:80"
         volumes:
             - tmp_mail:/tmp
+            - run_mail:/run
+            - state_mail:/var/spool
 #        read_only: true  # not possible because of PaX
         networks:
             - back
@@ -143,7 +143,9 @@ volumes:
     data_postgres: {}
     data_redis: {}
     data_static: {}
+    run_mail: {}
     run_postgres: {}
+    state_mail: {}
     state_spz: {}
     tmp_mail: {}
     tmp_nginx: {}
