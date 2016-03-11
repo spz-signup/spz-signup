@@ -34,13 +34,13 @@
             "email": "donald.richardson@kit.edu",
             "active": true,
             "superuser": false,
-            "languages": ["English", "English Intensive"]
+            "languages": ["Englisch", "Englisch Intensiv"]
         },
         {
             "email": "angela.althen@kit.edu",
             "active": true,
             "superuser": false,
-            "languages": ["English", "English Intensive"]
+            "languages": ["Englisch", "Englisch Intensiv"]
         },
         {
             "email": "franzoesisch@spz.kit.edu",
