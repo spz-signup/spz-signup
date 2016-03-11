@@ -6,10 +6,10 @@
 from datetime import datetime
 from fpdf import FPDF
 
-from flask import app, make_response
+from flask import make_response
 from flask.ext.login import login_required
 
-from spz import models
+from spz import app, models
 
 
 class BasePDF(FPDF):
