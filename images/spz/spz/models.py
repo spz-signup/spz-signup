@@ -394,7 +394,7 @@ class Language(db.Model):
         return self.signup_end
 
     def is_open_for_signup_rnd(self, time):
-        return self.rnd_begin < time < self.signup_rnd_end < self.signup_end
+        return self.signup_rnd_begin < time < self.signup_rnd_end < self.signup_end
 
     def is_open_for_signup_fcfs(self, time):
         return self.signup_fcfs_begin < time < self.signup_fcfs_end
