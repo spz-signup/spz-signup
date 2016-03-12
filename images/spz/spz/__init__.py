@@ -80,7 +80,7 @@ for name, bundle in bundles.items():
 
 
 # Set up logging before anything else, in order to catch early errors
-if not app.debug:
+if not app.debug and app.config.get('LOGFILE', None):
     from logging import FileHandler
     file_handler = FileHandler(app.config['LOGFILE'])
     app.logger.addHandler(file_handler)
@@ -90,11 +90,10 @@ if not app.debug:
 if app.debug:
     from werkzeug.debug import DebuggedApplication
     app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
-elif app.profiling:
+elif app.config.get('PROFILING', False):
     from werkzeug.contrib.profiler import ProfilerMiddleware
     app.wsgi_app = ProfilerMiddleware(app.wsgi_app)
-
-elif app.linting:
+elif app.config.get('LINTING', False):
     from werkzeug.contrib.lint import LintMiddleware
     app.wsgi_app = LintMiddleware(app.wsgi_app)
 
