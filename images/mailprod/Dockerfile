@@ -11,7 +11,7 @@ ENV LIBASR_VERSION="1.0.2" \
 # upgrade system and install deps
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends bison ca-certificates gcc libevent-dev libssl-dev make wget && \
+    apt-get install -y --no-install-recommends bison ca-certificates file gcc libevent-dev libssl-dev make wget && \
     rm -rf /root/.cache /var/cache/*
 
 # build opensmtpd and prepare system
@@ -28,7 +28,7 @@ RUN mkdir src && \
     make && \
     make install && \
     cd ../opensmtpd-$OPENSMPTD_VERSION && \
-    ./configure --prefix=/usr && \
+    ./configure --prefix=/usr --with-ca-file=/etc/ssl/certs/ca-certificates.crt && \
     make && \
     make install && \
     cd ../.. && \
