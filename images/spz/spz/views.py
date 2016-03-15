@@ -203,7 +203,18 @@ def approvals():
             mime = mime_from_filepointer(fp)
             if mime == 'text/plain':
                 try:
-                    filecontent = csv.reader(fp, delimiter=';')  # XXX: hardcoded?
+                    # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
+                    # and duplicates
+                    stripped_lines = (
+                        line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
+                        for line in fp.readlines()
+                    )
+                    filtered_lines = (
+                        line
+                        for line in stripped_lines
+                        if line
+                    )
+                    filecontent = csv.reader(filtered_lines, delimiter=';')  # XXX: hardcoded?
 
                     priority = bool(request.form.getlist("priority"))
 
