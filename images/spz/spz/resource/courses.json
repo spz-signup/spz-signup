@@ -67,7 +67,7 @@
         {
             "name": "Englisch Intensiv",
             "reply_to" : "englisch@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-03-13T09:00:00.Z",
+            "signup_begin_iso_utc": "2016-03-15T09:00:00.Z",
             "signup_end_iso_utc": "2016-03-28T09:00:00.Z",
             "courses": [
                 {"level": "B1 Intermediate 1 - Intensive", "limit": 20, "price": 90, "rating_lowest": 50, "rating_highest": 64, "alternative": [""] },
