@@ -77,7 +77,9 @@ class SignupForm(Form):
         'Matrikel&shy;nummer',
         [
             validators.RequiredDependingOnOrigin('Matrikelnummer muss angegeben werden'),
-            validators.TagDependingOnOrigin(),
+            # validators.TagDependingOnOrigin(),
+            # DON'T! Our data set of registration might be incomplete.
+            # So we kinda accept that students might get a "you have to pay" mail but are at least able to sign up.
             validators.Length(max=30, message='Länge darf maximal 30 Zeichen sein')
         ]
     )
