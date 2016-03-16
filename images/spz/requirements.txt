@@ -7,7 +7,9 @@ billiard==3.3.0.22
 blinker==1.4
 celery==3.1.20
 decorator==4.0.9
+dnspython3==1.12.0
 docutils==0.12
+email_validator==1.0.1
 flake8==2.5.2
 flake8-coding==1.1.1
 Flask==0.10.1
@@ -18,6 +20,7 @@ Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
 -e git+https://github.com/reingart/pyfpdf.git@3114b4f249bbaca199af6312f1cc982f8585ade9#egg=fpdf
+idna==2.0
 ipython==4.1.2
 ipython-genutils==0.1.0
 itsdangerous==0.24

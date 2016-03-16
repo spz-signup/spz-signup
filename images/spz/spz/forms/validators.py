@@ -2,12 +2,29 @@
 
 """Validators used for different forms."""
 
+import dns
+import email_validator
 import phonenumbers
 
 from wtforms.validators import *  # NOQA
 from wtforms.validators import ValidationError
 
 from spz import models
+
+
+# set LRU cache for DNS caching
+# TODO: use flask cache instead (LRU + timeout)
+dns.resolver.get_default_resolver().cache = dns.resolver.LRUCache()
+
+
+class EmailPlusValidator(object):
+    """Validates mail addresses including DNS check."""
+
+    def __call__(self, form, field):
+        try:
+            email_validator.validate_email(field.data)
+        except email_validator.EmailNotValidError:
+            raise ValidationError('Ungültige E-Mail Adresse')
 
 
 class TagDependingOnOrigin(object):

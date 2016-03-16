@@ -63,8 +63,8 @@ class SignupForm(Form):
     mail = TextField(
         'E-Mail',
         [
-            validators.Email('Valide Mail Adresse wird benötigt'),
-            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
+            validators.EmailPlusValidator()
         ]
     )
     origin = SelectField(
@@ -300,8 +300,8 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
     mail = TextField(
         'E-Mail',
         [
-            validators.Email('Valide Mail Adresse wird benötigt'),
-            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
+            validators.EmailPlusValidator()
         ]
     )
     tag = TextField(
@@ -492,8 +492,8 @@ class PretermForm(Form):
     mail = TextField(
         'E-Mail',
         [
-            validators.Email('Valide Mail Adresse wird benötigt'),
-            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein')
+            validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
+            validators.EmailPlusValidator()
         ]
     )
 
