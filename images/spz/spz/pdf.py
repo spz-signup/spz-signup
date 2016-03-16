@@ -4,7 +4,7 @@
 """
 
 from datetime import datetime
-from fpdf import FPDF
+import fpdf
 
 from flask import make_response
 from flask.ext.login import login_required
@@ -12,12 +12,21 @@ from flask.ext.login import login_required
 from spz import app, models
 
 
-class BasePDF(FPDF):
+class SPZPDF(fpdf.FPDF):
+    def __init__(self, *args, **kwargs):
+        fpdf.set_global('FPDF_CACHE_MODE', 2)
+        fpdf.set_global('FPDF_CACHE_DIR', '/tmp')
+        super(SPZPDF, self).__init__(*args, **kwargs)
+        self.add_font('DejaVu', '', '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf', uni=True)
+        self.add_font('DejaVu', 'B', '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf', uni=True)
+
+
+class BasePDF(SPZPDF):
     def header(self):
-        self.set_font('Arial', '', 10)
+        self.set_font('DejaVu', '', 8)
         self.cell(0, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
         self.cell(0, 5, app.config['SEMESTER_NAME'], 0, 1, 'R')
-        self.set_font('Arial', 'B', 10)
+        self.set_font('DejaVu', 'B', 10)
         self.cell(0, 5, 'Sprachenzentrum', 0)
 
     def get_column_size(self):
@@ -28,7 +37,7 @@ class BasePDF(FPDF):
 
 
 class CourseGenerator(BasePDF):
-    column_size = [7, 40, 40, 20, 80, 30, 15, 15, 15, 15]
+    column_size = [7, 40, 40, 20, 70, 40, 15, 15, 15, 15]
     header_texts = ["Nr.", "Nachname", "Vorname", "Matr.", "E-Mail", "Telefon", "Tln.", "Prf.", "Note", "Prozent"]
 
     def header(self):
@@ -38,7 +47,7 @@ class CourseGenerator(BasePDF):
 
     def footer(self):
         self.set_y(-20)
-        self.set_font('Arial', '', 11)
+        self.set_font('DejaVu', '', 10)
         self.cell(
             0,
             7,
@@ -47,7 +56,7 @@ class CourseGenerator(BasePDF):
             1,
             'R'
         )
-        self.set_font('Arial', '', 9)
+        self.set_font('DejaVu', '', 6)
         self.cell(
             0,
             5,
@@ -80,7 +89,7 @@ class PresenceGenerator(BasePDF):
 
     def footer(self):
         self.set_y(-10)
-        self.set_font('Arial', '', 9)
+        self.set_font('DejaVu', '', 8)
         self.cell(0, 5, 'Diese Liste bildet lediglich eine Hilfe im Unterricht und verbleibt beim Dozenten.', 0, 1, 'C')
 
 
@@ -97,9 +106,9 @@ def list_presence(pdflist, course):
 
     pdflist.add_page()
 
-    pdflist.set_font('Arial', 'B', 16)
+    pdflist.set_font('DejaVu', 'B', 14)
     pdflist.cell(0, 10, '{0}'.format(course.full_name()), 0, 1, 'C')
-    pdflist.set_font('Arial', '', 10)
+    pdflist.set_font('DejaVu', '', 8)
     height = 6
 
     idx = 1
@@ -160,10 +169,10 @@ def list_course(pdflist, course):
 
     pdflist.add_page()
     course_str = '{0}'.format(course.full_name())
-    pdflist.set_font('Arial', 'B', 16)
+    pdflist.set_font('DejaVu', 'B', 14)
     pdflist.cell(0, 10, course_str, 0, 1, 'C')
 
-    pdflist.set_font('Arial', '', 10)
+    pdflist.set_font('DejaVu', '', 8)
     height = 6
 
     idx = 1
@@ -219,7 +228,7 @@ def print_language(language_id):
 
 @login_required
 def print_bill(applicant_id, course_id):
-    class BillGenerator(FPDF):
+    class BillGenerator(SPZPDF):
         def header(this):
             this.zwischenraum = 21
             this.teiler = ''
@@ -232,26 +241,26 @@ def print_bill(applicant_id, course_id):
                 semester = 'Sommersemester {0}'.format(now.year)
             else:
                 semester = 'Wintersemester {0}/{1}'.format(now.year, now.year+1)
-            this.set_font('Arial', '', 10)
+            this.set_font('DejaVu', '', 8)
             # fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
             this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
             this.cell(48, 5, semester, 0, 0, 'R')
             this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
             this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
             this.cell(48, 5, semester, 0, 1, 'R')
-            this.set_font('Arial', 'B', 10)
+            this.set_font('DejaVu', 'B', 8)
             this.cell(80, 5, 'Sprachenzentrum', 0, 0)
-            this.set_font('Arial', '', 10)
+            this.set_font('DejaVu', '', 8)
             this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 0, 'R')
             this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
-            this.set_font('Arial', 'B', 10)
+            this.set_font('DejaVu', 'B', 8)
             this.cell(80, 5, 'Sprachenzentrum', 0, 0)
-            this.set_font('Arial', '', 10)
+            this.set_font('DejaVu', '', 8)
             this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
 
         def footer(this):
             this.set_y(-15)
-            this.set_font('Arial', '', 8)
+            this.set_font('DejaVu', '', 8)
             this.cell(
                 this.breite,
                 4,
@@ -293,13 +302,13 @@ def print_bill(applicant_id, course_id):
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, code, 0, 1, 'R')
     bill.ln(20)
-    bill.set_font('', 'B', 16)
+    bill.set_font('DejaVu', 'B', 14)
     bill.cell(bill.breite, 8, title, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 8, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 8, title, 0, 1, 'C')
     bill.ln(20)
 
-    bill.set_font('', '', 12)
+    bill.set_font('DejaVu', '', 10)
     bill.cell(bill.breite, 6, sex_str, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, sex_str, 0, 1)
@@ -315,14 +324,14 @@ def print_bill(applicant_id, course_id):
     bill.cell(bill.breite, 6, str1, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, str1, 0, 1)
-    bill.set_font('', 'B', 12)
+    bill.set_font('DejaVu', 'B', 10)
     bill.cell(bill.breite, 6, course_str, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, course_str, 0, 1, 'C')
     bill.cell(bill.breite, 6, amount_str, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, amount_str, 0, 1, 'C')
-    bill.set_font('', '', 12)
+    bill.set_font('DejaVu', '', 10)
     bill.cell(bill.breite, 6, str2, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, str2, 0, 1)
