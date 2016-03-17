@@ -10,6 +10,8 @@
 """
 
 import os
+import random
+import string
 
 from flask import Flask
 from flask.ext.assets import Environment
@@ -66,8 +68,23 @@ def login_by_token(tokenstring):
 CsrfProtect(app)
 
 
-# add `include_raw` Jinja helper
+# helper for random length, random content comment (e.g. for BREACH protection)
+rlrc_rng = random.SystemRandom()
+
+
+def rlrc_comment():
+    """Generate a random length (32 to 64 chars), random content (lower+upper numbers + letters) HTML comment."""
+    l = rlrc_rng.randrange(32, 32 + 64)
+    s = ''.join(
+        rlrc_rng.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
+        for _ in range(0, l)
+    )
+    return Markup('<!-- RND: {} -->'.format(s))
+
+
+# add Jinja helpers
 app.jinja_env.globals['include_raw'] = lambda filename: Markup(app.jinja_loader.get_source(app.jinja_env, filename)[0])
+app.jinja_env.globals['rlrc_comment'] = rlrc_comment
 
 
 # Assets handling; keep the spz.assets module in sync with the static directory
