@@ -87,8 +87,11 @@ def validate_once(
     # token is only valid if it's associated payload_wanted is not already in the database
     # this way we're able to guarantee the token's one-time property
     # defaults to False if no payload was extracted
+    # WARNING: Be careful about the fact that a matching instance might be created during the request/form handling
+    #          but wasn't commited to the DB. We do NOT want to match these kind of objects so the following
+    #          around: a) use `.all()` instead of `.first()` and set `autoflush` to `False`.
     found = (not payload_extracted) or \
-        db_model.query.filter(func.lower(db_column) == func.lower(payload_extracted)).first()
+        db_model.query.filter(func.lower(db_column) == func.lower(payload_extracted)).autoflush(False).all()
 
     # optional case insensitive mail address check, otherwise confusing!
     same = (not payload_wanted) or (payload_extracted and (payload_extracted.lower() == payload_wanted.lower()))
