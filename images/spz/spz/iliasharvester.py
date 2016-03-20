@@ -4,6 +4,8 @@
 
 How you should do it:
 
+.. code-block:: python
+
     import pysimplesoap
 
     # WARNING: Ilias requires us to conform to the given parameter order

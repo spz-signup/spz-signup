@@ -13,12 +13,6 @@ spz Package
 .. automodule:: spz.assets
     :members:
 
-:mod:`auth` Module
-------------------
-
-.. automodule:: spz.auth
-    :members:
-
 :mod:`decorators` Module
 ------------------------
 
@@ -31,16 +25,46 @@ spz Package
 .. automodule:: spz.errorhandlers
     :members:
 
-:mod:`forms` Module
--------------------
+:mod:`iliasharvester` Module
+----------------------------
 
-.. automodule:: spz.forms
+.. automodule:: spz.iliasharvester
+    :members:
+
+:mod:`mail` Module
+------------------
+
+.. automodule:: spz.mail
     :members:
 
 :mod:`models` Module
 --------------------
 
 .. automodule:: spz.models
+    :members:
+
+:mod:`pdf` Module
+-----------------
+
+.. automodule:: spz.pdf
+    :members:
+
+:mod:`populate` Module
+----------------------
+
+.. automodule:: spz.populate
+    :members:
+
+:mod:`tasks` Module
+-------------------
+
+.. automodule:: spz.tasks
+    :members:
+
+:mod:`token` Module
+-------------------
+
+.. automodule:: spz.token
     :members:
 
 :mod:`views` Module
@@ -54,5 +78,6 @@ Subpackages
 
 .. toctree::
 
+    spz.forms
     spz.util
 

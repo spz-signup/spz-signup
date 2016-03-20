@@ -1,17 +1,3 @@
 *.py[cod]
-*.swp
-*.log
 
-build
-env
-doc/build
-
-spz/static/.webassets-cache/
-spz/static/js/packed.js
-spz/static/js/packed_ie.js
-spz/static/js/packed_tools.js
-spz/static/css/packed.css
-spz/static/css/packed_tools.css
-listen/
-
-local.db
+docs/python

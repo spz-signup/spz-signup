@@ -78,7 +78,7 @@ class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
-       :param graduation: The intended :py:class:`Graduation` of the :py:`Attendance`.
+       :param graduation: The intended :py:class:`Graduation` of the :py:class:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
        :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
        :param informed_about_rejection: Tells us if we already send a "you're (not) in the course" mail

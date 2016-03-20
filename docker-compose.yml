@@ -6,6 +6,7 @@ services:
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
+            - ./docs/python:/home/spz/code/doc.build:rw
             - ./images/spz/spz:/home/spz/code/spz:ro
             - ./images/spz/util:/home/spz/code/util:ro
             - data_static:/home/spz/code/spz/static
