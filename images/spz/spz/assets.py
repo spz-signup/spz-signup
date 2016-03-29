@@ -29,20 +29,14 @@ register_filter(RCSSMin)
 
 
 # Javascript bundles:
-
-all_js = Bundle('js/jquery-2.1.4.js',
-                'js/semantic.js',
+all_js = Bundle('js/jquery-2.2.2.min.js',
+                'js/semantic.min.js',
                 'js/mailcheck.1.1.0.min.js',
                 'js/mailcheck-domains.js',
                 'js/garlic-1.2.2.min.js',
                 'js/moment.min.js',
                 'js/moment-de.js',
                 filters='rjsmin', output='js/packed.js')
-
-# Internet Explorer specific Javascript workarounds
-ie_js = Bundle('js/html5shiv.js',
-               'js/respond.min.js',
-               filters='rjsmin', output='js/packed_ie.js')
 
 
 # Tooling bundles
@@ -53,7 +47,7 @@ tools_js = Bundle('js/jquery.tablesort.js',
 # Stylesheet bundles:
 
 all_css = Bundle('css/lato.css',
-                 'css/semantic.css',
+                 'css/semantic.min.css',
                  'css/spz.css',
                  filters='rcssmin', output='css/packed.css')
 

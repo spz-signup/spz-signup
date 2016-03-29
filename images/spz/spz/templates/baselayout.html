@@ -12,12 +12,6 @@
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
 
-        {% assets "ie_js" %}
-        <!--[if lt IE 9]>
-        <script src="{{ ASSET_URL }}"></script>
-        <![endif]-->
-        {% endassets %}
-
         {% block head %}
         {% endblock head %}
     </head>
