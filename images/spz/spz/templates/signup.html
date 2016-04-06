@@ -137,6 +137,13 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
     }
     $(document).ready(function() {
         check_and_change_kit_visibilty();
+
+        // do it again when garlic did its job
+        $('#origin').garlic({
+            onRetrieve: function() {
+                check_and_change_kit_visibilty();
+            }
+        });
     });
     $('#origin').change(function() {
         check_and_change_kit_visibilty();
