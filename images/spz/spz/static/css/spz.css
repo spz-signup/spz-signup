@@ -188,6 +188,42 @@ body {
 }
 
 /***************************************
+ **** Printing fixes *******************
+ **************************************/
+@media print {
+    body {
+        overflow: visible !important;
+    }
+
+    .row {
+        display: initial !important;
+        max-width: initial !important;
+    }
+
+    .table.column {
+        display: initial !important;
+    }
+
+    .ui.column {
+        display: initial !important;
+    }
+
+    .ui.compact.small.table {
+        left: initial !important;
+        position: initial !important;
+        transform: none !important;
+    }
+
+    .ui.grid {
+        display: initial !important;
+    }
+
+    .ui.vertical.menu {
+        display: none !important;
+    }
+}
+
+/***************************************
  **** Misc *****************************
  **************************************/
 .license {
