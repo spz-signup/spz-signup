@@ -11,7 +11,8 @@ services:
             - ./images/spz/util:/home/spz/code/util:ro
             - data_static:/home/spz/code/spz/static
             - state_spz:/state
-            - tmp_spz:/tmp
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -32,6 +33,8 @@ services:
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
             - uwsgi
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -51,6 +54,8 @@ services:
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -70,6 +75,8 @@ services:
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -103,7 +110,8 @@ services:
         volumes:
             - data_postgres:/var/lib/postgresql/data
             - run_postgres:/run/postgresql
-            - tmp_postgres:/tmp
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - POSTGRES_PASSWORD=mysecretpassword
@@ -114,9 +122,10 @@ services:
     mail:
         build: images/maildev
         volumes:
-            - tmp_mail:/tmp
             - run_mail:/run
             - state_mail:/var/spool
+        tmpfs:
+            - /tmp
 #        read_only: true  # not possible because of PaX
         networks:
             - back
@@ -131,7 +140,8 @@ services:
         volumes:
             - cache_nginx:/var/cache/nginx
             - data_static:/static:ro
-            - tmp_nginx:/tmp
+        tmpfs:
+            - /tmp
         read_only: true
         networks:
             - front
@@ -148,10 +158,6 @@ volumes:
     run_postgres: {}
     state_mail: {}
     state_spz: {}
-    tmp_mail: {}
-    tmp_nginx: {}
-    tmp_postgres: {}
-    tmp_spz: {}
 networks:
     front: {}
     back: {}
