@@ -47,7 +47,7 @@ def check_precondition_with_auth(cond, msg, auth=False):
 
 @templated('signup.html')
 def index():
-    form = forms.SignupForm()
+    form = forms.SignupForm(show_all_courses=current_user.is_authenticated)
     time = datetime.utcnow()
 
     if current_user.is_authenticated:

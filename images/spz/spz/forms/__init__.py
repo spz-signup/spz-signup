@@ -116,15 +116,18 @@ class SignupForm(Form):
 
     # Hack: The form is evaluated only once; but we want the choices to be in sync with the database values
     # see: http://wtforms.simplecodes.com/docs/0.6.1/fields.html#wtforms.fields.SelectField
-    def __init__(self, *args, **kwargs):
+    def __init__(self, show_all_courses=False, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
-        self._populate()
+        self._populate(show_all_courses)
 
-    def _populate(self):
+    def _populate(self, show_all_courses):
         self.degree.choices = cached.degrees_to_choicelist()
         self.graduation.choices = cached.graduations_to_choicelist()
         self.origin.choices = cached.origins_to_choicelist()
-        self.course.choices = cached.upcoming_courses_to_choicelist()
+        if show_all_courses:
+            self.course.choices = cached.all_courses_to_choicelist()
+        else:
+            self.course.choices = cached.upcoming_courses_to_choicelist()
 
     # Accessors, to encapsulate the way the form represents and retrieves objects
     # This especially ensures that optional fields only get queried if a value is present
