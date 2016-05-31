@@ -94,7 +94,10 @@
 
             $(window).load(function(){
                 $('.ui.dropdown').dropdown({
-                    fullTextSearch: true
+                    fullTextSearch: true,
+                    message: {
+                        noResults: 'Keine Einträge vorhanden.'
+                    }
                 });
                 window.setTimeout(function(){
                     $('.ui.selection.dropdown .menu').css('width', 'calc(100% + 2px)');
