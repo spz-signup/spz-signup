@@ -4,7 +4,7 @@ MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # upgrade system
 RUN apt-get update && \
-    apt-get upgrade -y --no-install-recommends && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends && \
     rm -rf /root/.cache /var/cache/*
 
 # copy config

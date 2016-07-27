@@ -1,11 +1,11 @@
 # base information
-FROM djfarrelly/maildev
+FROM djfarrelly/maildev:0.13.4
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # upgrade system and install requirements
-RUN apt-get update && \
-    apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends attr && \
+RUN apk update && \
+    apk upgrade && \
+    apk add attr && \
     rm -rf /root/.cache /var/cache/*
 
 # PaX fix
