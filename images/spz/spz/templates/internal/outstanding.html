@@ -9,7 +9,6 @@ Offene Beträge
     <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>
-                <th>Anrede</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>E-Mail</th>
@@ -21,7 +20,6 @@ Offene Beträge
         <tbody>
             {% for attendance in outstanding %}
             <tr>
-                <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
                 <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
                 <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
                 <td>{{ attendance.applicant.mail }}</td>

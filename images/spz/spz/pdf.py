@@ -288,7 +288,6 @@ def print_bill(applicant_id, course_id):
     bill.add_page()
 #   fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
     title = 'Quittung'
-    sex_str = '{0}'.format('Herr' if attendance.applicant.sex else 'Frau')
     applicant_str = '{0} {1}'.format(attendance.applicant.first_name, attendance.applicant.last_name)
     tag_str = 'Matrikelnummer {0}'.format(attendance.applicant.tag) if attendance.applicant.tag else ''
     now = datetime.now()
@@ -309,9 +308,6 @@ def print_bill(applicant_id, course_id):
     bill.ln(20)
 
     bill.set_font('DejaVu', '', 10)
-    bill.cell(bill.breite, 6, sex_str, 0, 0)
-    bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
-    bill.cell(bill.breite, 6, sex_str, 0, 1)
     bill.cell(bill.breite, 6, applicant_str, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, applicant_str, 0, 1)

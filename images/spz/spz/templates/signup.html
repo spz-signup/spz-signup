@@ -14,7 +14,6 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
             {{ render_option(form.course, help='Englischkurse setzen entsprechende Testresultate voraus', icon='cube') }}
             <h3 class="ui dividing header">Persönliche Angaben</h3>
             <div class="grouped fields">
-                {{ render_radio(form.sex, icon='heterosexual') }}
                 {{ render_input(form.first_name, placeholder='Mika', icon='user') }}
                 {{ render_input(form.last_name, placeholder='Müller', icon='users') }}
             </div>
@@ -48,15 +47,6 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
 
     $('.ui.form').form({
         fields: {
-            sex: {
-                identifier: 'sex',
-                rules: [
-                    {
-                        type: 'empty',
-                        prompt: 'Bitte geben Sie ein Geschlecht an.'
-                    }
-                ]
-            },
             first_name: {
                 identifier: 'first_name',
                 rules: [

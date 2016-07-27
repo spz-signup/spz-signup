@@ -11,7 +11,6 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
     <form class="ui form" method="post">
         {{ csrf_field() }}
         <h3 class="ui dividing header">Persönliche Angaben</h3>
-        {{ render_option(form.sex) }}
         {{ render_input(form.first_name, required=False) }}
         {{ render_input(form.last_name, required=False) }}
         {{ render_input(form.phone, required=False) }}

@@ -27,7 +27,6 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
     <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>
-                <th>Anrede</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>E-Mail</th>
@@ -40,7 +39,6 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
         <tbody>
             {% for attendance in course.attendances %}
             <tr>
-                <td>{{ 'Herr' if attendance.applicant.sex else 'Frau' }}</a></td>
                 <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name }}</a></td>
                 <td><a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.last_name }}</a></td>
                 <td><a href="mailto:{{ attendance.applicant.mail }}">{{ attendance.applicant.mail }}</a></td>

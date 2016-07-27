@@ -402,7 +402,6 @@ def applicant(id):
             applicant.mail = form.mail.data
             applicant.tag = form.tag.data
             applicant.origin = form.get_origin()
-            applicant.sex = form.get_sex()
             applicant.degree = form.get_degree()
             applicant.semester = form.get_semester()
 

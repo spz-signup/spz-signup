@@ -37,14 +37,6 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    # This should be a BooleanField, because of select-between-two semantics
-    sex = SelectField(
-        'Anrede',
-        [validators.Required('Anrede muss angegeben werden')],
-        choices=[(1, 'Herr'), (2, 'Frau')],
-        coerce=int
-    )
-
     first_name = TextField(
         'Vorname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
@@ -132,9 +124,6 @@ class SignupForm(Form):
     # Accessors, to encapsulate the way the form represents and retrieves objects
     # This especially ensures that optional fields only get queried if a value is present
 
-    def get_sex(self):
-        return True if self.sex.data == 1 else False
-
     def get_first_name(self):
         return self.first_name.data
 
@@ -174,10 +163,16 @@ class SignupForm(Form):
         if existing:  # XXX: Return the applicant based on the assumption that the mail _address_ alone is an identidy
             return existing
 
-        return models.Applicant(self.get_mail(), self.get_tag(), self.get_sex(),
-                                self.get_first_name(), self.get_last_name(),
-                                self.get_phone(), self.get_degree(),
-                                self.get_semester(), self.get_origin())
+        return models.Applicant(
+            mail=self.get_mail(),
+            tag=self.get_tag(),
+            first_name=self.get_first_name(),
+            last_name=self.get_last_name(),
+            phone=self.get_phone(),
+            degree=self.get_degree(),
+            semester=self.get_semester(),
+            origin=self.get_origin()
+        )
 
 
 class NotificationForm(Form):
@@ -321,12 +316,6 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         coerce=int
     )
 
-    sex = SelectField(
-        'Anrede',
-        [validators.Required('Anrede muss angegeben werden')],
-        choices=[(1, 'Herr'), (2, 'Frau')],
-        coerce=int
-    )
     degree = SelectField(
         'Studienabschluss',
         [validators.Optional()],
@@ -368,7 +357,6 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         self.phone.data = self.applicant.phone
         self.tag.data = self.applicant.tag
         self.origin.data = self.applicant.origin_id
-        self.sex.data = 1 if self.applicant.sex else 2
         self.degree.data = self.applicant.degree.id if self.applicant.degree else None
         self.semester.data = self.applicant.semester
 
@@ -387,9 +375,6 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     def get_remove_from(self):
         return models.Course.query.get(self.remove_from.data) if self.remove_from.data else None
-
-    def get_sex(self):
-        return True if self.sex.data == 1 else False
 
     def get_origin(self):
         return models.Origin.query.get(self.origin.data)

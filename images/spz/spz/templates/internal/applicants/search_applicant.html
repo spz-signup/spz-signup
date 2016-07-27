@@ -19,7 +19,6 @@ Bewerbersuche
     <table class="ui selectable sortable compact small striped table">
         <thead>
             <tr>
-                <th>Anrede</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>E-Mail</th>
@@ -30,7 +29,6 @@ Bewerbersuche
         <tbody>
             {% for applicant in applicants %}
             <tr>
-                <td>{{ 'Herr' if applicant.sex else 'Frau' }}</a></td>
                 <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }}</a></td>
                 <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.last_name }}</a></td>
                 <td>{{ applicant.mail }}</td>
