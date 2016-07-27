@@ -183,7 +183,7 @@ def registrations_import():
                     db.session.rollback()
                     flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
 
-                return redirect(url_for('importer'))
+                return redirect(url_for('registrations'))
 
             flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
             return None
@@ -251,7 +251,7 @@ def approvals_import():
                     db.session.rollback()
                     flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
 
-                return redirect(url_for('importer'))
+                return redirect(url_for('approvals'))
 
             flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
             return None
