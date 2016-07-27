@@ -135,9 +135,11 @@ routes = [
 
     ('/internal/', views.internal, ['GET']),
 
-    ('/internal/import/', views.importer, ['GET']),
-    ('/internal/import/registrations', views.registrations, ['GET', 'POST']),
-    ('/internal/import/approvals', views.approvals, ['GET', 'POST']),
+    ('/internal/approvals/', views.approvals, ['GET']),
+    ('/internal/approvals/import', views.approvals_import, ['GET', 'POST']),
+
+    ('/internal/registrations/', views.registrations, ['GET']),
+    ('/internal/registrations/import', views.registrations_import, ['GET', 'POST']),
 
     ('/internal/export_course/<int:course_id>', views.export_course, ['GET']),
     ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),

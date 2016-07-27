@@ -142,14 +142,14 @@ def internal():
 
 
 @login_required
-@templated('internal/importer.html')
-def importer():
+@templated('internal/registrations.html')
+def registrations():
     return None
 
 
 @login_required
-@templated('internal/importer.html')
-def registrations():
+@templated('internal/registrations.html')
+def registrations_import():
     if request.method == 'POST':
 
         fp = request.files['file_name']
@@ -193,8 +193,14 @@ def registrations():
 
 
 @login_required
-@templated('internal/importer.html')
+@templated('internal/approvals.html')
 def approvals():
+    return None
+
+
+@login_required
+@templated('internal/approvals.html')
+def approvals_import():
     if request.method == 'POST':
 
         fp = request.files['file_name']

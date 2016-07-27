@@ -6,7 +6,8 @@
         <a href="{{ url_for('internal') }}"><h1>Interner Bereich</h1></a>
     </div>
     {% if current_user.is_authenticated %}
-    <a class="item" href="{{ url_for('importer') }}" ><i class="folder open icon"></i> Importieren</a>
+    <a class="item" href="{{ url_for('registrations') }}" ><i class="barcode icon"></i> Matrikelnummern</a>
+    <a class="item" href="{{ url_for('approvals') }}" ><i class="file text outline icon"></i> Englisch Testergebnisse</a>
     <a class="item" href="{{ url_for('lists') }}"><i class="list icon"></i> Kurslisten</a>
     <a class="item" href="{{ url_for('notifications') }}"><i class="mail icon"></i> Mail Zentrale</a>
     <a class="item" href="{{ url_for('search_applicant') }}"><i class="search icon"></i> Bewerbersuche</a>
