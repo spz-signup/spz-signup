@@ -4,9 +4,9 @@ MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # versions
 ENV LIBASR_VERSION="1.0.2" \
-    OPENSMPTD_VERSION="5.7.3p2" \
+    OPENSMPTD_VERSION="5.9.2p1" \
     LIBASR_SHA512="a4825a30130f70a452044c484871ac37459e1c1e6659c4c38dead7d3abbdaecb3517b7accb46586537975fee033857566fd279ecf97ae87dc80bb6bcdd467d3e" \
-    OPENSMPTD_SHA512="bac0b8d6a6969a5e49a1d45b2c74cb2f3da44d06b12c7162500adf3ca312751020762bc8301075a9d7634d94cf51f978d04fac327f843680646e9e687737c42f"
+    OPENSMPTD_SHA512="99ca15101557848aa6d642f0c0171b152d805192e6839a97410b19431c981a21a5c0dc011e2c8cd91f3e6f6acb37a77f0f4c8e68114bf9808240392fe2b5d375"
 
 # upgrade system and install deps
 RUN apt-get update && \
@@ -28,7 +28,7 @@ RUN mkdir src && \
     make && \
     make install && \
     cd ../opensmtpd-$OPENSMPTD_VERSION && \
-    ./configure --prefix=/usr --with-ca-file=/etc/ssl/certs/ca-certificates.crt && \
+    ./configure --prefix=/usr --with-path-CAfile=/etc/ssl/certs/ca-certificates.crt && \
     make && \
     make install && \
     cd ../.. && \
