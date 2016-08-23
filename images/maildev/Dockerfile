@@ -1,5 +1,5 @@
 # base information
-FROM djfarrelly/maildev:0.13.4
+FROM djfarrelly/maildev:0.14.0
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # upgrade system and install requirements
