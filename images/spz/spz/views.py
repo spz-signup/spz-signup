@@ -748,7 +748,7 @@ def login():
     if form.validate_on_submit():
         user = models.User.get_by_login(form.user.data, form.password.data)
         if user:
-            login_user(user)
+            login_user(user, remember=True)
             return redirect(url_for('internal'))
         flash('Du kommst hier net rein!', 'negative')
 
