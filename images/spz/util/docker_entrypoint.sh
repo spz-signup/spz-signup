@@ -23,7 +23,7 @@ test_connection_by_protocol()  {
     # code of its child
     bash -c "cat < /dev/null > /dev/$1/$address/$port" 2> /dev/null &
     pid=$!
-    bash -c "sleep 1; kill $pid" 2> /dev/null &
+    bash -c "sleep 5; kill $pid" 2> /dev/null &
     wait $pid
     if [ $? == 0 ]; then
         echo YES
