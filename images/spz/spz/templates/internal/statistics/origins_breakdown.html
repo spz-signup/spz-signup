@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import td_sorted %}
 
 {% block caption %}
 Aktive Teilnahmen nach Herkunft
@@ -17,8 +18,8 @@ Aktive Teilnahmen nach Herkunft
         <tbody>
             {% for origin, count in origins_breakdown %}
                 <tr>
-                    <td>{{ origin.name }}</a></td>
-                    <td>{{ count }}</td>
+                    {{ td_sorted(origin.name) }}
+                    {{ td_sorted(count) }}
                 </tr>
             {% endfor %}
         </tbody>

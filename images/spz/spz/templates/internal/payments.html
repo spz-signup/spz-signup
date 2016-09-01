@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import csrf_field, render_input, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit, td_sorted %}
 
 {% block caption %}
 Zahlungen
@@ -30,11 +30,11 @@ Zahlungen
         {% for stat in stats %}
             <tr>
                 <td>{{ 'Bar' if stat['cash'] else 'Überweisung' }}</td>
-                <td>{{ stat['count'] }}</td>
-                <td>{{ stat['sum'] }}</td>
-                <td>{{ '%0.2f'|format(stat['avg']) }}</td>
-                <td>{{ stat['min'] }}</td>
-                <td>{{ stat['max'] }}</td>
+                {{ td_sorted(stat['count']) }}
+                {{ td_sorted(stat['sum']) }}
+                {{ td_sorted('%0.2f'|format(stat['avg'])) }}
+                {{ td_sorted(stat['min']) }}
+                {{ td_sorted(stat['max']) }}
             </tr>
         {% endfor %}
         </tbody>

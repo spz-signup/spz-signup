@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import td_sorted %}
 
 {% block caption %}
 Restplätze
@@ -21,9 +22,9 @@ Restplätze
                 {% if course.limit > course.get_active_attendances()|count %}
                 <tr>
                     <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.full_name() }}</a></td>
-                    <td>{{ course.limit }}</td>
-                    <td>{{ course.limit - course.get_active_attendances()|count }}</td>
-                    <td>{{ course.get_waiting_attendances()|count }}</td>
+                    {{ td_sorted(course.limit) }}
+                    {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
+                    {{ td_sorted(course.get_waiting_attendances()|count) }}
                 </tr>
                 {% endif %}
             {% endfor %}

@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import td_sorted %}
 
 {% block caption %}
 Sprachen
@@ -26,11 +27,11 @@ Sprachen
             {% for language, courses, seats in lang_misc %}
             <tr>
                 <td><a href="{{ url_for('language', id=language.id) }}"><strong>{{ language.name }}</strong></a></td>
-                <td>{{ courses }}</td>
-                <td>{{ seats }}</td>
-                <td>{{ language.get_waiting_attendances()|count }}</td>
-                <td>{{ language.get_active_attendances()|count }}</td>
-                <td>{{ language.get_paying_attendances()|count }}</td>
+                {{ td_sorted(courses) }}
+                {{ td_sorted(seats) }}
+                {{ td_sorted(language.get_waiting_attendances()|count) }}
+                {{ td_sorted(language.get_active_attendances()|count) }}
+                {{ td_sorted(language.get_paying_attendances()|count) }}
                 <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="ui button">CSV</button></a></td>

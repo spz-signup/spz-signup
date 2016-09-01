@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import td_sorted %}
 
 {% block caption %}
 Sprache: {{ language.name }}
@@ -41,12 +42,12 @@ Sprache: {{ language.name }}
             {% for course in language.courses %}
             <tr>
                 <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.full_name() }}</strong></a></td>
-                <td>{{ course.limit }}</td>
-                <td>{{ course.limit - course.get_active_attendances()|count }}</td>
-                <td>{{ course.attendances|count }}</td>
-                <td>{{ course.get_active_attendances()|count }}</td>
-                <td>{{ course.get_waiting_attendances()|count }}</td>
-                <td>{{ course.get_paying_attendances()|count }}</td>
+                {{ td_sorted(course.limit) }}
+                {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
+                {{ td_sorted(course.attendances|count) }}
+                {{ td_sorted(course.get_active_attendances()|count) }}
+                {{ td_sorted(course.get_waiting_attendances()|count) }}
+                {{ td_sorted(course.get_paying_attendances()|count) }}
                 <td><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td><a href="{{ url_for('print_course_presence', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="ui button">CSV</button></a></td>
