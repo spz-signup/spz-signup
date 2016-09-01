@@ -14,6 +14,7 @@ import string
 from argon2 import argon2_hash
 
 from sqlalchemy import and_, between, func
+from sqlalchemy.dialects import postgresql
 
 from spz import app, db, token
 
@@ -234,14 +235,22 @@ class Applicant(db.Model):
 
     def active_in_parallel_course(self, course):
         # do not include the course queried for
-        active_in_courses = [attendance.course for attendance in self.attendances
-                             if attendance.course != course and not attendance.waiting]
+        active_in_courses = [
+            attendance.course
+            for attendance
+            in self.attendances
+            if attendance.course != course and not attendance.waiting
+        ]
 
         active_parallel = [
             crs
             for crs
             in active_in_courses
-            if crs.language == course.language and crs.level == course.level
+            if crs.language == course.language and (
+                crs.level == course.level or
+                crs.level in course.collision or
+                course.level in crs.collision
+            )
         ]
 
         return len(active_parallel) > 0
@@ -265,6 +274,7 @@ class Course(db.Model):
        :param price: The course's price.
        :param rating_highest: The course's upper bound of required rating.
        :param rating_lowest: The course's lower bound of required rating.
+       :param collision: Levels that collide with this course.
 
        .. seealso:: the :py:data:`attendances` relationship
     """
@@ -279,6 +289,7 @@ class Course(db.Model):
     price = db.Column(db.Integer, nullable=False)
     rating_highest = db.Column(db.Integer, nullable=False)
     rating_lowest = db.Column(db.Integer, nullable=False)
+    collision = db.Column(postgresql.ARRAY(db.String(120)), nullable=False)
 
     unique_constraint = db.UniqueConstraint(language_id, level, alternative)
     limit_constraint = db.CheckConstraint(limit > 0)
@@ -289,7 +300,7 @@ class Course(db.Model):
         rating_lowest <= rating_highest
     ))
 
-    def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest):
+    def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest, collision):
         self.language = language
         self.level = level
         self.alternative = alternative
@@ -297,6 +308,7 @@ class Course(db.Model):
         self.price = price
         self.rating_highest = rating_highest
         self.rating_lowest = rating_lowest
+        self.collision = collision
 
     def __repr__(self):
         return '<Course %r>' % (self.full_name())

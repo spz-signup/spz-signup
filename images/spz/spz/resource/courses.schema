@@ -47,6 +47,12 @@
                                     "rating_highest": {
                                         "type": "integer"
                                     },
+                                    "collision": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
                                     "alternative": {
                                         "type": "array",
                                         "items": {

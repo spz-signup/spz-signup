@@ -62,9 +62,16 @@ def insert_resources():
 
             for course in language["courses"]:
                 for alt in course["alternative"]:
-                    db.session.add(Course(ref_lang, level=course["level"], alternative=alt, limit=course["limit"],
-                                          price=course["price"], rating_lowest=course["rating_lowest"],
-                                          rating_highest=course["rating_highest"]))
+                    db.session.add(Course(
+                        language=ref_lang,
+                        level=course["level"],
+                        alternative=alt,
+                        limit=course["limit"],
+                        price=course["price"],
+                        rating_lowest=course["rating_lowest"],
+                        rating_highest=course["rating_highest"],
+                        collision=course["collision"]
+                    ))
 
     db.session.commit()
 
