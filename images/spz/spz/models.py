@@ -183,6 +183,10 @@ class Applicant(db.Model):
     def __lt__(self, other):
         return (self.last_name.lower(), self.first_name.lower()) < (other.last_name.lower(), other.first_name.lower())
 
+    @property
+    def full_name(self):
+        return '{} {}'.format(self.first_name, self.last_name)
+
     def add_course_attendance(self, *args, **kwargs):
         attendance = Attendance(*args, **kwargs)
         self.attendances.append(attendance)
