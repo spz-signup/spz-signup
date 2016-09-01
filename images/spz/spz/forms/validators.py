@@ -10,6 +10,7 @@ from wtforms.validators import *  # NOQA
 from wtforms.validators import ValidationError
 
 from spz import models
+from spz.util.Filetype import size_from_filepointer
 
 
 # set LRU cache for DNS caching
@@ -25,6 +26,22 @@ class EmailPlusValidator(object):
             email_validator.validate_email(field.data)
         except email_validator.EmailNotValidError:
             raise ValidationError('Ungültige E-Mail Adresse')
+
+
+class FileSizeValidator(object):
+    """Validates that file does not exceed certain size."""
+
+    def __init__(self, smin, smax):
+        self.smin = smin
+        self.smax = smax
+
+    def __call__(self, form, field):
+        if field.data:
+            s = size_from_filepointer(field.data)
+            if s < self.smin:
+                raise ValidationError('Datei ist zu klein')
+            if s > self.smax:
+                raise ValidationError('Datei ist zu groß')
 
 
 class TagDependingOnOrigin(object):

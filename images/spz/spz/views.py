@@ -266,20 +266,32 @@ def notifications():
     form = forms.NotificationForm()
 
     if form.validate_on_submit():
+        # get attachement data once
+        at_mime = ''
+        at_data = None
+        at_name = ''
+        if form.get_attachment():
+            # detect MIME data since browser tend to send messy data,
+            # e.g. https://bugzilla.mozilla.org/show_bug.cgi?id=373621
+            at_mime = mime_from_filepointer(form.get_attachment())
+            at_data = form.get_attachment().read()
+            at_name = form.get_attachment().filename
+
         try:
             for recipient in form.get_recipients():
-                tasks.send_slow.delay(
-                    Message(
-                        sender=current_user.email,
-                        recipients=[recipient],
-                        subject=form.get_subject(),
-                        body=form.get_body(),
-                        cc=form.get_cc(),
-                        bcc=form.get_bcc(),
-                        reply_to=form.get_reply_to(),
-                        charset='utf-8'
-                    )
+                msg = Message(
+                    sender=current_user.email,
+                    recipients=[recipient],
+                    subject=form.get_subject(),
+                    body=form.get_body(),
+                    cc=form.get_cc(),
+                    bcc=form.get_bcc(),
+                    reply_to=form.get_reply_to(),
+                    charset='utf-8'
                 )
+                if form.get_attachment():
+                    msg.attach(at_name, at_mime, at_data)
+                tasks.send_slow.delay(msg)
 
             flash('Mail erfolgreich verschickt', 'success')
             return redirect(url_for('internal'))

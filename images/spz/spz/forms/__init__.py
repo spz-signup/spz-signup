@@ -7,6 +7,7 @@
 
 from sqlalchemy import func
 from flask.ext.wtf import Form
+from flask_wtf.file import FileField
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField
 
 from spz import app, models, token
@@ -216,12 +217,19 @@ class NotificationForm(Form):
     only_waiting = BooleanField(
         'Nur an Wartende'
     )
+    attachment = FileField(
+        'Anhang',
+        [validators.FileSizeValidator(0, app.config['MAIL_MAX_ATTACHMENT_SIZE'])]
+    )
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
         # See SignupForm for this "trick"
         self.mail_courses.choices = cached.all_courses_to_choicelist()
         self.mail_reply_to.choices = self._reply_to_choices()
+
+    def get_attachment(self):
+        return self.attachment.data
 
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data))
