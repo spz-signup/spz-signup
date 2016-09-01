@@ -13,7 +13,7 @@ import string
 
 from argon2 import argon2_hash
 
-from sqlalchemy import and_, between, func
+from sqlalchemy import and_, between, func, or_
 from sqlalchemy.dialects import postgresql
 
 from spz import app, db, token
@@ -725,3 +725,49 @@ class User(db.Model):
             User.pwsalted != None,  # NOQA
             User.pwsalted == salted
         )).first()
+
+
+@total_ordering
+class LogEntry(db.Model):
+    """Log entry representing some DB changes
+
+       :param id: unique ID
+       :param timestamp: timestamp of the underlying event
+       :param msg: log message (in German) describing the event
+       :param language: course language the event belongs to, might be NULL (= global event)
+    """
+    __tablename__ = 'logentry'
+
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime(), nullable=False)
+    msg = db.Column(db.String(140), nullable=False)
+    language = db.relationship("Language")  # no backref
+    language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
+
+    def __init__(self, timestamp, msg, language=None):
+        self.timestamp = timestamp
+        self.msg = msg
+        self.language = language
+
+    def __repr__(self):
+        msg = self.msg
+        if len(msg) > 10:
+            msg = msg[:10] + '...'
+        return '<LogEntry {} "{}" {}>'.format(self.timestamp, msg, self.language)
+
+    def __lt__(self, other):
+        return self.timestamp < other.timestamp
+
+    @staticmethod
+    def get_visible_log(user, limit=None):
+        """Returns all log entries relevant for the given user."""
+        query = LogEntry.query
+        if not user.superuser:
+            query = query.filter(or_(
+                LogEntry.language == None,  # NOQA
+                LogEntry.language in user.languages
+            ))
+        query = query.order_by(LogEntry.timestamp.desc())
+        if limit is not None:
+            query = query.limit(limit)
+        return query.all()

@@ -111,7 +111,6 @@ def index():
                 has_to_pay=applicant.has_to_pay(),
                 informed_about_rejection=informed_about_rejection
             )
-
             db.session.add(applicant)
             db.session.commit()
         except Exception as e:
@@ -136,9 +135,11 @@ def licenses():
     return None
 
 
+@login_required
 @templated('internal/overview.html')
 def internal():
-    return None
+    logs = models.LogEntry.get_visible_log(current_user, 200)
+    return dict(logs=logs)
 
 
 @login_required

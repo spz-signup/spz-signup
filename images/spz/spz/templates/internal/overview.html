@@ -8,5 +8,24 @@
     <p>
     Wir sind dankbar für Vorschläge, Anregungen und Kritik. - Marco und Roman
     </p>
+    <h3 class="ui dividing header">Letzte Ereignisse</h3>
+    <table class="ui selectable sortable compact small striped table">
+        <thead>
+            <tr>
+                <th>Zeitpunkt</th>
+                <th>Nachricht</th>
+                <th>Sprache</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in logs %}
+                <tr>
+                    <td class="collapsing fmt-datetime">{{ entry.timestamp }}</td>
+                    <td>{{ entry.msg }}</a></td>
+                    <td class="right aligned collapsing">{% if entry.language %}{{ entry.language.name }}{% else %}∅{% endif %}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}

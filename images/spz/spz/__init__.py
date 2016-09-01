@@ -196,3 +196,6 @@ handlers = [
 
 for errno, handler in handlers:
     app.register_error_handler(errno, handler)
+
+# activate logging
+from spz import log  # NOQA
