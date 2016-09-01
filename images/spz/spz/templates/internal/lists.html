@@ -17,9 +17,9 @@ Sprachen
                 <th>Warteliste</th>
                 <th>Aktive</th>
                 <th>Zahlende</th>
-                <th>Kurs-L.</th>
-                <th>Anw.-L.</th>
-                <th>Daten</th>
+                <th class="collapsing">Kurs-L.</th>
+                <th class="collapsing">Anw.-L.</th>
+                <th class="collapsing">Daten</th>
             </tr>
         </thead>
         <tbody>
@@ -32,9 +32,9 @@ Sprachen
                 {{ td_sorted(language.get_waiting_attendances()|count) }}
                 {{ td_sorted(language.get_active_attendances()|count) }}
                 {{ td_sorted(language.get_paying_attendances()|count) }}
-                <td><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
-                <td><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
-                <td><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="ui button">CSV</button></a></td>
+                <td class="collapsing"><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
+                <td class="collapsing"><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
+                <td class="collapsing"><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="ui button">CSV</button></a></td>
             </tr>
             {% if sums.update({
                 'courses_t': sums['courses_t'] + courses,
