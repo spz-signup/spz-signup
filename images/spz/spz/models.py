@@ -19,12 +19,6 @@ from sqlalchemy.dialects import postgresql
 from spz import app, db, token
 
 
-# Ressources:
-# http://docs.sqlalchemy.org/en/rel_0_8/core/schema.html#sqlalchemy.schema.Column
-# http://docs.sqlalchemy.org/en/rel_0_8/core/types.html
-# http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
-
-
 def hash_secret_strong(s):
     """Hash secret, case-sensitive string to binary data.
 
@@ -100,7 +94,7 @@ class Attendance(db.Model):
     waiting = db.Column(db.Boolean)
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
-    amountpaid = db.Column(db.Integer, nullable=False)
+    amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
 
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())

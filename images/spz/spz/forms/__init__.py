@@ -8,7 +8,7 @@
 from sqlalchemy import func
 from flask.ext.wtf import Form
 from flask_wtf.file import FileField
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField
+from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, DecimalField
 
 from spz import app, models, token
 
@@ -402,14 +402,22 @@ class StatusForm(Form):
 
     """
 
-    graduation = SelectField('Kursabschluss', [validators.Optional()], coerce=int)
+    graduation = SelectField(
+        'Kursabschluss',
+        [validators.Optional()],
+        coerce=int
+    )
     registered = TextField('Registrierungsdatum')
     payingdate = TextField('Zahlungsdatum')
     waiting = BooleanField('Warteliste')
     has_to_pay = BooleanField('Zahlungspflichtig')
     discounted = BooleanField('Ermäßigt')
     paidbycash = BooleanField('Zahlungsart: Bar')
-    amountpaid = IntegerField('Zahlbetrag', [validators.NumberRange(min=0, message='Keine negativen Beträge')])
+    amountpaid = DecimalField(
+        'Zahlbetrag',
+        [validators.NumberRange(min=0, message='Keine negativen Beträge')],
+        places=2
+    )
     notify_change = BooleanField('Mail verschicken')
 
     def __init__(self, *args, **kwargs):
