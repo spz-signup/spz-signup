@@ -511,3 +511,14 @@ class LoginForm(Form):
 
     user = TextField('User', [validators.Required('User muss angegeben werden')])
     password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])
+
+class TagVerifyForm(Form):
+    """Represents the form to verify a tag.
+    """
+
+    tag = TextField(
+        'Matrikelnummer oder Kürzel'
+    )
+
+    def get_tag(self):
+        return self.tag.data
