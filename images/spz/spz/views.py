@@ -203,9 +203,9 @@ def registrations_verify():
     if form.validate_on_submit():
         num = form.get_tag()
         if models.verify_tag(num):
-            flash('Matrikelnummer ist in bereits in der Datenbank')
+            flash('Matrikelnummer "' + num + '" ist in bereits in der Datenbank', 'success')
         else:
-            flash('Matrikelnummer ist noch nicht in der Datenbank')
+            flash('Matrikelnummer "' + num + '" ist noch nicht in der Datenbank', 'negative')
 
     return dict(form=form)
 
