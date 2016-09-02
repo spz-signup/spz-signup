@@ -12,7 +12,7 @@ WORKDIR /home/spz/code
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends fonts-dejavu gcc git libmagic1 libpq-dev postgresql-client && \
-    pip install -U pip --no-cache-dir && \
+    pip install -U pip setuptools --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 
 # install requirements and do cleanup

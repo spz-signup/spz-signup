@@ -19,7 +19,7 @@
       * License get's stripped too, provide external file.
 """
 
-from flask.ext.assets import Bundle, register_filter
+from flask_assets import Bundle, register_filter
 from webassets.loaders import PythonLoader as PythonAssetsLoader
 
 from spz.util.RCSSMin import RCSSMin

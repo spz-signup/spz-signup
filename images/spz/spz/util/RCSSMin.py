@@ -7,7 +7,7 @@
 """
 
 from rcssmin import cssmin
-from flask.ext.assets import Filter
+from flask_assets import Filter
 
 
 class RCSSMin(Filter):

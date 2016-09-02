@@ -16,8 +16,8 @@ from redis import ConnectionError
 from sqlalchemy import and_, func, not_
 
 from flask import request, redirect, render_template, url_for, flash, make_response
-from flask.ext.login import current_user, login_required, login_user, logout_user
-from flask.ext.mail import Message
+from flask_login import current_user, login_required, login_user, logout_user
+from flask_mail import Message
 
 from spz import app, models, db, token, tasks
 from spz.decorators import templated

@@ -6,7 +6,7 @@ from datetime import datetime
 
 from flask import render_template
 
-from flask.ext.mail import Message
+from flask_mail import Message
 
 from spz import app, models
 

@@ -14,12 +14,12 @@ import random
 import string
 
 from flask import Flask
-from flask.ext.assets import Environment
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
-from flask.ext.mail import Mail
-from flask.ext.cache import Cache
-from flask.ext.wtf import CsrfProtect
+from flask_assets import Environment
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_mail import Mail
+from flask_cache import Cache
+from flask_wtf import CsrfProtect
 
 from jinja2 import Markup
 

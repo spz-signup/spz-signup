@@ -7,7 +7,7 @@ from datetime import datetime
 import fpdf
 
 from flask import make_response
-from flask.ext.login import login_required
+from flask_login import login_required
 
 from spz import app, models
 
