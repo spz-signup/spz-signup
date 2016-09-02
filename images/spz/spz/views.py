@@ -145,12 +145,15 @@ def internal():
 @login_required
 @templated('internal/registrations.html')
 def registrations():
-    return None
+
+    form = forms.TagVerifyForm()
+    return dict(form=form)
 
 
 @login_required
 @templated('internal/registrations.html')
 def registrations_import():
+    form = forms.TagVerifyForm()
     if request.method == 'POST':
 
         fp = request.files['file_name']
@@ -190,8 +193,21 @@ def registrations_import():
             return None
 
     flash('Datei konnte nicht gelesen werden', 'negative')
-    return None
+    return dict(form=form)
 
+@login_required
+@templated('internal/registrations.html')
+def registrations_verify():
+    form = forms.TagVerifyForm()
+
+    if form.validate_on_submit():
+        num = form.get_tag()
+        if models.verify_tag(num):
+            flash('Matrikelnummer ist in bereits in der Datenbank')
+        else:
+            flash('Matrikelnummer ist noch nicht in der Datenbank')
+
+    return dict(form=form)
 
 @login_required
 @templated('internal/approvals.html')

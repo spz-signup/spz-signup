@@ -140,6 +140,7 @@ routes = [
 
     ('/internal/registrations/', views.registrations, ['GET']),
     ('/internal/registrations/import', views.registrations_import, ['GET', 'POST']),
+    ('/internal/registrations/verify', views.registrations_verify, ['GET', 'POST']),
 
     ('/internal/export_course/<int:course_id>', views.export_course, ['GET']),
     ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),

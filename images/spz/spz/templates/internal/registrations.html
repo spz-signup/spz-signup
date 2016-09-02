@@ -1,6 +1,6 @@
 {% extends 'internal/internal.html' %}
 
-{% from 'formhelpers.html' import csrf_field %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit %}
 
 {% block caption %}
 Matrikelnummern
@@ -20,6 +20,16 @@ Matrikelnummern
             <input type="file" name="file_name">
         </div>
         <button type="submit" class="fluid ui positive button">Einlesen</button>
+    </form>
+</div>
+
+<div class="row">
+    <h3 class="ui dividing header">Matrikelnummer-Überprüfung</h3>
+    <form class="ui form" method="post" action="{{ url_for('registrations_verify') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        {{ render_input(form.number) }}
+        {{ render_submit(submit='Überprüfen') }}
+
     </form>
 </div>
 {% endblock internal_body %}

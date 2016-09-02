@@ -68,6 +68,11 @@ def hash_secret_weak(s):
     )
 
 
+def verify_tag(tag):
+    """Verifies, if a tag is already in the database.
+    """
+    return Registration.exists(tag)
+
 @total_ordering
 class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
@@ -253,6 +258,7 @@ class Applicant(db.Model):
         # at least do not count in courses that are already over..
         running = [att for att in self.attendances if att.course.language.signup_end >= now]
         return len(running) >= app.config['MAX_ATTENDANCES']
+
 
 
 @total_ordering
