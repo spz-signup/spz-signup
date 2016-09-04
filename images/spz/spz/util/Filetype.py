@@ -14,7 +14,7 @@ def mime_from_filepointer(fp):
     pos = fp.tell()
     fp.seek(0)
     data = fp.read(1024)
-    mime = magic.from_buffer(data, mime=True).decode('utf-8')
+    mime = magic.from_buffer(data, mime=True)
     fp.seek(pos, os.SEEK_SET)
     return mime
 
