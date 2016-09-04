@@ -180,8 +180,17 @@ def populate_fcfs(time):
     populate_generic(time, attendance_filter, idx_prepare, idx_select)
 
 
+def update_waiting_list_status():
+    """Update waiting list status of all courses."""
+    courses = models.Course.query.all()
+    for c in courses:
+        c.has_waiting_list = c.is_full()
+    db.session.commit()
+
+
 def populate_global():
     """Run global populate procedure as discussed with management."""
     time = datetime.utcnow()
     populate_rnd(time)
     populate_fcfs(time)
+    update_waiting_list_status()

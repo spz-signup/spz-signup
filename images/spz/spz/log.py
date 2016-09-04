@@ -35,4 +35,20 @@ def evt_set_attendance_waiting(target, value, oldvalue, _initiator):
         )
         log(msg, language=lang)
 
+
+@event.listens_for(models.Course.has_waiting_list, 'set')
+def evt_set_course_wlstatus(target, value, oldvalue, _initiator):
+    if value is not oldvalue:
+        lang = target.language
+        if value:
+            msg = '{cname} hat nun eine Warteliste.'.format(
+                cname=target.full_name()
+            )
+        else:
+            msg = '{cname} ist nun Wartelisten-frei.'.format(
+                cname=target.full_name()
+            )
+        log(msg, language=lang)
+
+
 # XXX: extend event handling, e.g. for sending mails to applicants

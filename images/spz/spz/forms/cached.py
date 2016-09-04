@@ -58,7 +58,7 @@ def upcoming_courses_to_choicelist():
     def generate_marker(course):
         if course.is_overbooked():
             return ' (Überbucht)'
-        elif course.is_full():
+        elif course.has_waiting_list:
             return ' (Warteliste)'
         else:
             return ''

@@ -20,6 +20,8 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
             <dt>Benötigtes Testergebnis (inklusive Grenzen)</dt>
             <dd>{{ course.rating_lowest }}% &mdash; {{ course.rating_highest }}%</dd>
             {% endif %}
+            <dt>Warteliste</dt>
+            <dd>{% if course.has_waiting_list %}Ja{% else %}Nein{% endif %}</dd>
         </dl>
     </div>
 </div>

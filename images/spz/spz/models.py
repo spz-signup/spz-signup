@@ -273,6 +273,7 @@ class Course(db.Model):
        :param rating_highest: The course's upper bound of required rating.
        :param rating_lowest: The course's lower bound of required rating.
        :param collision: Levels that collide with this course.
+       :param has_waiting_list: Indicates if there is a waiting list for this course
 
        .. seealso:: the :py:data:`attendances` relationship
     """
@@ -288,6 +289,7 @@ class Course(db.Model):
     rating_highest = db.Column(db.Integer, nullable=False)
     rating_lowest = db.Column(db.Integer, nullable=False)
     collision = db.Column(postgresql.ARRAY(db.String(120)), nullable=False)
+    has_waiting_list = db.Column(db.Boolean, nullable=False, default=False)
 
     unique_constraint = db.UniqueConstraint(language_id, level, alternative)
     limit_constraint = db.CheckConstraint(limit > 0)
