@@ -203,10 +203,7 @@ class Applicant(db.Model):
         results_priority = [
             approval.percent
             for approval
-            in Approval.query.filter(and_(
-                func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.priority == True  # NOQA
-            ))
+            in Approval.get_for_tag(self.tag, True)
         ]
         if results_priority:
             return max(results_priority)
@@ -214,10 +211,7 @@ class Applicant(db.Model):
         results_normal = [
             approval.percent
             for approval
-            in Approval.query.filter(and_(
-                func.lower(Approval.tag) == func.lower(self.tag),
-                Approval.priority == False  # NOQA
-            ))
+            in Approval.get_for_tag(self.tag, False)
         ]
         if results_normal:
             return max(results_normal)
@@ -578,7 +572,7 @@ class Registration(db.Model):
 class Approval(db.Model):
     """Represents the approval for English courses a :py:class:`Applicant` aims for.
 
-       :param tag: The registration number or other identification
+       :param tag_salted: The registration number or other identification, salted and hashed
        :param percent: applicant's level for English course
        :param sticky: describes that the entry is created for a special reason
        :param priority: describes that the entry has a higher priority than normal ones
@@ -596,7 +590,7 @@ class Approval(db.Model):
     __tablename__ = 'approval'
 
     id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String(30), nullable=False)  # tag may be not unique, multiple tests taken
+    tag_salted = db.Column(db.Binary(32), nullable=False)  # tag may be not unique, multiple tests taken
     percent = db.Column(db.Integer, nullable=False)
     sticky = db.Column(db.Boolean, nullable=False, default=False)
     priority = db.Column(db.Boolean, nullable=False, default=False)
@@ -604,16 +598,41 @@ class Approval(db.Model):
     percent_constraint = db.CheckConstraint(between(percent, 0, 100))
 
     def __init__(self, tag, percent, sticky, priority):
-        self.tag = tag
+        self.tag_salted = Approval.cleartext_to_salted(tag)
         self.percent = percent
         self.sticky = sticky
         self.priority = priority
 
     def __repr__(self):
-        return '<Approval %r %r>' % (self.tag, self.percent)
+        return '<Approval %r %r>' % (self.tag_salted, self.percent)
 
     def __lt__(self, other):
         return self.percent < other.percent
+
+    @staticmethod
+    def cleartext_to_salted(cleartext):
+        """Convert cleartext unicode data to salted binary data."""
+        if cleartext:
+            return hash_secret_weak(cleartext.lower())
+        else:
+            return hash_secret_weak('')
+
+    @staticmethod
+    def get_for_tag(tag, priority=None):
+        """Get all approvals for a specific tag and priority.
+
+           :param tag: tag (as cleartext) you're looking for
+           :param priority: optional priority to filter for
+        """
+        if priority is not None:
+            return Approval.query.filter(and_(
+                Approval.tag_salted == Approval.cleartext_to_salted(tag),
+                Approval.priority == priority
+            )).all()
+        else:
+            return Approval.query.filter(
+                Approval.tag_salted == Approval.cleartext_to_salted(tag)
+            ).all()
 
 
 # helper table for User<--[admin]-->Language N:M relationship
