@@ -338,7 +338,10 @@ class Course(db.Model):
         return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
 
     def full_name(self):
-        return '{0} {1} {2}'.format(self.language.name, self.level, self.alternative)
+        result = '{0} {1}'.format(self.language.name, self.level)
+        if self.alternative:
+            result = '{0} {1}'.format(result, self.alternative)
+        return result
 
 
 @total_ordering
