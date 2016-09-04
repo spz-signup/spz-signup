@@ -109,8 +109,8 @@ services:
             - "127.0.0.1:25432:5432"
         volumes:
             - data_postgres:/var/lib/postgresql/data
-            - run_postgres:/run/postgresql
         tmpfs:
+            - /run/postgresql
             - /tmp
         read_only: true
         environment:
@@ -124,9 +124,9 @@ services:
         ports:
             - "127.0.0.1:8080:80"
         volumes:
-            - run_mail:/run
             - state_mail:/var/spool
         tmpfs:
+            - /run
             - /tmp
 #        read_only: true  # not possible because of PaX
         networks:
@@ -156,8 +156,6 @@ volumes:
     data_postgres: {}
     data_redis: {}
     data_static: {}
-    run_mail: {}
-    run_postgres: {}
     state_mail: {}
     state_spz: {}
 networks:
