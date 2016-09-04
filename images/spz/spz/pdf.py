@@ -13,20 +13,50 @@ from spz import app, models
 
 
 class SPZPDF(fpdf.FPDF):
-    def __init__(self, *args, **kwargs):
+    """Base class used for ALL PDF generators here."""
+
+    def __init__(self):
         fpdf.set_global('FPDF_CACHE_MODE', 2)
         fpdf.set_global('FPDF_CACHE_DIR', '/tmp')
-        super(SPZPDF, self).__init__(*args, **kwargs)
+        super(SPZPDF, self).__init__('L', 'mm', 'A4')
         self.add_font('DejaVu', '', '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf', uni=True)
         self.add_font('DejaVu', 'B', '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf', uni=True)
 
+    def font_normal(self, size):
+        """Set font to a normal one (no bold/italic).
 
-class BasePDF(SPZPDF):
+           :param size: desired font size
+        """
+        self.set_font('DejaVu', '', size)
+
+    def font_bold(self, size):
+        """Set font to a bold one (no italic).
+
+           :param size: desired font size
+        """
+        self.set_font('DejaVu', 'B', size)
+
+    def gen_final_data(self):
+        """Get final byte string data for PDF."""
+        return self.output('', 'S')
+
+    def gen_response(self, filename):
+        """Generate HTTP response that download this PDF.
+
+           :param filename: filename of the downloaded file, w/o '.pdf' extension
+        """
+        resp = make_response(self.gen_final_data())
+        resp.headers['Content-Disposition'] = 'attachment; filename="{0}.pdf"'.format(filename)
+        resp.mimetype = 'application/pdf'
+        return resp
+
+
+class TablePDF(SPZPDF):
     def header(self):
-        self.set_font('DejaVu', '', 8)
+        self.font_normal(8)
         self.cell(0, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
         self.cell(0, 5, app.config['SEMESTER_NAME'], 0, 1, 'R')
-        self.set_font('DejaVu', 'B', 10)
+        self.font_bold(10)
         self.cell(0, 5, 'Sprachenzentrum', 0)
 
     def get_column_size(self):
@@ -36,7 +66,7 @@ class BasePDF(SPZPDF):
         return self.header_texts
 
 
-class CourseGenerator(BasePDF):
+class CourseGenerator(TablePDF):
     column_size = [7, 40, 40, 20, 70, 40, 15, 15, 15, 15]
     header_texts = ["Nr.", "Nachname", "Vorname", "Matr.", "E-Mail", "Telefon", "Tln.", "Prf.", "Note", "Prozent"]
 
@@ -47,7 +77,7 @@ class CourseGenerator(BasePDF):
 
     def footer(self):
         self.set_y(-20)
-        self.set_font('DejaVu', '', 10)
+        self.font_normal(10)
         self.cell(
             0,
             7,
@@ -56,7 +86,7 @@ class CourseGenerator(BasePDF):
             1,
             'R'
         )
-        self.set_font('DejaVu', '', 6)
+        self.font_normal(6)
         self.cell(
             0,
             5,
@@ -78,7 +108,7 @@ class CourseGenerator(BasePDF):
         )
 
 
-class PresenceGenerator(BasePDF):
+class PresenceGenerator(TablePDF):
     column_size = [7, 40, 40, 20, 80, 6]
     header_texts = ["Nr.", "Nachname", "Vorname", "Matr.", "E-Mail", ""]
 
@@ -89,8 +119,62 @@ class PresenceGenerator(BasePDF):
 
     def footer(self):
         self.set_y(-10)
-        self.set_font('DejaVu', '', 8)
+        self.font_normal(8)
         self.cell(0, 5, 'Diese Liste bildet lediglich eine Hilfe im Unterricht und verbleibt beim Dozenten.', 0, 1, 'C')
+
+
+class BillGenerator(SPZPDF):
+    def header(this):
+        this.zwischenraum = 21
+        this.teiler = ''
+        this.rahmen = 0
+        this.breite = 128
+        now = datetime.now()
+        if now.month < 3:
+            semester = 'Wintersemester {0}/{1}'.format(now.year-1, now.year)
+        elif now.month < 9:
+            semester = 'Sommersemester {0}'.format(now.year)
+        else:
+            semester = 'Wintersemester {0}/{1}'.format(now.year, now.year+1)
+        this.font_normal(8)
+        this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
+        this.cell(48, 5, semester, 0, 0, 'R')
+        this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
+        this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
+        this.cell(48, 5, semester, 0, 1, 'R')
+        this.font_bold(8)
+        this.cell(80, 5, 'Sprachenzentrum', 0, 0)
+        this.font_normal(8)
+        this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 0, 'R')
+        this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
+        this.font_bold(8)
+        this.cell(80, 5, 'Sprachenzentrum', 0, 0)
+        this.font_normal(8)
+        this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
+
+    def footer(this):
+        this.set_y(-15)
+        this.font_normal(8)
+        this.cell(
+            this.breite,
+            4,
+            'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.',
+            0,
+            0,
+            'C'
+        )
+        this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
+        this.cell(
+            this.breite,
+            4,
+            'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.',
+            0,
+            1,
+            'C'
+        )
+        this.cell(this.breite, 4, 'Exemplar für den Teilnehmer.', 0, 0, 'C')
+        this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
+        this.cell(this.breite, 4, 'Exemplar für das Sprachenzentrum.', 0, 1, 'C')
 
 
 def list_presence(pdflist, course):
@@ -106,9 +190,9 @@ def list_presence(pdflist, course):
 
     pdflist.add_page()
 
-    pdflist.set_font('DejaVu', 'B', 14)
-    pdflist.cell(0, 10, '{0}'.format(course.full_name()), 0, 1, 'C')
-    pdflist.set_font('DejaVu', '', 8)
+    pdflist.font_bold(14)
+    pdflist.cell(0, 10, course.full_name(), 0, 1, 'C')
+    pdflist.font_normal(8)
     height = 6
 
     idx = 1
@@ -120,7 +204,7 @@ def list_presence(pdflist, course):
     for applicant in active_no_debt:
         content = [idx, applicant.last_name, applicant.first_name, maybe(applicant.tag), applicant.mail, ""]
         for c, co in zip(column, content):
-            pdflist.cell(c, height, '{0}'.format(co), 1)
+            pdflist.cell(c, height, co, 1)
         for i in range(13):
             pdflist.cell(column[-1], height, '', 1)
         pdflist.ln()
@@ -131,29 +215,21 @@ def list_presence(pdflist, course):
 
 @login_required
 def print_course_presence(course_id):
-    pdflist = PresenceGenerator('L', 'mm', 'A4')
+    pdflist = PresenceGenerator()
     course = models.Course.query.get_or_404(course_id)
     list_presence(pdflist, course)
 
-    resp = make_response(pdflist.output('', 'S'))
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.pdf"'.format(course.full_name())
-    resp.mimetype = 'application/pdf'
-
-    return resp
+    return pdflist.gen_response(course.full_name())
 
 
 @login_required
 def print_language_presence(language_id):
     language = models.Language.query.get_or_404(language_id)
-    pdflist = PresenceGenerator('L', 'mm', 'A4')
+    pdflist = PresenceGenerator()
     for course in language.courses:
         list_presence(pdflist, course)
 
-    resp = make_response(pdflist.output('', 'S'))
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.pdf"'.format(language.name)
-    resp.mimetype = 'application/pdf'
-
-    return resp
+    return pdflist.gen_response(language.name)
 
 
 def list_course(pdflist, course):
@@ -163,16 +239,20 @@ def list_course(pdflist, course):
     def maybe(x):
         return x if x else ''
 
-    active_no_debt = [attendance.applicant for attendance in course.attendances
-                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+    active_no_debt = [
+        attendance.applicant
+        for attendance
+        in course.attendances
+        if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)
+    ]
     active_no_debt.sort()
 
     pdflist.add_page()
     course_str = '{0}'.format(course.full_name())
-    pdflist.set_font('DejaVu', 'B', 14)
+    pdflist.font_bold(14)
     pdflist.cell(0, 10, course_str, 0, 1, 'C')
 
-    pdflist.set_font('DejaVu', '', 8)
+    pdflist.font_normal(8)
     height = 6
 
     idx = 1
@@ -196,103 +276,39 @@ def list_course(pdflist, course):
             pdflist.cell(c, height, '{0}'.format(co), 1)
         pdflist.ln()
         idx += 1
-    return
 
 
 @login_required
 def print_course(course_id):
-    pdflist = CourseGenerator('L', 'mm', 'A4')
+    pdflist = CourseGenerator()
     course = models.Course.query.get_or_404(course_id)
     list_course(pdflist, course)
 
-    resp = make_response(pdflist.output('', 'S'))
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.pdf"'.format(course.full_name())
-    resp.mimetype = 'application/pdf'
-
-    return resp
+    return pdflist.gen_response(course.full_name())
 
 
 @login_required
 def print_language(language_id):
     language = models.Language.query.get_or_404(language_id)
-    pdflist = CourseGenerator('L', 'mm', 'A4')
+    pdflist = CourseGenerator()
     for course in language.courses:
         list_course(pdflist, course)
 
-    resp = make_response(pdflist.output('', 'S'))
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.pdf"'.format(language.name)
-    resp.mimetype = 'application/pdf'
-
-    return resp
+    return pdflist.gen_response(language.name)
 
 
 @login_required
 def print_bill(applicant_id, course_id):
-    class BillGenerator(SPZPDF):
-        def header(this):
-            this.zwischenraum = 21
-            this.teiler = ''
-            this.rahmen = 0
-            this.breite = 128
-            now = datetime.now()
-            if now.month < 3:
-                semester = 'Wintersemester {0}/{1}'.format(now.year-1, now.year)
-            elif now.month < 9:
-                semester = 'Sommersemester {0}'.format(now.year)
-            else:
-                semester = 'Wintersemester {0}/{1}'.format(now.year, now.year+1)
-            this.set_font('DejaVu', '', 8)
-            # fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
-            this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
-            this.cell(48, 5, semester, 0, 0, 'R')
-            this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
-            this.cell(80, 5, 'Karlsruher Institut für Technologie (KIT)', 0, 0)
-            this.cell(48, 5, semester, 0, 1, 'R')
-            this.set_font('DejaVu', 'B', 8)
-            this.cell(80, 5, 'Sprachenzentrum', 0, 0)
-            this.set_font('DejaVu', '', 8)
-            this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 0, 'R')
-            this.cell(this.zwischenraum, 5, this.teiler, this.rahmen, 0, 'C')
-            this.set_font('DejaVu', 'B', 8)
-            this.cell(80, 5, 'Sprachenzentrum', 0, 0)
-            this.set_font('DejaVu', '', 8)
-            this.cell(48, 5, datetime.now().strftime("%d.%m.%Y"), 0, 1, 'R')
-
-        def footer(this):
-            this.set_y(-15)
-            this.set_font('DejaVu', '', 8)
-            this.cell(
-                this.breite,
-                4,
-                'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.',
-                0,
-                0,
-                'C'
-            )
-            this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
-            this.cell(
-                this.breite,
-                4,
-                'Diese Quittung wurde maschinell ausgestellt und ist ohne Unterschrift gültig.',
-                0,
-                1,
-                'C'
-            )
-            this.cell(this.breite, 4, 'Exemplar für den Teilnehmer.', 0, 0, 'C')
-            this.cell(this.zwischenraum, 4, this.teiler, this.rahmen, 0, 'C')
-            this.cell(this.breite, 4, 'Exemplar für das Sprachenzentrum.', 0, 1, 'C')
-
     attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
 
-    bill = BillGenerator('L', 'mm', 'A4')
+    bill = BillGenerator()
     bill.add_page()
-#   fpdf.cell(w,h=0,txt='',border=0,ln=0,align='',fill=0,link='')
     title = 'Quittung'
     applicant_str = '{0} {1}'.format(attendance.applicant.first_name, attendance.applicant.last_name)
     tag_str = 'Matrikelnummer {0}'.format(attendance.applicant.tag) if attendance.applicant.tag else ''
     now = datetime.now()
     str1 = 'für die Teilnahme am Kurs:'
-    course_str = '{0}'.format(attendance.course.full_name())
+    course_str = attendance.course.full_name()
     amount_str = '{0} Euro'.format(attendance.amountpaid)
     str2 = 'bezahlt.'
     str3 = 'Stempel'
@@ -301,13 +317,13 @@ def print_bill(applicant_id, course_id):
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, code, 0, 1, 'R')
     bill.ln(20)
-    bill.set_font('DejaVu', 'B', 14)
+    bill.font_bold(14)
     bill.cell(bill.breite, 8, title, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 8, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 8, title, 0, 1, 'C')
     bill.ln(20)
 
-    bill.set_font('DejaVu', '', 10)
+    bill.font_normal(10)
     bill.cell(bill.breite, 6, applicant_str, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, applicant_str, 0, 1)
@@ -320,14 +336,14 @@ def print_bill(applicant_id, course_id):
     bill.cell(bill.breite, 6, str1, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, str1, 0, 1)
-    bill.set_font('DejaVu', 'B', 10)
+    bill.font_bold(10)
     bill.cell(bill.breite, 6, course_str, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, course_str, 0, 1, 'C')
     bill.cell(bill.breite, 6, amount_str, 0, 0, 'C')
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, amount_str, 0, 1, 'C')
-    bill.set_font('DejaVu', '', 10)
+    bill.font_normal(10)
     bill.cell(bill.breite, 6, str2, 0, 0)
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, str2, 0, 1)
@@ -337,9 +353,4 @@ def print_bill(applicant_id, course_id):
     bill.cell(bill.zwischenraum, 6, bill.teiler, bill.rahmen, 0, 'C')
     bill.cell(bill.breite, 6, str3, 0, 1, 'C')
 
-    resp = make_response(bill.output('', 'S'))
-    resp.headers['Content-Disposition'] = 'attachment; filename="Quittung {0}.pdf"' \
-        .format(attendance.applicant.last_name)
-    resp.mimetype = 'application/pdf'
-
-    return resp
+    return bill.gen_response('Quittung {0}'.format(attendance.applicant.last_name))
