@@ -24,10 +24,10 @@ Matrikelnummern
 </div>
 
 <div class="row">
-    <h3 class="ui dividing header">Matrikelnummer-Überprüfung</h3>
+    <h3 class="ui dividing header">Matrikelnummer/Kürzel-Überprüfung</h3>
     <form class="ui form" method="post" action="{{ url_for('registrations_verify') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
-        {{ render_input(form.number) }}
+        {{ render_input(form.tag) }}
         {{ render_submit(submit='Überprüfen') }}
 
     </form>

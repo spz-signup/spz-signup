@@ -515,9 +515,9 @@ class LoginForm(Form):
 class TagVerifyForm(Form):
     """Represents the form to verify a tag.
     """
-    number = TextField(
-        'Matrikelnummer'
+    tag = TextField(
+        'Matrikelnummer oder Kürzel'
     )
 
     def get_tag(self):
-        return self.number.data
+        return self.tag.data
