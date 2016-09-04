@@ -18,7 +18,7 @@ from flask_assets import Environment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_cache import Cache
+from flask_caching import Cache
 from flask_wtf import CsrfProtect
 
 from jinja2 import Markup
