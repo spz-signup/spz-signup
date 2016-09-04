@@ -10,7 +10,7 @@ Bewerbersuche
 <div class="row">
     <form class="ui form" method="post">
         {{ csrf_field() }}
-        {{ render_input(form.token, help="Suchen nach Vorname, Nachname, Mail und Matrikelnummer") }}
+        {{ render_input(form.query, help="Suchen nach Vorname, Nachname, Mail und Matrikelnummer") }}
         {{ render_submit(submit='Suche starten') }}
     </form>
 </div>
@@ -32,7 +32,7 @@ Bewerbersuche
                 <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name }}</a></td>
                 <td><a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.last_name }}</a></td>
                 <td>{{ applicant.mail }}</td>
-                <td>{{ applicant.tag }}</td>
+                <td>{{ applicant.tag if applicant.tag else '∅' }}</td>
                 <td><a href="{{ url_for('applicant_attendances', id=applicant.id)}}">{{ applicant.attendances|count }}</a></td>
             </tr>
             {% endfor %}

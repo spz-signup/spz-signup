@@ -452,12 +452,27 @@ def search_applicant():
     applicants = []
 
     if form.validate_on_submit():
-        applicants = models.Applicant.query.filter(
-            models.Applicant.first_name.like('%{0}%'.format(form.token.data)) |
-            models.Applicant.last_name.like('%{0}%'.format(form.token.data)) |
-            models.Applicant.mail.like('%{0}%'.format(form.token.data)) |
-            models.Applicant.tag.like('%{0}%'.format(form.token.data))
-        )
+        # split query into words, each word has to match at least one of the following attributes:
+        #  - first name
+        #  - second name
+        #  - mail address
+        #  - tag
+        parts = form.query.data.split(' ')
+        query = None
+        for p in parts:
+            p = p.strip()
+            if p:
+                ilike_str = '%{0}%'.format(p.replace('\\', '\\\\').replace('%', '\\%'))
+                subquery = (models.Applicant.first_name.ilike(ilike_str)
+                    | models.Applicant.last_name.ilike(ilike_str)
+                    | models.Applicant.mail.ilike(ilike_str)
+                    | models.Applicant.tag.ilike(ilike_str))
+                if query is None:
+                    query = subquery
+                else:
+                    query = query & subquery
+        if query is not None:
+            applicants = models.Applicant.query.filter(query)
 
     return dict(form=form, applicants=applicants)
 

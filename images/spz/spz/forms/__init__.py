@@ -456,7 +456,7 @@ class SearchForm(Form):
     """Represents a form to search for specific applicants.
     """
 
-    token = TextField(
+    query = TextField(
         'Suchen',
         [validators.Required('Suchparameter muss angegeben werden')]
     )
