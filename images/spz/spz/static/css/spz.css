@@ -191,7 +191,19 @@ body {
 /***************************************
  **** Printing fixes *******************
  **************************************/
+.print-warning {
+    display: none;
+}
+
 @media print {
+    .print-warning {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 2rem;
+        text-align: center;
+    }
+
     body {
         overflow: visible !important;
     }
