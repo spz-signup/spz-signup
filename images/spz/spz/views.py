@@ -463,10 +463,12 @@ def search_applicant():
             p = p.strip()
             if p:
                 ilike_str = '%{0}%'.format(p.replace('\\', '\\\\').replace('%', '\\%'))
-                subquery = (models.Applicant.first_name.ilike(ilike_str)
+                subquery = (
+                    models.Applicant.first_name.ilike(ilike_str)
                     | models.Applicant.last_name.ilike(ilike_str)
                     | models.Applicant.mail.ilike(ilike_str)
-                    | models.Applicant.tag.ilike(ilike_str))
+                    | models.Applicant.tag.ilike(ilike_str)
+                )
                 if query is None:
                     query = subquery
                 else:
