@@ -84,9 +84,15 @@ wait_for_services() {
 init() {
     echo "run global first run init"
 
+    # setup GPG
+    mkdir --mode=700 /state/gpg
+    gpg --batch --homedir=/state/gpg --import keys/spz_backup.key keys/spz_admin.key
+
+    # setup DB
     PGPASSWORD=mysecretpassword psql --host=postgres --port=5432 --username=postgres --command="CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
 
+    # build+compress assets
     python build_assets
     gzip --keep --recursive --force --best spz/static
 

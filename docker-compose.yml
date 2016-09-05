@@ -6,6 +6,7 @@ services:
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
+            - backup:/backup
             - ./docs/python:/home/spz/code/doc.build:rw
             - ./images/spz/spz:/home/spz/code/spz:ro
             - ./images/spz/util:/home/spz/code/util:ro
@@ -152,6 +153,7 @@ services:
         restart: unless-stopped
         cpuset: "0"
 volumes:
+    backup: {}
     cache_nginx: {}
     data_postgres: {}
     data_redis: {}
