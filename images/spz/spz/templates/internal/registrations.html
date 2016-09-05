@@ -28,8 +28,10 @@ Matrikelnummern
     <form class="ui form" method="post" action="{{ url_for('registrations_verify') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
         {{ render_input(form.tag) }}
+        <div class="ui message">
+            {{ message }}
+        </div>
         {{ render_submit(submit='Überprüfen') }}
-
     </form>
 </div>
 {% endblock internal_body %}

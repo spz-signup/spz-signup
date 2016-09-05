@@ -515,6 +515,7 @@ class LoginForm(Form):
 class TagVerifyForm(Form):
     """Represents the form to verify a tag.
     """
+
     tag = TextField(
         'Matrikelnummer oder Kürzel'
     )

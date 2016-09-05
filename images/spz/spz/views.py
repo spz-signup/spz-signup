@@ -145,7 +145,6 @@ def internal():
 @login_required
 @templated('internal/registrations.html')
 def registrations():
-
     form = forms.TagVerifyForm()
     return dict(form=form)
 
@@ -202,12 +201,13 @@ def registrations_verify():
 
     if form.validate_on_submit():
         tag = form.get_tag()
-        if models.verify_tag(tag):
-            flash('Matrikelnummer/Kürzel "' + tag + '" ist in bereits in der Datenbank', 'success')
+        success = models.verify_tag(tag)
+        if success:
+            message = 'Matrikelnummer/Kürzel "' + tag + '" ist in bereits in der Datenbank'
         else:
-            flash('Matrikelnummer/Kürzel "' + tag + '" ist noch nicht in der Datenbank', 'negative')
+            message = 'Matrikelnummer/Kürzel "' + tag + '" ist noch nicht in der Datenbank'
 
-    return dict(form=form)
+    return dict(form=form, message=message)
 
 @login_required
 @templated('internal/approvals.html')
