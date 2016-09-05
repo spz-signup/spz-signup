@@ -730,7 +730,7 @@ class User(db.Model):
         """
         id = token.validate_multi(tokenstring, 'users')
         if id:
-            return User.query.filter(func.lower(User.id) == func.lower(id)).first()
+            return User.query.filter(User.id == int(id)).first()
         else:
             return None
 
