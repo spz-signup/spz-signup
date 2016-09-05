@@ -13,10 +13,17 @@ def mime_from_filepointer(fp):
     File position gets restored after the detection procedure."""
     pos = fp.tell()
     fp.seek(0)
-    data = fp.read(1024)
-    mime = magic.from_buffer(data, mime=True)
-    fp.seek(pos, os.SEEK_SET)
-    return mime
+    try:
+        data = fp.read(1024)
+        mime = magic.from_buffer(data, mime=True)
+        fp.seek(pos, os.SEEK_SET)
+        return mime
+    except UnicodeDecodeError:
+        # that might happen when you open a file as text but it contains binary data
+        # in this case, we assume that this was not the file-type you wanted and try
+        # to follow RFC 2046 as close as possible
+        fp.seek(pos, os.SEEK_SET)
+        return 'application/octet-stream'
 
 
 def size_from_filepointer(fp):
