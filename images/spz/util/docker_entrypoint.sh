@@ -84,7 +84,7 @@ wait_for_services() {
 init() {
     echo "run global first run init"
 
-    PGPASSWORD=mysecretpassword psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE spz;"
+    PGPASSWORD=mysecretpassword psql --host=postgres --port=5432 --username=postgres --command="CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
 
     python build_assets
