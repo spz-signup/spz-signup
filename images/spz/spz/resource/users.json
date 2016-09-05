@@ -7,6 +7,12 @@
             "languages": []
         },
         {
+            "email": "felix.rittler@outlook.com",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
             "email": "roman@zukowsky.de",
             "active": true,
             "superuser": true,
