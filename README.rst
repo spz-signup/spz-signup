@@ -14,8 +14,5 @@ Sign up management for the language courses at the KIT Sprachzentrum.
 
 Feel free to report issues to our `issue tracker`_.
 
-Browse the internal documentation at `Read the Docs`_.
-
 
 .. _issue tracker: https://github.com/spz-signup/spz-signup/issues
-.. _Read the Docs: https://spz.readthedocs.org
