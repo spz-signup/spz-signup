@@ -88,7 +88,7 @@ init() {
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
 
     python build_assets
-    gzip --keep --recursive --force spz/static
+    gzip --keep --recursive --force --best spz/static
 
     echo "finished initialization"
 }
