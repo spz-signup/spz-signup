@@ -204,6 +204,10 @@ body {
         text-align: center;
     }
 
+    .no-print {
+        display: none !important;
+    }
+
     body {
         overflow: visible !important;
     }

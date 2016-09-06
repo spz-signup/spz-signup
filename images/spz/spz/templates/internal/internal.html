@@ -30,12 +30,14 @@ Interner Bereich
 
 
 {% block subcaption %}
+<div class="pull-right no-print">
 {% if current_user.is_authenticated %}
-<div class="pull-right">Angemeldet als <strong>{{ current_user.email }} ({% if current_user.superuser %}SUPERUSER{% else %}{{ current_user.languages|sort|map(attribute='name')|join(', ') }}{% endif %})</strong>
-(<a href="{{ url_for('logout')  }}" class="signout">Abmelden</a>)</div>
+    Angemeldet als <strong>{{ current_user.email }} ({% if current_user.superuser %}SUPERUSER{% else %}{{ current_user.languages|sort|map(attribute='name')|join(', ') }}{% endif %})</strong>
+(<a href="{{ url_for('logout')  }}" class="signout">Abmelden</a>)
 {% else %}
-<div class="pull-right">Nicht angemeldet. <a href="{{ url_for('login') }}" class="signin">Anmelden</a></div>
+    Nicht angemeldet. <a href="{{ url_for('login') }}" class="signin">Anmelden</a>
 {% endif %}
+</div>
 {% endblock subcaption %}
 
 
