@@ -21,6 +21,7 @@ class BackupException(Exception):
 
 
 def create():
+    """Create a new full DB backup, compressed and encrypted."""
     now = datetime.utcnow()
     timestamp = now.strftime('%Y-%m-%d-%H-%M')
     fname = '/backup/backup-{}.sql.xz.enc'.format(timestamp)
@@ -54,11 +55,34 @@ def create():
         )
 
 
+def is_backupfile(fname):
+    """Check if given file name is a valid backup file.
+
+       :param fname: file name w/o path
+    """
+    return fname.startswith('backup-') and fname.endswith('.sql.xz.enc')
+
+
+def get_all_backups():
+    """Returns a list of all backup files."""
+    files_all = os.listdir('/backup')
+    files_filtered = (
+        fname
+        for fname in files_all
+        if is_backupfile(fname)
+    )
+    return [
+        '/backup/{}'.format(fname)
+        for fname in files_filtered
+    ]
+
+
 def send():
-    files = os.listdir('/backup')
+    """Send last backup to admins via email."""
+    files = get_all_backups()
     if files:
         last = list(sorted(files, reverse=True))[0]
-        with open('/backup/{}'.format(last), 'rb') as fp:
+        with open(last, 'rb') as fp:
             msg = Message(
                 sender=app.config['PRIMARY_MAIL'],
                 recipients=app.config['ADMIN_MAILS'],
