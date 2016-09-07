@@ -32,7 +32,7 @@ Matrikelnummern
         <div class="ui positive message">
             Matrikelnummer/Kürzel "{{ tag }}" ist in bereits in der Datenbank.
         </div>
-        {% else %}
+        {% elif tag.data %}
         <div class="ui negative message">
             Matrikelnummer/Kürzel "{{ tag }}" ist noch nicht in der Datenbank.
         </div>
