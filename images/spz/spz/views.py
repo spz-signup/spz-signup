@@ -201,13 +201,9 @@ def registrations_verify():
 
     if form.validate_on_submit():
         tag = form.get_tag()
-        success = models.verify_tag(tag)
-        if success:
-            message = 'Matrikelnummer/Kürzel "' + tag + '" ist in bereits in der Datenbank'
-        else:
-            message = 'Matrikelnummer/Kürzel "' + tag + '" ist noch nicht in der Datenbank'
+        tag_exists = models.verify_tag(tag)
 
-    return dict(form=form, message=message)
+    return dict(form=form, tag_exists=tag_exists, tag=tag)
 
 @login_required
 @templated('internal/approvals.html')

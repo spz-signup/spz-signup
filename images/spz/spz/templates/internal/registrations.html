@@ -28,9 +28,15 @@ Matrikelnummern
     <form class="ui form" method="post" action="{{ url_for('registrations_verify') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
         {{ render_input(form.tag) }}
-        <div class="ui message">
-            {{ message }}
+        {% if tag_exists %}
+        <div class="ui positive message">
+            Matrikelnummer/Kürzel "{{ tag }}" ist in bereits in der Datenbank.
         </div>
+        {% else %}
+        <div class="ui negative message">
+            Matrikelnummer/Kürzel "{{ tag }}" ist noch nicht in der Datenbank.
+        </div>
+        {% endif %}
         {{ render_submit(submit='Überprüfen') }}
     </form>
 </div>
