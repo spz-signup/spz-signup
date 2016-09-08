@@ -50,16 +50,7 @@ Interner Bereich
 
 {% block scripts %}
 {{ super() }}
-<script>
-    "use strict";
-
-    $(window).load(function(){
-        $('.ui.table.sortable').tablesort();
-    });
-</script>
-
 {% assets "tools_js" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
-
 {% endblock scripts %}

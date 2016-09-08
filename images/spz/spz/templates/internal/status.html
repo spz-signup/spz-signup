@@ -28,15 +28,3 @@
     </form>
 </div>
 {% endblock internal_body %}
-
-
-{% block scripts %}
-{{ super() }}
-<script>
-    "use strict";
-
-    $('#confirm').click(function() {
-        return confirm("Unwiederrufliches Löschen bestätigen");
-    });
-</script>
-{% endblock scripts %}

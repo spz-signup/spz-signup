@@ -36,12 +36,18 @@ all_js = Bundle('js/jquery-2.2.2.min.js',
                 'js/garlic-1.2.2.min.js',
                 'js/moment.min.js',
                 'js/moment-de.js',
+                'js/spz.js',
                 filters='rjsmin', output='js/packed.js')
 
 
 # Tooling bundles
 tools_js = Bundle('js/jquery.tablesort.js',
+                  'js/internal.js',
                   filters='rjsmin', output='js/packed_tools.js')
+
+# signup script
+signup_js = Bundle('js/signup.js',
+                   filters='rjsmin', output='js/packed_signup.js')
 
 
 # Stylesheet bundles:

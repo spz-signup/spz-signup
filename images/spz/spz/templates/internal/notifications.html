@@ -23,19 +23,7 @@ Mail Zentrale
         {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
         {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
         {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
-        {{ render_submit(submit='Abschicken') }}
+        {{ render_submit(submit='Abschicken', confirm='Mailversand bestätigen.') }}
     </form>
 </div>
 {% endblock internal_body %}
-
-
-{% block scripts %}
-{{ super() }}
-<script>
-    "use strict";
-
-    $('#confirm').submit(function() {
-        return confirm("Mailversand bestätigen");
-    });
-</script>
-{% endblock scripts %}
