@@ -2,10 +2,10 @@
     "languages": [
         {
             "name": "Arabisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -14,7 +14,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "2",
@@ -23,16 +26,18 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Chinesisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -41,7 +46,13 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d", "e"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e"
+                    ]
                 },
                 {
                     "level": "2",
@@ -50,7 +61,11 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "3",
@@ -59,7 +74,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "4",
@@ -68,70 +86,87 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
-                },
-                {
-                    "level": "5",
-                    "limit": 25,
-                    "price": 90,
-                    "rating_lowest": 0,
-                    "rating_highest": 100,
-                    "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Englisch",
-            "reply_to" : "englisch@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "englisch@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
-                    "level": "A2 Elementary 1",
+                    "level": "A2: Elementary 1",
                     "limit": 22,
                     "price": 90,
                     "rating_lowest": 20,
                     "rating_highest": 49,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "A2 Elementary 2",
+                    "level": "A2: Elementary 2",
                     "limit": 22,
                     "price": 90,
                     "rating_lowest": 20,
                     "rating_highest": 49,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "B1 Engineering",
+                    "level": "B1: Engineering",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "B1 Intermediate 1",
+                    "level": "B1: Intermediate 1",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "B1 Intermediate 2",
+                    "level": "B1: Intermediate 2",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
+                },
+                {
+                    "level": "B1: Language Lab 1",
+                    "limit": 20,
+                    "price": 90,
+                    "rating_lowest": 50,
+                    "rating_highest": 64,
+                    "collision": [],
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "for Business Communication",
@@ -140,25 +175,21 @@
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "in Everyday Situations",
-                    "limit": 20,
+                    "limit": 22,
                     "price": 90,
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": [""]
-                },
-                {
-                    "level": "Grammar Review",
-                    "limit": 20,
-                    "price": 90,
-                    "rating_lowest": 50,
-                    "rating_highest": 64,
-                    "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Business Leadership B2",
@@ -167,7 +198,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Business Studies B2",
@@ -176,7 +209,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Discussion and Debate B2",
@@ -185,7 +220,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "B2: Engineering",
@@ -194,7 +231,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "B2: Science and Technology",
@@ -203,7 +242,10 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": ["a", "b", "c"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "B2: Science",
@@ -212,7 +254,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "B2: Upper Intermediate",
@@ -221,7 +265,13 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d", "e"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e"
+                    ]
                 },
                 {
                     "level": "for Work B2",
@@ -230,7 +280,11 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": ["a", "b", "c"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "Grammar in Context",
@@ -239,7 +293,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Intercultural Communication B2",
@@ -248,7 +304,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Presentation Skills B2",
@@ -257,7 +315,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Writing Skills B2",
@@ -266,7 +326,9 @@
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "for Architecture",
@@ -275,16 +337,21 @@
                     "rating_lowest": 65,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "TOEFL iBT Vorbereitung",
+                    "level": "TOEFL iBT Preparation",
                     "limit": 18,
                     "price": 90,
                     "rating_lowest": 65,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "Business Leadership C1",
@@ -293,7 +360,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Business Studies 1 C1",
@@ -302,7 +371,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Business Studies 2 C1",
@@ -311,7 +382,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Discussion & Debate C1",
@@ -320,7 +393,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "C1: Advanced",
@@ -329,7 +404,12 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d", "e"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                    ]
                 },
                 {
                     "level": "for Engineers C1",
@@ -338,7 +418,10 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "for Work C1",
@@ -347,7 +430,10 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "Intercultural Communication C1",
@@ -356,7 +442,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Issues in Science & Technology C1",
@@ -365,7 +453,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Presentation Skills C1",
@@ -374,7 +464,9 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Scientific Writing C1",
@@ -383,61 +475,84 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "C2: Proficiency",
+                    "level": "C2: Proficiency 1",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 90,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
+                },
+                {
+                    "level": "C2: Proficiency 2",
+                    "limit": 20,
+                    "price": 90,
+                    "rating_lowest": 90,
+                    "rating_highest": 100,
+                    "collision": [],
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Englisch Intensiv",
-            "reply_to" : "englisch@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-03-15T09:00:00.Z",
-            "signup_end_iso_utc": "2016-03-28T09:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-03-28T09:00:00.Z",
+            "reply_to": "englisch@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-09-14T05:00:00Z",
+            "signup_end_iso_utc": "2016-10-13T22:00:00Z",
+            "signup_auto_end_iso_utc": "2016-09-25T22:00:00Z",
             "courses": [
                 {
-                    "level": "B1 Intermediate 1 - Intensive",
+                    "level": "B1 Intermediate 2 - Intensive",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 50,
                     "rating_highest": 64,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "B2: Upper Intermediate - Intensive",
-                    "limit": 18,
-                    "price": 90,
-                    "rating_lowest": 65,
-                    "rating_highest": 79,
-                    "collision": [],
-                    "alternative": [""]
-                },
-                {
-                    "level": "Business Studies B2 - Intensive",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 65,
                     "rating_highest": 79,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "for Work B2/C1 - Intensive",
-                    "limit": 18,
+                    "level": "Presentation Skills B2/C1 - Intensive",
+                    "limit": 15,
                     "price": 90,
                     "rating_lowest": 65,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
+                },
+                {
+                    "level": "for Work C1 - Intensive",
+                    "limit": 20,
+                    "price": 90,
+                    "rating_lowest": 80,
+                    "rating_highest": 100,
+                    "collision": [],
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "C1: Advanced - Intensive",
@@ -446,25 +561,18 @@
                     "rating_lowest": 80,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
-                },
-                {
-                    "level": "Discussion and Debate C1 - Intensive",
-                    "limit": 18,
-                    "price": 90,
-                    "rating_lowest": 80,
-                    "rating_highest": 100,
-                    "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
-            "name": "Französisch",
-            "reply_to" : "franzoesisch@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "name": "Franz\u00f6sisch",
+            "reply_to": "franzoesisch@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -473,7 +581,14 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d", "e", "f"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e",
+                        "f"
+                    ]
                 },
                 {
                     "level": "2",
@@ -482,7 +597,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "3",
@@ -491,7 +609,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "4",
@@ -500,7 +621,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "5",
@@ -509,7 +632,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "6",
@@ -518,7 +643,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "7-8",
@@ -527,7 +654,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "Grammatik",
@@ -536,34 +666,43 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "Fit für Frankreich",
+                    "level": "Fit f\u00fcr Frankreich",
                     "limit": 20,
                     "price": 135,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "Französisch lesen, schreiben und sprechen",
+                    "level": "Franz\u00f6sisch lesen, schreiben und sprechen",
                     "limit": 20,
                     "price": 135,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "Französisch für alle Fälle",
-                    "limit": 20 ,
+                    "level": "Franz\u00f6sisch f\u00fcr alle F\u00e4lle",
+                    "limit": 20,
                     "price": 135,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Frankreichs Kunst und Kultur",
@@ -572,7 +711,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Aktuelle Themen",
@@ -581,16 +722,21 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "Französisch für Business und Marketing",
+                    "level": "Franz\u00f6sisch f\u00fcr Business und Marketing",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Diskussion und Textproduktion",
@@ -599,25 +745,33 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Italienisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
-                    "limit": 25,
+                    "limit": 23,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d", "e"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e"
+                    ]
                 },
                 {
                     "level": "2",
@@ -626,7 +780,11 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "3",
@@ -635,7 +793,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "4",
@@ -644,16 +804,18 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Japanisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -662,7 +824,12 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                    ]
                 },
                 {
                     "level": "2",
@@ -671,7 +838,11 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "3",
@@ -680,7 +851,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "4",
@@ -689,7 +863,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "5",
@@ -698,25 +874,29 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "Konversation",
+                    "level": "6",
                     "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Latein",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -725,7 +905,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "2",
@@ -734,43 +916,50 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
-            "name": "Niederländisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "name": "Niederl\u00e4ndisch",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
-                    "limit": 25,
+                    "limit": 23,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "2",
-                    "limit": 25,
+                    "limit": 23,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Polnisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -779,7 +968,10 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "2",
@@ -788,7 +980,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "3",
@@ -797,16 +991,18 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Portugiesisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -815,7 +1011,11 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "2",
@@ -824,7 +1024,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "3",
@@ -833,7 +1035,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "4",
@@ -842,70 +1046,75 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
-                },
-                {
-                    "level": "5",
-                    "limit": 25,
-                    "price": 90,
-                    "rating_lowest": 0,
-                    "rating_highest": 100,
-                    "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Russisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
-                    "limit": 23,
+                    "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                    ]
                 },
                 {
                     "level": "2",
-                    "limit": 23,
+                    "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "3",
-                    "limit": 23,
+                    "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "4",
-                    "limit": 23,
+                    "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Schwedisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -914,7 +1123,12 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b", "c", "d"]
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                    ]
                 },
                 {
                     "level": "2",
@@ -923,34 +1137,41 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
                     "level": "3",
-                    "limit": 23,
+                    "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "4",
-                    "limit": 23,
+                    "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
             "name": "Spanisch",
-            "reply_to" : "spanisch@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "reply_to": "spanisch@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
@@ -958,8 +1179,27 @@
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["rápido 1"],
-                    "alternative": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"]
+                    "collision": [
+                        "r\u00e1pido 1"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e",
+                        "f",
+                        "g",
+                        "h",
+                        "i",
+                        "j",
+                        "k",
+                        "l",
+                        "m",
+                        "n",
+                        "o",
+                        "p"
+                    ]
                 },
                 {
                     "level": "2",
@@ -967,8 +1207,19 @@
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["rápido 1"],
-                    "alternative": ["a", "b", "c", "d", "e", "f", "g", "h"]
+                    "collision": [
+                        "r\u00e1pido 1"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e",
+                        "f",
+                        "g",
+                        "h"
+                    ]
                 },
                 {
                     "level": "3",
@@ -976,8 +1227,16 @@
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["rápido 2"],
-                    "alternative": ["a", "b", "c", "d", "e"]
+                    "collision": [
+                        "r\u00e1pido 2"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "e"
+                    ]
                 },
                 {
                     "level": "4",
@@ -985,8 +1244,14 @@
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["rápido 2"],
-                    "alternative": ["a", "b", "c"]
+                    "collision": [
+                        "r\u00e1pido 2"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
                 },
                 {
                     "level": "5",
@@ -995,34 +1260,51 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": ["a", "b"]
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "rápido 1",
+                    "level": "r\u00e1pido 1",
                     "limit": 22,
                     "price": 180,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["1", "2"],
-                    "alternative": ["a", "b"]
+                    "collision": [
+                        "1",
+                        "2"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "rápido 2",
+                    "level": "r\u00e1pido 2",
                     "limit": 22,
                     "price": 180,
                     "rating_lowest": 0,
                     "rating_highest": 100,
-                    "collision": ["3", "4"],
-                    "alternative": ["a", "b"]
+                    "collision": [
+                        "3",
+                        "4"
+                    ],
+                    "alternative": [
+                        "a",
+                        "b"
+                    ]
                 },
                 {
-                    "level": "Mejora tu oído!",
+                    "level": "Mejora tu o\u00eddo!",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Mejora tu habla!",
@@ -1031,25 +1313,31 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "Profesional",
+                    "level": "Spanisch universitario y laboral",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
-                    "level": "Gramática",
+                    "level": "Gram\u00e1tica",
                     "limit": 20,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Auslandsvorbereitungskurs",
@@ -1058,7 +1346,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Temas de actualidad",
@@ -1067,7 +1357,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "DELE-Vorbereitungskurs",
@@ -1076,7 +1368,9 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "Intercultural",
@@ -1085,25 +1379,29 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         },
         {
-            "name": "Türkisch",
-            "reply_to" : "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-04-12T05:00:00.Z",
-            "signup_end_iso_utc": "2016-06-12T05:00:00.Z",
-            "signup_auto_end_iso_utc": "2016-05-12T05:00:00.Z",
+            "name": "T\u00fcrkisch",
+            "reply_to": "info@spz.kit.edu",
+            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
+            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",
-                    "limit": 22,
+                    "limit": 25,
                     "price": 90,
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 },
                 {
                     "level": "2",
@@ -1112,10 +1410,11 @@
                     "rating_lowest": 0,
                     "rating_highest": 100,
                     "collision": [],
-                    "alternative": [""]
+                    "alternative": [
+                        ""
+                    ]
                 }
             ]
         }
     ]
 }
-
