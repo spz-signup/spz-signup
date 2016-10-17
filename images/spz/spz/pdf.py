@@ -202,9 +202,9 @@ def list_presence(pdflist, course):
         pdflist.cell(column[-1], height, '', 1)
     pdflist.ln()
     for applicant in active_no_debt:
-        content = [idx, applicant.last_name, applicant.first_name, maybe(applicant.tag), applicant.mail, ""]
+        content = [idx, applicant.last_name, applicant.first_name, maybe(applicant.tag), applicant.mail, '']
         for c, co in zip(column, content):
-            pdflist.cell(c, height, co, 1)
+            pdflist.cell(c, height, str(co), 1)
         for i in range(13):
             pdflist.cell(column[-1], height, '', 1)
         pdflist.ln()
