@@ -78,7 +78,7 @@ def index():
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
-            '(Hinweis: Der Datenabgleich mit Ilias kann bis zu 30 Minuten in Anspruch nehmen)',  # 2*15m, just in case
+            '(Hinweis: Der Datenabgleich mit Ilias kann bis einem Werktag in Anspruch nehmen)',  # 2*15m, just in case
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
