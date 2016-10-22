@@ -4,11 +4,12 @@ SPZ Signup
 :Authors: - Roman Zukowsky <roman@zukowsky.de>
           - Daniel Hofmann <daniel+spz@trvx.org>
           - Marco Neumann <marco@crepererum.net>
-:Organization: Sprachzentrum KIT Karlsruhe
+	  - Felix Rittler <felix.rittler@web.de>
+:Organization: Sprachenzentrum KIT Karlsruhe
 :Source: https://github.com/spz-signup/spz-signup
 
 
-Sign up management for the language courses at the KIT Sprachzentrum.
+Sign up management for the language courses at the KIT Sprachenzentrum.
 
 
 
