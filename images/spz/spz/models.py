@@ -260,6 +260,7 @@ class Applicant(db.Model):
         return len(running) >= app.config['MAX_ATTENDANCES']
 
 
+
 @total_ordering
 class Course(db.Model):
     """Represents a course that has a :py:class:`Language` and gets attended by multiple :py:class:`Applicant`.
