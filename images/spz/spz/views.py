@@ -145,14 +145,14 @@ def internal():
 @login_required
 @templated('internal/registrations.html')
 def registrations():
-    form = forms.TagVerifyForm()
+    form = forms.TagForm()
     return dict(form=form)
 
 
 @login_required
 @templated('internal/registrations.html')
 def registrations_import():
-    form = forms.TagVerifyForm()
+    form = forms.TagForm()
     if request.method == 'POST':
 
         fp = request.files['file_name']
@@ -197,7 +197,7 @@ def registrations_import():
 @login_required
 @templated('internal/registrations.html')
 def registrations_verify():
-    form = forms.TagVerifyForm()
+    form = forms.TagForm()
 
     if form.validate_on_submit():
         tag = form.get_tag()
@@ -208,7 +208,8 @@ def registrations_verify():
 @login_required
 @templated('internal/approvals.html')
 def approvals():
-    return None
+    form = forms.TagForm()
+    return dict(form=form)
 
 
 @login_required
@@ -272,6 +273,15 @@ def approvals_import():
     flash('Datei konnte nicht gelesen werden', 'negative')
     return None
 
+@login_required
+@templated('internal/approvals.html')
+def approvals_check():
+    form = forms.TagForm()
+
+    if form.validate_on_submit():
+        tag = form.get_tag()
+        approvals = models.Approval.get_for_tag(tag)
+    return dict(form=form,tag=tag, approvals=approvals)
 
 @login_required
 @templated('internal/notifications.html')

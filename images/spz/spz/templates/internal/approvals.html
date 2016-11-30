@@ -1,6 +1,6 @@
 {% extends 'internal/internal.html' %}
 
-{% from 'formhelpers.html' import csrf_field %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit %}
 
 {% block caption %}
 Englischtest Ergebnisse
@@ -32,5 +32,34 @@ Englischtest Ergebnisse
         </div>
         <button type="submit" class="ui fluid positive button">Einlesen</button>
     </form>
+</div>
+
+<div class="row">
+    <h3 class="ui dividing header">Englischtest-Ergebnisse</h3>
+    <form class="ui form" method="post" action="{{ url_for('approvals_check') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        {{ render_input(form.tag) }}
+        {{ render_submit(submit='Anzeigen') }}
+    </form>
+</div>
+<div class="row">
+    <table class="ui selectable sortable compact small striped table">
+        <thead>
+            <tr>
+                <th>Level</th>
+                <th>Per Web-Oberfläche hinzugefügt</th>
+                <th>Priorität</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for approval in approvals %}
+            <tr>
+                <td>{{ approval.percent }}%</td>
+                <td>{% if approval.sticky %}Ja {% else %}Nein {% endif %} </td>
+                <td>{% if approval.priority %}Ja {% else %}Nein {% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock internal_body %}

@@ -26,6 +26,7 @@ __all__ = [
     'SignupForm',
     'StatusForm',
     'UniqueForm',
+    'TagForm',
 ]
 
 
@@ -512,8 +513,8 @@ class LoginForm(Form):
     user = TextField('User', [validators.Required('User muss angegeben werden')])
     password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])
 
-class TagVerifyForm(Form):
-    """Represents the form to verify a tag.
+class TagForm(Form):
+    """Represents the form for the input of a tag.
     """
 
     tag = TextField(
@@ -522,3 +523,4 @@ class TagVerifyForm(Form):
 
     def get_tag(self):
         return self.tag.data
+
