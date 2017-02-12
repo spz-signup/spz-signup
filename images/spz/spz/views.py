@@ -224,7 +224,8 @@ def approvals_import():
             if mime == 'text/plain':
                 try:
                     # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
-                    # and duplicates
+                    # and duplicates and header lines and all occurrences of quotation marks, since ilias
+                    # formats his csv files with them (whyever)
                     stripped_lines = (
                         line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
                         for line in fp.readlines()
@@ -232,10 +233,15 @@ def approvals_import():
                     filtered_lines = (
                         line
                         for line in stripped_lines
-                        if line
+                        if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"')
                     )
-                    filecontent = csv.reader(filtered_lines, delimiter=';')  # XXX: hardcoded?
 
+                    without_marks = (
+                        line.replace('"', '')
+                        for line in filtered_lines
+                    )
+
+                    filecontent = csv.reader(without_marks, delimiter=';')  # XXX: hardcoded?
                     priority = bool(request.form.getlist("priority"))
 
                     num_deleted = 0
@@ -246,17 +252,40 @@ def approvals_import():
                             models.Approval.priority == priority
                         )).delete()  # NOQA
 
+                    # set columns indices depending on file type (ILIAS or selfmade)
+                    ilias_export = bool(request.form.getlist("ilias_export"))
+                    if ilias_export:
+                        tagCol = 2
+                    else:
+                        tagCol = 0
+
                     # create list of sticky Approvals, so that background jobs don't remove them
-                    approvals = [
-                        models.Approval(
-                            tag=line[0],
-                            percent=int(line[1]),
-                            sticky=True,
-                            priority=priority
+                    approvals = []
+                    for line in filecontent:
+
+                        # set rating depending on file type (ILIAS or selfmade)
+                        if ilias_export:
+                            rating = max(
+                                0,
+                                min(
+                                    int(100 * int(line[3]) / int(line[4])),
+                                    100
+                                )
+                            )
+                        else:
+                            rating = line[1]
+
+                        approvals.append(
+
+                            models.Approval(
+                                tag=line[tagCol],
+                                percent=rating,
+                                sticky=True,
+                                priority=priority
+                            )
                         )
-                        for line
-                        in filecontent
-                    ]
+
+                    #add approvals
                     db.session.add_all(approvals)
                     db.session.commit()
                     flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
@@ -268,10 +297,11 @@ def approvals_import():
                 return redirect(url_for('approvals'))
 
             flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
-            return None
+            return redirect(url_for('approvals'))
 
     flash('Datei konnte nicht gelesen werden', 'negative')
-    return None
+    return redirect(url_for('approvals'))
+
 
 @login_required
 @templated('internal/approvals.html')

@@ -13,7 +13,9 @@ Englischtest Ergebnisse
     <form class="ui form" method="post" action="{{ url_for('approvals_import') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="ui message">
-            <p>Zeilenweiser Aufbau, bitte ohne Header: ID;Prozent &ndash; z.b. 123;99</p>
+            <h3>Aufbau:</h3>
+            <p>Entweder zeilenweiser Aufbau, bitte ohne Header: ID;Prozent, z.b. 123;99</p>
+            <p>Oder die aus dem ILIAS exportierte Datei verwenden und entsprechenden Haken setzen.</p>
         </div>
         <div class="field">
             <input type="file" name="file_name">
@@ -28,6 +30,12 @@ Englischtest Ergebnisse
             <div class="ui toggle checkbox">
                 <input type="checkbox" name="delete_old">
                 <label for="delete_old">Bisherige Einträge (priorisiert oder normal) löschen</label>
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="ilias_export">
+                <label for="ilias_export">Datei durch ILIAS exportiert</label>
             </div>
         </div>
         <button type="submit" class="ui fluid positive button">Einlesen</button>
