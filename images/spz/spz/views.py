@@ -224,24 +224,21 @@ def approvals_import():
             if mime == 'text/plain':
                 try:
                     # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
-                    # and duplicates and header lines and all occurrences of quotation marks, since ilias
-                    # formats his csv files with them (whyever)
+                    # and duplicates and header lines
+
                     stripped_lines = (
                         line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
                         for line in fp.readlines()
                     )
+
                     filtered_lines = (
                         line
                         for line in stripped_lines
                         if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"')
                     )
 
-                    without_marks = (
-                        line.replace('"', '')
-                        for line in filtered_lines
-                    )
 
-                    filecontent = csv.reader(without_marks, delimiter=';')  # XXX: hardcoded?
+                    filecontent = csv.reader(filtered_lines, delimiter=';')  # XXX: hardcoded?
                     priority = bool(request.form.getlist("priority"))
 
                     num_deleted = 0
@@ -254,17 +251,17 @@ def approvals_import():
 
                     # set columns indices depending on file type (ILIAS or selfmade)
                     ilias_export = bool(request.form.getlist("ilias_export"))
-                    if ilias_export:
-                        tagCol = 2
-                    else:
-                        tagCol = 0
 
                     # create list of sticky Approvals, so that background jobs don't remove them
                     approvals = []
                     for line in filecontent:
 
-                        # set rating depending on file type (ILIAS or selfmade)
+                        # set rating and tag depending on file type (ILIAS or selfmade)
                         if ilias_export:
+                            #test if all params are existent, if not skip entry
+                            if line[1] == '' or line[3] == '' or line[4] == '':
+                                continue
+                            #calc params
                             rating = max(
                                 0,
                                 min(
@@ -272,13 +269,21 @@ def approvals_import():
                                     100
                                 )
                             )
+
+                            # set tag depending if an immatriculation number is existing. If not set tag to account name
+                            if not line[2] == '':
+                                tag = line[2]
+                            else:
+                                tag = line[1]
+
                         else:
-                            rating = line[1]
+                            rating = int(line[1])
+                            tag = line[0]
 
                         approvals.append(
 
                             models.Approval(
-                                tag=line[tagCol],
+                                tag=tag,
                                 percent=rating,
                                 sticky=True,
                                 priority=priority
@@ -294,7 +299,7 @@ def approvals_import():
                     db.session.rollback()
                     flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
 
-                return redirect(url_for('approvals'))
+                return dict(form=forms.TagForm())
 
             flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
             return redirect(url_for('approvals'))
