@@ -234,7 +234,7 @@ def approvals_import():
                     filtered_lines = (
                         line
                         for line in stripped_lines
-                        if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"')
+                        if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"') and not line.startswith('"Name";"Login";"Matriculation number"')
                     )
 
 
