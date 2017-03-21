@@ -102,3 +102,4 @@ In case you have to do a hotfix or you want to update to the latest upstream ima
 - `docker exec -it NAME_OF_THE_UWSGI_CONTAINER ipython`
 - `import spz.models`
 - do your changes
+- If you changed something: Don't forget to import 'db' from 'spz' and commit your changes
