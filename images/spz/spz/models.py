@@ -6,7 +6,7 @@
 """
 
 from binascii import hexlify
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import total_ordering
 import random
 import string
@@ -418,7 +418,7 @@ class Language(db.Model):
         return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
 
     def is_upcoming(self, time):
-        return self.signup_end >= time
+        return self.signup_end >= time and self.signup_begin - time < timedelta(days=2)
 
     def is_in_manual_mode(self, time):
         return (time < self.signup_manual_end) or (time > self.signup_auto_end)
