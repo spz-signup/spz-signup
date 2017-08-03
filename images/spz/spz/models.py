@@ -790,13 +790,13 @@ class LogEntry(db.Model):
     @staticmethod
     def get_visible_log(user, limit=None):
         """Returns all log entries relevant for the given user."""
-        query = LogEntry.query
-        if not user.superuser:
-            query = query.filter(or_(
-                LogEntry.language == None,  # NOQA
-                LogEntry.language in user.languages
-            ))
-        query = query.order_by(LogEntry.timestamp.desc())
-        if limit is not None:
-            query = query.limit(limit)
-        return query.all()
+        entries = LogEntry.query.order_by(LogEntry.timestamp.desc()).all();
+
+        if not user.superuser and limit is not None:
+            entries = [x for x in entries if x.language == None or x.language in user.languages][:limit]
+        elif not user.superuser:
+            entries = [x for x in entries if x.language == None or x.language in user.languages]
+        elif limit is not None:
+            entries = entries[:limit]
+
+        return entries
