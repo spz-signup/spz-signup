@@ -13,7 +13,7 @@ import string
 
 from argon2 import argon2_hash
 
-from sqlalchemy import and_, between, func, or_
+from sqlalchemy import and_, between, func
 from sqlalchemy.dialects import postgresql
 
 from spz import app, db, token
@@ -72,6 +72,7 @@ def verify_tag(tag):
     """Verifies, if a tag is already in the database.
     """
     return Registration.exists(tag)
+
 
 @total_ordering
 class Attendance(db.Model):
@@ -790,12 +791,12 @@ class LogEntry(db.Model):
     @staticmethod
     def get_visible_log(user, limit=None):
         """Returns all log entries relevant for the given user."""
-        entries = LogEntry.query.order_by(LogEntry.timestamp.desc()).all();
+        entries = LogEntry.query.order_by(LogEntry.timestamp.desc()).all()
 
         if not user.superuser and limit is not None:
-            entries = [x for x in entries if x.language == None or x.language in user.languages][:limit]
+            entries = [x for x in entries if x.language is None or x.language in user.languages][:limit]
         elif not user.superuser:
-            entries = [x for x in entries if x.language == None or x.language in user.languages]
+            entries = [x for x in entries if x.language is None or x.language in user.languages]
         elif limit is not None:
             entries = entries[:limit]
 

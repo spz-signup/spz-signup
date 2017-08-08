@@ -78,7 +78,8 @@ def index():
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
-            '(Hinweis: Der Datenabgleich mit Ilias erfolgt regelmäßig, jedoch nicht automatisch sondern manuell.)',  # 2*15m, just in case
+            '(Hinweis: Der Datenabgleich mit Ilias erfolgt regelmäßig, '
+            'jedoch nicht automatisch sondern manuell.)',  # 2*15m, just in case
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
@@ -194,6 +195,7 @@ def registrations_import():
     flash('Datei konnte nicht gelesen werden', 'negative')
     return dict(form=form)
 
+
 @login_required
 @templated('internal/registrations.html')
 def registrations_verify():
@@ -204,6 +206,7 @@ def registrations_verify():
         tag_exists = models.verify_tag(tag)
 
     return dict(form=form, tag_exists=tag_exists, tag=tag)
+
 
 @login_required
 @templated('internal/approvals.html')
@@ -216,30 +219,13 @@ def approvals():
 @templated('internal/approvals.html')
 def approvals_import():
     if request.method == 'POST':
-
         fp = request.files['file_name']
-
         if fp:
             mime = mime_from_filepointer(fp)
             if mime == 'text/plain':
                 try:
-                    # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
-                    # and duplicates and header lines
-
-                    stripped_lines = (
-                        line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
-                        for line in fp.readlines()
-                    )
-
-                    filtered_lines = (
-                        line
-                        for line in stripped_lines
-                        if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"') and not line.startswith('"Name";"Login";"Matriculation number"')
-                    )
-
-
-                    filecontent = csv.reader(filtered_lines, delimiter=';')  # XXX: hardcoded?
                     priority = bool(request.form.getlist("priority"))
+                    approvals = extract_approvals(fp, priority)
 
                     num_deleted = 0
                     if request.form.getlist("delete_old"):
@@ -248,49 +234,7 @@ def approvals_import():
                             models.Approval.sticky == True,
                             models.Approval.priority == priority
                         )).delete()  # NOQA
-
-                    # set columns indices depending on file type (ILIAS or selfmade)
-                    ilias_export = bool(request.form.getlist("ilias_export"))
-
-                    # create list of sticky Approvals, so that background jobs don't remove them
-                    approvals = []
-                    for line in filecontent:
-
-                        # set rating and tag depending on file type (ILIAS or selfmade)
-                        if ilias_export:
-                            #test if all params are existent, if not skip entry
-                            if line[1] == '' or line[3] == '' or line[4] == '':
-                                continue
-                            #calc params
-                            rating = max(
-                                0,
-                                min(
-                                    int(100 * int(line[3]) / int(line[4])),
-                                    100
-                                )
-                            )
-
-                            # set tag depending if an immatriculation number is existing. If not set tag to account name
-                            if not line[2] == '':
-                                tag = line[2]
-                            else:
-                                tag = line[1]
-
-                        else:
-                            rating = int(line[1])
-                            tag = line[0]
-
-                        approvals.append(
-
-                            models.Approval(
-                                tag=tag,
-                                percent=rating,
-                                sticky=True,
-                                priority=priority
-                            )
-                        )
-
-                    #add approvals
+                    # add approvals
                     db.session.add_all(approvals)
                     db.session.commit()
                     flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
@@ -298,7 +242,6 @@ def approvals_import():
                 except Exception as e:  # csv, index or db could go wrong here..
                     db.session.rollback()
                     flash('Konnte Einträge nicht speichern, bitte neu einlesen: {0}'.format(e), 'negative')
-
                 return dict(form=forms.TagForm())
 
             flash('Falscher Dateitype {0}, bitte nur Text oder CSV Dateien verwenden'.format(mime), 'danger')
@@ -306,6 +249,63 @@ def approvals_import():
 
     flash('Datei konnte nicht gelesen werden', 'negative')
     return redirect(url_for('approvals'))
+
+
+def extract_approvals(fp, priority):
+    """Extracts approvals of a file
+
+       :param fp: filepointe to the file
+       :param priority: if the approval entries are priority entries
+    """
+    # strip all known endings ('\r', '\n', '\r\n') and remove empty lines
+    # and duplicates and header lines
+    stripped_lines = (
+        line.decode('utf-8', 'ignore').rstrip('\r').rstrip('\n').rstrip('\r').strip()
+        for line in fp.readlines()
+    )
+    filtered_lines = (
+        line
+        for line in stripped_lines
+        if line and not line.startswith('"Name";"Benutzername";"Matrikelnummer"') and
+        not line.startswith('"Name";"Login";"Matriculation number"')
+    )
+    filecontent = csv.reader(filtered_lines, delimiter=';')  # XXX: hardcoded?
+
+    # set columns indices depending on file type (ILIAS or selfmade)
+    ilias_export = bool(request.form.getlist("ilias_export"))
+    # create list of sticky Approvals, so that background jobs don't remove them
+    approvals = []
+    for line in filecontent:
+        # set rating and tag depending on file type (ILIAS or selfmade)
+        if ilias_export:
+            # test if all params are existent, if not skip entry
+            if line[1] == '' or line[3] == '' or line[4] == '':
+                continue
+            # calc params
+            rating = max(
+                0,
+                min(
+                    int(100 * int(line[3]) / int(line[4])),
+                    100
+                )
+            )
+            # set tag depending if an immatriculation number is existing. If not set tag to account name
+            if not line[2] == '':
+                tag = line[2]
+            else:
+                tag = line[1]
+        else:
+            rating = int(line[1])
+            tag = line[0]
+        approvals.append(
+            models.Approval(
+                tag=tag,
+                percent=rating,
+                sticky=True,
+                priority=priority
+            )
+        )
+    return approvals
 
 
 @login_required
@@ -316,7 +316,8 @@ def approvals_check():
     if form.validate_on_submit():
         tag = form.get_tag()
         approvals = models.Approval.get_for_tag(tag)
-    return dict(form=form,tag=tag, approvals=approvals)
+    return dict(form=form, tag=tag, approvals=approvals)
+
 
 @login_required
 @templated('internal/notifications.html')
