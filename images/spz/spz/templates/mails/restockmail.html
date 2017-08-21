@@ -1,18 +1,58 @@
 {% extends 'mails/basemail.html' %}
 
 {% block message %}
-Im Zuge des Nachrückverfahrens haben Sie einen Platz im oben genannten
+{% if has_to_pay %}
+Im Zuge des Nachrückverfahrens haben Sie zahlungspflichtig einen Platz im oben genannten
 Sprachkurs erhalten.
 
-Wenn Sie am KIT immatrikuliert sind und in diesem Semester an maximal einem
-Sprachkurs (inklusive diesem) teilnehmen, dürfen Sie einfach zum nächsten
-Kurstermin erscheinen.
+Bitte bezahlen Sie die Kursgebühr an einem der auf der Homepage genannten
+Barzahlungstermine (Keine Karten!) oder überweisen Sie innerhalb der nächsten
+4 Tage den Betrag ({{ course.price }} Euro) unter Angabe des folgenden Verwendungszwecks:
 
-Andernfalls zahlen Sie bitte den Kurs zu den auf der Homepage genannten
-Zeiten oder vereinbaren einen Sondertermin mit uns.
+XD02003911901 {{ applicant.last_name ~ ', ' ~ applicant.first_name ~ ', ' ~ 'A' ~ applicant.id ~ 'C' ~ course.id ~ ', ' ~ course.full_name() }}
 
-Falls Sie am Kurs NICHT teilnehmen können, teilen Sie uns dies bitte schnellst
-möglich mit, damit andere Personen auf der Warteliste eine Chance erhalten.
+auf folgendes Konto des KIT:
+
+Deutsche Bundesbank Filiale Karlsruhe
+IBAN: DE 5766 0000 0000 6600 1508
+BIC: MARK DE F1660
+
+Falls Sie nur aufgrund einer Verzögerung der Rückmeldung als
+zahlungspflichtig eingestuft wurden, klären Sie bitte Ihren
+Status im betreffenden Büro der jeweiligen Sprache.
+
+Falls Sie doch nicht am Kurs teilnehmen möchten, informieren
+Sie bitte den jeweiligen Fachbereich über unten stehende Mailadresse.
+
+{% else %}
+
+Sie sind über das Nachrückverfahren gebührenfrei im Kurs und dürfen zum
+nächsten Kurstermin einfach erscheinen.
+
+
+Diese Gratiskurse werden aus Qualitätssicherungsmitteln finanziert und wir
+sind dem zuständigen Senatsausschuss sehr dankbar, dass er das SpZ und damit
+alle KIT-Studierenden seit Jahren bei Vermittlung und Erwerb der wichtigen
+Schlüsselqualifikation Fremdsprache massiv unterstützt.
+
+Nun unsere Bitte an Sie:
+
+Helfen Sie uns, diese großzügige Regelung aufrecht zu erhalten, indem Sie
+uns schnellstmöglich informieren, falls Sie NICHT mehr am Kurs teilnehmen können,
+damit andere Personen auf der Warteliste eine Chance erhalten.
+
+Wir möchten auch weiterhin verantwortungsvoll mit den uns anvertrauten
+Mitteln umgehen.
+
+Vielen Dank für Ihre Unterstützung. Unser Team steht Ihnen in gewohnter
+Weise für Fragen und Anregungen gerne zur Verfügung.
+
+Gratiskursteilnehmer, die in ersten Kurswoche nach Erhalt dieser Mail unentschuldigt fehlen,
+werden durch Nachrücker ersetzt.
+
+Falls Sie am Kurs NICHT teilnehmen können, teilen Sie dies bitte schnellst
+möglich der zuständigen Fachleitung über die unten stehende Kontaktadresse mit.
 
 Bitte verwenden Sie die für Ihren Sprachkurs zutreffende E-Mail-Adresse.
+{% endif %}
 {% endblock message %}
