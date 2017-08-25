@@ -50,8 +50,14 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
         {{ render_option(form.remove_from, help='Aus folgendem Kurs entfernen') }}
         {{ render_option(form.add_to, help='Zu folgendem Kurs hinzufügen') }}
         {{ render_boolean(form.send_mail) }}
-
-        <button id="confirm" type="submit" class="fluid ui positive button" data-confirm="Änderungen bestätigen.">Änderungen speichern</button>
+        <h3 class="ui dividing header"></h3>
+        <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="changes_confirmed" required=true>
+                <label for="changes_confirmed">Änderungen überprüft und alles ok?</label>
+            </div>
+        </div>
+        <button class="fluid ui positive button">Änderungen speichern</button>
     </form>
 </div>
 {% endblock internal_body %}

@@ -101,10 +101,10 @@
 </div>
 {% endmacro %}
 
-{% macro render_submit(submit='Absenden', confirm=None) %}
+{% macro render_submit(submit='Absenden') %}
 <div class="ui section divider"></div>
 <div class="ui fluid buttons">
-    <button type="submit" class="ui positive button confirm" {% if confirm %}data-confirm="{{ confirm }}"{% endif %}>{{ submit }}</button>
+    <button type="submit" class="ui positive button confirm">{{ submit }}</button>
     <div class="or" data-text="/"></div>
     <button type="reset" class="ui button">Zurücksetzen</button>
 </div>

@@ -23,7 +23,15 @@ Mail Zentrale
         {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
         {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
         {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
-        {{ render_submit(submit='Abschicken', confirm='Mailversand bestätigen.') }}
+
+        <h3 class="ui dividing header"></h3>
+        <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="changes_confirmed" required=true>
+                <label for="changes_confirmed">Mail überprüft und alles ok?</label>
+            </div>
+        </div>
+        {{ render_submit(submit='Abschicken')}}
     </form>
 </div>
 {% endblock internal_body %}
