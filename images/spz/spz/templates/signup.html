@@ -35,6 +35,10 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
                 </div>
                 {{ render_radio(form.graduation, required=False, icon='file text outline') }}
             </div>
+            <div class="ui message">
+                Alle Teilnehmer erhalten zwei Auto-E-Mails: Eine Bestätigungsmail und eine mit der Info über den Ausgang der Verlosung. Sollten Sie diese Mails 48h nach Verlosung noch nicht erhalten haben,
+                melden Sie sich bitte bei Ihrem Fachleiter.
+            </div>
             {{ render_submit(submit='Absenden') }}
         </form>
 </div>
