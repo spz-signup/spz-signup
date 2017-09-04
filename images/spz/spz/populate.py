@@ -122,12 +122,11 @@ def populate_rnd(time):
     # Interval filtering in Python instead of SQL because it's not portable (across SQLite, Postgres, ..)
     # implementable in standard SQL
     # See: https://groups.google.com/forum/#!msg/sqlalchemy/AneqcriykeI/j4sayzZP1qQJ
-    w_open = app.config['RANDOM_WINDOW_OPEN_FOR']
 
     weights = []
 
     def attendance_filter(att):
-        return (att.course.language.signup_begin) < att.registered < (att.course.language.signup_begin + w_open)
+        return (att.course.language.signup_begin) < att.registered < (att.course.language.signup_rnd_window_end)
 
     def idx_prepare(to_assign):
         # (attendance, weight) tuples from query would be possible, too;

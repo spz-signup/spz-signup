@@ -19,6 +19,10 @@
                             "type": "string",
                             "format": "date-time"
                         },
+                        "signup_random_window_end_iso_utc": {
+                            "type": "string",
+                            "format": "data-time"
+                        },
                         "signup_end_iso_utc": {
                             "type": "string",
                             "format": "date-time"

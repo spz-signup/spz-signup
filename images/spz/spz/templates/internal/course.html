@@ -54,7 +54,7 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
 </a>
                 </td>
                 <td>{{ attendance.applicant.origin.name }}</td>
-                <td>{% if attendance.registered < (attendance.course.language.signup_begin + config.RANDOM_WINDOW_OPEN_FOR) %}Zufall{% else %}First-Come-First-Served{% endif %}
+                <td>{% if attendance.registered < attendance.course.language.signup_rnd_window_end %}Zufall{% else %}First-Come-First-Served{% endif %}
                 </td>
             </tr>
             {% endfor %}
