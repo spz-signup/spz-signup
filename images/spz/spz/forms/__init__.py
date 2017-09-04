@@ -61,6 +61,12 @@ class SignupForm(Form):
             validators.EmailPlusValidator()
         ]
     )
+
+    confirm_mail = TextField(
+        'E-Mail bestätigen',
+        [validators.EqualTo('mail', message='E-Mailadressen müssen übereinstimmen.')]
+    )
+
     origin = SelectField(
         'Bewerber&shy;kreis',
         [validators.Required('Herkunft muss angegeben werden')],

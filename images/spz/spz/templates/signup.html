@@ -21,6 +21,7 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
                 {{ render_input(form.phone, placeholder='0 1521 1234 678', icon='mobile') }}
                 {# mail needs an help-block because we write the suggestion in it #}
                 {{ render_input(form.mail, placeholder='mika.mueller@beispiel.de', required_extras='data-type="email" data-trigger="change"', help=' ', icon='at') }}
+                {{ render_input(form.confirm_mail, placeholder='mika.mueller@beispiel.de', required_extras='data-type="email" data-trigger="change"', help=' ', icon='at') }}
             </div>
             <div class="grouped fields">
                 {{ render_option(form.origin, icon='leaf') }}
