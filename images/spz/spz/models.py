@@ -170,6 +170,8 @@ class Applicant(db.Model):
     # See {add,remove}_course_attendance member functions below
     attendances = db.relationship("Attendance", backref="applicant", cascade='all, delete-orphan', lazy="joined")
 
+    signoff_id = db.Column(db.String(120))
+
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
 
     def __init__(self, mail, tag, first_name, last_name, phone, degree, semester, origin):
@@ -182,6 +184,11 @@ class Applicant(db.Model):
         self.semester = semester
         self.origin = origin
         self.discounted = False
+        rng = random.SystemRandom()
+        self.signoff_id = ''.join(
+            rng.choice(string.ascii_letters + string.digits)
+            for _ in range(0, 16)
+        )
 
     def __repr__(self):
         return '<Applicant %r %r>' % (self.mail, self.tag)
@@ -259,6 +266,9 @@ class Applicant(db.Model):
         # at least do not count in courses that are already over..
         running = [att for att in self.attendances if att.course.language.signup_end >= now]
         return len(running) >= app.config['MAX_ATTENDANCES']
+
+    def matches_signoff_id(self, signoff_id):
+        return signoff_id == self.signoff_id
 
 
 @total_ordering
@@ -401,12 +411,19 @@ class Language(db.Model):
         return self.signup_rnd_end + app.config['MANUAL_PERIOD']
 
     @property
+    def self_signoff_end(self):
+        return self.signup_manual_end + app.config['SELF_SIGNOFF_PERIOD']
+
+    @property
     def signup_fcfs_begin(self):
         return self.signup_rnd_end + app.config['RANDOM_WINDOW_CLOSED_FOR']
 
     @property
     def signup_fcfs_end(self):
         return self.signup_end
+
+    def is_open_for_self_signoff(self, time):
+        return time < self.self_signoff_end
 
     def is_open_for_signup_rnd(self, time):
         return self.signup_rnd_begin < time < self.signup_rnd_end < self.signup_end

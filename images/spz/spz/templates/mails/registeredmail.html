@@ -20,8 +20,9 @@ Falls Sie nur aufgrund einer Verzögerung der Rückmeldung als
 zahlungspflichtig eingestuft wurden, klären Sie bitte Ihren
 Status im betreffenden Büro der jeweiligen Sprache.
 
-Falls Sie doch nicht am Kurs teilnehmen möchten, informieren
-Sie bitte den jeweiligen Fachbereich.
+Falls Sie doch nicht am Kurs teilnehmen möchten, können Sie sich bis zum {{ signoff_window.strftime("%d.%m.%Y um %H:%M:%S Uhr") }} unter www.anmeldung.spz.kit.edu/signoff unter Angabe Ihrer Abmelde-ID abmelden.
+Abmelde-ID: {{ applicant.signoff_id }}
+Nach Verstreichen dieser Frist melden Sie sich bitte mit dieser E-Mailadresse bei Ihrem Fachleiter ab.
 
 
 {% else %}
@@ -51,7 +52,9 @@ Weise für Fragen und Anregungen gerne zur Verfügung.
 Gratiskursteilnehmer, die in der ersten Kurswoche unentschuldigt fehlen,
 werden durch Nachrücker ersetzt.
 
-Falls Sie nicht mehr am Kurs teilnehmen können, melden Sie sich bitte bei
-der jeweiligen Fachleitung über die unten stehende Kontaktadresse ab.
+Falls Sie nicht mehr am Kurs teilnehmen können, können Sie sich bis zum {{ signoff_window.strftime("%d.%m.%Y um %H:%M:%S Uhr") }} unter www.anmeldung.spz.kit.edu/signoff unter Angabe Ihrer Abmelde-ID abmelden.
+Abmelde-ID: {{ applicant.signoff_id }}
+
+Nach Verstreichen dieser Frist melden Sie sich bitte mit dieser E-Mailadresse bei Ihrem Fachleiter ab.
 {% endif %}
 {% endblock message %}

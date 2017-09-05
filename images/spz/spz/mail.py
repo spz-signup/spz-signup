@@ -52,7 +52,8 @@ def generate_status_mail(applicant, course, time=None, restock=False):
             applicant=applicant,
             course=course,
             has_to_pay=attendance.has_to_pay if attendance else False,
-            date=time
+            date=time,
+            signoff_window=course.language.self_signoff_end
         ),
         charset='utf-8'
     )

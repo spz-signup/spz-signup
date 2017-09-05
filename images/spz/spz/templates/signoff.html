@@ -1,0 +1,22 @@
+{% extends 'baselayout.html' %}
+
+{% from 'formhelpers.html' import csrf_field, render_input, render_submit, render_option %}
+
+
+{% block caption %}
+Abmeldung
+{% endblock caption %}
+
+
+{% block body %}
+<div class="row">
+    <h3 class="ui dividing header">Abmeldung von Kursen</h3>
+    <form class="ui form" method="post" action="{{ url_for('signoff') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        {{ render_input(form.mail, icon='at') }}
+        {{ render_input(form.signoff_id, icon='barcode') }}
+        {{ render_option(form.course, icon='cube')}}
+        <button class="fluid ui positive button">Änderungen speichern</button>
+    </form>
+</div>
+{% endblock body %}

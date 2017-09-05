@@ -27,7 +27,45 @@ __all__ = [
     'StatusForm',
     'UniqueForm',
     'TagForm',
+    'SignoffForm',
 ]
+
+
+class SignoffForm(Form):
+    signoff_id = TextField(
+        'Abmelde-ID'
+    )
+
+    course = SelectField(
+        'Kurse',
+        coerce=int
+    )
+
+    mail = TextField(
+        'Für Anmeldung verwendete E-Mailadresse'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(SignoffForm, self).__init__(*args, **kwargs)
+        self.course.choices = cached.all_courses_to_choicelist()
+
+    def get_signoff_id(self):
+        return self.signoff_id.data
+
+    def get_course(self):
+        return models.Course.query.get(self.course.data)
+
+    def get_mail(self):
+        return self.mail.data
+
+    def get_applicant(self):
+        existing = models.Applicant.query.filter(
+            func.lower(models.Applicant.mail) == func.lower(self.get_mail())
+        ).first()
+        if (existing):
+            return existing
+        else:
+            return None
 
 
 class SignupForm(Form):

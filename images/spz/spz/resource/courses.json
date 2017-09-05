@@ -3,10 +3,10 @@
         {
             "name": "Arabisch",
             "reply_to": "info@spz.kit.edu",
-            "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
-            "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
-            "signup_end_iso_utc": "2016-12-11T05:00:00Z",
-            "signup_auto_end_iso_utc": "2016-11-11T05:00:00Z",
+            "signup_begin_iso_utc": "2017-09-03T05:00:00Z",
+            "signup_random_window_end_iso_utc": "2017-10-11T15:00:00Z",
+            "signup_end_iso_utc": "2017-12-11T05:00:00Z",
+            "signup_auto_end_iso_utc": "2017-11-11T05:00:00Z",
             "courses": [
                 {
                     "level": "1",

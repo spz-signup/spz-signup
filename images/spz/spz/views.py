@@ -136,6 +136,43 @@ def licenses():
     return None
 
 
+@templated('signoff.html')
+def signoff():
+    form = forms.SignoffForm()
+    if form.validate_on_submit():
+        applicant = form.get_applicant()
+        course = form.get_course()
+        signoff_id = form.get_signoff_id()
+        if (applicant is not None):
+            if applicant.matches_signoff_id(signoff_id):
+                if applicant.in_course(course):
+                    if course.language.is_open_for_self_signoff(datetime.utcnow()):
+                        try:
+                            applicant.remove_course_attendance(course)
+                            db.session.commit()
+                            flash('Abmeldung erfolgreich!', 'positive')
+                        except Exception as e:
+                            db.session.rollback()
+                            flash('Konnte nicht erfolgreich abmelden, bitte erneut versuchen:{0}'.format(e), 'negative')
+                        try:
+                            tasks.send_slow.delay(generate_status_mail(applicant, course, datetime.utcnow()))
+                        except (AssertionError, socket.error, ConnectionError) as e:
+                            flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+                    else:
+                        flash('Abmeldefrist abgelaufen: Zur Abmeldung bitte mit Ihrem '
+                              'Fachbereichsleiter reden!', 'negative')
+
+                else:
+                    flash('Abmeldung fehlgeschlagen: Sie können sich nicht von einem Kurs '
+                          'abmelden, für den Sie nicht angemeldet waren!', 'negative')
+            else:
+                flash('Abmeldung fehlgeschlagen: Ungültige Abmelde-ID!', 'negative')
+        else:
+            flash('Abmeldung fehlgeschlagen: E-Mailadresse nicht vorhanden.', 'negative')
+
+    return dict(form=form)
+
+
 @login_required
 @templated('internal/overview.html')
 def internal():
