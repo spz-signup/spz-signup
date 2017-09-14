@@ -152,12 +152,12 @@ def signoff():
 
                             attends = len([attendance for attendance in applicant.attendances if not attendance.waiting])
                             if applicant.is_student() and attends > 0:
-                                free_course = false
+                                free_course = False
                                 for attendance in applicant.attendances:
-                                    if attendance.has_to_pay is false:
-                                        free_course == true
+                                    if attendance.has_to_pay is False and not attendance.waiting:
+                                        free_course = True
                                 if not free_course:
-                                    attendances[0].has_to_pay = false
+                                    applicant.attendances[0].has_to_pay = False
                             db.session.commit()
                             flash('Abmeldung erfolgreich!', 'positive')
                         except Exception as e:
