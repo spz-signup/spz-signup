@@ -149,6 +149,15 @@ def signoff():
                     if course.language.is_open_for_self_signoff(datetime.utcnow()):
                         try:
                             applicant.remove_course_attendance(course)
+
+                            attends = len([attendance for attendance in applicant.attendances if not attendance.waiting])
+                            if applicant.is_student() and attends > 0:
+                                free_course = false
+                                for attendance in applicant.attendances:
+                                    if attendance.has_to_pay is false:
+                                        free_course == true
+                                if not free_course:
+                                    attendances[0].has_to_pay = false
                             db.session.commit()
                             flash('Abmeldung erfolgreich!', 'positive')
                         except Exception as e:
