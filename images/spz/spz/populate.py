@@ -98,7 +98,7 @@ def populate_generic(time, attendance_filter, idx_prepare, idx_select):
             continue
 
         attendance.has_to_pay = attendance.applicant.has_to_pay()
-        attendance.waiting = False
+        attendance.take_in_course()
         handled_attendances.append((attendance, attendance.informed_about_rejection))
         attendance.informed_about_rejection = True
 
