@@ -99,7 +99,7 @@ class Attendance(db.Model):
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
     graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
-    waiting = db.Column(db.Boolean) #do not change, please use the take_in_course function
+    waiting = db.Column(db.Boolean)  # do not change, please use the take_in_course function
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
     amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
@@ -130,7 +130,7 @@ class Attendance(db.Model):
 
     def take_in_course(self):
         if self.waiting:
-            self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0,second=0,minute=0)
+            self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0, second=0, minute=0)
             self.waiting = False
 
 
@@ -239,7 +239,7 @@ class Applicant(db.Model):
 
         return 0
 
-    def has_to_pay(self): # Has to pay if he joins another course and NOT if he has to pay at the moment
+    def has_to_pay(self):  # Has to pay if he joins another course and NOT if he has to pay at the moment
         attends = len([attendance for attendance in self.attendances if not attendance.waiting])
         return not self.is_student() or attends > 0
 
@@ -278,8 +278,7 @@ class Applicant(db.Model):
     def matches_signoff_id(self, signoff_id):
         return signoff_id == self.signoff_id
 
-
-    def is_in_signoff_window(self,course):
+    def is_in_signoff_window(self, course):
         try:
             att = [attendance for attendance in self.attendances if course == attendance.course][0]
         except IndexError as e:
