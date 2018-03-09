@@ -30,7 +30,7 @@ Make a DB backup from the old data!
 ## 2. Images and Docker
 
 ### 2.1 nginx
-- change `serve_name` from `localhost` to `anmeldung.spz.kit.edu` (twice!)
+- change `server_name` from `localhost` to `anmeldung.spz.kit.edu` (twice!)
 - regenerate DH params: `openssl dhparam -outform PEM -out dhparam.pem 4096`
 - set correct key to `main.key.pem`
 - set cert + chain to `main.crt+chain.pem`: 1. our cert, 2.... all intermediate certs, starting with the "nearest" one going up to the root CA, **without** root CA (also called anchor)
