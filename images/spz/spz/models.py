@@ -78,7 +78,7 @@ def verify_tag(tag):
 class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
-        Use the :py:func:`take_in_course` to remove the :py:data:`waiting` Status
+        Use the :py:func:`set_waiting_status` to remove the :py:data:`waiting` Status
 
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
        :param graduation: The intended :py:class:`Graduation` of the :py:class:`Attendance`.
@@ -99,7 +99,7 @@ class Attendance(db.Model):
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
     graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
-    waiting = db.Column(db.Boolean)  # do not change, please use the take_in_course function
+    waiting = db.Column(db.Boolean)  # do not change, please use the set_waiting_status function
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
     amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
@@ -128,10 +128,12 @@ class Attendance(db.Model):
     def __lt__(self, other):
         return self.registered < other.registered
 
-    def take_in_course(self):
-        if self.waiting:
+    def set_waiting_status(self,waiting_list):
+        if self.waiting and not waiting_list:
             self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0, second=0, minute=0)
             self.waiting = False
+        elif not self.waiting and waiting_list:
+            self.waiting = True
 
 
 @total_ordering

@@ -708,8 +708,7 @@ def status(applicant_id, course_id):
             attendance.applicant.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
-            if not form.waiting.data:
-                attendance.take_in_course()
+            attendance.set_waiting_status(form.waiting.data)
             db.session.commit()
             flash('Der Status wurde aktualisiert', 'success')
         except Exception as e:
