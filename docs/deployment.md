@@ -65,6 +65,7 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 - set `ADMIN_MAILS` to an array of one or more mails of project admins. This people will get encrypted backup messages (and in the future maybe error messages).
 - set `SEMESTER_NAME` to the correct value
 - enter `ILIAS_USERNAME`, `ILIAS_PASSWORD` and `ILIAS_REFID` (hints: it's the integer value in the URL of the test, not the one of the course that contains it)
+- check that `SELF_SIGNOFF_PERIOD`, `MANUAL_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day
 
 `util/docker_entrypoint.sh`
 - set correct DB password to the line `PGPASSWORD=mysecretpassword psql -h postgres ...` somewhere in the `init` function
