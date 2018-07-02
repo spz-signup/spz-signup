@@ -231,7 +231,7 @@ class Applicant(db.Model):
 
         return 0
 
-    def has_to_pay(self): # Has to pay if he joins another course and NOT if he has to pay at the moment
+    def has_to_pay(self):  # Has to pay if he joins another course and NOT if he has to pay at the moment
         attends = len([attendance for attendance in self.attendances if not attendance.waiting])
         return not self.is_student() or attends > 0
 

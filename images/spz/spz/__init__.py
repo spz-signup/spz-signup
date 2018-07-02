@@ -19,7 +19,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_caching import Cache
-from flask_wtf import CsrfProtect
+from flask_wtf import CSRFProtect
 
 from jinja2 import Markup
 
@@ -65,7 +65,7 @@ def login_by_token(tokenstring):
 
 
 # set up CSRF protection
-CsrfProtect(app)
+CSRFProtect(app)
 
 
 # helper for random length, random content comment (e.g. for BREACH protection)

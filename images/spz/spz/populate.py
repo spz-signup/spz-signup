@@ -9,7 +9,7 @@ from redis import ConnectionError
 
 from sqlalchemy import orm
 
-from spz import app, db, models, tasks
+from spz import db, models, tasks
 
 from spz.mail import generate_status_mail
 

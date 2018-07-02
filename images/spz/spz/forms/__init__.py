@@ -7,8 +7,8 @@
 
 from sqlalchemy import func
 from flask_wtf import Form
-from flask_wtf.file import FileField
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField, TextAreaField, BooleanField, DecimalField
+from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
+from wtforms import TextAreaField, BooleanField, DecimalField, FileField
 
 from spz import app, models, token
 
