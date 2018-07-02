@@ -78,6 +78,8 @@ def verify_tag(tag):
 class Attendance(db.Model):
     """Associates an :py:class:`Applicant` to a :py:class:`Course`.
 
+        Use the :py:func:`set_waiting_status` to remove the :py:data:`waiting` Status
+
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
        :param graduation: The intended :py:class:`Graduation` of the :py:class:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
@@ -97,13 +99,14 @@ class Attendance(db.Model):
     graduation_id = db.Column(db.Integer, db.ForeignKey('graduation.id'))
     graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
-    waiting = db.Column(db.Boolean)
+    waiting = db.Column(db.Boolean)  # do not change, please use the set_waiting_status function
     has_to_pay = db.Column(db.Boolean)
     paidbycash = db.Column(db.Boolean)
     amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
 
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())
+    signoff_window = db.Column(db.DateTime(), default=datetime.utcnow)
 
     informed_about_rejection = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -124,6 +127,13 @@ class Attendance(db.Model):
 
     def __lt__(self, other):
         return self.registered < other.registered
+
+    def set_waiting_status(self,waiting_list):
+        if self.waiting and not waiting_list:
+            self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0, second=0, minute=0)
+            self.waiting = False
+        elif not self.waiting and waiting_list:
+            self.waiting = True
 
 
 @total_ordering
@@ -269,6 +279,13 @@ class Applicant(db.Model):
 
     def matches_signoff_id(self, signoff_id):
         return signoff_id == self.signoff_id
+
+    def is_in_signoff_window(self, course):
+        try:
+            att = [attendance for attendance in self.attendances if course == attendance.course][0]
+        except IndexError as e:
+            return False
+        return att.signoff_window > datetime.utcnow()
 
 
 @total_ordering

@@ -146,7 +146,7 @@ def signoff():
         if (applicant is not None):
             if applicant.matches_signoff_id(signoff_id):
                 if applicant.in_course(course):
-                    if course.language.is_open_for_self_signoff(datetime.utcnow()):
+                    if applicant.is_in_signoff_window(course):
                         try:
                             applicant.remove_course_attendance(course)
 
@@ -168,8 +168,8 @@ def signoff():
                         except (AssertionError, socket.error, ConnectionError) as e:
                             flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
                     else:
-                        flash('Abmeldefrist abgelaufen: Zur Abmeldung bitte mit Ihrem '
-                              'Fachbereichsleiter reden!', 'negative')
+                        flash('Abmeldefrist abgelaufen: Zur Abmeldung bitte bei Ihrem '
+                              'Fachbereichsleiter melden!', 'negative')
 
                 else:
                     flash('Abmeldung fehlgeschlagen: Sie können sich nicht von einem Kurs '
@@ -704,11 +704,11 @@ def status(applicant_id, course_id):
         try:
             attendance.graduation = form.get_graduation()
             attendance.payingdate = datetime.utcnow()
-            attendance.waiting = form.waiting.data
             attendance.has_to_pay = form.has_to_pay.data
             attendance.applicant.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
+            attendance.set_waiting_status(form.waiting.data)
             db.session.commit()
             flash('Der Status wurde aktualisiert', 'success')
         except Exception as e:

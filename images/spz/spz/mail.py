@@ -10,6 +10,9 @@ from flask_mail import Message
 
 from spz import app, models
 
+from pytz import timezone
+import pytz
+
 
 def generate_status_mail(applicant, course, time=None, restock=False):
     """Generate mail to notify applicants about their new attendance status."""
@@ -41,7 +44,8 @@ def generate_status_mail(applicant, course, time=None, restock=False):
         # no registration exists => assuming she got kicked out
         subject_status = 'Platzverlust'
         template = 'mails/kickoutmail.html'
-
+    # assigning timezone
+    signoff = attendance.signoff_window.replace(tzinfo=pytz.utc).astimezone(tz=timezone('Europe/Berlin')) if attendance else False
     return Message(
         sender=app.config['PRIMARY_MAIL'],
         reply_to=course.language.reply_to,
@@ -53,7 +57,7 @@ def generate_status_mail(applicant, course, time=None, restock=False):
             course=course,
             has_to_pay=attendance.has_to_pay if attendance else False,
             date=time,
-            signoff_window=course.language.self_signoff_end
+            signoff_window=signoff
         ),
         charset='utf-8'
     )

@@ -30,7 +30,7 @@ Make a DB backup from the old data!
 ## 2. Images and Docker
 
 ### 2.1 nginx
-- change `serve_name` from `localhost` to `anmeldung.spz.kit.edu` (twice!)
+- change `server_name` from `localhost` to `anmeldung.spz.kit.edu` (twice!)
 - regenerate DH params: `openssl dhparam -outform PEM -out dhparam.pem 4096`
 - set correct key to `main.key.pem`
 - set cert + chain to `main.crt+chain.pem`: 1. our cert, 2.... all intermediate certs, starting with the "nearest" one going up to the root CA, **without** root CA (also called anchor)
@@ -65,6 +65,7 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 - set `ADMIN_MAILS` to an array of one or more mails of project admins. This people will get encrypted backup messages (and in the future maybe error messages).
 - set `SEMESTER_NAME` to the correct value
 - enter `ILIAS_USERNAME`, `ILIAS_PASSWORD` and `ILIAS_REFID` (hints: it's the integer value in the URL of the test, not the one of the course that contains it)
+- check that `SELF_SIGNOFF_PERIOD`, `MANUAL_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day
 
 `util/docker_entrypoint.sh`
 - set correct DB password to the line `PGPASSWORD=mysecretpassword psql -h postgres ...` somewhere in the `init` function
