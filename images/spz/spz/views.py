@@ -375,12 +375,12 @@ def notifications():
         at_mime = ''
         at_data = None
         at_name = ''
-        if form.get_attachment():
+        if form.get_attachments():
             # detect MIME data since browser tend to send messy data,
             # e.g. https://bugzilla.mozilla.org/show_bug.cgi?id=373621
-            at_mime = mime_from_filepointer(form.get_attachment())
-            at_data = form.get_attachment().read()
-            at_name = form.get_attachment().filename
+            at_mime = [mime_from_filepointer(att) for att in form.get_attachments()]
+            at_data = [att.read() for att in form.get_attachments()]
+            at_name = [att.filename for att in form.get_attachments()]
 
         try:
             for recipient in form.get_recipients():
@@ -394,8 +394,9 @@ def notifications():
                     reply_to=form.get_reply_to(),
                     charset='utf-8'
                 )
-                if form.get_attachment():
-                    msg.attach(at_name, at_mime, at_data)
+                if form.get_attachments():
+                    for (mime, data, name) in zip(at_mime, at_data, at_name):
+                        msg.attach(name, mime, data)
                 tasks.send_slow.delay(msg)
 
             flash('Mail erfolgreich verschickt', 'success')

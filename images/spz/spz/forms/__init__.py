@@ -8,7 +8,7 @@
 from sqlalchemy import func
 from flask_wtf import Form
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
-from wtforms import TextAreaField, BooleanField, DecimalField, FileField
+from wtforms import TextAreaField, BooleanField, DecimalField, FileField, MultipleFileField
 
 from spz import app, models, token
 
@@ -262,9 +262,9 @@ class NotificationForm(Form):
     only_waiting = BooleanField(
         'Nur an Wartende'
     )
-    attachment = FileField(
+    attachments = MultipleFileField(
         'Anhang',
-        [validators.FileSizeValidator(0, app.config['MAIL_MAX_ATTACHMENT_SIZE'])]
+        [validators.MultiFilesFileSizeValidator(0, app.config['MAIL_MAX_ATTACHMENT_SIZE'])]
     )
 
     def __init__(self, *args, **kwargs):
@@ -273,8 +273,8 @@ class NotificationForm(Form):
         self.mail_courses.choices = cached.all_courses_to_choicelist()
         self.mail_reply_to.choices = self._reply_to_choices()
 
-    def get_attachment(self):
-        return self.attachment.data
+    def get_attachments(self):
+        return self.attachments.data
 
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data))

@@ -31,6 +31,19 @@
 </div>
 {% endmacro %}
 
+{% macro render_multiple_files(field, width=12, help=None, required=True) %}
+<div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
+    {{ field.label }}
+    <div class="field">
+        <input type="file" id="{{ field.id }}" name="{{ field.id }}" multiple>
+    </div>
+    {% for error in field.errors %}
+        <span class="ui red pointing prompt label transition visible">{{ error }}</span>
+    {% endfor %}
+    {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
+</div>
+{% endmacro %}
+
 {% macro render_boolean(field, width=12, help=None, required=False) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
     <div class="ui toggle checkbox">

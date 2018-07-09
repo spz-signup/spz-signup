@@ -28,6 +28,24 @@ class EmailPlusValidator(object):
             raise ValidationError('Ungültige E-Mail Adresse')
 
 
+class MultiFilesFileSizeValidator(object):
+    """Validates that file does not exceed certain size."""
+
+    def __init__(self, smin, smax):
+        self.smin = smin
+        self.smax = smax
+
+    def __call__(self, form, field):
+        if field.data:
+            sum = 0
+            for fld in field.data:
+                s = size_from_filepointer(fld)
+                sum += s
+                if s < self.smin:
+                    raise ValidationError('Eine Datei ist zu klein')
+                if sum > self.smax:
+                    raise ValidationError('Dateien sind zu groß')
+
 class FileSizeValidator(object):
     """Validates that file does not exceed certain size."""
 
@@ -42,6 +60,7 @@ class FileSizeValidator(object):
                 raise ValidationError('Datei ist zu klein')
             if s > self.smax:
                 raise ValidationError('Datei ist zu groß')
+
 
 
 class TagDependingOnOrigin(object):
