@@ -59,6 +59,18 @@
             "active": true,
             "superuser": false,
             "languages": ["Spanisch"]
+        },
+        {
+            "email": "spz@tobiasdierich.de",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "timzi777@gmail.com",
+            "active": true,
+            "superuser": true,
+            "languages": []
         }
     ]
 }

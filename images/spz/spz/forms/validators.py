@@ -46,6 +46,7 @@ class MultiFilesFileSizeValidator(object):
                 if sum > self.smax:
                     raise ValidationError('Dateien sind zu groß')
 
+
 class FileSizeValidator(object):
     """Validates that file does not exceed certain size."""
 
@@ -60,7 +61,6 @@ class FileSizeValidator(object):
                 raise ValidationError('Datei ist zu klein')
             if s > self.smax:
                 raise ValidationError('Datei ist zu groß')
-
 
 
 class TagDependingOnOrigin(object):

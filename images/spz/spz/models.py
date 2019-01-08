@@ -128,7 +128,7 @@ class Attendance(db.Model):
     def __lt__(self, other):
         return self.registered < other.registered
 
-    def set_waiting_status(self,waiting_list):
+    def set_waiting_status(self, waiting_list):
         if self.waiting and not waiting_list:
             self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0, second=0, minute=0)
             self.waiting = False
