@@ -758,7 +758,7 @@ class User(db.Model):
         return True
 
     def get_auth_token(self):
-        """Get token that can be used to authentificate a user."""
+        """Get token that can be used to authenticate a user."""
         return token.generate(self.id, 'users')
 
     @staticmethod
