@@ -94,7 +94,7 @@ def download_and_parse_data():
 
 
 def refresh():
-    #Overwrite approvals in DB with newest Ilias data.
+    # Overwrite approvals in DB with newest Ilias data.
     print("Start ilias")
     approvals = download_and_parse_data()
     # start transaction rollback area

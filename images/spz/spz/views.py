@@ -143,7 +143,7 @@ def signoff():
         applicant = form.get_applicant()
         course = form.get_course()
         signoff_id = form.get_signoff_id()
-        if (applicant is not None):
+        if applicant is not None:
             if applicant.matches_signoff_id(signoff_id):
                 if applicant.in_course(course):
                     if applicant.is_in_signoff_window(course):
