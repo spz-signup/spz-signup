@@ -55,8 +55,7 @@ def index():
         namespace='preterm',
         db_model=models.Applicant,
         db_column=models.Applicant.mail
-    )
-    # if one_time_token else None
+    ) if one_time_token else None
     # show all forms to authenticated users (normal or via one_time_token)
     form = forms.SignupForm(show_all_courses=(current_user.is_authenticated or token_payload))
     time = datetime.utcnow()
