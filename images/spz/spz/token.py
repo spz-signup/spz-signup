@@ -76,7 +76,7 @@ def validate_once(
     signer = get_default_signer(namespace)
 
     # guard against obviously invalid inputs
-    if not token or not payload_wanted:
+    if not token:
         return False
 
     # we're not interested in the exception type (BadSignature, SignatureExpired)
