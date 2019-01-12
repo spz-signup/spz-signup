@@ -47,32 +47,46 @@ def check_precondition_with_auth(cond, msg, auth=False):
 
 @templated('signup.html')
 def index():
-    form = forms.SignupForm(show_all_courses=current_user.is_authenticated)
+    one_time_token = request.args.get('token', None)
+    # token_payload will contain the linked mail address if valid or None otherwise
+    token_payload = token.validate_once(
+        token=one_time_token,
+        payload_wanted=None,
+        namespace='preterm',
+        db_model=models.Applicant,
+        db_column=models.Applicant.mail
+    ) if one_time_token else None
+    # show all forms to authenticated users (normal or via one_time_token)
+    form = forms.SignupForm(show_all_courses=(current_user.is_authenticated or token_payload))
     time = datetime.utcnow()
 
     if current_user.is_authenticated:
-        flash('Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'success')
+        flash('Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte abmelden.', 'info')
+    if token_payload:
+        flash('Prioritäranmeldung aktiv!', 'info')
+    elif one_time_token:
+        flash('Token für Prioritäranmeldung ungültig!', 'negative')
+        
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
         course = form.get_course()
-        one_time_token = request.args.get('token', None)
         user_has_special_rights = current_user.is_authenticated and current_user.can_edit_course(course)
 
         # signup at all times only with token or privileged users
-        preterm = applicant.mail and \
-            one_time_token and \
-            token.validate_once(
-                token=one_time_token,
-                payload_wanted=applicant.mail,
-                namespace='preterm',
-                db_model=models.Applicant,
-                db_column=models.Applicant.mail
-            )
+        # when using a token, payload and submitted mail address have to match (ignore case)
+        preterm = applicant.mail and token_payload
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in '
             '{0}!'.format(course.language.until_signup_fmt()),
+            user_has_special_rights
+        )
+        # when using a token, submitted mail address has to match the one stored in payload
+        err |= check_precondition_with_auth(
+            token_payload and (token_payload.lower() == applicant.mail),
+            'Die eingegebene EMail-Adresse entspricht nicht der hinterlegten. '
+            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären Anmeldung erhalten haben!',
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
