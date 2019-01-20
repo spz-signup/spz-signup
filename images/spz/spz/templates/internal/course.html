@@ -67,7 +67,8 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
     <form class="ui form" method="post">
         {{ csrf_field() }}
         {# Do we need csrf when using post? #}
-        <h3 class="ui dividing header">Alle Teilnehmer entfernen und Kurs löschen</h3>
+        <h3 class="ui dividing header">Alle wartenden Teilnehmer entfernen und Kurs löschen</h3>
+        <p>Zuvor müssen alle aktiven Teilnehmer manuell aus dem Kurs entfernt worden sein.</p>
         <div class="ui toggle checkbox">
             <input type="checkbox" name="changes_confirmed" required=true>
             <label for="changes_confirmed">Sicher? Dies kann nicht rückgängig gemacht werden</label>
