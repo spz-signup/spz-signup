@@ -518,8 +518,8 @@ def language(id):
 def course(id):
     course = models.Course.query.get_or_404(id)
     form = forms.DeleteCourseForm()
-    
-    if form.validate_on_submit():
+
+    if form.validate_on_submit() and current_user.superuser:
         try:
             if len(course.get_active_attendances()) > 0:
                 flash('Der Kurs kann nicht gelöscht werden, weil aktive Teilnahmen bestehen.', 'error')
@@ -531,12 +531,12 @@ def course(id):
                     db.session.delete(attendance)
                     deleted += 1
                     # TODO: notify attendants
-                
+
                 db.session.delete(course)
 
                 db.session.commit()
                 flash('Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted), 'success')
-                
+
                 return redirect(url_for('lists'))
         except Exception as e:
             db.session.rollback()
@@ -830,7 +830,7 @@ def preterm():
 
     token = None
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and current_user.superuser:
         token = form.get_token()
 
         try:

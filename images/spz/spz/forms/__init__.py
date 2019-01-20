@@ -533,6 +533,7 @@ class UniqueForm(LanguageForm):
     """
     pass
 
+
 class DeleteCourseForm(Form):
     """Represents a form for deleting a course.
     """
