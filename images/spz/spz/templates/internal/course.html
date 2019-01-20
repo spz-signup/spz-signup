@@ -1,4 +1,5 @@
 {% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import csrf_field, render_submit %}
 
 {% block caption %}
 Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.language.name }}</a> {{ course.level }} {{ course.alternative }}
@@ -61,4 +62,18 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
         </tbody>
     </table>
 </div>
+{% if current_user.superuser %}
+<div class="row">
+    <form class="ui form" method="post">
+        {{ csrf_field() }}
+        {# Do we need csrf when using post? #}
+        <h3 class="ui dividing header">Alle Teilnehmer entfernen und Kurs löschen</h3>
+        <div class="ui toggle checkbox">
+            <input type="checkbox" name="changes_confirmed" required=true>
+            <label for="changes_confirmed">Sicher? Dies kann nicht rückgängig gemacht werden</label>
+        </div>
+        {{ render_submit(submit='Löschen', negative=True)}}
+    </form>
+</div>
+{% endif %}
 {% endblock internal_body %}
