@@ -66,7 +66,6 @@ def index():
         flash('Prioritäranmeldung aktiv!', 'info')
     elif one_time_token:
         flash('Token für Prioritäranmeldung ungültig!', 'negative')
-        
 
     if form.validate_on_submit():
         applicant = form.get_applicant()
@@ -86,7 +85,8 @@ def index():
         err |= check_precondition_with_auth(
             token_payload and (token_payload.lower() == applicant.mail),
             'Die eingegebene EMail-Adresse entspricht nicht der hinterlegten. '
-            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären Anmeldung erhalten haben!',
+            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären'
+            'Anmeldung erhalten haben!',
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
