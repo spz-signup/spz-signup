@@ -4,26 +4,25 @@
 
 .. code-block:: python
 """
-from pysimplesoap.simplexml import SimpleXMLElement
 from pysimplesoap.client import SoapClient
+from pysimplesoap.simplexml import SimpleXMLElement
 from spz import app, db, models
 
 
 def get_sid(client, username, password):
     response = client.login(
-        client = 'pilot',
-        username = username,
-        password = password
+        client='pilot',
+        username=username,
+        password=password
     )
     return response.sid
 
 
-
 def get_data(client, sid, ref_id):
     response = client.getTestResults(
-        sid = sid,
-        ref_id = ref_id,
-        sum_only = True
+        sid=sid,
+        ref_id=ref_id,
+        sum_only=True
     )
     # ilias will return a xml dom, formatted as string and encapsualted in the main responses dom
     return SimpleXMLElement(str(response.xml))
