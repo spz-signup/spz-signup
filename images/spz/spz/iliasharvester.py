@@ -4,37 +4,29 @@
 
 .. code-block:: python
 """
-from pysimplesoap import simplexml
-import pysimplesoap
+from pysimplesoap.simplexml import SimpleXMLElement
+from pysimplesoap.client import SoapClient
 from spz import app, db, models
-
-# WARNING: Ilias requires us to conform to the given parameter order
-#          For that reason, we build XML data by hand rather using the
-#          automatic kwargs conversion of pysimplesoap
 
 
 def get_sid(client, username, password):
-    element = simplexml.SimpleXMLElement(
-        '<login xmlns="urn:ilUserAdministration">'
-        '<client>pilot</client>'
-        '<username>{}</username>'
-        '<password>{}</password>'
-        '</login>'.format(username, password)
+    response = client.login(
+        client = 'pilot',
+        username = username,
+        password = password
     )
-    response = client.call('login', element)
-    return str(response('sid'))
+    return response.sid
+
 
 
 def get_data(client, sid, ref_id):
-    element = simplexml.SimpleXMLElement(
-        '<getTestResults xmlns="urn:ilUserAdministration">'
-        '<sid>{}</sid>'
-        '<ref_id>{}</ref_id>'
-        '<sum_only>true</sum_only>'
-        '</getTestResults>'.format(sid, ref_id)
+    response = client.getTestResults(
+        sid = sid,
+        ref_id = ref_id,
+        sum_only = True
     )
-    response = client.call('getTestResults', element)
-    return simplexml.SimpleXMLElement(str(response('xml')))
+    # ilias will return a xml dom, formatted as string and encapsualted in the main responses dom
+    return SimpleXMLElement(str(response.xml))
 
 
 def download_and_parse_data():
@@ -44,10 +36,7 @@ def download_and_parse_data():
     ref_id = app.config['ILIAS_REFID']
     url = app.config['ILIAS_URL']
 
-    cl = pysimplesoap.client.SoapClient(
-        location=url,
-        namespace='urn:ilUserAdministration'
-    )
+    cl = SoapClient(url)
 
     # get session id and download data
     sid = get_sid(cl, username, password)
