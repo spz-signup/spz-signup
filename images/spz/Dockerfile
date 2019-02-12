@@ -13,7 +13,7 @@ RUN apt-get update && \
 	mkdir -p /usr/share/man/man1 && \
     mkdir -p /usr/share/man/man7 && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y fonts-dejavu gcc git libmagic1 libpq-dev postgresql-client xz-utils && \
+    apt-get install -y fonts-dejavu gcc git gpg libmagic1 libpq-dev postgresql-client xz-utils && \
     pip install -U pip setuptools --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 
