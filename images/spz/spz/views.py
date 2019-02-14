@@ -157,28 +157,34 @@ def signoff():
         applicant = form.get_applicant()
         course = form.get_course()
         signoff_id = form.get_signoff_id()
-        if applicant is not None:
-            if applicant.matches_signoff_id(signoff_id):
-                if applicant.in_course(course):
-                    if applicant.is_in_signoff_window(course):
-                        try:
-                            remove_attendance(applicant, course, True)
-                            db.session.commit()
-                            flash('Abmeldung erfolgreich!', 'positive')
-                        except Exception as e:
-                            db.session.rollback()
-                            flash('Konnte nicht erfolgreich abmelden, bitte erneut versuchen:{0}'.format(e), 'negative')
-                    else:
-                        flash('Abmeldefrist abgelaufen: Zur Abmeldung bitte bei Ihrem '
-                              'Fachbereichsleiter melden!', 'negative')
 
-                else:
-                    flash('Abmeldung fehlgeschlagen: Sie können sich nicht von einem Kurs '
-                          'abmelden, für den Sie nicht angemeldet waren!', 'negative')
-            else:
-                flash('Abmeldung fehlgeschlagen: Ungültige Abmelde-ID!', 'negative')
-        else:
-            flash('Abmeldung fehlgeschlagen: E-Mailadresse nicht vorhanden.', 'negative')
+        err = check_precondition_with_auth(
+            applicant is not None,
+            'Abmeldung fehlgeschlagen: E-Mailadresse nicht vorhanden.'
+        )
+        if not err:
+            err |= check_precondition_with_auth(
+                applicant.matches_signoff_id(signoff_id),
+                'Abmeldung fehlgeschlagen: Ungültige Abmelde-ID!'
+            )
+            err |= check_precondition_with_auth(
+                applicant.in_course(course),
+                'Abmeldung fehlgeschlagen: Sie können sich nicht von einem Kurs abmelden, '
+                'für den Sie nicht angemeldet waren!'
+            )
+            err |= check_precondition_with_auth(
+                applicant.is_in_signoff_window(course),
+                'Abmeldefrist abgelaufen: Zur Abmeldung bitte bei Ihrem Fachbereichsleiter melden!'
+            )
+
+            if not err:
+                try:
+                    remove_attendance(applicant, course, True)
+                    db.session.commit()
+                    flash('Abmeldung erfolgreich!', 'positive')
+                except Exception as e:
+                    db.session.rollback()
+                    flash('Konnte nicht erfolgreich abmelden, bitte erneut versuchen:{0}'.format(e), 'negative')
 
     return dict(form=form)
 
