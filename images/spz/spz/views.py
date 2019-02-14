@@ -607,7 +607,7 @@ def search_applicant():
 
 def add_attendance(applicant, course, notify):
     if applicant.in_course(course) or applicant.active_in_parallel_course(course):
-        flash('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil!', 'warning')
+        raise ValueError('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil!', 'warning')
 
     applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
     db.session.commit()
@@ -634,7 +634,6 @@ def remove_attendance(applicant, course, notify):
             active_courses = [a for a in applicant.attendances if not a.waiting]
             free_courses = [a for a in active_courses if not a.has_to_pay]
             if active_courses and not free_courses:
-                # TODO: make sure that active_courses is not a deep copy of applicant.attendances
                 active_courses[0].has_to_pay = False
 
     if notify and success:
