@@ -217,7 +217,10 @@ class Applicant(db.Model):
         return attendance
 
     def remove_course_attendance(self, course):
-        self.attendances = [attendance for attendance in self.attendances if attendance.course != course]
+        remove = [attendance for attendance in self.attendances if attendance.course == course]
+        for attendance in remove:
+            self.attendances.remove(attendance)
+        return len(remove) > 0
 
     def is_student(self):
         return Registration.exists(self.tag)

@@ -84,8 +84,8 @@ def index():
         # when using a token, submitted mail address has to match the one stored in payload
         err |= check_precondition_with_auth(
             token_payload and (token_payload.lower() == applicant.mail),
-            'Die eingegebene EMail-Adresse entspricht nicht der hinterlegten. '
-            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären'
+            'Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
+            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
             'Anmeldung erhalten haben!',
             user_has_special_rights
         )
@@ -162,25 +162,12 @@ def signoff():
                 if applicant.in_course(course):
                     if applicant.is_in_signoff_window(course):
                         try:
-                            applicant.remove_course_attendance(course)
-
-                            attends = len([attendance for attendance in applicant.attendances if not attendance.waiting])
-                            if applicant.is_student() and attends > 0:
-                                free_course = False
-                                for attendance in applicant.attendances:
-                                    if attendance.has_to_pay is False and not attendance.waiting:
-                                        free_course = True
-                                if not free_course:
-                                    applicant.attendances[0].has_to_pay = False
+                            remove_attendance(applicant, course, True)
                             db.session.commit()
                             flash('Abmeldung erfolgreich!', 'positive')
                         except Exception as e:
                             db.session.rollback()
                             flash('Konnte nicht erfolgreich abmelden, bitte erneut versuchen:{0}'.format(e), 'negative')
-                        try:
-                            tasks.send_slow.delay(generate_status_mail(applicant, course, datetime.utcnow()))
-                        except (AssertionError, socket.error, ConnectionError) as e:
-                            flash('Eine Bestätigungsmail konnte nicht verschickt werden: {0}'.format(e), 'negative')
                     else:
                         flash('Abmeldefrist abgelaufen: Zur Abmeldung bitte bei Ihrem '
                               'Fachbereichsleiter melden!', 'negative')
@@ -241,7 +228,7 @@ def registrations_import():
                     num_deleted = models.Registration.query.delete()
                     db.session.add_all(unique_registrations)
                     db.session.commit()
-                    flash('Import OK: {0} Einträge gelöscht, {1} Eintrage hinzugefügt'
+                    flash('Import OK: {0} Einträge gelöscht, {1} Einträge hinzugefügt'
                           .format(num_deleted, len(unique_registrations)), 'success')
                 except Exception as e:
                     db.session.rollback()
@@ -544,15 +531,29 @@ def applicant(id):
             remove_from = form.get_remove_from()
             notify = form.get_send_mail()
 
-            if add_to and remove_from:
-                flash(
-                    'Bitte im Moment nur entweder eine Teilnahme hinzufügen oder nur eine Teilnahme löschen',
-                    'negative'
-                )
-            elif add_to:
-                return add_attendance(applicant_id=applicant.id, course_id=add_to.id, notify=notify)
-            elif remove_from:
-                return remove_attendance(applicant_id=applicant.id, course_id=remove_from.id, notify=notify)
+            if remove_from:
+                try:
+                    remove_attendance(applicant, remove_from, notify)
+                    flash('Der Bewerber wurde aus dem Kurs "{0}" genommen'.format(remove_from.full_name()), 'success')
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    flash('Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'negative')
+
+            if add_to:
+                try:
+                    add_attendance(applicant, add_to, notify)
+                    flash(
+                        'Der Bewerber wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.',
+                        'success'
+                    )
+                    db.session.commit()
+                    return redirect(url_for('status', applicant_id=applicant.id, course_id=add_to.id))
+                except Exception as e:
+                    db.session.rollback()
+                    flash('Der Bewerber konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'negative')
+
+            return redirect(url_for('applicant', id=applicant.id))
 
         except Exception as e:
             db.session.rollback()
@@ -598,65 +599,46 @@ def search_applicant():
     return dict(form=form, applicants=applicants)
 
 
-@login_required
-def add_attendance(applicant_id, course_id, notify):
-    applicant = models.Applicant.query.get_or_404(applicant_id)
-    course = models.Course.query.get_or_404(course_id)
-
+def add_attendance(applicant, course, notify):
     if applicant.in_course(course) or applicant.active_in_parallel_course(course):
-        flash('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil', 'negative')
-        return redirect(url_for('applicant', id=applicant_id))
+        flash('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil!', 'warning')
 
-    try:
-        applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
-        db.session.commit()
-        flash('Der Teilnehmer wurde in den Kurs eingetragen. Bitte jetzt Status setzen und überprüfen.', 'success')
+    applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
+    db.session.commit()
 
-        if not course.is_allowed(applicant):
-            flash(
-                'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse.'
-                'Teilnehmer wurde trotzdem eingetragen.',
-                'warning'
-            )
-
-    except Exception as e:
-        db.session.rollback()
-        flash('Der Teilnehmer konnte nicht für den Kurs eingetragen werden: {0}'.format(e), 'negative')
-        return redirect(url_for('applicant', id=applicant_id))
+    if not course.is_allowed(applicant):
+        flash(
+            'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. '
+            'Teilnehmer wurde trotzdem eingetragen.',
+            'warning'
+        )
 
     if notify:
         try:
             tasks.send_slow.delay(generate_status_mail(applicant, course, restock=True))
-            flash('Mail erfolgreich verschickt', 'success')
+            flash('Bestätigungsmail wurde versendet', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
-
-    return redirect(url_for('status', applicant_id=applicant_id, course_id=course_id))
+            flash('Bestätigungsmail konnte nicht versendet werden: {0}'.format(e), 'negative')
 
 
-@login_required
-def remove_attendance(applicant_id, course_id, notify):
-    attendance = models.Attendance.query.get_or_404((applicant_id, course_id))
-    applicant = attendance.applicant
-    course = attendance.course
+def remove_attendance(applicant, course, notify):
+    success = applicant.remove_course_attendance(course)
+    if success:
+        if applicant.is_student():
+            active_courses = [a for a in applicant.attendances if not a.waiting]
+            free_courses = [a for a in active_courses if not a.has_to_pay]
+            if active_courses and not free_courses:
+                # TODO: make sure that active_courses is not a deep copy of applicant.attendances
+                active_courses[0].has_to_pay = False
 
-    try:
-        attendance.applicant.remove_course_attendance(attendance.course)
-        db.session.commit()
-        flash('Der Bewerber wurde aus dem Kurs genommen', 'success')
-    except Exception as e:
-        db.session.rollback()
-        flash('Der Bewerber konnte nicht aus dem Kurs genommen werden: {0}'.format(e), 'negative')
-        return redirect(url_for('applicant', id=applicant_id))
-
-    if notify:
+    if notify and success:
         try:
             tasks.send_slow.delay(generate_status_mail(applicant, course))
-            flash('Mail erfolgreich verschickt', 'success')
+            flash('Bestätigungsmail wurde versendet', 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash('Mail konnte nicht verschickt werden: {0}'.format(e), 'negative')
+            flash('Bestätigungsmail konnte nicht versendet werden: {0}'.format(e), 'negative')
 
-    return redirect(url_for('applicant', id=applicant_id))
+    return success
 
 
 @login_required
