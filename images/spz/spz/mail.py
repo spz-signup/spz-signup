@@ -45,7 +45,10 @@ def generate_status_mail(applicant, course, time=None, restock=False):
         subject_status = 'Platzverlust'
         template = 'mails/kickoutmail.html'
     # assigning timezone
-    signoff = attendance.signoff_window.replace(tzinfo=pytz.utc).astimezone(tz=timezone('Europe/Berlin')) if attendance else False
+    if attendance:
+        signoff = attendance.signoff_window.replace(tzinfo=pytz.utc).astimezone(tz=timezone('Europe/Berlin'))
+    else:
+        signoff = False
     return Message(
         sender=app.config['PRIMARY_MAIL'],
         reply_to=course.language.reply_to,

@@ -130,7 +130,8 @@ class Attendance(db.Model):
 
     def set_waiting_status(self, waiting_list):
         if self.waiting and not waiting_list:
-            self.signoff_window = (datetime.utcnow() + app.config['SELF_SIGNOFF_PERIOD']).replace(microsecond=0, second=0, minute=0)
+            signoff_period = app.config['SELF_SIGNOFF_PERIOD']
+            self.signoff_window = (datetime.utcnow() + signoff_period).replace(microsecond=0, second=0, minute=0)
             self.waiting = False
         elif not self.waiting and waiting_list:
             self.waiting = True
@@ -216,7 +217,10 @@ class Applicant(db.Model):
         return attendance
 
     def remove_course_attendance(self, course):
-        self.attendances = [attendance for attendance in self.attendances if attendance.course != course]
+        remove = [attendance for attendance in self.attendances if attendance.course == course]
+        for attendance in remove:
+            self.attendances.remove(attendance)
+        return len(remove) > 0
 
     def is_student(self):
         return Registration.exists(self.tag)
