@@ -1,15 +1,15 @@
 version: '2'
 services:
     uwsgi:
-        build: images/spz
+        build: src/spz
         command: uwsgi --ini /home/spz/code/uwsgi.ini --workers 8 --threads 4
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
             - backup:/backup
             - ./docs/python:/home/spz/code/doc.build:rw
-            - ./images/spz/spz:/home/spz/code/spz:ro
-            - ./images/spz/util:/home/spz/code/util:ro
+            - ./src/spz/spz:/home/spz/code/spz:ro
+            - ./src/spz/util:/home/spz/code/util:ro
             - data_static:/home/spz/code/spz/static
             - state_spz:/state
         tmpfs:
@@ -28,9 +28,8 @@ services:
             - front
             - back
         restart: unless-stopped
-        cpuset: "0,1"
     celery_beat:
-        build: images/spz
+        build: src/spz
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
             - uwsgi
@@ -49,9 +48,8 @@ services:
         networks:
             - back
         restart: unless-stopped
-        cpuset: "2"
     celery_default:
-        build: images/spz
+        build: src/spz
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
@@ -70,9 +68,8 @@ services:
         networks:
             - back
         restart: unless-stopped
-        cpuset: "2"
     celery_slow_mails:
-        build: images/spz
+        build: src/spz
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
@@ -91,9 +88,8 @@ services:
         networks:
             - back
         restart: unless-stopped
-        cpuset: "2"
     redis:
-        build: images/redis
+        image: redis:3.0
         command: redis-server --appendonly yes
         ports:
             - "127.0.0.1:26379:6379"
@@ -103,12 +99,12 @@ services:
         networks:
             - back
         restart: unless-stopped
-        cpuset: "3"
     postgres:
-        build: images/postgres
+        image: postgres:9.4
         ports:
             - "127.0.0.1:25432:5432"
         volumes:
+            - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
             - data_postgres:/var/lib/postgresql/data
         tmpfs:
             - /run/postgresql
@@ -119,9 +115,8 @@ services:
         networks:
             - back
         restart: unless-stopped
-        cpuset: "3"
     mail:
-        build: images/maildev
+        image: djfarrelly/maildev:1.0.0-rc2
         ports:
             - "127.0.0.1:8080:80"
         volumes:
@@ -129,18 +124,31 @@ services:
         tmpfs:
             - /run
             - /tmp
-#        read_only: true  # not possible because of PaX
         networks:
             - back
         restart: unless-stopped
-        cpuset: "2"
+# Uncomment for production
+#    mail:
+#        image: spzsignup/opensmtpd:6.0.3p1
+#        volumes:
+#            - ./conf/smtpd.conf:/etc/smtpd.conf
+#            - state_mail:/var/spool
+#        tmpfs:
+#            - /run
+#            - /tmp
+#        read_only: true
+#        networks:
+#            - back
+#        restart: unless-stopped
     nginx:
-        build: images/nginx
+        image: nginx:1.11
         command: nginx -g "worker_processes 16;"
         ports:
             - "127.0.0.1:80:80"
             - "127.0.0.1:443:443"
         volumes:
+            - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./conf/nginx/ssl:/etc/nginx/ssl:ro
             - cache_nginx:/var/cache/nginx
             - data_static:/static:ro
         tmpfs:
@@ -151,7 +159,6 @@ services:
         links:
             - uwsgi
         restart: unless-stopped
-        cpuset: "0"
 volumes:
     backup: {}
     cache_nginx: {}
