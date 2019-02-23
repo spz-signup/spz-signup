@@ -509,7 +509,37 @@ def language(id):
 @login_required
 @templated('internal/course.html')
 def course(id):
-    return dict(course=models.Course.query.get_or_404(id))
+    course = models.Course.query.get_or_404(id)
+    form = forms.DeleteCourseForm()
+
+    if form.validate_on_submit() and current_user.superuser:
+        try:
+            if len(course.get_active_attendances()) > 0:
+                flash('Der Kurs kann nicht gelöscht werden, weil aktive Teilnahmen bestehen.', 'error')
+                # TODO: handle active attendances automatically or make deleting them easier
+            else:
+                deleted = 0
+                name = course.full_name()
+                for attendance in course.get_waiting_attendances():
+                    db.session.delete(attendance)
+                    deleted += 1
+                    # TODO: notify attendants
+
+                db.session.delete(course)
+
+                db.session.commit()
+                flash('Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted), 'success')
+
+                return redirect(url_for('lists'))
+        except Exception as e:
+            db.session.rollback()
+            flash(
+                'Der Kurs konnte nicht gelöscht werden: '
+                '{0}'.format(e),
+                'error'
+            )
+
+    return dict(course=course)
 
 
 @login_required
@@ -787,7 +817,7 @@ def preterm():
 
     token = None
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and current_user.superuser:
         token = form.get_token()
 
         try:

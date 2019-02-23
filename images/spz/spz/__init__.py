@@ -156,7 +156,7 @@ routes = [
     ('/internal/lists', views.lists, ['GET']),
     ('/internal/applicant/<int:id>', views.applicant, ['GET', 'POST']),
     ('/internal/language/<int:id>', views.language, ['GET']),
-    ('/internal/course/<int:id>', views.course, ['GET']),
+    ('/internal/course/<int:id>', views.course, ['GET', 'POST']),
 
     ('/internal/add_attendance/<int:applicant_id>/<int:course_id>', views.add_attendance, ['GET']),
     ('/internal/remove_attendance/<int:applicant_id>/<int:course_id>', views.remove_attendance, ['GET']),
