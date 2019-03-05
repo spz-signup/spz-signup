@@ -55,7 +55,7 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 
 `keys/*.key`:
 - in contrast to nginx config we're talking about GPG keys now. Ensure that key and signature algorithms are compatible with the GPG version used by the docker container!
-- replace `spz_backup.key` with a new private key. Do NOT use a passphrase. Extract the public key of that one and save it to your computer. It will be required to verify the backups that where send to the admin.
+- replace `spz_backup.key` with a new private key. Do NOT use a passphrase. Extract the public key of that one and save it to your computer. It will be required to verify the backups that were send to the admin.
 - replace `spz_admin.key` with the public (NOT the private) key of the admin (or a key shared by a group of admins). Only people who own the corresponding private key will be able to decrypt the backups.
 
 `instances/development.conf`:
