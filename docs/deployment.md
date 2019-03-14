@@ -75,7 +75,7 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 - replace `maildev` with `mailprod`, renable `read-only`. no need to adjust the volumes, they are designed to work with both
 - set correct (new, but same as used for the `spz` image) to the `POSTGRES_PASSWORD` env variable of the `postgres` container
 - remove `--autoreload` flag from `celery_default` and `celery_slow_mails` command entries
-- remove relative image mounts (starting with `./images`) from `uwsgi` container
+- remove relative image mounts (starting with `./src`) from `uwsgi` container
 
 ## 3. Fire it up
 - ensure you're acting for the server docker and not your local one (you might want to use a SSH tunnel and the client TLS certificate)
