@@ -82,13 +82,14 @@ def index():
             user_has_special_rights
         )
         # when using a token, submitted mail address has to match the one stored in payload
-        err |= check_precondition_with_auth(
-            token_payload and (token_payload.lower() == applicant.mail),
-            'Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
-            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
-            'Anmeldung erhalten haben!',
-            user_has_special_rights
-        )
+        if token_payload:
+            err |= check_precondition_with_auth(
+                token_payload.lower() == applicant.mail,
+                'Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
+                'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
+                'Anmeldung erhalten haben!',
+                user_has_special_rights
+            )
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
@@ -528,7 +529,10 @@ def course(id):
                 db.session.delete(course)
 
                 db.session.commit()
-                flash('Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted), 'success')
+                flash(
+                    'Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted),
+                    'success'
+                )
 
                 return redirect(url_for('lists'))
         except Exception as e:
