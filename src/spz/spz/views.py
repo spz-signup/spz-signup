@@ -386,9 +386,14 @@ def notifications():
         if form.get_attachments():
             # detect MIME data since browser tend to send messy data,
             # e.g. https://bugzilla.mozilla.org/show_bug.cgi?id=373621
-            at_mime = [mime_from_filepointer(att) for att in form.get_attachments()]
-            at_data = [att.read() for att in form.get_attachments()]
-            at_name = [att.filename for att in form.get_attachments()]
+            at_mime = []
+            at_data = []
+            at_name = []
+            for att in form.get_attachments():
+                if att:
+                    at_mime.append(mime_from_filepointer(att))
+                    at_data.append(att.read())
+                    at_name.append(att.filename)
 
         try:
             for recipient in form.get_recipients():

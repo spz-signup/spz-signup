@@ -30,6 +30,8 @@ def size_from_filepointer(fp):
     """Detect size from filepointer.
 
     File position gets restored after the detection procedure."""
+    if not fp:
+        return 0
     pos = fp.tell()
     fp.seek(0, os.SEEK_END)
     size = fp.tell()
