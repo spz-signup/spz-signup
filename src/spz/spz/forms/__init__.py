@@ -248,7 +248,7 @@ class NotificationForm(Form):
         [validators.Required('Kurs muss angegeben werden')],
         coerce=int
     )
-    mail_reply_to = SelectField(
+    mail_sender = SelectField(
         'Antwort an',
         [validators.Required('Reply-To muss angegeben werden')],
         coerce=int
@@ -271,7 +271,7 @@ class NotificationForm(Form):
         super(NotificationForm, self).__init__(*args, **kwargs)
         # See SignupForm for this "trick"
         self.mail_courses.choices = cached.all_courses_to_choicelist()
-        self.mail_reply_to.choices = self._reply_to_choices()
+        self.mail_sender.choices = self._sender_choices()
 
     def get_attachments(self):
         return self.attachments.data
@@ -322,11 +322,11 @@ class NotificationForm(Form):
     def get_bcc(self):
         return self._unique_mails_from_str(self.mail_bcc.data)
 
-    def get_reply_to(self):
-        return dict(self._reply_to_choices()).get(self.mail_reply_to.data)
+    def get_sender(self):
+        return dict(self._sender_choices()).get(self.mail_sender.data)
 
     @staticmethod
-    def _reply_to_choices():
+    def _sender_choices():
         # Start index by 1 instead of 0, for the form submitting to be consistent
         return [(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
 

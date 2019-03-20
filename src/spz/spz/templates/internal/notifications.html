@@ -16,7 +16,7 @@ Mail Zentrale
         {{ render_input(form.mail_bcc, required=False) }}
         {{ render_multiple_files(form.attachments, required=False) }}
         <h3 class="ui dividing header">Benötigte Angaben</h3>
-        {{ render_option(form.mail_reply_to) }}
+        {{ render_option(form.mail_sender) }}
         {{ render_input(form.mail_subject) }}
         {{ render_textarea(form.mail_body) }}
         <h3 class="ui dividing header">Empfänger der Mail</h3>

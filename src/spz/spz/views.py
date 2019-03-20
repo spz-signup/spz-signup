@@ -398,13 +398,12 @@ def notifications():
         try:
             for recipient in form.get_recipients():
                 msg = Message(
-                    sender=current_user.email,
+                    sender=form.get_sender(),
                     recipients=[recipient],
                     subject=form.get_subject(),
                     body=form.get_body(),
                     cc=form.get_cc(),
                     bcc=form.get_bcc(),
-                    reply_to=form.get_reply_to(),
                     charset='utf-8'
                 )
                 if form.get_attachments():
