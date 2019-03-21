@@ -328,9 +328,9 @@ class NotificationForm(Form):
 
     @staticmethod
     def _sender_choices():
-        adresses = [current_user.email] + app.config['REPLY_TO']
+        addresses = [current_user.email] + app.config['REPLY_TO']
         # Start index by 1 instead of 0, for the form submitting to be consistent
-        return [(idx, mail) for (idx, mail) in enumerate(adresses, 1)]
+        return [(idx, mail) for (idx, mail) in enumerate(addresses, 1)]
 
 
 class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
