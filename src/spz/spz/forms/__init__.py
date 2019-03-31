@@ -7,6 +7,7 @@
 
 from sqlalchemy import func
 from flask_wtf import Form
+from flask_login import current_user
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
@@ -249,8 +250,8 @@ class NotificationForm(Form):
         coerce=int
     )
     mail_sender = SelectField(
-        'Antwort an',
-        [validators.Required('Reply-To muss angegeben werden')],
+        'Absender',
+        [validators.Required('Absender muss angegeben werden')],
         coerce=int
     )
     only_active = BooleanField(
@@ -327,8 +328,9 @@ class NotificationForm(Form):
 
     @staticmethod
     def _sender_choices():
+        addresses = [current_user.email] + app.config['REPLY_TO']
         # Start index by 1 instead of 0, for the form submitting to be consistent
-        return [(idx, mail) for (idx, mail) in enumerate(app.config['REPLY_TO'], 1)]
+        return [(idx, mail) for (idx, mail) in enumerate(addresses, 1)]
 
 
 class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
