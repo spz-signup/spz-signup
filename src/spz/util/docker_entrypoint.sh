@@ -99,16 +99,6 @@ init() {
     echo "finished initialization"
 }
 
-selfcheck() {
-    echo "run quick self check"
-    flake8 --statistics spz
-    if [ $? == 0 ]; then
-        echo "PASSED"
-    else
-        echo "WARNING: there are problems with the code!"
-    fi
-}
-
 wait_for_services
 
 # locked block
@@ -133,9 +123,6 @@ wait_for_services
         rm -f $FILE_PROCESS
     fi
 ) 200>$FILE_LOCK
-
-# selfcheck
-selfcheck
 
 # run payload
 exec $@
