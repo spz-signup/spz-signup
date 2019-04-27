@@ -1,7 +1,7 @@
 version: '2'
 services:
     uwsgi:
-        build: src/spz
+        build: .
         command: uwsgi --ini /home/spz/code/uwsgi.ini --workers 8 --threads 4
         ports:
             - "127.0.0.1:3031:3031"
@@ -29,7 +29,7 @@ services:
             - back
         restart: unless-stopped
     celery_beat:
-        build: src/spz
+        build: .
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
             - uwsgi
@@ -49,7 +49,7 @@ services:
             - back
         restart: unless-stopped
     celery_default:
-        build: src/spz
+        build: .
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
@@ -69,7 +69,7 @@ services:
             - back
         restart: unless-stopped
     celery_slow_mails:
-        build: src/spz
+        build: .
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
         volumes_from:
             - uwsgi
