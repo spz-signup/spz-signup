@@ -8,14 +8,13 @@
 import socket
 import re
 import csv
-import io
 from datetime import datetime
 
 from redis import ConnectionError
 
 from sqlalchemy import and_, func, not_
 
-from flask import request, redirect, render_template, url_for, flash, make_response
+from flask import request, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_mail import Message
 
@@ -24,6 +23,7 @@ from spz.decorators import templated
 import spz.forms as forms
 from spz.util.Filetype import mime_from_filepointer
 from spz.mail import generate_status_mail
+from spz.tables import export_course_list
 
 
 def check_precondition_with_auth(cond, msg, auth=False):
@@ -422,74 +422,12 @@ def notifications():
 
 @login_required
 def export_course(course_id):
-    course = models.Course.query.get_or_404(course_id)
-
-    active_no_debt = [attendance.applicant for attendance in course.attendances
-                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-
-    buf = io.StringIO()
-    out = csv.writer(buf, delimiter=";", dialect=csv.excel)
-
-    # XXX: header -- not standardized
-    out.writerow(['Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail', 'Matrikelnummer',
-                  'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
-
-    def maybe(x):
-        return x if x else ''
-
-    idx = 1
-    for applicant in active_no_debt:
-        out.writerow(['{0}'.format(idx), '{0}'.format(applicant.id), applicant.first_name,
-                      applicant.last_name, applicant.mail, maybe(applicant.tag), maybe(applicant.phone),
-                      applicant.degree.name if applicant.degree else '', '{0}'.format(maybe(applicant.semester)),
-                      applicant.origin.name if applicant.origin else ''])
-        idx += 1
-
-    resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste {0}.csv"'.format(course.full_name())
-    resp.mimetype = 'text/csv'
-
-    return resp
+    return export_course_list([models.Course.query.get_or_404(course_id)], 'csv')
 
 
 @login_required
 def export_language(language_id):
-    language = models.Language.query.get_or_404(language_id)
-
-    buf = io.StringIO()
-    out = csv.writer(buf, delimiter=";", dialect=csv.excel)
-
-    # XXX: header -- not standardized
-    out.writerow(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
-                  'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
-
-    def maybe(x):
-        return x if x else ''
-
-    for course in language.courses:
-        active_no_debt = [attendance.applicant for attendance in course.attendances
-                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-
-        idx = 1
-        for applicant in active_no_debt:
-            out.writerow(['{0}'.format(course.full_name()),
-                          '{0}'.format(idx),
-                          '{0}'.format(applicant.id),
-                          applicant.first_name,
-                          applicant.last_name,
-                          applicant.mail,
-                          maybe(applicant.tag),
-                          maybe(applicant.phone),
-                          applicant.degree.name if applicant.degree else '',
-                          '{0}'.format(maybe(applicant.semester)),
-                          applicant.origin.name if applicant.origin else ''])
-            idx += 1
-
-    resp = make_response(buf.getvalue())
-    resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste {0}.csv"'.format(language.name)
-    resp.mimetype = 'text/csv'
-
-    return resp
+    return export_course_list(models.Language.query.get_or_404(language_id).courses, 'csv')
 
 
 @login_required
