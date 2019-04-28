@@ -34,7 +34,10 @@ Sprachen
                 {{ td_sorted(language.get_paying_attendances()|count) }}
                 <td class="collapsing"><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
-                <td class="collapsing"><a href="{{ url_for('export_language', language_id=language.id) }}"><button type="button" class="ui button">CSV</button></a></td>
+                <td class="collapsing">
+                    <a href="{{ url_for('export_language', language_id=language.id, format='csv') }}"><button type="button" class="ui button">CSV</button></a>
+                    <a href="{{ url_for('export_language', language_id=language.id, format='xlsx') }}"><button type="button" class="ui button">Excel</button></a>
+                </td>
             </tr>
             {% if sums.update({
                 'courses_t': sums['courses_t'] + courses,

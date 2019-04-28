@@ -8,11 +8,15 @@
 import csv
 import io
 
-from flask import make_response
+from flask import make_response, url_for, redirect, flash
+
 
 def export_course_list(courses, format):
-    if format is 'csv': return csv_export(courses)
-	else return None
+    if format == 'csv': return csv_export(courses)
+    else:
+        flash('Ungültiges Export-Format: {0}'.format(format), 'error')
+        return redirect(url_for('lists'))
+
 
 def csv_export(courses):
     buf = io.StringIO()

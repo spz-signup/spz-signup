@@ -421,13 +421,13 @@ def notifications():
 
 
 @login_required
-def export_course(course_id):
-    return export_course_list([models.Course.query.get_or_404(course_id)], 'csv')
+def export_course(course_id, format):
+    return export_course_list([models.Course.query.get_or_404(course_id)], format)
 
 
 @login_required
-def export_language(language_id):
-    return export_course_list(models.Language.query.get_or_404(language_id).courses, 'csv')
+def export_language(language_id, format):
+    return export_course_list(models.Language.query.get_or_404(language_id).courses, format)
 
 
 @login_required
