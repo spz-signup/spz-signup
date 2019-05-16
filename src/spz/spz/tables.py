@@ -8,8 +8,9 @@
 import csv
 import io
 from tempfile import NamedTemporaryFile
+from openpyxl import Workbook
 
-from flask import send_file, url_for, redirect, flash
+from flask import make_response, send_file, url_for, redirect, flash
 
 
 def export_course_list(courses, format):
@@ -60,6 +61,13 @@ def csv_export(courses):
 
 
 def excel_export(courses):
-    file = NamedTemporaryFile()
-    resp = send_file(file, as_attachment = True, attachment_filename = 'Kursliste.xlsx')
+    wb = Workbook()
+    wb.active.title = "Kursliste"
+    with NamedTemporaryFile() as file:
+        wb.save(file.name)
+        file.seek(0)
+        stream = file.read()
+        resp = make_response(stream)
+        resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste.xlsx"'
+        resp.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return resp
