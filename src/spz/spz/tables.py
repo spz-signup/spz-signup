@@ -34,10 +34,15 @@ class CSVWriter:
         self.filename = 'Kursliste.csv'
 
     def write_heading(self, values):
-        self.write_row(values)
+        if not self.header_written:
+            self.write_row(values)
+            self.header_written = True
 
     def write_row(self, values):
         self.out.writerow(values)
+
+    def new_section(self, name):
+        pass
 
     def get_data(self):
         return self.buf.getvalue()
@@ -46,7 +51,7 @@ class CSVWriter:
 class ExcelWriter:
 
     def __init__(self):
-        self.workbook = Workbook()
+        self.workbook = Workbook(write_only=True)
         self.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         self.filename = 'Kursliste.xlsx'
 
@@ -54,7 +59,10 @@ class ExcelWriter:
         self.write_row(values)
 
     def write_row(self, values):
-        self.workbook.active.append(values)
+        self.workbook._sheets[-1].append(values)
+
+    def new_section(self, name):
+        self.workbook.create_sheet(name)
 
     def get_data(self):
         with NamedTemporaryFile() as file:
@@ -66,29 +74,32 @@ class ExcelWriter:
 
 def export(writer, courses):
     # XXX: header -- not standardized
-    writer.write_heading(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
-                  'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
+    header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
+              'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
 
     def maybe(x):
         return x if x else ''
 
     for course in courses:
+        writer.new_section(course.full_name())
+        writer.write_heading(header)
+
         active_no_debt = [attendance.applicant for attendance in course.attendances
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
         idx = 1
         for applicant in active_no_debt:
             writer.write_row(['{0}'.format(course.full_name()),
-                                  '{0}'.format(idx),
-                                  '{0}'.format(applicant.id),
-                                  applicant.first_name,
-                                  applicant.last_name,
-                                  applicant.mail,
-                                  maybe(applicant.tag),
-                                  maybe(applicant.phone),
-                                  applicant.degree.name if applicant.degree else '',
-                                  '{0}'.format(maybe(applicant.semester)),
-                                  applicant.origin.name if applicant.origin else ''])
+                              '{0}'.format(idx),
+                              '{0}'.format(applicant.id),
+                              applicant.first_name,
+                              applicant.last_name,
+                              applicant.mail,
+                              maybe(applicant.tag),
+                              maybe(applicant.phone),
+                              applicant.degree.name if applicant.degree else '',
+                              '{0}'.format(maybe(applicant.semester)),
+                              applicant.origin.name if applicant.origin else ''])
             idx += 1
 
     resp = make_response(writer.get_data())
