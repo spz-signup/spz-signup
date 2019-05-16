@@ -23,12 +23,29 @@ def export_course_list(courses, format):
         return redirect(url_for('lists'))
 
 
+class CSVWriter:
+
+    mimetype = 'text/csv'
+
+    def __init__(self):
+        self.buf = io.StringIO()
+        self.out = csv.writer(self.buf, delimiter=";", dialect=csv.excel)
+
+    def write_heading(self, values):
+        self.write_row(values)
+
+    def write_row(self, values):
+        self.out.writerow(values)
+    
+    def get_data(self):
+        return self.buf.getvalue()
+
+
 def csv_export(courses):
-    buf = io.StringIO()
-    out = csv.writer(buf, delimiter=";", dialect=csv.excel)
+    writer = CSVWriter()
 
     # XXX: header -- not standardized
-    out.writerow(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
+    writer.write_heading(['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
                   'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis'])
 
     def maybe(x):
@@ -40,22 +57,22 @@ def csv_export(courses):
 
         idx = 1
         for applicant in active_no_debt:
-            out.writerow(['{0}'.format(course.full_name()),
-                          '{0}'.format(idx),
-                          '{0}'.format(applicant.id),
-                          applicant.first_name,
-                          applicant.last_name,
-                          applicant.mail,
-                          maybe(applicant.tag),
-                          maybe(applicant.phone),
-                          applicant.degree.name if applicant.degree else '',
-                          '{0}'.format(maybe(applicant.semester)),
-                          applicant.origin.name if applicant.origin else ''])
+            writer.write_row(['{0}'.format(course.full_name()),
+                              '{0}'.format(idx),
+                              '{0}'.format(applicant.id),
+                              applicant.first_name,
+                              applicant.last_name,
+                              applicant.mail,
+                              maybe(applicant.tag),
+                              maybe(applicant.phone),
+                              applicant.degree.name if applicant.degree else '',
+                              '{0}'.format(maybe(applicant.semester)),
+                              applicant.origin.name if applicant.origin else ''])
             idx += 1
 
-    resp = make_response(buf.getvalue())
+    resp = make_response(writer.get_data())
     resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste.csv"'
-    resp.mimetype = 'text/csv'
+    resp.mimetype = writer.mimetype
 
     return resp
 
