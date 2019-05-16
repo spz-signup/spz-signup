@@ -7,14 +7,18 @@
 
 import csv
 import io
+from tempfile import NamedTemporaryFile
 
-from flask import make_response, url_for, redirect, flash
+from flask import send_file, url_for, redirect, flash
 
 
 def export_course_list(courses, format):
-    if format == 'csv': return csv_export(courses)
+    if format == 'csv':
+        return csv_export(courses)
+    elif format == 'xlsx':
+        return excel_export(courses)
     else:
-        flash('Ungültiges Export-Format: {0}'.format(format), 'error')
+        flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
         return redirect(url_for('lists'))
 
 
@@ -52,4 +56,10 @@ def csv_export(courses):
     resp.headers['Content-Disposition'] = 'attachment; filename="Kursliste.csv"'
     resp.mimetype = 'text/csv'
 
+    return resp
+
+
+def excel_export(courses):
+    file = NamedTemporaryFile()
+    resp = send_file(file, as_attachment = True, attachment_filename = 'Kursliste.xlsx')
     return resp
