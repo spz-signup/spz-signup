@@ -14,11 +14,11 @@ from openpyxl.worksheet.table import Table
 from flask import make_response, url_for, redirect, flash
 
 
-def export_course_list(courses, format):
+def export_course_list(courses, format, filename='Kursliste'):
     if format == 'csv':
-        return export(CSVWriter(), courses)
+        return export(CSVWriter(), courses, filename)
     elif format == 'xlsx':
-        return export(ExcelWriter(), courses)
+        return export(ExcelWriter(), courses, filename)
     else:
         flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
         return redirect(url_for('lists'))
@@ -27,12 +27,11 @@ def export_course_list(courses, format):
 class CSVWriter:
 
     mimetype = 'text/csv'
+    filetype = 'csv'
 
     def __init__(self):
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=";", dialect=csv.excel)
-        self.mimetype = 'text/csv'
-        self.filetype = 'csv'
         self.header_written = False
 
     def write_heading(self, values):
@@ -54,12 +53,13 @@ class CSVWriter:
 
 class ExcelWriter:
 
+    mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    filetype = 'xlsx'
+
     def __init__(self):
         # write_only=True would require additional logic to keep track of sheet dimension so we keep it at False
         # (see sheet.dimensions in end_section())
         self.workbook = Workbook(write_only=False)
-        self.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        self.filetype = 'xlsx'
         self.workbook._sheets.clear()  # start off with no sheets
 
     def write_heading(self, values):
@@ -84,13 +84,15 @@ class ExcelWriter:
 
     def end_section(self):
         sheet = self.workbook._sheets[-1]
-        # create a table within the excel sheet to simplify sorting by values
-        tableName = sheet.title.replace(' ', '_')  # needs to be unique and must not contain spaces
-        table = Table(displayName=tableName, ref=sheet.dimensions)
-        sheet.add_table(table)
+        # if there are values: create a table within the excel sheet to simplify sorting by values
+        # else: excel considers the file invalid if a table contains only one row so don't
+        if sheet.max_row > 1:
+            tableName = sheet.title.replace(' ', '_')  # needs to be unique and must not contain spaces
+            table = Table(displayName=tableName, ref=sheet.dimensions)
+            sheet.add_table(table)
 
 
-def export(writer, courses, filename = 'Kursliste'):
+def export(writer, courses, filename):
     # XXX: header -- not standardized
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
