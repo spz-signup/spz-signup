@@ -32,6 +32,7 @@ class CSVWriter:
         self.out = csv.writer(self.buf, delimiter=";", dialect=csv.excel)
         self.mimetype = 'text/csv'
         self.filename = 'Kursliste.csv'
+        self.header_written = False
 
     def write_heading(self, values):
         if not self.header_written:
@@ -39,7 +40,8 @@ class CSVWriter:
             self.header_written = True
 
     def write_row(self, values):
-        self.out.writerow(values)
+        string_values = [str(v) if v else '' for v in values]
+        self.out.writerow(string_values)
 
     def new_section(self, name):
         pass
@@ -77,9 +79,6 @@ def export(writer, courses):
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
 
-    def maybe(x):
-        return x if x else ''
-
     for course in courses:
         writer.new_section(course.full_name())
         writer.write_heading(header)
@@ -89,17 +88,17 @@ def export(writer, courses):
 
         idx = 1
         for applicant in active_no_debt:
-            writer.write_row(['{0}'.format(course.full_name()),
-                              '{0}'.format(idx),
-                              '{0}'.format(applicant.id),
+            writer.write_row([course.full_name(),
+                              idx,
+                              applicant.id,
                               applicant.first_name,
                               applicant.last_name,
                               applicant.mail,
-                              maybe(applicant.tag),
-                              maybe(applicant.phone),
-                              applicant.degree.name if applicant.degree else '',
-                              '{0}'.format(maybe(applicant.semester)),
-                              applicant.origin.name if applicant.origin else ''])
+                              applicant.tag,
+                              applicant.phone,
+                              applicant.degree.name if applicant.degree else None,
+                              applicant.semester,
+                              applicant.origin.name if applicant.origin else None])
             idx += 1
 
     resp = make_response(writer.get_data())
