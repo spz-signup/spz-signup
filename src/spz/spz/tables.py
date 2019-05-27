@@ -9,6 +9,7 @@ import csv
 import io
 from tempfile import NamedTemporaryFile
 from openpyxl import Workbook
+from openpyxl.worksheet.table import Table
 
 from flask import make_response, url_for, redirect, flash
 
@@ -44,6 +45,7 @@ class CSVWriter:
         self.out.writerow(string_values)
 
     def new_section(self, name):
+        # CSV does not support sections
         pass
 
     def get_data(self):
@@ -53,9 +55,12 @@ class CSVWriter:
 class ExcelWriter:
 
     def __init__(self):
-        self.workbook = Workbook(write_only=True)
+        # write_only=True would require additional logic to keep track of sheet dimension so we keep it at False
+        # (see sheet.dimensions in end_section())
+        self.workbook = Workbook(write_only=False)
         self.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         self.filename = 'Kursliste.xlsx'
+        self.workbook._sheets.clear()  # start off with no sheets
 
     def write_heading(self, values):
         self.write_row(values)
@@ -64,15 +69,25 @@ class ExcelWriter:
         self.workbook._sheets[-1].append(values)
 
     def new_section(self, name):
+        if self.workbook._sheets:
+            self.end_section()
         self.workbook.create_sheet(name)
 
     def get_data(self):
+        if self.workbook._sheets:
+            self.end_section()
         with NamedTemporaryFile() as file:
             self.workbook.save(file.name)
             file.seek(0)
             stream = file.read()
         return stream
 
+    def end_section(self):
+        sheet = self.workbook._sheets[-1]
+        # create a table within the excel sheet to simplify sorting by values
+        tableName = sheet.title.replace(' ', '_')  # needs to be unique and must not contain spaces
+        table = Table(displayName=tableName, ref=sheet.dimensions)
+        sheet.add_table(table)
 
 def export(writer, courses):
     # XXX: header -- not standardized
