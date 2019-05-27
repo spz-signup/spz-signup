@@ -32,7 +32,7 @@ class CSVWriter:
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=";", dialect=csv.excel)
         self.mimetype = 'text/csv'
-        self.filename = 'Kursliste.csv'
+        self.filetype = 'csv'
         self.header_written = False
 
     def write_heading(self, values):
@@ -59,7 +59,7 @@ class ExcelWriter:
         # (see sheet.dimensions in end_section())
         self.workbook = Workbook(write_only=False)
         self.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        self.filename = 'Kursliste.xlsx'
+        self.filetype = 'xlsx'
         self.workbook._sheets.clear()  # start off with no sheets
 
     def write_heading(self, values):
@@ -89,7 +89,8 @@ class ExcelWriter:
         table = Table(displayName=tableName, ref=sheet.dimensions)
         sheet.add_table(table)
 
-def export(writer, courses):
+
+def export(writer, courses, filename = 'Kursliste'):
     # XXX: header -- not standardized
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
@@ -117,7 +118,7 @@ def export(writer, courses):
             idx += 1
 
     resp = make_response(writer.get_data())
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}"'.format(writer.filename)
+    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.{1}"'.format(filename, writer.filetype)
     resp.mimetype = writer.mimetype
 
     return resp

@@ -422,12 +422,14 @@ def notifications():
 
 @login_required
 def export_course(course_id, format):
-    return export_course_list([models.Course.query.get_or_404(course_id)], format)
+    course = models.Course.query.get_or_404(course_id)
+    return export_course_list([course], format, course.full_name())
 
 
 @login_required
 def export_language(language_id, format):
-    return export_course_list(models.Language.query.get_or_404(language_id).courses, format)
+    language = models.Language.query.get_or_404(language_id)
+    return export_course_list(language.courses, format, language.name)
 
 
 @login_required
