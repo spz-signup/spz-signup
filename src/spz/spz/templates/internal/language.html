@@ -50,7 +50,10 @@ Sprache: {{ language.name }}
                 {{ td_sorted(course.get_paying_attendances()|count) }}
                 <td class="collapsing"><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_course_presence', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
-                <td class="collapsing"><a href="{{ url_for('export_course', course_id=course.id) }}"><button type="button" class="ui button">CSV</button></a></td>
+                <td class="collapsing">
+                    <a href="{{ url_for('export_course', course_id=course.id, format='csv') }}"><button type="button" class="ui button">CSV</button></a>
+                    <a href="{{ url_for('export_course', course_id=course.id, format='xlsx') }}"><button type="button" class="ui button">Excel</button></a>
+                </td>
             </tr>
             {% if sums.update({
               'limit': sums['limit'] + course.limit,
@@ -71,6 +74,7 @@ Sprache: {{ language.name }}
                 <th>{{ sums['active'] }}</th>
                 <th>{{ sums['waiting'] }}</th>
                 <th>{{ sums['paying'] }}</th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
