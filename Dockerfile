@@ -19,11 +19,13 @@ RUN apt-get update && \
 
 # install requirements and do cleanup
 COPY requirements.txt /home/spz/code/requirements.txt
+COPY setup.cfg /home/spz/code/setup.cfg
+COPY uwsgi.ini /home/spz/code/uwsgi.ini
 RUN pip install -U -r requirements.txt --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 
 # copy code
-COPY . /home/spz/code
+COPY ./src/spz /home/spz/code
 RUN mkdir /backup /state && \
     chown -R spz:spz /backup /home/spz/code /state
 

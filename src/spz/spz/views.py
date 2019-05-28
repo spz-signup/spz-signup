@@ -48,6 +48,7 @@ def check_precondition_with_auth(cond, msg, auth=False):
 @templated('signup.html')
 def index():
     one_time_token = request.args.get('token', None)
+
     # token_payload will contain the linked mail address if valid or None otherwise
     token_payload = token.validate_once(
         token=one_time_token,
@@ -56,6 +57,7 @@ def index():
         db_model=models.Applicant,
         db_column=models.Applicant.mail
     ) if one_time_token else None
+
     # show all forms to authenticated users (normal or via one_time_token)
     form = forms.SignupForm(show_all_courses=(current_user.is_authenticated or token_payload))
     time = datetime.utcnow()
@@ -82,14 +84,13 @@ def index():
             user_has_special_rights
         )
         # when using a token, submitted mail address has to match the one stored in payload
-        if token_payload:
-            err |= check_precondition_with_auth(
-                token_payload.lower() == applicant.mail,
-                'Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
-                'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
-                'Anmeldung erhalten haben!',
-                user_has_special_rights
-            )
+        err |= token_payload and check_precondition_with_auth(
+            token_payload.lower() == applicant.mail,
+            'Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
+            'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
+            'Anmeldung erhalten haben!',
+            user_has_special_rights
+        )
         err |= check_precondition_with_auth(
             course.is_allowed(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
