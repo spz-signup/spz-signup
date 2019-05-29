@@ -7,9 +7,11 @@
 
 import csv
 import io
+import re
 from tempfile import NamedTemporaryFile
 from openpyxl import Workbook
 from openpyxl.worksheet.table import Table
+from openpyxl.workbook.child import INVALID_TITLE_REGEX
 
 from flask import make_response, url_for, redirect, flash
 
@@ -71,6 +73,11 @@ class ExcelWriter:
     def new_section(self, name):
         if self.workbook._sheets:
             self.end_section()
+        # Sheet naming is very constrained: some chars are disallowed , names need to be unique & maximum length is 32
+        # Openpyxl knows about the first two but not about the last one. It will automatically enforce unique naming by
+        # appending an incrementer (e.g. [sheet, sheet] -> [sheet1, sheet2]). This then might cause the length limit to
+        # be exceeded: Therefore we use a shorter limit of only 30 characters here.
+        name = re.sub(INVALID_TITLE_REGEX, '', name)[:30]
         self.workbook.create_sheet(name)
 
     def get_data(self):
