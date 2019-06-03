@@ -151,6 +151,8 @@ routes = [
     ('/internal/print_language/<int:language_id>', pdf.print_language, ['GET']),
     ('/internal/print_language_presence/<int:language_id>', pdf.print_language_presence, ['GET']),
 
+    ('/internal/export', views.export, ['GET', 'POST']),
+
     ('/internal/notifications', views.notifications, ['GET', 'POST']),
 
     ('/internal/lists', views.lists, ['GET']),

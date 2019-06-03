@@ -1,0 +1,20 @@
+{% extends 'internal/internal.html' %}
+{% from 'formhelpers.html' import csrf_field, render_option, render_submit %}
+
+{% block caption %}
+Kurslisten Export
+{% endblock caption %}
+
+
+{% block internal_body %}
+<div class="row">
+    <form class="ui form" method="post" id="export" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <h3 class="ui dividing header">Auswahl</h3>
+        {{ render_option(form.courses, multiple=True, required=False) }}
+        {{ render_option(form.languages, multiple=True, required=False) }}
+        
+        {{ render_submit(submit='Herunterladen')}}
+    </form>
+</div>
+{% endblock internal_body %}

@@ -16,11 +16,11 @@ from openpyxl.workbook.child import INVALID_TITLE_REGEX
 from flask import make_response, url_for, redirect, flash
 
 
-def export_course_list(courses, format, filename='Kursliste'):
+def export_course_list(courses, format, filename='Kursliste', sectionize=True):
     if format == 'csv':
-        return export(CSVWriter(), courses, filename)
+        return export(CSVWriter(), courses, filename, sectionize)
     elif format == 'xlsx':
-        return export(ExcelWriter(), courses, filename)
+        return export(ExcelWriter(), courses, filename, sectionize)
     else:
         flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
         return redirect(url_for('lists'))
@@ -99,14 +99,15 @@ class ExcelWriter:
             sheet.add_table(table)
 
 
-def export(writer, courses, filename):
+def export(writer, courses, filename, sectionize):
     # XXX: header -- not standardized
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
 
     for course in courses:
-        writer.new_section(course.full_name())
-        writer.write_heading(header)
+        if (sectionize):
+            writer.new_section(course.full_name())
+            writer.write_heading(header)
 
         active_no_debt = [attendance.applicant for attendance in course.attendances
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]

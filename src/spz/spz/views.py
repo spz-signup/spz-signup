@@ -422,6 +422,18 @@ def notifications():
 
 
 @login_required
+@templated('internal/export.html')
+def export():
+    form = forms.ExportForm()
+
+    if form.validate_on_submit():
+        pass
+
+    return dict(form=form)
+
+
+
+@login_required
 def export_course(course_id, format):
     course = models.Course.query.get_or_404(course_id)
     return export_course_list([course], format, course.full_name())

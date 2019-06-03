@@ -29,6 +29,7 @@ __all__ = [
     'UniqueForm',
     'TagForm',
     'SignoffForm',
+    'ExportForm',
 ]
 
 
@@ -576,3 +577,23 @@ class TagForm(Form):
 
     def get_tag(self):
         return self.tag.data
+
+
+class ExportForm(Form):
+    """Represents a form to select course export options
+    """
+
+    courses = SelectMultipleField(
+        'Kurse',
+        coerce=int
+    )
+
+    languages = SelectMultipleField(
+        'Sprachen',
+        coerce=int
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(ExportForm, self).__init__(*args, **kwargs)
+        self.courses.choices = cached.all_courses_to_choicelist()
+        self.languages.choices = cached.languages_to_choicelist()
