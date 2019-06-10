@@ -144,14 +144,13 @@ routes = [
     ('/internal/registrations/import', views.registrations_import, ['GET', 'POST']),
     ('/internal/registrations/verify', views.registrations_verify, ['GET', 'POST']),
 
-    ('/internal/export_course/<int:course_id>/<string:format>', views.export_course, ['GET']),
     ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),
     ('/internal/print_course_presence/<int:course_id>', pdf.print_course_presence, ['GET']),
-    ('/internal/export_language/<int:language_id>/<string:format>', views.export_language, ['GET']),
     ('/internal/print_language/<int:language_id>', pdf.print_language, ['GET']),
     ('/internal/print_language_presence/<int:language_id>', pdf.print_language_presence, ['GET']),
 
-    ('/internal/export', views.export, ['GET', 'POST']),
+    ('/internal/export/<string:type>/<int:id>', views.export, ['GET', 'POST']),
+    ('/internal/export/<string:type>/<int:id>/<string:format>', views.export, ['GET', 'POST']),
 
     ('/internal/notifications', views.notifications, ['GET', 'POST']),
 

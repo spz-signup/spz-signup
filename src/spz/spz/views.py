@@ -14,7 +14,7 @@ from redis import ConnectionError
 
 from sqlalchemy import and_, func, not_
 
-from flask import request, redirect, render_template, url_for, flash
+from flask import request, redirect, render_template, url_for, flash, abort
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_mail import Message
 
@@ -423,26 +423,21 @@ def notifications():
 
 @login_required
 @templated('internal/export.html')
-def export():
-    form = forms.ExportForm()
+def export(type, id, format='xlsx'):
+    if type == 'course':
+        form = forms.ExportCourseForm()
+    elif type == 'language':
+        form = forms.ExportLanguageForm()
+    else:
+        abort(404)
 
     if form.validate_on_submit():
-        pass
+        return export_course_list(courses=form.get_selected(), format=form.get_format(), sectionize=form.sections_wanted())
+    else:
+        form.select.data = id
+        form.format.data = format
 
     return dict(form=form)
-
-
-
-@login_required
-def export_course(course_id, format):
-    course = models.Course.query.get_or_404(course_id)
-    return export_course_list([course], format, course.full_name())
-
-
-@login_required
-def export_language(language_id, format):
-    language = models.Language.query.get_or_404(language_id)
-    return export_course_list(language.courses, format, language.name)
 
 
 @login_required

@@ -11,7 +11,7 @@ from flask_login import current_user
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
-from spz import app, models, token
+from spz import app, models, token, tables
 
 from . import cached, validators
 
@@ -580,20 +580,66 @@ class TagForm(Form):
 
 
 class ExportForm(Form):
-    """Represents a form to select course export options
+    """Represents a general export form.
     """
 
-    courses = SelectMultipleField(
-        'Kurse',
-        coerce=int
+
+    format = SelectField(
+        'Format',
+        [validators.Required('Das Format muss angegeben werden')],
+        choices=tables.export_file_formats
     )
 
-    languages = SelectMultipleField(
-        'Sprachen',
-        coerce=int
+    no_sections = BooleanField(
+        'Alle Kurse in einen Abschnitt schreiben'
     )
+
+    def get_format(self):
+        return self.format.data
+
+    def sections_wanted(self):
+        return not self.no_sections.data
 
     def __init__(self, *args, **kwargs):
         super(ExportForm, self).__init__(*args, **kwargs)
-        self.courses.choices = cached.all_courses_to_choicelist()
-        self.languages.choices = cached.languages_to_choicelist()
+
+
+class ExportCourseForm(ExportForm):
+    """Represents a form to select course export options.
+    """
+
+
+    select = SelectMultipleField(
+        'Kurse',
+        [validators.Required('Mindestens ein Kurs muss ausgewählt werden')],
+        coerce=int
+    )
+
+    def get_selected(self):
+        return [models.Course.query.get(id) for id in self.select.data]
+
+    def __init__(self, *args, **kwargs):
+        super(ExportForm, self).__init__(*args, **kwargs)
+        self.select.choices = cached.all_courses_to_choicelist()
+
+
+class ExportLanguageForm(ExportForm):
+    """Represents a form to select language export options.
+    """
+
+
+    select = SelectMultipleField(
+        'Sprachen',
+        [validators.Required('Mindestens eine Sprache muss ausgewählt werden')],
+        coerce=int
+    )
+
+    def get_selected(self):
+        selected = []
+        for id in self.select.data:
+            selected += models.Language.query.get(id).courses
+        return selected
+
+    def __init__(self, *args, **kwargs):
+        super(ExportForm, self).__init__(*args, **kwargs)
+        self.select.choices = cached.languages_to_choicelist()

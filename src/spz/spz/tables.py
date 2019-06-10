@@ -15,6 +15,11 @@ from openpyxl.workbook.child import INVALID_TITLE_REGEX
 
 from flask import make_response, url_for, redirect, flash
 
+export_file_formats = [
+    ('xlsx', 'Excel (.xlsx)'),
+    ('csv', 'Comma Separated (.csv)')
+]
+
 
 def export_course_list(courses, format, filename='Kursliste', sectionize=True):
     if format == 'csv':
@@ -104,8 +109,11 @@ def export(writer, courses, filename, sectionize):
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
 
+    if not sectionize:
+        writer.new_section(filename)
+        writer.write_heading(header)
     for course in courses:
-        if (sectionize):
+        if sectionize:
             writer.new_section(course.full_name())
             writer.write_heading(header)
 
