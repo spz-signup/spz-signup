@@ -432,7 +432,11 @@ def export(type, id, format='xlsx'):
         abort(404)
 
     if form.validate_on_submit():
-        return export_course_list(courses=form.get_selected(), format=form.get_format(), sectionize=form.sections_wanted())
+        return export_course_list(
+            courses=form.get_selected(),
+            format=form.get_format(),
+            sectionize=form.sections_wanted()
+        )
     else:
         form.select.data = id
         form.format.data = format

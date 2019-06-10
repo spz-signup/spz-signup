@@ -29,7 +29,8 @@ __all__ = [
     'UniqueForm',
     'TagForm',
     'SignoffForm',
-    'ExportForm',
+    'ExportCourseForm',
+    'ExportLanguageForm',
 ]
 
 
@@ -583,7 +584,6 @@ class ExportForm(Form):
     """Represents a general export form.
     """
 
-
     format = SelectField(
         'Format',
         [validators.Required('Das Format muss angegeben werden')],
@@ -608,7 +608,6 @@ class ExportCourseForm(ExportForm):
     """Represents a form to select course export options.
     """
 
-
     select = SelectMultipleField(
         'Kurse',
         [validators.Required('Mindestens ein Kurs muss ausgewählt werden')],
@@ -626,7 +625,6 @@ class ExportCourseForm(ExportForm):
 class ExportLanguageForm(ExportForm):
     """Represents a form to select language export options.
     """
-
 
     select = SelectMultipleField(
         'Sprachen',

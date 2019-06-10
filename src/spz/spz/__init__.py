@@ -33,6 +33,7 @@ class CustomFlask(Flask):
     """
     jinja_options = dict(Flask.jinja_options, trim_blocks=True, lstrip_blocks=True, auto_reload=False)
 
+
 app = CustomFlask(__name__, instance_relative_config=True)
 
 
@@ -74,10 +75,10 @@ rlrc_rng = random.SystemRandom()
 
 def rlrc_comment():
     """Generate a random length (32 to 64 chars), random content (lower+upper numbers + letters) HTML comment."""
-    l = rlrc_rng.randrange(32, 32 + 64)
+    r = rlrc_rng.randrange(32, 32 + 64)
     s = ''.join(
         rlrc_rng.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
-        for _ in range(0, l)
+        for _ in range(0, r)
     )
     return Markup('<!-- RND: {} -->'.format(s))
 

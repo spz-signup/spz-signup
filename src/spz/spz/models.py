@@ -287,7 +287,7 @@ class Applicant(db.Model):
     def is_in_signoff_window(self, course):
         try:
             att = [attendance for attendance in self.attendances if course == attendance.course][0]
-        except IndexError as e:
+        except IndexError:
             return False
         return att.signoff_window > datetime.utcnow()
 
