@@ -15,26 +15,12 @@ from openpyxl.workbook.child import INVALID_TITLE_REGEX
 
 from flask import make_response, url_for, redirect, flash
 
-export_file_formats = [
-    ('xlsx', 'Excel (.xlsx)'),
-    ('csv', 'Comma Separated (.csv)')
-]
-
-
-def export_course_list(courses, format, filename='Kursliste', sectionize=True):
-    if format == 'csv':
-        return export(CSVWriter(), courses, filename, sectionize)
-    elif format == 'xlsx':
-        return export(ExcelWriter(), courses, filename, sectionize)
-    else:
-        flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
-        return redirect(url_for('lists'))
-
 
 class CSVWriter:
 
     mimetype = 'text/csv'
     filetype = 'csv'
+    description = 'Comma Separated (.csv)'
 
     def __init__(self):
         self.buf = io.StringIO()
@@ -62,6 +48,7 @@ class ExcelWriter:
 
     mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     filetype = 'xlsx'
+    description = 'Excel (.xlsx)'
 
     def __init__(self):
         # write_only=True would require additional logic to keep track of sheet dimension so we keep it at False
@@ -102,6 +89,23 @@ class ExcelWriter:
             tableName = sheet.title.replace(' ', '_')  # needs to be unique and must not contain spaces
             table = Table(displayName=tableName, ref=sheet.dimensions)
             sheet.add_table(table)
+
+
+writers = [
+    ExcelWriter,
+    CSVWriter
+]
+
+export_file_formats = [(w.filetype, w.description) for w in writers]
+
+
+def export_course_list(courses, format, filename='Kursliste', sectionize=True):
+    for writer in writers:
+        if writer.filetype == format:
+            return export(writer(), courses, filename, sectionize)
+
+    flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
+    return redirect(url_for('lists'))
 
 
 def export(writer, courses, filename, sectionize):
