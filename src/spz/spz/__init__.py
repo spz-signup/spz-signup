@@ -33,6 +33,7 @@ class CustomFlask(Flask):
     """
     jinja_options = dict(Flask.jinja_options, trim_blocks=True, lstrip_blocks=True, auto_reload=False)
 
+
 app = CustomFlask(__name__, instance_relative_config=True)
 
 
@@ -74,10 +75,10 @@ rlrc_rng = random.SystemRandom()
 
 def rlrc_comment():
     """Generate a random length (32 to 64 chars), random content (lower+upper numbers + letters) HTML comment."""
-    l = rlrc_rng.randrange(32, 32 + 64)
+    r = rlrc_rng.randrange(32, 32 + 64)
     s = ''.join(
         rlrc_rng.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
-        for _ in range(0, l)
+        for _ in range(0, r)
     )
     return Markup('<!-- RND: {} -->'.format(s))
 
@@ -144,12 +145,13 @@ routes = [
     ('/internal/registrations/import', views.registrations_import, ['GET', 'POST']),
     ('/internal/registrations/verify', views.registrations_verify, ['GET', 'POST']),
 
-    ('/internal/export_course/<int:course_id>/<string:format>', views.export_course, ['GET']),
     ('/internal/print_course/<int:course_id>', pdf.print_course, ['GET']),
     ('/internal/print_course_presence/<int:course_id>', pdf.print_course_presence, ['GET']),
-    ('/internal/export_language/<int:language_id>/<string:format>', views.export_language, ['GET']),
     ('/internal/print_language/<int:language_id>', pdf.print_language, ['GET']),
     ('/internal/print_language_presence/<int:language_id>', pdf.print_language_presence, ['GET']),
+
+    ('/internal/export/<string:type>/<int:id>', views.export, ['GET', 'POST']),
+    ('/internal/export/<string:type>/<int:id>/<string:format>', views.export, ['GET', 'POST']),
 
     ('/internal/notifications', views.notifications, ['GET', 'POST']),
 

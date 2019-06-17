@@ -40,6 +40,7 @@ def make_celery(app):
     celery.Task = ContextTask
     return celery
 
+
 cel = make_celery(app)
 
 

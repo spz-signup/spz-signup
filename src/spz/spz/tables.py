@@ -16,20 +16,11 @@ from openpyxl.workbook.child import INVALID_TITLE_REGEX
 from flask import make_response, url_for, redirect, flash
 
 
-def export_course_list(courses, format, filename='Kursliste'):
-    if format == 'csv':
-        return export(CSVWriter(), courses, filename)
-    elif format == 'xlsx':
-        return export(ExcelWriter(), courses, filename)
-    else:
-        flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
-        return redirect(url_for('lists'))
-
-
 class CSVWriter:
 
     mimetype = 'text/csv'
     filetype = 'csv'
+    description = 'Comma Separated (.csv)'
 
     def __init__(self):
         self.buf = io.StringIO()
@@ -57,6 +48,7 @@ class ExcelWriter:
 
     mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     filetype = 'xlsx'
+    description = 'Excel (.xlsx)'
 
     def __init__(self):
         # write_only=True would require additional logic to keep track of sheet dimension so we keep it at False
@@ -99,14 +91,35 @@ class ExcelWriter:
             sheet.add_table(table)
 
 
-def export(writer, courses, filename):
+writers = [
+    ExcelWriter,
+    CSVWriter
+]
+
+export_file_formats = [(w.filetype, w.description) for w in writers]
+
+
+def export_course_list(courses, format, filename='Kursliste', sectionize=True):
+    for writer in writers:
+        if writer.filetype == format:
+            return export(writer(), courses, filename, sectionize)
+
+    flash('Ungueltiges Export-Format: {0}'.format(format), 'error')
+    return redirect(url_for('lists'))
+
+
+def export(writer, courses, filename, sectionize):
     # XXX: header -- not standardized
     header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
               'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
 
-    for course in courses:
-        writer.new_section(course.full_name())
+    if not sectionize:
+        writer.new_section(filename)
         writer.write_heading(header)
+    for course in courses:
+        if sectionize:
+            writer.new_section(course.full_name())
+            writer.write_heading(header)
 
         active_no_debt = [attendance.applicant for attendance in course.attendances
                           if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
