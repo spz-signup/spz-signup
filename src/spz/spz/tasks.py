@@ -7,17 +7,13 @@ from celery import Celery
 
 from spz import app, mail
 
-import spz.backup as backup
-
 from spz.iliasharvester import refresh
 from spz.populate import populate_global
 
 
 __all__ = [
     'cel',
-    'create_backup',
     'populate',
-    'send_backup',
     'send_slow',
     'send_quick',
     'sync_ilias',
@@ -69,15 +65,3 @@ def populate():
 def sync_ilias():
     # don't catch exception because task is stateless and will be rescheduled
     refresh()
-
-
-@cel.task
-def create_backup():
-    # don't catch exception because task is stateless and will be rescheduled
-    backup.create()
-
-
-@cel.task
-def send_backup():
-    # don't catch exception because task is stateless and will be rescheduled
-    backup.send()

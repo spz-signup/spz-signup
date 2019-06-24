@@ -26,8 +26,8 @@ RUN pip install -U -r requirements.txt --no-cache-dir && \
 
 # copy code
 COPY ./src/spz /home/spz/code
-RUN mkdir /backup /state && \
-    chown -R spz:spz /backup /home/spz/code /state
+RUN mkdir /state && \
+    chown -R spz:spz /home/spz/code /state
 
 # security and volumes
 VOLUME ["/home/spz/code/spz/static", "/state"]

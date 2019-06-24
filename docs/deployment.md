@@ -53,16 +53,10 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 `uwsgi.ini`:
 - `python-autoreload = 1` => `python-autoreload = 0`
 
-`keys/*.key`:
-- in contrast to nginx config we're talking about GPG keys now. Ensure that key and signature algorithms are compatible with the GPG version used by the docker container!
-- replace `spz_backup.key` with a new private key. Do NOT use a passphrase. Extract the public key of that one and save it to your computer. It will be required to verify the backups that were send to the admin.
-- replace `spz_admin.key` with the public (NOT the private) key of the admin (or a key shared by a group of admins). Only people who own the corresponding private key will be able to decrypt the backups.
-
 `instances/development.conf`:
 - `DEBUG = True` => `DEBUG = False`
 - set new DB password in `SQLALCHEMY_DATABASE_URI`
 - generate 3 random entries for `SECRET_KEY`, `TOKEN_SECRET_KEY` and `ARGON2_SALT`
-- set `ADMIN_MAILS` to an array of one or more mails of project admins. This people will get encrypted backup messages (and in the future maybe error messages).
 - set `SEMESTER_NAME` to the correct value
 - enter `ILIAS_USERNAME`, `ILIAS_PASSWORD` and `ILIAS_REFID` (hints: it's the integer value in the URL of the test, not the one of the course that contains it)
 - check that `SELF_SIGNOFF_PERIOD`, `MANUAL_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day

@@ -6,7 +6,6 @@ services:
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
-            - backup:/backup
             - ./docs/python:/home/spz/code/doc.build:rw
             - ./src/spz/spz:/home/spz/code/spz:ro
             - ./src/spz/util:/home/spz/code/util:ro
@@ -159,6 +158,42 @@ services:
         links:
             - uwsgi
         restart: unless-stopped
+# Uncomment for production
+#    pg-dump:
+#        image: jmcarbo/docker-postgres-backup
+#        container_name: pg-dump
+#        restart: unless-stopped
+#        environment:
+#            CRON_TIME: 0 0 1 * * 
+#            POSTGRES_HOST: postgres
+#            POSTGRES_PORT: 5432
+#            POSTGRES_USER: postgres
+#            POSTGRES_PASSWORD: mysecretpassword
+#            POSTGRES_DB: spz
+#            MAX_BACKUPS: 200
+#            INIT_BACKUP: 'true'
+#        volumes:
+#            - backup:/backup
+#        networks:
+#            - back
+#        links:
+#            - postgres
+#    backup:
+#        image: southclaws/restic-robot
+#        container_name: backup
+#        restart: unless-stopped
+#        environment:
+#            # every day at 3am
+#            SCHEDULE: 0 0 3 * * *
+#            RESTIC_REPOSITORY: 'b2:spz-backup'
+#            RESTIC_ARGS: /data
+#            RUN_ON_BOOT: 'true'
+#            B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
+#            B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
+#            RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+#        volumes:
+#            - backup:/data/
+
 volumes:
     backup: {}
     cache_nginx: {}
