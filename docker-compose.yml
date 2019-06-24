@@ -164,7 +164,7 @@ services:
 #        container_name: pg-dump
 #        restart: unless-stopped
 #        environment:
-#            CRON_TIME: 0 0 1 * * 
+#            CRON_TIME: 0 0 2 * * 
 #            POSTGRES_HOST: postgres
 #            POSTGRES_PORT: 5432
 #            POSTGRES_USER: postgres
