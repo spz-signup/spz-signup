@@ -6,7 +6,7 @@
 """
 
 from sqlalchemy import func
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
@@ -34,7 +34,7 @@ __all__ = [
 ]
 
 
-class SignoffForm(Form):
+class SignoffForm(FlaskForm):
     signoff_id = TextField(
         'Abmelde-ID'
     )
@@ -71,7 +71,7 @@ class SignoffForm(Form):
             return None
 
 
-class SignupForm(Form):
+class SignupForm(FlaskForm):
     """Represents the main sign up form.
 
        Get's populated with choices from the backend.
@@ -224,7 +224,7 @@ class SignupForm(Form):
         )
 
 
-class NotificationForm(Form):
+class NotificationForm(FlaskForm):
     """Represents the form for sending notifications.
 
        The field's length are limited on purpose.
@@ -335,7 +335,7 @@ class NotificationForm(Form):
         return [(idx, mail) for (idx, mail) in enumerate(addresses, 1)]
 
 
-class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
+class ApplicantForm(FlaskForm):  # TODO: refactor: lots of code dup. here
     """Represents the form for editing an applicant and his/her attendances.
 
     """
@@ -446,7 +446,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         return self.send_mail.data
 
 
-class StatusForm(Form):
+class StatusForm(FlaskForm):
     """Represents the form for applicants attendances and payments.
 
     """
@@ -490,7 +490,7 @@ class StatusForm(Form):
         return models.Graduation.query.get(self.graduation.data) if self.graduation.data else None
 
 
-class PaymentForm(Form):
+class PaymentForm(FlaskForm):
     """Represents a PaymentForm to input the attendance
 
     """
@@ -501,7 +501,7 @@ class PaymentForm(Form):
     )
 
 
-class SearchForm(Form):
+class SearchForm(FlaskForm):
     """Represents a form to search for specific applicants.
     """
 
@@ -511,7 +511,7 @@ class SearchForm(Form):
     )
 
 
-class LanguageForm(Form):
+class LanguageForm(FlaskForm):
     """Represents a form for working with courses based on the user's language selection.
     """
 
@@ -538,13 +538,13 @@ class UniqueForm(LanguageForm):
     pass
 
 
-class DeleteCourseForm(Form):
+class DeleteCourseForm(FlaskForm):
     """Represents a form for deleting a course.
     """
     pass
 
 
-class PretermForm(Form):
+class PretermForm(FlaskForm):
     """Represents a form to generate a preterm signup token.
     """
 
@@ -560,7 +560,7 @@ class PretermForm(Form):
         return token.generate(self.mail.data, namespace='preterm')
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """Represents the login form the the internal partsPasswort
     """
 
@@ -568,7 +568,7 @@ class LoginForm(Form):
     password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])
 
 
-class TagForm(Form):
+class TagForm(FlaskForm):
     """Represents the form for the input of a tag.
     """
 
@@ -580,7 +580,7 @@ class TagForm(Form):
         return self.tag.data
 
 
-class ExportForm(Form):
+class ExportForm(FlaskForm):
     """Represents a general export form.
     """
 
