@@ -48,7 +48,7 @@ else:
 # set up login system
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.session_protection = 'strong'
+login_manager.session_protection = 'basic'
 
 
 @login_manager.user_loader
