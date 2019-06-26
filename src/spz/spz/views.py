@@ -842,11 +842,11 @@ def unique():
                 deleted += 1
 
             db.session.commit()
-            flash('Kurse von {0} wartenden Teilnahmen mit aktiven Parallelkurs bereinigt'.format(deleted), 'success')
+            flash('Kurse von {0} wartenden Teilnehmern mit aktivem Parallelkurs bereinigt'.format(deleted), 'success')
         except Exception as e:
             db.session.rollback()
             flash(
-                'Die Kurse konnten nicht von wartenden Teilnahmen mit aktiven Parallelkurs bereinigt werden: '
+                'Die Kurse konnten nicht von wartenden Teilnehmern mit aktivem Parallelkurs bereinigt werden: '
                 '{0}'.format(e),
                 'negative'
             )
