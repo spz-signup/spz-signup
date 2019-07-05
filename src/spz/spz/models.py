@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from functools import total_ordering
 import random
 import string
+import re
 
 from argon2 import argon2_hash
 
@@ -362,6 +363,11 @@ class Course(db.Model):
     def get_active_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting]
 
+    """ active attendances without debt """
+    def get_paid_attendances(self):
+        return [attendance for attendance in self.attendances if not attendance.waiting
+                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+
     def get_paying_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and attendance.has_to_pay]
 
@@ -545,6 +551,14 @@ class Origin(db.Model):
 
     __tablename__ = 'origin'
 
+    short_names = {
+        'KIT (Mitarbeiter)': 'KIT Mitarb.',
+        'Hochschule Karlsruhe': 'HS KA',
+        'PH Karlsruhe': 'PH KA',
+        'HfG Karlsruhe': 'HfG KA',
+        'Musikhochschule Karlsruhe': 'MHS KA'
+    }
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
     validate_registration = db.Column(db.Boolean, nullable=False)
@@ -558,6 +572,11 @@ class Origin(db.Model):
 
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
+
+    def get_short_name(self):
+        if self.name in self.short_names:
+            return self.short_names[self.name]
+        return re.sub('\\(.+?\\)', '', self.name)
 
 
 @total_ordering

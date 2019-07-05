@@ -110,8 +110,7 @@ def export_course_list(courses, format, filename='Kursliste', sectionize=True):
 
 def export(writer, courses, filename, sectionize):
     # XXX: header -- not standardized
-    header = ['Kurs', 'Kursplatz', 'Bewerbernummer', 'Vorname', 'Nachname', 'Mail',
-              'Matrikelnummer', 'Telefon', 'Studienabschluss', 'Semester', 'Bewerberkreis']
+    header = ['Nachname', 'Vorname', 'Hochschule', 'Matrikelnummer', 'E-Mail', 'Telefon', 'Kurs']
 
     if not sectionize:
         writer.new_section(filename)
@@ -121,23 +120,16 @@ def export(writer, courses, filename, sectionize):
             writer.new_section(course.full_name())
             writer.write_heading(header)
 
-        active_no_debt = [attendance.applicant for attendance in course.attendances
-                          if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+        active_no_debt = sorted(attendance.applicant for attendance in course.get_paid_attendances())
 
-        idx = 1
         for applicant in active_no_debt:
-            writer.write_row([course.full_name(),
-                              idx,
-                              applicant.id,
+            writer.write_row([applicant.last_name,
                               applicant.first_name,
-                              applicant.last_name,
-                              applicant.mail,
+                              applicant.origin.get_short_name() if applicant.origin else None,
                               applicant.tag,
+                              applicant.mail,
                               applicant.phone,
-                              applicant.degree.name if applicant.degree else None,
-                              applicant.semester,
-                              applicant.origin.name if applicant.origin else None])
-            idx += 1
+                              course.full_name()])
 
     resp = make_response(writer.get_data())
     resp.headers['Content-Disposition'] = 'attachment; filename="{0}.{1}"'.format(filename, writer.filetype)
