@@ -7,3 +7,4 @@ install: "pip install -q -r requirements.txt"
 
 script:
   - flake8 ./src/spz
+  - pytest ./src/spz
