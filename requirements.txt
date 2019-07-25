@@ -2,7 +2,7 @@ alabaster==0.7.12
 amqp==1.4.9
 anyjson==0.3.3
 argon2==0.1.10
-Babel==2.3.4
+Babel==2.7.0
 billiard==3.3.0.23
 blinker==1.4
 celery==3.1.23
@@ -34,7 +34,7 @@ mccabe==0.5.2
 openpyxl==2.6.2
 pep8==1.7.1
 pexpect==4.2.1
-phonenumbers==7.5.2
+phonenumbers==8.10.15
 pickleshare==0.7.5
 prompt-toolkit==1.0.7
 psycopg2-binary==2.8.3
