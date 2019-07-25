@@ -8,7 +8,7 @@
 from sqlalchemy import func
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
+from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
 from spz import app, models, token, tables
@@ -35,7 +35,7 @@ __all__ = [
 
 
 class SignoffForm(FlaskForm):
-    signoff_id = TextField(
+    signoff_id = StringField(
         'Abmelde-ID'
     )
 
@@ -44,7 +44,7 @@ class SignoffForm(FlaskForm):
         coerce=int
     )
 
-    mail = TextField(
+    mail = StringField(
         'Für Anmeldung verwendete E-Mailadresse'
     )
 
@@ -80,22 +80,22 @@ class SignupForm(FlaskForm):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    first_name = TextField(
+    first_name = StringField(
         'Vorname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
     )
-    last_name = TextField(
+    last_name = StringField(
         'Nachname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
     )
-    phone = TextField(
+    phone = StringField(
         'Telefon',
         [
             validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein'),
             validators.PhoneValidator()
         ]
     )
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
@@ -103,7 +103,7 @@ class SignupForm(FlaskForm):
         ]
     )
 
-    confirm_mail = TextField(
+    confirm_mail = StringField(
         'E-Mail bestätigen',
         [validators.EqualTo('mail', message='E-Mailadressen müssen übereinstimmen.')]
     )
@@ -114,7 +114,7 @@ class SignupForm(FlaskForm):
         coerce=int
     )
 
-    tag = TextField(
+    tag = StringField(
         'Matrikel&shy;nummer',
         [
             validators.RequiredDependingOnOrigin('Matrikelnummer muss angegeben werden'),
@@ -230,7 +230,7 @@ class NotificationForm(FlaskForm):
        The field's length are limited on purpose.
     """
 
-    mail_subject = TextField(
+    mail_subject = StringField(
         'Betreff',
         [validators.Length(1, 200, 'Betreff muss zwischen 1 und 200 Zeichen enthalten')]
     )
@@ -238,11 +238,11 @@ class NotificationForm(FlaskForm):
         'Nachricht',
         [validators.Length(1, 2000, 'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')]
     )
-    mail_cc = TextField(
+    mail_cc = StringField(
         'CC',
         [validators.Optional()]
     )
-    mail_bcc = TextField(
+    mail_bcc = StringField(
         'BCC',
         [validators.Optional()]
     )
@@ -340,26 +340,26 @@ class ApplicantForm(FlaskForm):  # TODO: refactor: lots of code dup. here
 
     """
     applicant = None  # really needed?
-    first_name = TextField(
+    first_name = StringField(
         'Vorname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
     )
-    last_name = TextField(
+    last_name = StringField(
         'Nachname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
     )
-    phone = TextField(
+    phone = StringField(
         'Telefon',
         [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')]
     )
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
             validators.EmailPlusValidator()
         ]
     )
-    tag = TextField(
+    tag = StringField(
         'Matrikelnummer',
         [
             validators.Optional(),
@@ -456,8 +456,8 @@ class StatusForm(FlaskForm):
         [validators.Optional()],
         coerce=int
     )
-    registered = TextField('Registrierungsdatum')
-    payingdate = TextField('Zahlungsdatum')
+    registered = StringField('Registrierungsdatum')
+    payingdate = StringField('Zahlungsdatum')
     waiting = BooleanField('Warteliste')
     has_to_pay = BooleanField('Zahlungspflichtig')
     discounted = BooleanField('Ermäßigt')
@@ -495,7 +495,7 @@ class PaymentForm(FlaskForm):
 
     """
 
-    confirmation_code = TextField(
+    confirmation_code = StringField(
         'Code',
         [validators.Length(min=4, message='Länge muss mindestens 4 Zeichen lang sein')]
     )
@@ -505,7 +505,7 @@ class SearchForm(FlaskForm):
     """Represents a form to search for specific applicants.
     """
 
-    query = TextField(
+    query = StringField(
         'Suchen',
         [validators.DataRequired('Suchparameter muss angegeben werden')]
     )
@@ -548,7 +548,7 @@ class PretermForm(FlaskForm):
     """Represents a form to generate a preterm signup token.
     """
 
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
@@ -564,15 +564,15 @@ class LoginForm(FlaskForm):
     """Represents the login form the the internal partsPasswort
     """
 
-    user = TextField('User', [validators.DataRequired('User muss angegeben werden')])
-    password = TextField('Passwort', [validators.DataRequired('Passwort muss angegeben werden')])
+    user = StringField('User', [validators.DataRequired('User muss angegeben werden')])
+    password = StringField('Passwort', [validators.DataRequired('Passwort muss angegeben werden')])
 
 
 class TagForm(FlaskForm):
     """Represents the form for the input of a tag.
     """
 
-    tag = TextField(
+    tag = StringField(
         'Matrikelnummer oder Kürzel'
     )
 
