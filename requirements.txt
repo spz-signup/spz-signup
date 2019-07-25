@@ -37,7 +37,7 @@ pexpect==4.2.1
 phonenumbers==7.5.2
 pickleshare==0.7.5
 prompt-toolkit==1.0.7
-psycopg2==2.7.6.1
+psycopg2-binary==2.8.3
 ptyprocess==0.5.1
 pycodestyle==2.0.0
 pyflakes==1.2.3
