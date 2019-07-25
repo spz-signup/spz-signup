@@ -20,7 +20,7 @@ Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
--e git+https://github.com/reingart/pyfpdf.git@3114b4f249bbaca199af6312f1cc982f8585ade9#egg=fpdf
+git+https://github.com/reingart/pyfpdf.git@3114b4f249bbaca199af6312f1cc982f8585ade9#egg=fpdf
 idna==2.8
 imagesize==0.7.1
 ipython==5.1.0
@@ -62,3 +62,4 @@ wcwidth==0.1.7
 webassets==0.12.1
 Werkzeug==0.14.1
 WTForms==2.2.1
+pytest==4.6.4
