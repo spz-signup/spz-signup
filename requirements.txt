@@ -18,7 +18,7 @@ Flask-Assets==0.12
 Flask-Caching==1.4.0
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
-Flask-SQLAlchemy==2.3.2
+Flask-SQLAlchemy==2.4.0
 Flask-WTF==0.14.2
 git+https://github.com/reingart/pyfpdf.git@3114b4f249bbaca199af6312f1cc982f8585ade9#egg=fpdf
 idna==2.8
@@ -55,7 +55,7 @@ six==1.10.0
 snowballstemmer==1.2.1
 Sphinx==1.4.6
 sphinx-rtd-theme==0.1.9
-SQLAlchemy==1.3.3
+SQLAlchemy==1.3.6
 traitlets==4.2.2
 uWSGI==2.0.17.1
 wcwidth==0.1.7
