@@ -164,7 +164,7 @@ services:
 #        container_name: pg-dump
 #        restart: unless-stopped
 #        environment:
-#            CRON_TIME: 0 * * * * 
+#            CRON_TIME: 0 * * * *
 #            POSTGRES_HOST: postgres
 #            POSTGRES_PORT: 5432
 #            POSTGRES_USER: postgres
@@ -183,7 +183,7 @@ services:
 #        container_name: backup
 #        restart: unless-stopped
 #        environment:
-#            # every day at 3am
+#            # once every hour (10 minutes past)
 #            SCHEDULE: 0 10 * * * *
 #            RESTIC_REPOSITORY: 'b2:spz-backup'
 #            RESTIC_ARGS: /data
