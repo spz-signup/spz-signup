@@ -592,7 +592,7 @@ class Registration(db.Model):
 
     __tablename__ = 'registration'
 
-    salted = db.Column(db.Binary(32), primary_key=True)
+    salted = db.Column(db.LargeBinary(32), primary_key=True)
 
     def __init__(self, salted):
         self.salted = salted
@@ -655,7 +655,7 @@ class Approval(db.Model):
     __tablename__ = 'approval'
 
     id = db.Column(db.Integer, primary_key=True)
-    tag_salted = db.Column(db.Binary(32), nullable=False)  # tag may be not unique, multiple tests taken
+    tag_salted = db.Column(db.LargeBinary(32), nullable=False)  # tag may be not unique, multiple tests taken
     percent = db.Column(db.Integer, nullable=False)
     sticky = db.Column(db.Boolean, nullable=False, default=False)
     priority = db.Column(db.Boolean, nullable=False, default=False)
@@ -726,7 +726,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     active = db.Column(db.Boolean, default=True)
     superuser = db.Column(db.Boolean, default=False)
-    pwsalted = db.Column(db.Binary(32), nullable=True)
+    pwsalted = db.Column(db.LargeBinary(32), nullable=True)
     languages = db.relationship('Language', secondary='admin', backref='admins')
 
     def __init__(self, email, active, superuser, languages):

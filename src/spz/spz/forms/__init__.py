@@ -110,7 +110,7 @@ class SignupForm(FlaskForm):
 
     origin = SelectField(
         'Bewerber&shy;kreis',
-        [validators.Required('Herkunft muss angegeben werden')],
+        [validators.DataRequired('Herkunft muss angegeben werden')],
         coerce=int
     )
 
@@ -151,7 +151,7 @@ class SignupForm(FlaskForm):
     )
     course = SelectField(
         'Kurse',
-        [validators.Required('Kurs muss angegeben werden')],
+        [validators.DataRequired('Kurs muss angegeben werden')],
         coerce=int
     )
 
@@ -248,12 +248,12 @@ class NotificationForm(FlaskForm):
     )
     mail_courses = SelectMultipleField(
         'Kurse',
-        [validators.Required('Kurs muss angegeben werden')],
+        [validators.DataRequired('Kurs muss angegeben werden')],
         coerce=int
     )
     mail_sender = SelectField(
         'Absender',
-        [validators.Required('Absender muss angegeben werden')],
+        [validators.DataRequired('Absender muss angegeben werden')],
         coerce=int
     )
     only_active = BooleanField(
@@ -369,7 +369,7 @@ class ApplicantForm(FlaskForm):  # TODO: refactor: lots of code dup. here
 
     origin = SelectField(
         'Bewerberkreis',
-        [validators.Required('Bewerberkreis muss angegeben werden')],
+        [validators.DataRequired('Bewerberkreis muss angegeben werden')],
         coerce=int
     )
 
@@ -507,7 +507,7 @@ class SearchForm(FlaskForm):
 
     query = TextField(
         'Suchen',
-        [validators.Required('Suchparameter muss angegeben werden')]
+        [validators.DataRequired('Suchparameter muss angegeben werden')]
     )
 
 
@@ -517,7 +517,7 @@ class LanguageForm(FlaskForm):
 
     language = SelectField(
         'Sprache',
-        [validators.Required('Die Sprache muss angegeben werden')],
+        [validators.DataRequired('Die Sprache muss angegeben werden')],
         coerce=int
     )
 
@@ -564,8 +564,8 @@ class LoginForm(FlaskForm):
     """Represents the login form the the internal partsPasswort
     """
 
-    user = TextField('User', [validators.Required('User muss angegeben werden')])
-    password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])
+    user = TextField('User', [validators.DataRequired('User muss angegeben werden')])
+    password = TextField('Passwort', [validators.DataRequired('Passwort muss angegeben werden')])
 
 
 class TagForm(FlaskForm):
@@ -586,7 +586,7 @@ class ExportForm(FlaskForm):
 
     format = SelectField(
         'Format',
-        [validators.Required('Das Format muss angegeben werden')],
+        [validators.DataRequired('Das Format muss angegeben werden')],
         choices=tables.export_file_formats
     )
 
@@ -610,7 +610,7 @@ class ExportCourseForm(ExportForm):
 
     select = SelectMultipleField(
         'Kurse',
-        [validators.Required('Mindestens ein Kurs muss ausgewählt werden')],
+        [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
         coerce=int
     )
 
@@ -628,7 +628,7 @@ class ExportLanguageForm(ExportForm):
 
     select = SelectMultipleField(
         'Sprachen',
-        [validators.Required('Mindestens eine Sprache muss ausgewählt werden')],
+        [validators.DataRequired('Mindestens eine Sprache muss ausgewählt werden')],
         coerce=int
     )
 
