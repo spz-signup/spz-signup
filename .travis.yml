@@ -5,6 +5,9 @@ python:
 
 install: "pip install -q -r requirements.txt"
 
-script:
-  - flake8 ./src/spz
-  - pytest ./src/spz
+jobs:
+  include:
+    - stage: lint
+      script: flake8 ./src/spz
+    - stage: test
+      script: pytest ./src/spz
