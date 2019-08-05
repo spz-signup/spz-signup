@@ -17,5 +17,5 @@ jobs:
           - psql -c 'create database spz;' -U postgres
           - YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python ./src/spz/init_db
           - python ./src/spz/build_assets
-          -  gzip --keep --recursive --force --best ./src/spz/spz/static
+          - gzip --keep --recursive --force --best ./src/spz/spz/static
       script: pytest ./src/spz
