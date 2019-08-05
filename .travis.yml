@@ -3,6 +3,9 @@ language: python
 python:
   - "3.5"
 
+services:
+  - postgres
+
 install: "pip install -q -r requirements.txt"
 
 jobs:
@@ -10,4 +13,6 @@ jobs:
     - stage: lint
       script: flake8 ./src/spz
     - stage: test
+      before_install:
+        - ./src/spz/util/docker_entrypoint.sh
       script: pytest ./src/spz
