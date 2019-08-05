@@ -4,7 +4,7 @@ python:
   - "3.5"
 
 services:
-  - postgres
+  - postgresql
 
 install: "pip install -q -r requirements.txt"
 
