@@ -10,7 +10,9 @@ from flask import json
 from jsonschema import validate, ValidationError, SchemaError
 
 from spz import app, db
-from spz.models import *  # Keep this import, otherwise the create_all call won't any models at all
+from spz.models import Degree, Graduation, Origin, Language, Course, User
+# Make sure that create_all works for all models (even ones that might be added in the future)
+from spz.models import *  # noqa
 
 
 def validate_resources():
@@ -55,9 +57,11 @@ def insert_resources():
             ref_lang = Language(
                 language["name"],
                 language["reply_to"],
-                datetime.strptime(language["signup_begin_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),  # ISO 8601 / RFC 3339 -- better way to parse this?
+                # ISO 8601 / RFC 3339 -- better way to parse this?
+                datetime.strptime(language["signup_begin_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
                 datetime.strptime(language["signup_random_window_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
-                datetime.strptime(language["signup_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),    # see also Jsonschema RFC, date-time
+                # see also Jsonschema RFC, date-time
+                datetime.strptime(language["signup_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
                 datetime.strptime(language["signup_auto_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ")
             )
 
@@ -117,7 +121,8 @@ if __name__ == '__main__':
     if 'YES_I_KNOW_THAT_WORLD_ENDS_NOW' in os.environ:
         user_in = token
     else:
-        user_in = input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'.format(db, token))
+        user_in = input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'
+                        .format(db, token))
 
     if token == user_in:
         db.drop_all()
