@@ -1,0 +1,52 @@
+version: '2'
+services:
+    uwsgi:
+        environment:
+            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+    celery_beat:
+        environment:
+            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+    celery_default:
+        environment:
+            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+    celery_slow_mails:
+        environment:
+            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+    mail:
+        image: spzsignup/opensmtpd:6.0.3p1
+        volumes:
+            - ./conf/smtpd.conf:/etc/smtpd.conf
+    pg-dump:
+        image: jmcarbo/docker-postgres-backup
+        container_name: pg-dump
+        restart: unless-stopped
+        environment:
+            CRON_TIME: 0 * * * *
+            POSTGRES_HOST: postgres
+            POSTGRES_PORT: 5432
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: mysecretpassword
+            POSTGRES_DB: spz
+            MAX_BACKUPS: 200
+            INIT_BACKUP: 'true'
+        volumes:
+            - backup:/backup
+        networks:
+            - back
+        links:
+            - postgres
+    backup:
+        image: southclaws/restic-robot
+        container_name: backup
+        restart: unless-stopped
+        environment:
+            # once every hour (10 minutes past)
+            SCHEDULE: 0 10 * * * *
+            RESTIC_REPOSITORY: 'b2:spz-backup'
+            RESTIC_ARGS: /data
+            RUN_ON_BOOT: 'true'
+            B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
+            B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
+            RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+        volumes:
+            - backup:/data/

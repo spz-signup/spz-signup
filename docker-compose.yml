@@ -2,17 +2,12 @@ version: '2'
 services:
     uwsgi:
         build: .
-        command: uwsgi --ini /home/spz/uwsgi.ini --workers 8 --threads 4
-        ports:
-            - "127.0.0.1:3031:3031"
+        command: uwsgi --ini /home/spz/config/uwsgi.ini --workers 8 --threads 4
         volumes:
             - ./docs/python:/home/spz/code/doc.build:rw
-            - ./src/spz/spz:/home/spz/code/spz:ro
-            - ./src/spz/util:/home/spz/code/util:ro
+            - ./conf/spz:/home/spz/config:ro
             - data_static:/home/spz/code/spz/static:rw
             - state_spz:/state:rw
-            - ./conf/spz:/home/spz/config:ro
-            - ./conf/uwsgi.ini:/home/spz/uwsgi.ini:ro
         tmpfs:
             - /tmp
         read_only: true
@@ -20,7 +15,6 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -41,7 +35,6 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -51,7 +44,7 @@ services:
         restart: unless-stopped
     celery_default:
         build: .
-        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
         volumes_from:
             - uwsgi
         tmpfs:
@@ -71,7 +64,7 @@ services:
         restart: unless-stopped
     celery_slow_mails:
         build: .
-        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
         volumes_from:
             - uwsgi
         tmpfs:
@@ -81,7 +74,6 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -92,8 +84,6 @@ services:
     redis:
         image: redis:3.0
         command: redis-server --appendonly yes
-        ports:
-            - "127.0.0.1:26379:6379"
         volumes:
             - data_redis:/data
         read_only: true
@@ -102,8 +92,6 @@ services:
         restart: unless-stopped
     postgres:
         image: postgres:9.4
-        ports:
-            - "127.0.0.1:25432:5432"
         volumes:
             - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
             - data_postgres:/var/lib/postgresql/data
@@ -117,9 +105,6 @@ services:
             - back
         restart: unless-stopped
     mail:
-        image: djfarrelly/maildev:1.0.0-rc2
-        ports:
-            - "127.0.0.1:8080:80"
         volumes:
             - state_mail:/var/spool
         tmpfs:
@@ -160,41 +145,6 @@ services:
         links:
             - uwsgi
         restart: unless-stopped
-# Uncomment for production
-#    pg-dump:
-#        image: jmcarbo/docker-postgres-backup
-#        container_name: pg-dump
-#        restart: unless-stopped
-#        environment:
-#            CRON_TIME: 0 * * * *
-#            POSTGRES_HOST: postgres
-#            POSTGRES_PORT: 5432
-#            POSTGRES_USER: postgres
-#            POSTGRES_PASSWORD: mysecretpassword
-#            POSTGRES_DB: spz
-#            MAX_BACKUPS: 200
-#            INIT_BACKUP: 'true'
-#        volumes:
-#            - backup:/backup
-#        networks:
-#            - back
-#        links:
-#            - postgres
-#    backup:
-#        image: southclaws/restic-robot
-#        container_name: backup
-#        restart: unless-stopped
-#        environment:
-#            # once every hour (10 minutes past)
-#            SCHEDULE: 0 10 * * * *
-#            RESTIC_REPOSITORY: 'b2:spz-backup'
-#            RESTIC_ARGS: /data
-#            RUN_ON_BOOT: 'true'
-#            B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
-#            B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
-#            RESTIC_PASSWORD: ${RESTIC_PASSWORD}
-#        volumes:
-#            - backup:/data/
 
 volumes:
     backup: {}
