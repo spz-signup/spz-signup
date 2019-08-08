@@ -19,8 +19,6 @@ RUN apt-get update && \
 
 # install requirements and do cleanup
 COPY requirements.txt /home/spz/code/requirements.txt
-COPY setup.cfg /home/spz/code/setup.cfg
-COPY uwsgi.ini /home/spz/code/uwsgi.ini
 RUN pip install -U -r requirements.txt --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 

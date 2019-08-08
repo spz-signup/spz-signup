@@ -2,15 +2,17 @@ version: '2'
 services:
     uwsgi:
         build: .
-        command: uwsgi --ini /home/spz/code/uwsgi.ini --workers 8 --threads 4
+        command: uwsgi --ini /home/spz/uwsgi.ini --workers 8 --threads 4
         ports:
             - "127.0.0.1:3031:3031"
         volumes:
             - ./docs/python:/home/spz/code/doc.build:rw
             - ./src/spz/spz:/home/spz/code/spz:ro
             - ./src/spz/util:/home/spz/code/util:ro
-            - data_static:/home/spz/code/spz/static
-            - state_spz:/state
+            - data_static:/home/spz/code/spz/static:rw
+            - state_spz:/state:rw
+            - ./conf/spz:/home/spz/config:ro
+            - ./conf/uwsgi.ini:/home/spz/uwsgi.ini:ro
         tmpfs:
             - /tmp
         read_only: true
@@ -18,7 +20,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
+            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -39,7 +41,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
+            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -59,7 +61,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
+            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres
@@ -79,7 +81,7 @@ services:
             - MAIL_PORT=tcp://mail:25
             - POSTGRES_PORT=tcp://postgres:5432
             - REDIS_PORT=tcp://redis:6379
-            - SPZ_CFG_FILE=/home/spz/code/instance/development.cfg
+            - SPZ_CFG_FILE=/home/spz/config/development.cfg
         links:
             - mail
             - postgres

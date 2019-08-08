@@ -8,6 +8,10 @@
 *.swo
 *.~
 
+__pycache__
+.pytest_cache
+
 .dockerignore
 Dockerfile
 docker-compose.yml
+.travis.yml
