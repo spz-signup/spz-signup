@@ -113,6 +113,8 @@ wait_for_services
 
         init
 
+        # update python documentation
+        bash util/build_docs.sh
 
         # remember that we reached this point
         touch $FILE_DONE
