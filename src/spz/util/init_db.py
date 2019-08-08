@@ -113,12 +113,11 @@ if __name__ == '__main__':
 
     # Request polite confirmation
     token = uuid4().hex[:5]  # repeat random token of arbitrary length
-    try:
+    # OK, not an interactive process, try something else
+    if 'YES_I_KNOW_THAT_WORLD_ENDS_NOW' in os.environ:
+        user_in = token
+    else:
         user_in = input('Create and drop tables using {0}\nConfirm by repeating the following token\n{1}\n'.format(db, token))
-    except EOFError:
-        # OK, not an interactive process, try something else
-        if 'YES_I_KNOW_THAT_WORLD_ENDS_NOW' in os.environ:
-            user_in = token
 
     if token == user_in:
         db.drop_all()

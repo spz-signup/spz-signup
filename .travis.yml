@@ -1,9 +1,25 @@
 language: python
 
+cache: pip
+
 python:
   - "3.5"
 
+services:
+  - postgresql
+
 install: "pip install -q -r requirements.txt"
 
-script:
-  - flake8 ./src/spz
+jobs:
+  include:
+    - stage: lint
+      script: flake8 ./src/spz
+    - stage: test
+      env:
+          - SPZ_CFG_FILE=travis.cfg
+      before_script:
+          - psql -c 'create database spz;' -U postgres
+          - YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python ./src/spz/init_db
+          - python ./src/spz/build_assets
+          - gzip --keep --recursive --force --best ./src/spz/spz/static
+      script: pytest ./src/spz
