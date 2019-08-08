@@ -16,10 +16,11 @@ jobs:
       script: flake8 ./src/spz
     - stage: test
       env:
-          - SPZ_CFG_FILE=travis.cfg
+          - SPZ_CFG_FILE=/home/spz/config/travis.cfg
       before_script:
           - psql -c 'create database spz;' -U postgres
-          - YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python ./src/spz/init_db
-          - python ./src/spz/build_assets
-          - gzip --keep --recursive --force --best ./src/spz/spz/static
-      script: pytest ./src/spz
+          - cd ./src/spz
+          - YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python -m util.init_db
+          - python -m util.build_assets
+          - gzip --keep --recursive --force --best spz/static
+      script: pytest .
