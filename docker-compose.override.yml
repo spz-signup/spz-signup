@@ -7,18 +7,18 @@ services:
             - ./src/spz/spz:/home/spz/code/spz:ro
             - ./src/spz/util:/home/spz/code/util:ro
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
+            - FLASK_ENV=development
     celery_beat:
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
+            - FLASK_ENV=development
     celery_default:
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
+            - FLASK_ENV=development
     celery_slow_mails:
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/development.cfg
+            - FLASK_ENV=development
     redis:
         ports:
             - "127.0.0.1:26379:6379"

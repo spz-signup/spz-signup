@@ -2,16 +2,16 @@ version: '2'
 services:
     uwsgi:
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+            - SPZ_CFG_FILE=production.cfg
     celery_beat:
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+            - SPZ_CFG_FILE=production.cfg
     celery_default:
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+            - SPZ_CFG_FILE=production.cfg
     celery_slow_mails:
         environment:
-            - SPZ_CFG_FILE=/home/spz/config/production.cfg
+            - SPZ_CFG_FILE=production.cfg
     mail:
         image: spzsignup/opensmtpd:6.0.3p1
         volumes:

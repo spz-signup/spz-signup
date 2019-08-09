@@ -27,6 +27,9 @@ COPY ./src/spz /home/spz/code
 RUN mkdir /state && \
     chown -R spz:spz /home/spz/code /state
 
+# copy configuration
+COPY ./conf/spz/production.cfg /home/spz/code/instance/production.cfg
+
 # security and volumes
 VOLUME ["/home/spz/code/spz/static", "/state"]
 USER 1000
