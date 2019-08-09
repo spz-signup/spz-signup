@@ -16,7 +16,7 @@ jobs:
       script: flake8 ./src/spz
     - stage: test
       env:
-          - SPZ_CFG_FILE=/home/spz/config/travis.cfg
+          - SPZ_CFG_FILE=../../../conf/spz/travis.cfg
       before_script:
           - psql -c 'create database spz;' -U postgres
           - cd ./src/spz
