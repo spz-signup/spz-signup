@@ -12,11 +12,6 @@ from kombu import Queue
 
 class BaseConfig(object):
 
-    SECRET_KEY = 'your-secret-key'
-    TOKEN_SECRET_KEY = 'your-secret-key'
-    ARGON2_SALT = 'your-secret-key'
-    DEBUG = False
-
     WTF_CSRF_ENABLED = True
 
     SESSION_COOKIE_SECURE = True
@@ -26,19 +21,15 @@ class BaseConfig(object):
     REMEMBER_COOKIE_SECURE = True
     REMEMBER_COOKIE_HTTPONLY = True
 
-    DB_DB = 'spz'
-    DB_DRIVER = 'postgresql'
-    DB_HOST = 'postgres'
-    DB_USER = 'postgres'
-    DB_PW = 'mysecretpassword'
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        return '{driver}://{user}:{pw}@{host}/{db}'.format(
+                db=self.DB_DB,
+                driver=self.DB_DRIVER,
+                host=self.DB_HOST,
+                pw=self.DB_PW,
+                user=self.DB_USER)
 
-    SQLALCHEMY_DATABASE_URI = '{driver}://{user}:{pw}@{host}/{db}'.format(
-        db=DB_DB,
-        driver=DB_DRIVER,
-        host=DB_HOST,
-        pw=DB_PW,
-        user=DB_USER
-    )
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_size': 5}
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
@@ -124,29 +115,37 @@ class BaseConfig(object):
     # data for ilias sync
     ILIAS_URL = 'https://scc-ilias-plugins.scc.kit.edu:443/webservice/soap/server.php?wsdl'
     ILIAS_USERNAME = 'soap_spz'
-    ILIAS_PASSWORD = 'S0kJYhMMV4BdWZ8VluJvhWOU2SJPKCdt!'
-    ILIAS_REFID = '970'
+    ILIAS_PASSWORD = 'mysecretpassword'
+    ILIAS_REFID = '123'
 
 
 class Development(BaseConfig):
     DEBUG = True
 
+    SECRET_KEY = 'dev-secret'
+    TOKEN_SECRET_KEY = 'dev-secret'
+    ARGON2_SALT = 'dev-secret'
+
+    DB_DB = 'spz'
+    DB_DRIVER = 'postgresql'
+    DB_HOST = 'postgres'
+    DB_USER = 'postgres'
+    DB_PW = 'dev-password'
+
 
 class Testing(BaseConfig):
+    TESTING = True
+
+    SECRET_KEY = 'test-secret'
+    TOKEN_SECRET_KEY = 'test-secret'
+    ARGON2_SALT = 'test-secret'
+
     DB_DB = 'spz'
     DB_DRIVER = 'postgresql'
     DB_HOST = 'localhost'
     DB_USER = 'postgres'
     DB_PW = ''
 
-    SQLALCHEMY_DATABASE_URI = '{driver}://{user}:{pw}@{host}/{db}'.format(
-        db=DB_DB,
-        driver=DB_DRIVER,
-        host=DB_HOST,
-        pw=DB_PW,
-        user=DB_USER
-    )
-
 
 class Production(BaseConfig):
-    pass  # secrets should be specified in production.cfg
+    pass  # see production.cfg for specifying secrets
