@@ -12,6 +12,7 @@ log = logging.getLogger('webassets')
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.DEBUG)
 
+
 def build_assets():
     cmdenv = CommandLineEnvironment(assets_env, log)
     cmdenv.build()

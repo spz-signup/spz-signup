@@ -4,7 +4,7 @@
 """
 import pytest
 
-from spz import app, db
+from spz import app
 from util.init_db import recreate_tables, insert_resources
 from util.build_assets import build_assets
 
