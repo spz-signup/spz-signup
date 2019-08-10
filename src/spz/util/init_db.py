@@ -28,6 +28,11 @@ def validate_resources():
             validate(res_json, res_schema)
 
 
+def recreate_tables():
+    db.drop_all()
+    db.create_all()
+
+
 def insert_resources():
     with app.open_resource('resource/degrees.json') as fd:
         res = json.load(fd)
@@ -125,8 +130,7 @@ if __name__ == '__main__':
                         .format(db, token))
 
     if token == user_in:
-        db.drop_all()
-        db.create_all()
+        recreate_tables()
         insert_resources()
 
         print('Import OK.')

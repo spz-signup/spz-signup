@@ -48,8 +48,8 @@ elif app.env == 'testing':
 app.config.from_object(config_object)
 
 
-if 'SPZ_CONFIG_FILE' in os.environ:
-    app.config.from_pyfile(os.environ['SPZ_CONFIG_FILE'])  # load override values from external directory
+if 'SPZ_CFG_FILE' in os.environ:
+    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])  # load override values from external directory
 
 
 # set up login system

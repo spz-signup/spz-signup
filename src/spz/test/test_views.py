@@ -4,15 +4,19 @@
 """
 import pytest
 
-from spz import app
+from spz import app, db
+from util.init_db import recreate_tables, insert_resources
+from util.build_assets import build_assets
 
 
 @pytest.fixture
 def client():
     client = app.test_client()
 
-#    with app.app_context():
-#        app.init_db()
+    recreate_tables()
+    insert_resources()
+
+    build_assets()
 
     yield client
 
