@@ -17,6 +17,5 @@ def build_assets():
     cmdenv = CommandLineEnvironment(assets_env, log)
     cmdenv.build()
 
-
 if __name__ == '__main__':
     build_assets()
