@@ -11,8 +11,6 @@ from jsonschema import validate, ValidationError, SchemaError
 
 from spz import app, db
 from spz.models import Degree, Graduation, Origin, Language, Course, User
-# Make sure that create_all works for all models (even ones that might be added in the future)
-from spz.models import *  # noqa
 
 
 def validate_resources():
@@ -29,6 +27,8 @@ def validate_resources():
 
 
 def recreate_tables():
+    # any models not imported won't have tables created
+    from spz.models import *  # noqa
     db.drop_all()
     db.create_all()
 
