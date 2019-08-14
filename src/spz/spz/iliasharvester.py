@@ -7,6 +7,8 @@
 import csv
 import requests
 from spz import app, db, models
+from bs4 import BeautifulSoup
+from urllib import parse
 
 
 # headers that will be used for all Ilias HTTPS requests
@@ -16,19 +18,11 @@ headers = {
 }
 
 
-def extract_text(s, token_begin, token_end):
-    """Extract text from string that is located between 2 tokens."""
-    l0 = len(token_begin)
-    idx0 = s.find(token_begin)
-    assert idx0 > -1
+def get_export_parameters(html):
+    parsed_html = BeautifulSoup(html, 'html.parser')
+    url = parsed_html.body.find('form', attrs={'id': 'ilToolbar'}).get('action')
 
-    begin = idx0 + l0
-
-    idx1 = s.find(token_end, begin)
-    assert idx1 > -1
-
-    end = idx1
-    return s[begin:end]
+    return dict(parse.parse_qsl(parse.urlsplit(url).query))
 
 
 def download_data():
@@ -90,8 +84,9 @@ def download_data():
     assert r2.status_code == 200
     text2 = r2.text
     # these tokens occur multiple times but seem to be unique
-    rtoken = extract_text(text2, "rtoken=", "\"")
-    active_id = extract_text(text2, "active_id=", "&")
+    export_parameters = get_export_parameters(text2)
+    rtoken = export_parameters['rtoken']
+    active_id = export_parameters['active_id']
 
     # prepare form / virtual table so we get all the information we need
     # without this step, the "Matrikelnummer" won't be present.
