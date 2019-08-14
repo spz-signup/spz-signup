@@ -1,9 +1,22 @@
 language: python
 
+cache: pip
+
 python:
   - "3.5"
 
+services:
+  - postgresql
+
 install: "pip install -q -r requirements.txt"
 
-script:
-  - flake8 ./src/spz
+jobs:
+  include:
+    - stage: lint
+      script: flake8 ./src/spz
+    - stage: test
+      env:
+          - FLASK_ENV=testing
+      before_script:
+          - psql -c 'create database spz;' -U postgres
+      script: pytest .

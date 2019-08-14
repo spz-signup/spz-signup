@@ -6,9 +6,9 @@
 """
 
 from sqlalchemy import func
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import TextField, SelectField, SelectMultipleField, IntegerField
+from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
 from spz import app, models, token, tables
@@ -34,8 +34,8 @@ __all__ = [
 ]
 
 
-class SignoffForm(Form):
-    signoff_id = TextField(
+class SignoffForm(FlaskForm):
+    signoff_id = StringField(
         'Abmelde-ID'
     )
 
@@ -44,7 +44,7 @@ class SignoffForm(Form):
         coerce=int
     )
 
-    mail = TextField(
+    mail = StringField(
         'Für Anmeldung verwendete E-Mailadresse'
     )
 
@@ -71,7 +71,7 @@ class SignoffForm(Form):
             return None
 
 
-class SignupForm(Form):
+class SignupForm(FlaskForm):
     """Represents the main sign up form.
 
        Get's populated with choices from the backend.
@@ -80,22 +80,22 @@ class SignupForm(Form):
        .. note:: Keep this fully cacheable (i.e. do not query the database for every new form)
     """
 
-    first_name = TextField(
+    first_name = StringField(
         'Vorname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
     )
-    last_name = TextField(
+    last_name = StringField(
         'Nachname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
     )
-    phone = TextField(
+    phone = StringField(
         'Telefon',
         [
             validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein'),
             validators.PhoneValidator()
         ]
     )
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
@@ -103,18 +103,18 @@ class SignupForm(Form):
         ]
     )
 
-    confirm_mail = TextField(
+    confirm_mail = StringField(
         'E-Mail bestätigen',
         [validators.EqualTo('mail', message='E-Mailadressen müssen übereinstimmen.')]
     )
 
     origin = SelectField(
         'Bewerber&shy;kreis',
-        [validators.Required('Herkunft muss angegeben werden')],
+        [validators.DataRequired('Herkunft muss angegeben werden')],
         coerce=int
     )
 
-    tag = TextField(
+    tag = StringField(
         'Matrikel&shy;nummer',
         [
             validators.RequiredDependingOnOrigin('Matrikelnummer muss angegeben werden'),
@@ -151,7 +151,7 @@ class SignupForm(Form):
     )
     course = SelectField(
         'Kurse',
-        [validators.Required('Kurs muss angegeben werden')],
+        [validators.DataRequired('Kurs muss angegeben werden')],
         coerce=int
     )
 
@@ -224,13 +224,13 @@ class SignupForm(Form):
         )
 
 
-class NotificationForm(Form):
+class NotificationForm(FlaskForm):
     """Represents the form for sending notifications.
 
        The field's length are limited on purpose.
     """
 
-    mail_subject = TextField(
+    mail_subject = StringField(
         'Betreff',
         [validators.Length(1, 200, 'Betreff muss zwischen 1 und 200 Zeichen enthalten')]
     )
@@ -238,22 +238,22 @@ class NotificationForm(Form):
         'Nachricht',
         [validators.Length(1, 2000, 'Nachricht muss zwischen 1 und 2000 Zeichen enthalten')]
     )
-    mail_cc = TextField(
+    mail_cc = StringField(
         'CC',
         [validators.Optional()]
     )
-    mail_bcc = TextField(
+    mail_bcc = StringField(
         'BCC',
         [validators.Optional()]
     )
     mail_courses = SelectMultipleField(
         'Kurse',
-        [validators.Required('Kurs muss angegeben werden')],
+        [validators.DataRequired('Kurs muss angegeben werden')],
         coerce=int
     )
     mail_sender = SelectField(
         'Absender',
-        [validators.Required('Absender muss angegeben werden')],
+        [validators.DataRequired('Absender muss angegeben werden')],
         coerce=int
     )
     only_active = BooleanField(
@@ -335,31 +335,31 @@ class NotificationForm(Form):
         return [(idx, mail) for (idx, mail) in enumerate(addresses, 1)]
 
 
-class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
+class ApplicantForm(FlaskForm):  # TODO: refactor: lots of code dup. here
     """Represents the form for editing an applicant and his/her attendances.
 
     """
     applicant = None  # really needed?
-    first_name = TextField(
+    first_name = StringField(
         'Vorname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 und 60 Zeichen sein')]
     )
-    last_name = TextField(
+    last_name = StringField(
         'Nachname',
         [validators.Length(1, 60, 'Länge muss zwischen 1 and 60 sein')]
     )
-    phone = TextField(
+    phone = StringField(
         'Telefon',
         [validators.Length(max=20, message='Länge darf maximal 20 Zeichen sein')]
     )
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
             validators.EmailPlusValidator()
         ]
     )
-    tag = TextField(
+    tag = StringField(
         'Matrikelnummer',
         [
             validators.Optional(),
@@ -369,7 +369,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
 
     origin = SelectField(
         'Bewerberkreis',
-        [validators.Required('Bewerberkreis muss angegeben werden')],
+        [validators.DataRequired('Bewerberkreis muss angegeben werden')],
         coerce=int
     )
 
@@ -446,7 +446,7 @@ class ApplicantForm(Form):  # TODO: refactor: lots of code dup. here
         return self.send_mail.data
 
 
-class StatusForm(Form):
+class StatusForm(FlaskForm):
     """Represents the form for applicants attendances and payments.
 
     """
@@ -456,8 +456,8 @@ class StatusForm(Form):
         [validators.Optional()],
         coerce=int
     )
-    registered = TextField('Registrierungsdatum')
-    payingdate = TextField('Zahlungsdatum')
+    registered = StringField('Registrierungsdatum')
+    payingdate = StringField('Zahlungsdatum')
     waiting = BooleanField('Warteliste')
     has_to_pay = BooleanField('Zahlungspflichtig')
     discounted = BooleanField('Ermäßigt')
@@ -490,34 +490,34 @@ class StatusForm(Form):
         return models.Graduation.query.get(self.graduation.data) if self.graduation.data else None
 
 
-class PaymentForm(Form):
+class PaymentForm(FlaskForm):
     """Represents a PaymentForm to input the attendance
 
     """
 
-    confirmation_code = TextField(
+    confirmation_code = StringField(
         'Code',
         [validators.Length(min=4, message='Länge muss mindestens 4 Zeichen lang sein')]
     )
 
 
-class SearchForm(Form):
+class SearchForm(FlaskForm):
     """Represents a form to search for specific applicants.
     """
 
-    query = TextField(
+    query = StringField(
         'Suchen',
-        [validators.Required('Suchparameter muss angegeben werden')]
+        [validators.DataRequired('Suchparameter muss angegeben werden')]
     )
 
 
-class LanguageForm(Form):
+class LanguageForm(FlaskForm):
     """Represents a form for working with courses based on the user's language selection.
     """
 
     language = SelectField(
         'Sprache',
-        [validators.Required('Die Sprache muss angegeben werden')],
+        [validators.DataRequired('Die Sprache muss angegeben werden')],
         coerce=int
     )
 
@@ -538,17 +538,17 @@ class UniqueForm(LanguageForm):
     pass
 
 
-class DeleteCourseForm(Form):
+class DeleteCourseForm(FlaskForm):
     """Represents a form for deleting a course.
     """
     pass
 
 
-class PretermForm(Form):
+class PretermForm(FlaskForm):
     """Represents a form to generate a preterm signup token.
     """
 
-    mail = TextField(
+    mail = StringField(
         'E-Mail',
         [
             validators.Length(max=120, message='Länge muss zwischen 1 und 120 Zeichen sein'),
@@ -560,19 +560,19 @@ class PretermForm(Form):
         return token.generate(self.mail.data, namespace='preterm')
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """Represents the login form the the internal partsPasswort
     """
 
-    user = TextField('User', [validators.Required('User muss angegeben werden')])
-    password = TextField('Passwort', [validators.Required('Passwort muss angegeben werden')])
+    user = StringField('User', [validators.DataRequired('User muss angegeben werden')])
+    password = StringField('Passwort', [validators.DataRequired('Passwort muss angegeben werden')])
 
 
-class TagForm(Form):
+class TagForm(FlaskForm):
     """Represents the form for the input of a tag.
     """
 
-    tag = TextField(
+    tag = StringField(
         'Matrikelnummer oder Kürzel'
     )
 
@@ -580,13 +580,13 @@ class TagForm(Form):
         return self.tag.data
 
 
-class ExportForm(Form):
+class ExportForm(FlaskForm):
     """Represents a general export form.
     """
 
     format = SelectField(
         'Format',
-        [validators.Required('Das Format muss angegeben werden')],
+        [validators.DataRequired('Das Format muss angegeben werden')],
         choices=tables.export_file_formats
     )
 
@@ -610,7 +610,7 @@ class ExportCourseForm(ExportForm):
 
     select = SelectMultipleField(
         'Kurse',
-        [validators.Required('Mindestens ein Kurs muss ausgewählt werden')],
+        [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
         coerce=int
     )
 
@@ -628,7 +628,7 @@ class ExportLanguageForm(ExportForm):
 
     select = SelectMultipleField(
         'Sprachen',
-        [validators.Required('Mindestens eine Sprache muss ausgewählt werden')],
+        [validators.DataRequired('Mindestens eine Sprache muss ausgewählt werden')],
         coerce=int
     )
 

@@ -19,8 +19,6 @@ RUN apt-get update && \
 
 # install requirements and do cleanup
 COPY requirements.txt /home/spz/code/requirements.txt
-COPY setup.cfg /home/spz/code/setup.cfg
-COPY uwsgi.ini /home/spz/code/uwsgi.ini
 RUN pip install -U -r requirements.txt --no-cache-dir && \
     rm -rf /root/.cache /var/cache/*
 
@@ -28,6 +26,9 @@ RUN pip install -U -r requirements.txt --no-cache-dir && \
 COPY ./src/spz /home/spz/code
 RUN mkdir /state && \
     chown -R spz:spz /home/spz/code /state
+
+# copy configuration
+COPY ./conf/spz/production.cfg /home/spz/code/instance/production.cfg
 
 # security and volumes
 VOLUME ["/home/spz/code/spz/static", "/state"]
