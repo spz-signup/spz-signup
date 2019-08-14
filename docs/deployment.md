@@ -53,27 +53,25 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 `uwsgi.ini`:
 - `python-autoreload = 1` => `python-autoreload = 0`
 
-`instances/development.conf`:
-- `DEBUG = True` => `DEBUG = False`
+`production.conf`:
 - set new DB password in `SQLALCHEMY_DATABASE_URI`
 - generate 3 random entries for `SECRET_KEY`, `TOKEN_SECRET_KEY` and `ARGON2_SALT`
 - set `SEMESTER_NAME` to the correct value
 - enter `ILIAS_USERNAME`, `ILIAS_PASSWORD` and `ILIAS_REFID` (hints: it's the integer value in the URL of the test, not the one of the course that contains it)
 - check that `SELF_SIGNOFF_PERIOD`, `MANUAL_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day
 
-`util/docker_entrypoint.sh`
+`src/spz/util/docker_entrypoint.sh`
 - set correct DB password to the line `PGPASSWORD=mysecretpassword psql -h postgres ...` somewhere in the `init` function
 
 ### 2.7 compose file
-- remove all `ports` entries, apart from the nginx ones where you just have to remove the `127.0.0.1:` prefix (two, port 80 and 443) of course
-- replace `maildev` with `mailprod`, renable `read-only`. no need to adjust the volumes, they are designed to work with both
+- in production we use `docker-compose.prod.yml` to override values from `docker-compose.yml`
+- if you wonder: docker-compose defaults to `docker-compose.override.yml` for overriding `docker-compose.yml` when run without further arguments
 - set correct (new, but same as used for the `spz` image) to the `POSTGRES_PASSWORD` env variable of the `postgres` container
-- remove `--autoreload` flag from `celery_default` and `celery_slow_mails` command entries
-- remove relative image mounts (starting with `./src`) from `uwsgi` container
 
 ## 3. Fire it up
 - ensure you're acting for the server docker and not your local one (you might want to use a SSH tunnel and the client TLS certificate)
 - hopefully you have a backup at this point
+- `export COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml` -- make docker use production compose file
 - `docker-compose down -v` -- that wipes everything
 - `docker-compose build --pull` -- ensures you get fresh upstream images during the build
 - `docker-compose up -d` -- launch new containers
@@ -89,11 +87,13 @@ After everything seems to be OK, send out mails to all users with their password
 
 ### 6.1 Image Fixes or Upgrades
 In case you have to do a hotfix or you want to update to the latest upstream images:
+- `export COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml`
 - `docker-compose build --pull`
 - `docker-compose down` (**NO `-v` flag this time, otherwise you wipe everyting!**)
 - `docker-compose up -d`
 
 ### 6.2 DB modifications
+- `export COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml`
 - `docker exec -it NAME_OF_THE_UWSGI_CONTAINER ipython`
 - `import spz.models`
 - do your changes

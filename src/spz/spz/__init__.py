@@ -24,6 +24,7 @@ from flask_wtf import CSRFProtect
 from jinja2 import Markup
 
 from spz import assets
+from spz.config import Development, Production, Testing
 
 
 class CustomFlask(Flask):
@@ -38,11 +39,17 @@ app = CustomFlask(__name__, instance_relative_config=True)
 
 
 # Configuration loading
+if app.env == 'development':
+    config_object = Development()
+elif app.env == 'production':
+    config_object = Production()
+elif app.env == 'testing':
+    config_object = Testing()
+app.config.from_object(config_object)
+
+
 if 'SPZ_CFG_FILE' in os.environ:
-    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])
-else:
-    app.config.from_pyfile('development.cfg')
-    # app.config.from_pyfile('production.cfg')
+    app.config.from_pyfile(os.environ['SPZ_CFG_FILE'])  # load override values from external directory
 
 
 # set up login system

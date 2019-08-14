@@ -86,10 +86,10 @@ init() {
 
     # setup DB
     PGPASSWORD=mysecretpassword psql --host=postgres --port=5432 --username=postgres --command="CREATE DATABASE spz;"
-    YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python init_db
+    YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python -m util.init_db
 
     # build+compress assets
-    python build_assets
+    python -m util.build_assets
     gzip --keep --recursive --force --best spz/static
 
     echo "finished initialization"
@@ -113,6 +113,8 @@ wait_for_services
 
         init
 
+        # update python documentation
+        bash util/build_docs.sh
 
         # remember that we reached this point
         touch $FILE_DONE
