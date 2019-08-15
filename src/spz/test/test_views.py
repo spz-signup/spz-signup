@@ -21,7 +21,7 @@ def client():
 
 
 def create_user(mail, superuser=False, languages=[]):
-    user = User(mail, active=True, superuser=superuser,languages=languages)
+    user = User(mail, active=True, superuser=superuser, languages=languages)
     password = user.reset_password()
     db.session.add(user)
     db.session.commit()
