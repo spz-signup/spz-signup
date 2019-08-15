@@ -136,6 +136,8 @@ class Development(BaseConfig):
 class Testing(BaseConfig):
     TESTING = True
 
+    WTF_CSRF_ENABLED = False
+
     SECRET_KEY = 'test-secret'
     TOKEN_SECRET_KEY = 'test-secret'
     ARGON2_SALT = 'test-secret'
