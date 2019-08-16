@@ -113,7 +113,7 @@ class BaseConfig(object):
     MAX_ATTENDANCES = 2
 
     # data for ilias sync
-    ILIAS_URL = 'https://scc-ilias-plugins.scc.kit.edu:443/webservice/soap/server.php?wsdl'
+    ILIAS_URL = 'https://scc-ilias-plugins.scc.kit.edu/'
     ILIAS_USERNAME = 'soap_spz'
     ILIAS_PASSWORD = 'mysecretpassword'
     ILIAS_REFID = '123'
