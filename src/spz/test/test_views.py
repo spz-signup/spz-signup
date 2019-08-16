@@ -3,8 +3,9 @@
 """Tests the application views.
 """
 
-from test.fixtures import * # noqa
 from . import login, logout, get_text
+from test.fixtures import client, user, superuser
+from spz import app
 from spz.models import Course, Origin, Degree, Graduation
 
 
