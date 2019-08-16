@@ -3,8 +3,7 @@
 """Tests the application views.
 """
 
-from . import login, logout, get_text
-from test.fixtures import client, user, superuser
+from test import login, logout, get_text
 from spz import app
 from spz.models import Course, Origin, Degree, Graduation
 
