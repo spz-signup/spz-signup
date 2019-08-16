@@ -135,6 +135,7 @@ class Development(BaseConfig):
 
 class Testing(BaseConfig):
     TESTING = True
+    CACHE_CONFIG = {'CACHE_TYPE': 'null', 'CACHE_NO_NULL_WARNING': True}
 
     WTF_CSRF_ENABLED = False
 

@@ -6,6 +6,8 @@
 from test import login, logout, get_text
 from spz.models import Course, Origin, Degree, Graduation, Applicant
 
+from datetime import datetime, timedelta
+
 
 def test_startpage(client):
     response = client.get('/')
@@ -62,10 +64,16 @@ def test_signup(client, superuser):
         degree=degree.id,
         graduation=graduation.id)
 
-    login(client, superuser)  # login to override time-delta restrictions
+    # make sure the courses language is open for signup
+    language = course.language
+    now = datetime.utcnow()
+    delta = timedelta(hours=1)
+    language.signup_begin = now - delta
+    language.signup_end = now + delta
+    assert language.is_upcoming(now) and language.is_open_for_signup(now)
+
     response = client.post('/', data=data)
     response_text = get_text(response)
-    logout(client)
 
     assert '{} {} – Sie haben sich für den Kurs {} beworben.'.format(
         data['first_name'], data['last_name'], course.full_name()) in response_text
