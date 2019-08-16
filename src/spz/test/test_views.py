@@ -2,47 +2,10 @@
 
 """Tests the application views.
 """
-import pytest
 
-from spz import app, db
-from spz.models import User
-from util.init_db import recreate_tables, insert_resources
-from bs4 import BeautifulSoup
-
-
-@pytest.fixture
-def client():
-    client = app.test_client()
-
-    recreate_tables()
-    insert_resources()
-
-    yield client
-
-
-def create_user(mail, superuser=False, languages=[]):
-    user = User(mail, active=True, superuser=superuser, languages=languages)
-    password = user.reset_password()
-    db.session.add(user)
-    db.session.commit()
-    return (mail, password)
-
-
-def login(client, user, password):
-    return client.post('/internal/login', data=dict(
-            user=user,
-            password=password),
-        follow_redirects=True)
-
-
-def logout(client):
-    return client.post('/internal/logout', follow_redirects=True)
-
-
-def get_text(response, expected_response_code=200):
-    assert response.status_code == expected_response_code
-    html = BeautifulSoup(response.data, 'html.parser')
-    return html.body.get_text()
+from test.fixtures import * # noqa
+from . import login, logout, get_text
+from spz.models import Course, Origin, Degree, Graduation
 
 
 def test_startpage(client):
@@ -54,20 +17,60 @@ def test_startpage(client):
     assert 'Absenden' in response_text
 
 
-def test_login(client):
-    credentials = create_user('test@localhost', superuser=True)
-
-    response = login(client, credentials[0], credentials[1])
+def test_login(client, user, superuser):
+    response = login(client, user)
     response_text = get_text(response)
-    assert 'Angemeldet als {} (SUPERUSER)'.format(credentials[0]) in response_text
     logout(client)
+    assert 'Angemeldet als {} ()'.format(user[0]) in response_text
 
-    response = login(client, credentials[0], 'definately-wrong-password')
+    response = login(client, superuser)
     response_text = get_text(response)
+    logout(client)
+    assert 'Angemeldet als {} (SUPERUSER)'.format(superuser[0]) in response_text
+
+    response = login(client, (user[0], 'definately-wrong-password'))
+    response_text = get_text(response)
+    logout(client)
     assert 'Du kommst hier net rein!' in response_text
+
+    response = login(client, ('definately-wrong-username', user[1]))
+    response_text = get_text(response)
+    logout(client)
+    assert 'Du kommst hier net rein!' in response_text
+
+
+def test_signup(client, superuser):
+    with app.app_context():  # lazy load (as used in course.full_name()) will fail otherwise
+        course = Course.query.first()
+        origin = Origin.query.first()
+        degree = Degree.query.first()
+        graduation = Graduation.query.first()
+        course_name = course.full_name()
+    name = ('Mika', 'Müller')
+    tag = '123456'
+    phone = '01521 1234567'
+    mail = 'mika.mueller@beispiel.de'
+    semester = 1
+    data = dict(
+        course=course.id,
+        first_name=name[0],
+        last_name=name[1],
+        phone=phone,
+        mail=mail,
+        confirm_mail=mail,
+        origin=origin.id)
+
+    if origin.validate_registration:
+        data = dict(
+            data,
+            tag=tag,
+            degree=degree.id,
+            semester=semester,
+            graduation=graduation.id)
+
+    login(client, superuser)  # login to override time-delta restrictions
+    response = client.post('/', data=data)
+    response_text = get_text(response)
     logout(client)
 
-    response = login(client, 'definately-wrong-username', credentials[1])
-    response_text = get_text(response)
-    assert 'Du kommst hier net rein!' in response_text
-    logout(client)
+    assert '{} {} – Sie haben sich für den Kurs {} beworben.'.format(name[0], name[1], course_name) in response_text
