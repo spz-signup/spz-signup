@@ -4,8 +4,7 @@
 """
 
 from test import login, logout, get_text
-from spz import app
-from spz.models import Course, Origin, Degree, Graduation
+from spz.models import Course, Origin, Degree, Graduation, Applicant
 
 
 def test_startpage(client):
@@ -39,38 +38,37 @@ def test_login(client, user, superuser):
     assert 'Du kommst hier net rein!' in response_text
 
 
-def test_signup(client, superuser):
-    with app.app_context():  # lazy load (as used in course.full_name()) will fail otherwise
-        course = Course.query.first()
-        origin = Origin.query.first()
-        degree = Degree.query.first()
-        graduation = Graduation.query.first()
-        course_name = course.full_name()
-    name = ('Mika', 'Müller')
-    tag = '123456'
-    phone = '01521 1234567'
-    mail = 'mika.mueller@beispiel.de'
-    semester = 1
-    data = dict(
-        course=course.id,
-        first_name=name[0],
-        last_name=name[1],
-        phone=phone,
+def fake_person(mail):
+    return dict(
+        first_name='Mika',
+        last_name='Müller',
+        phone='01521 1234567',
         mail=mail,
         confirm_mail=mail,
-        origin=origin.id)
+        tag='123456',
+        semester=1)
 
-    if origin.validate_registration:
-        data = dict(
-            data,
-            tag=tag,
-            degree=degree.id,
-            semester=semester,
-            graduation=graduation.id)
+
+def test_signup(client, superuser):
+    course = Course.query.first()
+    origin = Origin.query.first()
+    degree = Degree.query.first()
+    graduation = Graduation.query.first()
+    mail = 'mika.mueller@beispiel.de'
+    data = dict(
+        fake_person(mail),
+        course=course.id,
+        origin=origin.id,
+        degree=degree.id,
+        graduation=graduation.id)
 
     login(client, superuser)  # login to override time-delta restrictions
     response = client.post('/', data=data)
     response_text = get_text(response)
     logout(client)
 
-    assert '{} {} – Sie haben sich für den Kurs {} beworben.'.format(name[0], name[1], course_name) in response_text
+    assert '{} {} – Sie haben sich für den Kurs {} beworben.'.format(
+        data['first_name'], data['last_name'], course.full_name()) in response_text
+
+    applicant = Applicant.query.filter(Applicant.mail == mail).first()
+    assert applicant.in_course(course)

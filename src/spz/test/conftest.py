@@ -24,7 +24,8 @@ def client():
     recreate_tables()
     insert_resources()
 
-    yield client
+    with app.app_context():  # app context allows for implicit database session usage
+        yield client
 
 
 @fixture
