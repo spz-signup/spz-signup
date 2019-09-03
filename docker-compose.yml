@@ -112,19 +112,6 @@ services:
         networks:
             - back
         restart: unless-stopped
-# Uncomment for production
-#    mail:
-#        image: spzsignup/opensmtpd:6.0.3p1
-#        volumes:
-#            - ./conf/smtpd.conf:/etc/smtpd.conf
-#            - state_mail:/var/spool
-#        tmpfs:
-#            - /run
-#            - /tmp
-#        read_only: true
-#        networks:
-#            - back
-#        restart: unless-stopped
     nginx:
         image: nginx:1.11
         command: nginx -g "worker_processes 16;"

@@ -12,10 +12,19 @@ services:
     celery_slow_mails:
         environment:
             - SPZ_CFG_FILE=production.cfg
+    postgres:
+        environment:
+            - POSTGRES_PASSWORD=mysecretpassword
     mail:
         image: spzsignup/opensmtpd:6.0.3p1
         volumes:
             - ./conf/smtpd.conf:/etc/smtpd.conf
+    nginx:
+        image: nginx:1.11
+        command: nginx -g "worker_processes 16;"
+        ports:
+            - "80:80"
+            - "443:443"
     pg-dump:
         image: jmcarbo/docker-postgres-backup
         container_name: pg-dump
