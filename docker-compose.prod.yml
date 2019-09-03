@@ -20,8 +20,6 @@ services:
         volumes:
             - ./conf/smtpd.conf:/etc/smtpd.conf
     nginx:
-        image: nginx:1.11
-        command: nginx -g "worker_processes 16;"
         ports:
             - "80:80"
             - "443:443"
