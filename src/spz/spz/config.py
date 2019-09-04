@@ -28,7 +28,8 @@ class BaseConfig(object):
                 driver=self.DB_DRIVER,
                 host=self.DB_HOST,
                 pw=self.DB_PW,
-                user=self.DB_USER)
+                user=self.DB_USER
+        )
 
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_size': 5}
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -148,4 +149,10 @@ class Testing(BaseConfig):
 
 
 class Production(BaseConfig):
-    pass  # see production.cfg for specifying secrets
+    # overwrite in production.cfg
+
+    DB_DB = 'spz'
+    DB_DRIVER = 'postgresql'
+    DB_HOST = 'localhost'
+    DB_USER = 'postgres'
+    DB_PW = ''
