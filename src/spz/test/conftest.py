@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""Provides pytest fixtures to tests.
+"""Provides pytest fixtures.
 """
 
 from pytest import fixture
 from spz import app, db
-from spz.models import User
+from spz.models import User, Origin, Degree, Graduation, Course
 from util.init_db import recreate_tables, insert_resources
 
 
@@ -36,3 +36,24 @@ def superuser():
 @fixture
 def user():
     yield create_user('user@localhost')
+
+
+@fixture
+def applicant_data(mail='mika.mueller@beispiel.de'):
+    yield dict(
+        first_name='Mika',
+        last_name='Müller',
+        phone='01521 1234567',
+        mail=mail,
+        confirm_mail=mail,
+        tag='123456',
+        semester=1,
+        origin = Origin.query.first().id,
+        degree = Degree.query.first().id,
+        graduation = Graduation.query.first().id
+    )
+
+@fixture
+def course():
+    with app.app_context():
+        yield Course.query.first()
