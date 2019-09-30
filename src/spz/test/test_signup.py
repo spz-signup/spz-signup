@@ -54,6 +54,8 @@ def test_closed_signup(client, applicant_data, course):
     response = client.post('/', data=data)
     response_text = get_text(response)
 
+    assert "Not a valid choice" in response_text
+
     assert not in_course(applicant_data, course)
 
 

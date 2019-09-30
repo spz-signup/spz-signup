@@ -4,9 +4,6 @@
 """
 
 from test import login, logout, get_text
-from spz.models import Course, Origin, Degree, Graduation, Applicant
-
-from datetime import datetime, timedelta
 
 
 def test_startpage(client):

@@ -48,10 +48,11 @@ def applicant_data(mail='mika.mueller@beispiel.de'):
         confirm_mail=mail,
         tag='123456',
         semester=1,
-        origin = Origin.query.first().id,
-        degree = Degree.query.first().id,
-        graduation = Graduation.query.first().id
+        origin=Origin.query.first().id,
+        degree=Degree.query.first().id,
+        graduation=Graduation.query.first().id
     )
+
 
 @fixture
 def course():
