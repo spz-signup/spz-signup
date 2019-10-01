@@ -29,8 +29,7 @@ __all__ = [
     'UniqueForm',
     'TagForm',
     'SignoffForm',
-    'ExportCourseForm',
-    'ExportLanguageForm',
+    'ExportCourseForm'
 ]
 
 
@@ -580,14 +579,19 @@ class TagForm(FlaskForm):
         return self.tag.data
 
 
-class ExportForm(FlaskForm):
-    """Represents a general export form.
+class ExportCourseForm(FlaskForm):
+    """Form for exporting one or multiple courses.
     """
+
+    select = SelectMultipleField(
+        'Kurse',
+        [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
+        coerce=int
+    )
 
     format = SelectField(
         'Format',
-        [validators.DataRequired('Das Format muss angegeben werden')],
-        choices=tables.export_file_formats
+        [validators.DataRequired('Das Format muss angegeben werden')]
     )
 
     no_sections = BooleanField(
@@ -600,44 +604,10 @@ class ExportForm(FlaskForm):
     def sections_wanted(self):
         return not self.no_sections.data
 
-    def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
-
-
-class ExportCourseForm(ExportForm):
-    """Represents a form to select course export options.
-    """
-
-    select = SelectMultipleField(
-        'Kurse',
-        [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
-        coerce=int
-    )
-
     def get_selected(self):
         return [models.Course.query.get(id) for id in self.select.data]
 
     def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
+        super(ExportCourseForm, self).__init__(*args, **kwargs)
         self.select.choices = cached.all_courses_to_choicelist()
-
-
-class ExportLanguageForm(ExportForm):
-    """Represents a form to select language export options.
-    """
-
-    select = SelectMultipleField(
-        'Sprachen',
-        [validators.DataRequired('Mindestens eine Sprache muss ausgewählt werden')],
-        coerce=int
-    )
-
-    def get_selected(self):
-        selected = []
-        for id in self.select.data:
-            selected += models.Language.query.get(id).courses
-        return selected
-
-    def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
-        self.select.choices = cached.languages_to_choicelist()
+        self.format.choices = tables.export_file_formats

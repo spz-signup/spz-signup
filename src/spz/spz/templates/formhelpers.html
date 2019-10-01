@@ -80,7 +80,7 @@
         <select{% if multiple %} multiple{% endif %} size="{{ size }}" class="ui fluid search dropdown" id="{{ field.id }}" placeholder="{{ placeholder|default('', true) }}" name="{{ field.id }}"{% if required %} data-required="true"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }}>
             <option value=""></option>
             {% for id, name in field.choices %}
-            <option value="{{ id }}"{% if id == field.data %} selected="selected"{% endif %}>{{ name }}</option>
+            <option value="{{ id }}"{% if id == field.data or (field.data is iterable and id in field.data) %} selected="selected"{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
     </div>
