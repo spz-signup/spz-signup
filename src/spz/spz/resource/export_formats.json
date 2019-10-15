@@ -1,0 +1,16 @@
+{
+    "formats": [
+        {
+            "name": "Excel",
+            "formatter": "excel",
+            "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "extension": "xlsx"
+        },
+        {
+            "name": "Comma Separated",
+            "formatter": "csv",
+            "mimetype": "text/csv",
+            "extension": "csv"
+        }
+    ]
+}

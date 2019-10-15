@@ -11,7 +11,7 @@ from flask_login import current_user
 from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
-from spz import app, models, token, tables
+from spz import app, models, token
 
 from . import cached, validators
 
@@ -591,7 +591,8 @@ class ExportCourseForm(FlaskForm):
 
     format = SelectField(
         'Format',
-        [validators.DataRequired('Das Format muss angegeben werden')]
+        [validators.DataRequired('Das Format muss angegeben werden')],
+        coerce=int
     )
 
     no_sections = BooleanField(
@@ -599,7 +600,7 @@ class ExportCourseForm(FlaskForm):
     )
 
     def get_format(self):
-        return self.format.data
+        return models.ExportFormat.query.get(self.format.data)
 
     def sections_wanted(self):
         return not self.no_sections.data
@@ -610,4 +611,4 @@ class ExportCourseForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(ExportCourseForm, self).__init__(*args, **kwargs)
         self.select.choices = cached.all_courses_to_choicelist()
-        self.format.choices = tables.export_file_formats
+        self.format.choices = [(f.id, f.name) for f in models.ExportFormat.list_formatters()]

@@ -23,7 +23,7 @@ from spz.decorators import templated
 import spz.forms as forms
 from spz.util.Filetype import mime_from_filepointer
 from spz.mail import generate_status_mail
-from spz.tables import export_course_list
+from spz.export import export_course_list
 
 
 def check_precondition_with_auth(cond, msg, auth=False):

@@ -14,10 +14,10 @@ import re
 
 from argon2 import argon2_hash
 
-from sqlalchemy import and_, between, func
+from sqlalchemy import and_, or_, between, func
 from sqlalchemy.dialects import postgresql
 
-from spz import app, db, token
+from spz import app, db, token, export
 
 
 def hash_secret_strong(s):
@@ -860,3 +860,54 @@ class LogEntry(db.Model):
             entries = entries[:limit]
 
         return entries
+
+
+@total_ordering
+class ExportFormat(db.Model):
+    """Format used when exporting course lists
+
+       :param id: unique ID
+       :param name: human readable name for the format
+       :param formatter: class name of the python formatter to be used
+       :param template: optional template descriptor, supplied to the formatter
+       :param mimetype: mimetype used for the export file
+       :param extension: extension used for the export file
+       :param language: language for which the export format is intended (NULL for any)
+    """
+    __tablename__ = 'export_format'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    formatter = db.Column(db.String(50), nullable=False)
+    template = db.Column(db.String(50))
+    mimetype = db.Column(db.String(100))
+    extension = db.Column(db.String(10))
+    language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
+    language = db.relationship("Language")
+
+    def __init__(self, name, formatter, template=None, mimetype=None, extension=None, language=None):
+        self.name = name
+        self.formatter = formatter
+        self.template = template
+        self.mimetype = mimetype
+        self.extension = extension
+        self.language = language
+
+    def __repr__(self):
+        msg = self.msg
+        if len(msg) > 10:
+            msg = msg[:10] + '...'
+        return '<LogEntry {} "{}" {}>'.format(self.timestamp, msg, self.language)
+
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
+
+    def init_formatter(self):
+        return export.formatters.get(self.formatter)()
+
+    @staticmethod
+    def list_formatters(language=None):
+        return ExportFormat.query.filter(or_(
+            ExportFormat.language is None,
+            ExportFormat.language == language
+        )).all()

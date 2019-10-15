@@ -10,7 +10,7 @@ from flask import json
 from jsonschema import validate, ValidationError, SchemaError
 
 from spz import app, db
-from spz.models import Degree, Graduation, Origin, Language, Course, User
+from spz.models import Degree, Graduation, Origin, Language, Course, User, ExportFormat
 # Make sure that create_all works for all models (even ones that might be added in the future)
 from spz.models import *  # noqa
 
@@ -82,6 +82,19 @@ def insert_resources():
                         rating_highest=course["rating_highest"],
                         collision=course["collision"]
                     ))
+
+    with app.open_resource('resource/export_formats.json') as fd:
+        res = json.load(fd)
+
+        for format in res["formats"]:
+            db.session.add(ExportFormat(
+                name=format["name"],
+                formatter=format["formatter"],
+                # template=format["template"],
+                mimetype=format["mimetype"],
+                extension=format["extension"],
+                language=Language.query.filter(Language.name == format.get("language")).first()
+            ))
 
     db.session.commit()
 
