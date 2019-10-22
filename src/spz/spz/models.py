@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from functools import total_ordering
 import random
 import string
-import re
 
 from argon2 import argon2_hash
 
@@ -551,20 +550,14 @@ class Origin(db.Model):
 
     __tablename__ = 'origin'
 
-    short_names = {
-        'KIT (Mitarbeiter)': 'KIT Mitarb.',
-        'Hochschule Karlsruhe': 'HS KA',
-        'PH Karlsruhe': 'PH KA',
-        'HfG Karlsruhe': 'HfG KA',
-        'Musikhochschule Karlsruhe': 'MHS KA'
-    }
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
+    short_name = db.Column(db.String(10), nullable=False)
     validate_registration = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, name, validate_registration):
+    def __init__(self, name, short_name, validate_registration):
         self.name = name
+        self.short_name = short_name
         self.validate_registration = validate_registration
 
     def __repr__(self):
@@ -572,11 +565,6 @@ class Origin(db.Model):
 
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
-
-    def get_short_name(self):
-        if self.name in self.short_names:
-            return self.short_names[self.name]
-        return re.sub('\\(.+?\\)', '', self.name)
 
 
 @total_ordering

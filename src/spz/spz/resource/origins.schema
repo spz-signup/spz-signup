@@ -11,11 +11,14 @@
                         "name": {
                             "type": "string"
                         },
+                        "short_name": {
+                            "type": "string"
+                        },
                         "validate_registration": {
                             "type": "boolean"
                         }
                     },
-                    "required": [ "name", "validate_registration" ]
+                    "required": [ "name", "short_name", "validate_registration" ]
                 },
                 "uniqueItems": true
             }

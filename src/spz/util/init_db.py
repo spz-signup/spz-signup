@@ -66,6 +66,7 @@ def insert_origins(json_file):
         for origin in res["origins"]:
             db.session.add(Origin(
                 name=origin["name"],
+                short_name=origin["short_name"],
                 validate_registration=origin["validate_registration"]
             ))
 

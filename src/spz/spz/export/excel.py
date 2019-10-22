@@ -18,8 +18,13 @@ class ExcelWriter:
         self.workbook = Workbook(write_only=False)
         self.workbook._sheets.clear()  # start off with no sheets
 
-    def write_heading(self, values):
-        self.write_row(values)
+    def write_heading(self):
+        # TODO
+        pass
+
+    def write_element(self, element):
+        # TODO
+        pass
 
     def write_row(self, values):
         self.workbook._sheets[-1].append(values)
