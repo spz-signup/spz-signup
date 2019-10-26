@@ -2,21 +2,36 @@
 
 """Tests the application views.
 """
-import pytest
 
-from spz import app
-from util.init_db import recreate_tables, insert_resources
-
-
-@pytest.fixture
-def client():
-    client = app.test_client()
-
-    recreate_tables()
-    insert_resources()
-
-    yield client
+from test import login, logout, get_text
 
 
 def test_startpage(client):
-    assert client.get('/').status_code == 200
+    response = client.get('/')
+    response_text = get_text(response)
+    assert 'Anmeldung' in response_text
+    assert 'Kurswahl' in response_text
+    assert 'Persönliche Angaben' in response_text
+    assert 'Absenden' in response_text
+
+
+def test_login(client, user, superuser):
+    response = login(client, user)
+    response_text = get_text(response)
+    logout(client)
+    assert 'Angemeldet als {} ()'.format(user[0]) in response_text
+
+    response = login(client, superuser)
+    response_text = get_text(response)
+    logout(client)
+    assert 'Angemeldet als {} (SUPERUSER)'.format(superuser[0]) in response_text
+
+    response = login(client, (user[0], 'definately-wrong-password'))
+    response_text = get_text(response)
+    logout(client)
+    assert 'Du kommst hier net rein!' in response_text
+
+    response = login(client, ('definately-wrong-username', user[1]))
+    response_text = get_text(response)
+    logout(client)
+    assert 'Du kommst hier net rein!' in response_text

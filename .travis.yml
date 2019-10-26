@@ -19,4 +19,4 @@ jobs:
           - FLASK_ENV=testing
       before_script:
           - psql -c 'create database spz;' -U postgres
-      script: pytest .
+      script: pytest ./src/spz
