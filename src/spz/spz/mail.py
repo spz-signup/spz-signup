@@ -53,7 +53,7 @@ def generate_status_mail(applicant, course, time=None, restock=False):
         sender=app.config['PRIMARY_MAIL'],
         reply_to=course.language.reply_to,
         recipients=[applicant.mail],
-        subject='[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name(), subject_status),
+        subject='[Sprachenzentrum] Kurs {0} - {1}'.format(course.full_name, subject_status),
         body=render_template(
             template,
             applicant=applicant,

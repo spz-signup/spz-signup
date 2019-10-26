@@ -342,7 +342,7 @@ class Course(db.Model):
         self.collision = collision
 
     def __repr__(self):
-        return '<Course %r>' % (self.full_name())
+        return '<Course %r>' % (self.full_name)
 
     def __lt__(self, other):
         return (self.language, self.level.lower()) < (other.language, other.level.lower())
@@ -373,6 +373,7 @@ class Course(db.Model):
     def get_free_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
 
+    @property
     def full_name(self):
         result = '{0} {1}'.format(self.language.name, self.level)
         if self.alternative:

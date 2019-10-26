@@ -2,7 +2,7 @@
 {% from 'formhelpers.html' import csrf_field, render_input, render_boolean, render_option, render_submit %}
 
 {% block caption %}
-<a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.full_name() }}</a>
+<a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.full_name }}</a>
 {% endblock caption %}
 
 

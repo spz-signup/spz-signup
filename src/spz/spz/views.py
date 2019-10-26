@@ -474,7 +474,7 @@ def course(id):
                 # TODO: handle active attendances automatically or make deleting them easier
             else:
                 deleted = 0
-                name = course.full_name()
+                name = course.full_name
                 for attendance in course.get_waiting_attendances():
                     db.session.delete(attendance)
                     deleted += 1
@@ -528,7 +528,7 @@ def applicant(id):
             if remove_from:
                 try:
                     remove_attendance(applicant, remove_from, notify)
-                    flash('Der Bewerber wurde aus dem Kurs "{0}" genommen'.format(remove_from.full_name()), 'success')
+                    flash('Der Bewerber wurde aus dem Kurs "{0}" genommen'.format(remove_from.full_name), 'success')
                     db.session.commit()
                 except Exception as e:
                     db.session.rollback()

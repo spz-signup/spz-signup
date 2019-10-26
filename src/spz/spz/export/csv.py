@@ -9,13 +9,14 @@ import io
 
 class CSVWriter:
 
-    default_template = {
-        'Nachname': 'last_name',
-        'Vorname': 'first_name',
-        'Hochschule': 'origin.short_name',
-        'Matrikelnummer': 'tag',
-        'E-Mail': 'mail',
-        'Telefon': 'phone'
+    default_template = {  # needs to be ordered
+        'Kurs': 'course.full_name',
+        'Nachname': 'applicant.last_name',
+        'Vorname': 'applicant.first_name',
+        'Hochschule': 'applicant.origin.short_name',
+        'Matrikelnummer': 'applicant.tag',
+        'E-Mail': 'applicant.mail',
+        'Telefon': 'applicant.phone'
     }
 
     def __init__(self, template=default_template):
@@ -33,9 +34,12 @@ class CSVWriter:
         path = key.split('.')
         value = element
         while path:
-            try:
-                value = getattr(value, path.pop(0))
-            except AttributeError:
+            subkey = path.pop(0)
+            if isinstance(value, dict):
+                value = value.get(subkey)
+            elif hasattr(value, subkey):
+                value = getattr(value, subkey)
+            else:
                 return None
         return value
 

@@ -31,7 +31,7 @@ def evt_set_attendance_waiting(target, value, oldvalue, _initiator):
         msg = '{fname} ({mail}) wurde in {cname} gebucht.'.format(
             fname=target.applicant.full_name,
             mail=target.applicant.mail,
-            cname=course.full_name()
+            cname=course.full_name
         )
         log(msg, language=lang)
 
@@ -42,11 +42,11 @@ def evt_set_course_wlstatus(target, value, oldvalue, _initiator):
         lang = target.language
         if value:
             msg = '{cname} hat nun eine Warteliste.'.format(
-                cname=target.full_name()
+                cname=target.full_name
             )
         else:
             msg = '{cname} ist nun Wartelisten-frei.'.format(
-                cname=target.full_name()
+                cname=target.full_name
             )
         log(msg, language=lang)
 
