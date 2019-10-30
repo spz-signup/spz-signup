@@ -5,25 +5,26 @@
 
 import csv
 import io
+import os
+
+from spz import app
+
+# from jinja2 import Template
+
+
+def read_template(template):
+    with app.open_resource('templates/' + template, 'r') as file:
+        reader = csv.DictReader(file, delimiter=';')
+        return next(reader)
 
 
 class CSVWriter:
 
-    default_template = {  # needs to be ordered
-        'Kurs': 'course.full_name',
-        'Nachname': 'applicant.last_name',
-        'Vorname': 'applicant.first_name',
-        'Hochschule': 'applicant.origin.short_name',
-        'Matrikelnummer': 'applicant.tag',
-        'E-Mail': 'applicant.mail',
-        'Telefon': 'applicant.phone'
-    }
-
-    def __init__(self, template=default_template):
+    def __init__(self, template):
         self.buf = io.StringIO()
-        self.out = csv.writer(self.buf, delimiter=";", dialect=csv.excel)
+        self.out = csv.writer(self.buf, delimiter=';')
         self.header_written = False
-        self.template = template
+        self.template = read_template(template)
 
     def write_heading(self):
         if not self.header_written:
@@ -44,6 +45,7 @@ class CSVWriter:
         return value
 
     def write_element(self, element):
+        # TODO: use jinja instead of self written function here
         row = [self.get_nested_value(element, key) for key in self.template.values()]
         self.write_row(row)
 

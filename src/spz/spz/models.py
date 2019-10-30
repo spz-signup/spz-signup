@@ -380,6 +380,10 @@ class Course(db.Model):
             result = '{0} {1}'.format(result, self.alternative)
         return result
 
+    @property
+    def active_applicants(self):
+        return sorted(attendance.applicant for attendance in self.get_paid_attendances())
+
 
 @total_ordering
 class Language(db.Model):
@@ -892,7 +896,7 @@ class ExportFormat(db.Model):
         return self.name.lower() < other.name.lower()
 
     def init_formatter(self):
-        return export.formatters.get(self.formatter)()
+        return export.formatters.get(self.formatter)(self.template)
 
     @staticmethod
     def list_formatters(language=None):

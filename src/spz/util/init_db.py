@@ -106,14 +106,8 @@ def insert_export_formats(json_file):
         res = json.load(fd)
 
         for format in res["formats"]:
-            db.session.add(ExportFormat(
-                name=format["name"],
-                formatter=format["formatter"],
-                # template=format["template"],
-                mimetype=format["mimetype"],
-                extension=format["extension"],
-                language=Language.query.filter(Language.name == format.get("language")).first()
-            ))
+            format['language'] = Language.query.filter(Language.name == format.get("language")).first()
+            db.session.add(ExportFormat(**format))
 
 
 def insert_users(json_file):
