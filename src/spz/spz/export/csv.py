@@ -5,53 +5,38 @@
 
 import csv
 import io
-import os
 
 from spz import app
 
-# from jinja2 import Template
 
-
-def read_template(template):
-    with app.open_resource('templates/' + template, 'r') as file:
-        reader = csv.DictReader(file, delimiter=';')
-        return next(reader)
+def read_template(template_path):
+    with app.open_resource('templates/' + template_path, 'r') as file:
+        reader = csv.reader(file, delimiter=';')
+        template = {}
+        template['keys'] = next(reader)
+        template['values'] = [app.jinja_env.compile_expression(key) for key in next(reader)]
+        return template
 
 
 class CSVWriter:
 
-    def __init__(self, template):
+    def __init__(self, template_path):
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=';')
         self.header_written = False
-        self.template = read_template(template)
+        self.template = read_template(template_path)
 
     def write_heading(self):
         if not self.header_written:
-            self.write_row(self.template.keys())
+            self.write_row(self.template['keys'])
             self.header_written = True
 
-    def get_nested_value(self, element, key):
-        path = key.split('.')
-        value = element
-        while path:
-            subkey = path.pop(0)
-            if isinstance(value, dict):
-                value = value.get(subkey)
-            elif hasattr(value, subkey):
-                value = getattr(value, subkey)
-            else:
-                return None
-        return value
-
     def write_element(self, element):
-        # TODO: use jinja instead of self written function here
-        row = [self.get_nested_value(element, key) for key in self.template.values()]
+        row = [value(element) for value in self.template['values']]
         self.write_row(row)
 
     def write_row(self, values):
-        string_values = [str(v) if v else '' for v in values]
-        self.out.writerow(string_values)
+        self.out.writerow(values)
 
     def new_section(self, name):
         # CSV does not support sections
