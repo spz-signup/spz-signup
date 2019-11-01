@@ -362,11 +362,6 @@ class Course(db.Model):
     def get_active_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting]
 
-    """ active attendances without debt """
-    def get_paid_attendances(self):
-        return [attendance for attendance in self.attendances if not attendance.waiting
-                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-
     def get_paying_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and attendance.has_to_pay]
 
@@ -380,9 +375,12 @@ class Course(db.Model):
             result = '{0} {1}'.format(result, self.alternative)
         return result
 
+    """ active attendants without debt """
     @property
-    def active_applicants(self):
-        return sorted(attendance.applicant for attendance in self.get_paid_attendances())
+    def course_list(self):
+        return [attendance.applicant for attendance in self.attendances
+                if not attendance.waiting
+                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
 
 @total_ordering
@@ -873,8 +871,8 @@ class ExportFormat(db.Model):
     name = db.Column(db.String(), nullable=False)
     formatter = db.Column(db.String(50), nullable=False)
     template = db.Column(db.String(50))
-    mimetype = db.Column(db.String(100))
-    extension = db.Column(db.String(10))
+    mimetype = db.Column(db.String(100), nullable=False)
+    extension = db.Column(db.String(10), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     language = db.relationship("Language")
 
@@ -898,9 +896,14 @@ class ExportFormat(db.Model):
     def init_formatter(self):
         return export.formatters.get(self.formatter)(self.template)
 
+    @property
+    def descriptive_name(self):
+        return '{0} (.{1})'.format(self.name, self.extension)
+
     @staticmethod
-    def list_formatters(language=None):
+    def list_formatters(languages=[]):
+        language_ids = [l.id for l in languages]
         return ExportFormat.query.filter(or_(
-            ExportFormat.language is None,
-            ExportFormat.language == language
+            ExportFormat.language == None,  # noqa
+            ExportFormat.language_id.in_(language_ids)
         )).all()

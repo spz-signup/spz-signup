@@ -10,7 +10,7 @@ from openpyxl.worksheet.table import Table
 from openpyxl.workbook.child import INVALID_TITLE_REGEX
 
 
-class ExcelWriter:
+class ExcelCourseWriter:
 
     def __init__(self):
         # write_only=True would require additional logic to keep track of sheet dimension so we keep it at False

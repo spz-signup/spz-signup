@@ -3,6 +3,7 @@
         {
             "name": "Excel",
             "formatter": "excel",
+            "template": "export/course.xlsx",
             "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "extension": "xlsx"
         },

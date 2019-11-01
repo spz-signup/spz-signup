@@ -581,9 +581,12 @@ class TagForm(FlaskForm):
 
 class ExportCourseForm(FlaskForm):
     """Form for exporting one or multiple courses.
+
+       Export format choices differ, depending on the passed language list (current_user.languages).
+       It might be an option to use the value of 'courses' instead.
     """
 
-    select = SelectMultipleField(
+    courses = SelectMultipleField(
         'Kurse',
         [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
         coerce=int
@@ -595,20 +598,15 @@ class ExportCourseForm(FlaskForm):
         coerce=int
     )
 
-    no_sections = BooleanField(
-        'Alle Kurse in einen Abschnitt schreiben'
-    )
-
     def get_format(self):
         return models.ExportFormat.query.get(self.format.data)
 
-    def sections_wanted(self):
-        return not self.no_sections.data
-
     def get_selected(self):
-        return [models.Course.query.get(id) for id in self.select.data]
+        return [models.Course.query.get(id) for id in self.courses.data]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, languages=[], *args, **kwargs):
         super(ExportCourseForm, self).__init__(*args, **kwargs)
-        self.select.choices = cached.all_courses_to_choicelist()
-        self.format.choices = [(f.id, f.name) for f in models.ExportFormat.list_formatters()]
+        self.courses.choices = cached.all_courses_to_choicelist()
+        self.format.choices = [
+            (f.id, f.descriptive_name) for f in models.ExportFormat.list_formatters(languages=languages)
+        ]

@@ -422,22 +422,21 @@ def notifications():
 
 @login_required
 @templated('internal/export.html')
-def export(type, id, format='xlsx'):
-    form = forms.ExportCourseForm()
+def export(type, id):
+    form = forms.ExportCourseForm(languages=current_user.languages)
 
     if form.validate_on_submit():
         return export_course_list(
             courses=form.get_selected(),
-            format=form.get_format(),
-            sectionize=form.sections_wanted()
+            format=form.get_format()
         )
     else:
-        form.format.data = format
+        form.format.data = models.ExportFormat.query.first().id
         if type == 'course':
-            form.select.data = id
+            form.courses.data = id
         elif type == 'language':
             language = models.Language.query.get(id)
-            form.select.data = [course.id for course in language.courses]
+            form.courses.data = [course.id for course in language.courses]
 
     return dict(form=form)
 

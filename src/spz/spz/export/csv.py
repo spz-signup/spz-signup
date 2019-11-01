@@ -18,7 +18,7 @@ def read_template(template_path):
         return template
 
 
-class CSVWriter:
+class CSVCourseWriter:
 
     def __init__(self, template_path):
         self.buf = io.StringIO()
@@ -26,10 +26,11 @@ class CSVWriter:
         self.header_written = False
         self.template = read_template(template_path)
 
-    def write_heading(self):
-        if not self.header_written:
-            self.write_row(self.template['keys'])
-            self.header_written = True
+    def process(self, courses):
+        self.write_row(self.template['keys'])  # write heading
+        for course in courses:  # write data
+            for applicant in course.course_list:
+                self.write_element({'course': course, 'applicant': applicant})
 
     def write_element(self, element):
         row = [value(element) for value in self.template['values']]
@@ -37,10 +38,6 @@ class CSVWriter:
 
     def write_row(self, values):
         self.out.writerow(values)
-
-    def new_section(self, name):
-        # CSV does not support sections
-        pass
 
     def get_data(self):
         return self.buf.getvalue()

@@ -27,7 +27,7 @@
                             "type": "string"
                         }
                     },
-                    "required": [ "name", "formatter" ]
+                    "required": [ "name", "formatter", "mimetype", "extension" ]
                 },
                 "uniqueItems": true
             }
