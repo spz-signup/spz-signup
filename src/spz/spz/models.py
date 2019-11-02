@@ -885,10 +885,7 @@ class ExportFormat(db.Model):
         self.language = language
 
     def __repr__(self):
-        msg = self.msg
-        if len(msg) > 10:
-            msg = msg[:10] + '...'
-        return '<LogEntry {} "{}" {}>'.format(self.timestamp, msg, self.language)
+        return '<ExportFormat "{}">'.format(self.descriptive_name)
 
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()

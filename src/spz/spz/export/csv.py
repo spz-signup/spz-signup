@@ -9,7 +9,7 @@ import io
 from spz import app
 
 
-def read_template(template_path):
+def load_template(template_path):
     with app.open_resource('templates/' + template_path, 'r') as file:
         reader = csv.reader(file, delimiter=';')
         template = {}
@@ -24,7 +24,7 @@ class CSVCourseWriter:
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=';')
         self.header_written = False
-        self.template = read_template(template_path)
+        self.template = load_template(template_path)
 
     def process(self, courses):
         self.write_row(self.template['keys'])  # write heading
