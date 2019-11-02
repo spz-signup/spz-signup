@@ -23,6 +23,6 @@ def export_course_list(courses, format, filename='Kursliste'):
 
     resp = make_response(formatter.get_data())
     resp.headers['Content-Disposition'] = 'attachment; filename="{0}.{1}"'.format(filename, format.extension)
-    resp.mimetype = format.mimetype
+    resp.mimetype = formatter.mimetype
 
     return resp

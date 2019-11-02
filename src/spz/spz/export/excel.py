@@ -55,3 +55,7 @@ class ExcelCourseWriter:
             file.seek(0)
             stream = file.read()
         return stream
+
+    @property
+    def mimetype(self):
+        return self.workbook.mime_type

@@ -20,6 +20,8 @@ def load_template(template_path):
 
 class CSVCourseWriter:
 
+    mimetype = 'text/csv'
+
     def __init__(self, template_path):
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=';')

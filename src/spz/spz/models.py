@@ -861,7 +861,6 @@ class ExportFormat(db.Model):
        :param name: human readable name for the format
        :param formatter: class name of the python formatter to be used
        :param template: optional template descriptor, supplied to the formatter
-       :param mimetype: mimetype used for the export file
        :param extension: extension used for the export file
        :param language: language for which the export format is intended (NULL for any)
     """
@@ -871,16 +870,14 @@ class ExportFormat(db.Model):
     name = db.Column(db.String(), nullable=False)
     formatter = db.Column(db.String(50), nullable=False)
     template = db.Column(db.String(50))
-    mimetype = db.Column(db.String(100), nullable=False)
     extension = db.Column(db.String(10), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     language = db.relationship("Language")
 
-    def __init__(self, name, formatter, template=None, mimetype=None, extension=None, language=None):
+    def __init__(self, name, formatter, template=None, extension=None, language=None):
         self.name = name
         self.formatter = formatter
         self.template = template
-        self.mimetype = mimetype
         self.extension = extension
         self.language = language
 

@@ -17,9 +17,6 @@
                         "template": {
                             "type": "string"
                         },
-                        "mimetype": {
-                            "type": "string"
-                        },
                         "extension": {
                             "type": "string"
                         },
@@ -27,7 +24,7 @@
                             "type": "string"
                         }
                     },
-                    "required": [ "name", "formatter", "mimetype", "extension" ]
+                    "required": [ "name", "formatter", "extension" ]
                 },
                 "uniqueItems": true
             }

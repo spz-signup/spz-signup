@@ -4,14 +4,12 @@
             "name": "Excel",
             "formatter": "excel",
             "template": "export/course.xlsx",
-            "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "extension": "xlsx"
         },
         {
             "name": "Comma Separated",
             "formatter": "csv",
             "template": "export/course.csv",
-            "mimetype": "text/csv",
             "extension": "csv"
         }
     ]
