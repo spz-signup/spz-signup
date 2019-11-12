@@ -16,7 +16,7 @@ from argon2 import argon2_hash
 from sqlalchemy import and_, or_, between, func
 from sqlalchemy.dialects import postgresql
 
-from spz import app, db, token, export
+from spz import app, db, token
 
 
 def hash_secret_strong(s):
@@ -886,9 +886,6 @@ class ExportFormat(db.Model):
 
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
-
-    def init_formatter(self):
-        return export.formatters.get(self.formatter)(self.template)
 
     @property
     def descriptive_name(self):

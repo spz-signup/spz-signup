@@ -3,40 +3,30 @@
 """Formatter that writes csv files.
 """
 
+from . import TableWriter
+
 import csv
 import io
 
-from spz import app
 
-
-def load_template(template_path):
-    with app.open_resource('templates/' + template_path, 'r') as file:
-        reader = csv.reader(file, delimiter=';')
-        template = {}
-        template['keys'] = next(reader)
-        template['values'] = [app.jinja_env.compile_expression(key) for key in next(reader)]
-        return template
-
-
-class CSVCourseWriter:
+class CSVWriter(TableWriter):
 
     mimetype = 'text/csv'
 
-    def __init__(self, template_path):
+    template_file_mode = 'r'
+
+    def __init__(self, delimiter=';'):
+        TableWriter.__init__(self)
+        self.delimiter = delimiter
         self.buf = io.StringIO()
-        self.out = csv.writer(self.buf, delimiter=';')
-        self.header_written = False
-        self.template = load_template(template_path)
+        self.out = csv.writer(self.buf, delimiter=self.delimiter)
 
-    def process(self, courses):
-        self.write_row(self.template['keys'])  # write heading
-        for course in courses:  # write data
-            for applicant in course.course_list:
-                self.write_element({'course': course, 'applicant': applicant})
-
-    def write_element(self, element):
-        row = [value(element) for value in self.template['values']]
-        self.write_row(row)
+    def load_template_file(self, file):
+        reader = csv.reader(file, delimiter=self.delimiter)
+        # read heading from first row
+        self.write_row(next(reader))
+        # parse jinja expressions from second row
+        self.parse_template_row(next(reader))
 
     def write_row(self, values):
         self.out.writerow(values)
