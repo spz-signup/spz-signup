@@ -3,7 +3,7 @@
 """Formatter that writes excel files.
 """
 
-from . import TableWriter, binary_template_expected
+from . import TableWriter
 
 from tempfile import NamedTemporaryFile
 from openpyxl import load_workbook
@@ -24,16 +24,16 @@ class ExcelWriter(TableWriter):
     def mimetype(self):
         return self.workbook.mime_type
 
-    def __init__(self):
-        TableWriter.__init__(self)
+    def __init__(self, template):
+        TableWriter.__init__(self, template, binary_template=True)
 
-    @binary_template_expected
-    def load_template_file(self, file):
+    def parse_template(self, file):
         self.workbook = load_workbook(file)
         (self.sheet, self.table) = find_table(self.workbook, 'DATA')
         self.range = CellRange(self.table.ref)
-        self.parse_template_row([self.sheet.cell(*c).value for c in self.range.bottom])
+        expression_row = [self.sheet.cell(*c).value for c in self.range.bottom]
         self.delete_last_row()  # remove row containing template data from output
+        return super().parse_template(expression_row)
 
     def write_row(self, row):
         row_iter = iter(row)

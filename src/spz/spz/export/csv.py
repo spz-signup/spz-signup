@@ -15,18 +15,18 @@ class CSVWriter(TableWriter):
 
     template_file_mode = 'r'
 
-    def __init__(self, delimiter=';'):
-        TableWriter.__init__(self)
+    def __init__(self, template, delimiter=';'):
         self.delimiter = delimiter
         self.buf = io.StringIO()
         self.out = csv.writer(self.buf, delimiter=self.delimiter)
+        TableWriter.__init__(self, template, binary_template=False)
 
-    def load_template_file(self, file):
+    def parse_template(self, file):
         reader = csv.reader(file, delimiter=self.delimiter)
         # read heading from first row
         self.write_row(next(reader))
         # parse jinja expressions from second row
-        self.parse_template_row(next(reader))
+        return super().parse_template(next(reader))
 
     def write_row(self, values):
         self.out.writerow(values)
