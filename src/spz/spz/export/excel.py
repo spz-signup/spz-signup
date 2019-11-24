@@ -21,19 +21,22 @@ def find_table(workbook, table_name):
         for table in sheet._tables:
             return sheet, table
 
+
 def delete_last_row(sheet, range):
     sheet.delete_rows(range.max_row)
     range.shrink(bottom=1)
 
-""" Sanitize a string so it can safely be used as a worksheet title:
-    Disallowed characters will be stripped and the string will be trimmed to a length of 30.
-"""
+
 def sanitize_title(str):
+    """Sanitize a string so it can safely be used as a worksheet title:
+    Disallowed characters will be stripped and the string will be trimmed to a length of 30.
+    """
     return re.sub(INVALID_TITLE_REGEX, '', str)[:30]
 
-"""The base ExcelWriter begins a new sheet for each new section.
-"""
+
 class ExcelWriter(TableWriter):
+    """The base ExcelWriter begins a new sheet for each new section.
+    """
 
     @property
     def mimetype(self):
@@ -85,9 +88,10 @@ class ExcelWriter(TableWriter):
             stream = file.read()
         return stream
 
-""" The ExcelZipWriter begins a new .xlsx file for each new section.
-"""
+
 class ExcelZipWriter(ExcelWriter):
+    """ The ExcelZipWriter begins a new .xlsx file for each new section.
+    """
 
     mimetype = 'application/zip'
     extension = 'zip'
