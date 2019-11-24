@@ -21,6 +21,12 @@ class TemplatedWriter:
     def write_element(self, element):
         pass
 
+    def begin_section(self, title):
+        pass
+
+    def end_section(self, title):
+        pass
+
     def get_data(self):
         pass
 
@@ -44,12 +50,13 @@ class TableWriter(TemplatedWriter):
         pass
 
 
-from .excel import ExcelWriter  # noqa
+from .excel import ExcelWriter, ExcelZipWriter  # noqa
 from .csv import CSVWriter  # noqa
 
 
 course_formatters = {
     'excel': ExcelWriter,
+    'zip-excel': ExcelZipWriter,
     'csv': CSVWriter
 }
 
@@ -61,11 +68,13 @@ def init_formatter(lookup_table, format):
 def export_course_list(courses, format, filename='Kursliste'):
     formatter = init_formatter(course_formatters, format)
     for course in courses:
+        formatter.begin_section(course.full_name)
         for applicant in course.course_list:
             formatter.write_element(dict(course=course, applicant=applicant))
+        formatter.end_section(course.full_name)
 
     resp = make_response(formatter.get_data())
-    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.{1}"'.format(filename, format.extension)
+    resp.headers['Content-Disposition'] = 'attachment; filename="{0}.{1}"'.format(filename, formatter.extension)
     resp.mimetype = formatter.mimetype
 
     return resp

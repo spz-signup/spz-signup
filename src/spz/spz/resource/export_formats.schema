@@ -17,14 +17,11 @@
                         "template": {
                             "type": "string"
                         },
-                        "extension": {
-                            "type": "string"
-                        },
                         "language": {
                             "type": "string"
                         }
                     },
-                    "required": [ "name", "formatter", "extension" ]
+                    "required": [ "name", "formatter" ]
                 },
                 "uniqueItems": true
             }

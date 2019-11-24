@@ -861,7 +861,6 @@ class ExportFormat(db.Model):
        :param name: human readable name for the format
        :param formatter: class name of the python formatter to be used
        :param template: optional template descriptor, supplied to the formatter
-       :param extension: extension used for the export file
        :param language: language for which the export format is intended (NULL for any)
     """
     __tablename__ = 'export_format'
@@ -870,7 +869,6 @@ class ExportFormat(db.Model):
     name = db.Column(db.String(), nullable=False)
     formatter = db.Column(db.String(50), nullable=False)
     template = db.Column(db.String(50))
-    extension = db.Column(db.String(10), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     language = db.relationship("Language")
 
@@ -878,7 +876,6 @@ class ExportFormat(db.Model):
         self.name = name
         self.formatter = formatter
         self.template = template
-        self.extension = extension
         self.language = language
 
     def __repr__(self):
@@ -889,7 +886,7 @@ class ExportFormat(db.Model):
 
     @property
     def descriptive_name(self):
-        return '{0} (.{1})'.format(self.name, self.extension)
+        return self.name
 
     @staticmethod
     def list_formatters(languages=[]):

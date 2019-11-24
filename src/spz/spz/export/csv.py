@@ -13,6 +13,8 @@ class CSVWriter(TableWriter):
 
     mimetype = 'text/csv'
 
+    extension = 'csv'
+
     template_file_mode = 'r'
 
     def __init__(self, template, delimiter=';'):

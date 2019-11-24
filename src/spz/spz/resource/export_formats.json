@@ -1,16 +1,20 @@
 {
     "formats": [
         {
-            "name": "Excel",
+            "name": "Excel (.xlsx)",
             "formatter": "excel",
-            "template": "export/course.xlsx",
-            "extension": "xlsx"
+            "template": "export/course.xlsx"
         },
         {
-            "name": "Comma Separated",
+            "name": "Comma Separated (.csv)",
             "formatter": "csv",
-            "template": "export/course.csv",
-            "extension": "csv"
+            "template": "export/course.csv"
+        },
+        {
+            "name": "Spanisch Vorlage (.zip)",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch.xlsx"
         }
     ]
 }
