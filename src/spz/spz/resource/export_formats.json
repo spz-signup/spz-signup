@@ -6,6 +6,11 @@
             "template": "export/course.xlsx"
         },
         {
+            "name": "Excel (.xlsx / eine Mappe für alle Kurse)",
+            "formatter": "single-excel",
+            "template": "export/course.xlsx"
+        },
+        {
             "name": "Comma Separated (.csv)",
             "formatter": "csv",
             "template": "export/course.csv"

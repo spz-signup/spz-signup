@@ -118,3 +118,21 @@ class ExcelZipWriter(ExcelWriter):
         self.zip.close()
         self.tempfile.seek(0)
         return self.tempfile.read()
+
+
+class SingleSectionExcelWriter(ExcelWriter):
+
+    section = None
+
+    def begin_section(self, section_name):
+        if not self.section:
+            super().begin_section(section_name)
+        self.section = section_name
+
+    def end_section(self, section_name):
+        pass
+
+    def get_data(self):
+        if self.section:
+            super().end_section(self.section)
+        return super().get_data()

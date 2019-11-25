@@ -50,12 +50,13 @@ class TableWriter(TemplatedWriter):
         pass
 
 
-from .excel import ExcelWriter, ExcelZipWriter  # noqa
+from .excel import ExcelWriter, ExcelZipWriter, SingleSectionExcelWriter  # noqa
 from .csv import CSVWriter  # noqa
 
 
 course_formatters = {
     'excel': ExcelWriter,
+    'single-excel': SingleSectionExcelWriter,
     'zip-excel': ExcelZipWriter,
     'csv': CSVWriter
 }
