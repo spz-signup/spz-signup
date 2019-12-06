@@ -11,7 +11,7 @@ from flask_login import current_user
 from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
-from spz import app, models, token, tables
+from spz import app, models, token
 
 from . import cached, validators
 
@@ -29,8 +29,7 @@ __all__ = [
     'UniqueForm',
     'TagForm',
     'SignoffForm',
-    'ExportCourseForm',
-    'ExportLanguageForm',
+    'ExportCourseForm'
 ]
 
 
@@ -580,64 +579,34 @@ class TagForm(FlaskForm):
         return self.tag.data
 
 
-class ExportForm(FlaskForm):
-    """Represents a general export form.
+class ExportCourseForm(FlaskForm):
+    """Form for exporting one or multiple courses.
+
+       Export format choices differ, depending on the passed language list (current_user.languages).
+       It might be an option to use the value of 'courses' instead.
     """
 
-    format = SelectField(
-        'Format',
-        [validators.DataRequired('Das Format muss angegeben werden')],
-        choices=tables.export_file_formats
-    )
-
-    no_sections = BooleanField(
-        'Alle Kurse in einen Abschnitt schreiben'
-    )
-
-    def get_format(self):
-        return self.format.data
-
-    def sections_wanted(self):
-        return not self.no_sections.data
-
-    def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
-
-
-class ExportCourseForm(ExportForm):
-    """Represents a form to select course export options.
-    """
-
-    select = SelectMultipleField(
+    courses = SelectMultipleField(
         'Kurse',
         [validators.DataRequired('Mindestens ein Kurs muss ausgewählt werden')],
         coerce=int
     )
 
-    def get_selected(self):
-        return [models.Course.query.get(id) for id in self.select.data]
-
-    def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
-        self.select.choices = cached.all_courses_to_choicelist()
-
-
-class ExportLanguageForm(ExportForm):
-    """Represents a form to select language export options.
-    """
-
-    select = SelectMultipleField(
-        'Sprachen',
-        [validators.DataRequired('Mindestens eine Sprache muss ausgewählt werden')],
+    format = SelectField(
+        'Format',
+        [validators.DataRequired('Das Format muss angegeben werden')],
         coerce=int
     )
 
-    def get_selected(self):
-        selected = []
-        for id in self.select.data:
-            selected += models.Language.query.get(id).courses
-        return selected
+    def get_format(self):
+        return models.ExportFormat.query.get(self.format.data)
 
-    def __init__(self, *args, **kwargs):
-        super(ExportForm, self).__init__(*args, **kwargs)
-        self.select.choices = cached.languages_to_choicelist()
+    def get_selected(self):
+        return [models.Course.query.get(id) for id in self.courses.data]
+
+    def __init__(self, languages=[], *args, **kwargs):
+        super(ExportCourseForm, self).__init__(*args, **kwargs)
+        self.courses.choices = cached.all_courses_to_choicelist()
+        self.format.choices = [
+            (f.id, f.descriptive_name) for f in models.ExportFormat.list_formatters(languages=languages)
+        ]

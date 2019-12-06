@@ -14,7 +14,7 @@ from redis import ConnectionError
 
 from sqlalchemy import and_, func, not_
 
-from flask import request, redirect, render_template, url_for, flash, abort
+from flask import request, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_mail import Message
 
@@ -23,7 +23,7 @@ from spz.decorators import templated
 import spz.forms as forms
 from spz.util.Filetype import mime_from_filepointer
 from spz.mail import generate_status_mail
-from spz.tables import export_course_list
+from spz.export import export_course_list
 
 
 def check_precondition_with_auth(cond, msg, auth=False):
@@ -421,23 +421,21 @@ def notifications():
 
 @login_required
 @templated('internal/export.html')
-def export(type, id, format='xlsx'):
-    if type == 'course':
-        form = forms.ExportCourseForm()
-    elif type == 'language':
-        form = forms.ExportLanguageForm()
-    else:
-        abort(404)
+def export(type, id):
+    form = forms.ExportCourseForm(languages=current_user.languages)
 
     if form.validate_on_submit():
         return export_course_list(
             courses=form.get_selected(),
-            format=form.get_format(),
-            sectionize=form.sections_wanted()
+            format=form.get_format()
         )
     else:
-        form.select.data = id
-        form.format.data = format
+        form.format.data = models.ExportFormat.query.first().id
+        if type == 'course':
+            form.courses.data = id
+        elif type == 'language':
+            language = models.Language.query.get(id)
+            form.courses.data = [course.id for course in language.courses]
 
     return dict(form=form)
 
@@ -474,7 +472,7 @@ def course(id):
                 # TODO: handle active attendances automatically or make deleting them easier
             else:
                 deleted = 0
-                name = course.full_name()
+                name = course.full_name
                 for attendance in course.get_waiting_attendances():
                     db.session.delete(attendance)
                     deleted += 1
@@ -528,7 +526,7 @@ def applicant(id):
             if remove_from:
                 try:
                     remove_attendance(applicant, remove_from, notify)
-                    flash('Der Bewerber wurde aus dem Kurs "{0}" genommen'.format(remove_from.full_name()), 'success')
+                    flash('Der Bewerber wurde aus dem Kurs "{0}" genommen'.format(remove_from.full_name), 'success')
                     db.session.commit()
                 except Exception as e:
                     db.session.rollback()

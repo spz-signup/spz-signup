@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-        "title": "Origins",
+        "title": "ExportFormats",
         "type": "object",
         "properties": {
-            "origins": {
+            "formats": {
                 "type": "array",
                 "items": {
                     "type": "object",
@@ -11,17 +11,20 @@
                         "name": {
                             "type": "string"
                         },
-                        "short_name": {
+                        "formatter": {
                             "type": "string"
                         },
-                        "validate_registration": {
-                            "type": "boolean"
+                        "template": {
+                            "type": "string"
+                        },
+                        "language": {
+                            "type": "string"
                         }
                     },
-                    "required": [ "name", "short_name", "validate_registration" ]
+                    "required": [ "name", "formatter" ]
                 },
                 "uniqueItems": true
             }
         },
-        "required": [ "origins" ]
+        "required": [ "formats" ]
 }

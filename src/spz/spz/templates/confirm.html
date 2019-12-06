@@ -8,7 +8,7 @@ Ihre Registrierung war erfolgreich
 {% block body %}
 <div class="row">
     <p>
-        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} &ndash; Sie haben sich für den Kurs <strong>{{ course.full_name() }}</strong> beworben.
+        {{ applicant.first_name ~ ' ' ~ applicant.last_name }} &ndash; Sie haben sich für den Kurs <strong>{{ course.full_name }}</strong> beworben.
         Sie werden per Mail benachrichtigt, falls Sie einen Kursplatz erhalten oder auf der Warteliste sind.
     </p>
 
@@ -17,7 +17,7 @@ Ihre Registrierung war erfolgreich
     <p>Sie sind jetzt für folgende Kurse registriert (Warteliste, Zufallspool oder Erfolgreich):</p>
     <ul class="ui list">
         {% for attendance in applicant.attendances %}
-            <li>{{ attendance.course.full_name() }}</li>
+            <li>{{ attendance.course.full_name }}</li>
         {% endfor %}
     </ul>
 </div>

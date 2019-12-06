@@ -64,7 +64,7 @@ def upcoming_courses_to_choicelist():
             return ''
 
     return [
-        (course.id, '{0}{1}'.format(course.full_name(), generate_marker(course)))
+        (course.id, '{0}{1}'.format(course.full_name, generate_marker(course)))
         for course in upcoming
     ]
 
@@ -76,6 +76,6 @@ def all_courses_to_choicelist():
         .order_by(models.Language.name, models.Course.level, models.Course.alternative)
 
     return [
-        (course.id, '{0}'.format(course.full_name()))
+        (course.id, '{0}'.format(course.full_name))
         for course in courses
     ]

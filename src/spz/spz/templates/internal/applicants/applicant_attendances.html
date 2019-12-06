@@ -20,7 +20,7 @@ Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applica
             <tbody>
                 {% for attendance in applicant.attendances %}
                 <tr>
-                    <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name() }} </a></td>
+                    <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name }} </a></td>
                     <td>
 <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
 {{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}

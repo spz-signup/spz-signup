@@ -10,13 +10,13 @@ from flask import json
 from jsonschema import validate, ValidationError, SchemaError
 
 from spz import app, db
-from spz.models import Degree, Graduation, Origin, Language, Course, User
+from spz.models import Degree, Graduation, Origin, Language, Course, User, ExportFormat
 # Make sure that create_all works for all models (even ones that might be added in the future)
 from spz.models import *  # noqa
 
 
 def validate_resources():
-    resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations', 'users')
+    resources = ('degrees', 'origins', 'courses', 'degrees', 'graduations', 'users', 'export_formats')
 
     for fname in resources:
         with app.open_resource('resource/{0}.json'.format(fname)) as fd_json, \
@@ -34,28 +34,45 @@ def recreate_tables():
 
 
 def insert_resources():
-    with app.open_resource('resource/degrees.json') as fd:
+    insert_degrees('resource/degrees.json')
+    insert_graduations('resource/graduations.json')
+    insert_origins('resource/origins.json')
+    insert_courses('resource/courses.json')
+    insert_export_formats('resource/export_formats.json')
+    insert_users('resource/users.json')
+    db.session.commit()
+
+
+def insert_degrees(json_file):
+    with app.open_resource(json_file) as fd:
         res = json.load(fd)
 
         for degree in res["degrees"]:
             db.session.add(Degree(degree))
 
-    with app.open_resource('resource/graduations.json') as fd:
+
+def insert_graduations(json_file):
+    with app.open_resource(json_file) as fd:
         res = json.load(fd)
 
         for graduation in res["graduations"]:
             db.session.add(Graduation(graduation))
 
-    with app.open_resource('resource/origins.json') as fd:
+
+def insert_origins(json_file):
+    with app.open_resource(json_file) as fd:
         res = json.load(fd)
 
         for origin in res["origins"]:
             db.session.add(Origin(
                 name=origin["name"],
+                short_name=origin["short_name"],
                 validate_registration=origin["validate_registration"]
             ))
 
-    with app.open_resource('resource/courses.json') as fd:
+
+def insert_courses(json_file):
+    with app.open_resource(json_file) as fd:
         res = json.load(fd)
 
         for language in res["languages"]:
@@ -83,9 +100,18 @@ def insert_resources():
                         collision=course["collision"]
                     ))
 
-    db.session.commit()
 
-    with app.open_resource('resource/users.json') as fd:
+def insert_export_formats(json_file):
+    with app.open_resource(json_file) as fd:
+        res = json.load(fd)
+
+        for format in res["formats"]:
+            format['language'] = Language.query.filter(Language.name == format.get("language")).first()
+            db.session.add(ExportFormat(**format))
+
+
+def insert_users(json_file):
+    with app.open_resource(json_file) as fd:
         res = json.load(fd)
 
         print("create user accounts:")
@@ -106,8 +132,6 @@ def insert_resources():
             pw = u.reset_password()
             print('  {} : {}'.format(u.email, pw))
             db.session.add(u)
-
-    db.session.commit()
 
 
 # Has to be done only once, to initialize the database;

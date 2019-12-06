@@ -191,7 +191,7 @@ def list_presence(pdflist, course):
     pdflist.add_page()
 
     pdflist.font_bold(14)
-    pdflist.cell(0, 10, course.full_name(), 0, 1, 'C')
+    pdflist.cell(0, 10, course.full_name, 0, 1, 'C')
     pdflist.font_normal(8)
     height = 6
 
@@ -219,7 +219,7 @@ def print_course_presence(course_id):
     course = models.Course.query.get_or_404(course_id)
     list_presence(pdflist, course)
 
-    return pdflist.gen_response(course.full_name())
+    return pdflist.gen_response(course.full_name)
 
 
 @login_required
@@ -248,7 +248,7 @@ def list_course(pdflist, course):
     active_no_debt.sort()
 
     pdflist.add_page()
-    course_str = '{0}'.format(course.full_name())
+    course_str = '{0}'.format(course.full_name)
     pdflist.font_bold(14)
     pdflist.cell(0, 10, course_str, 0, 1, 'C')
 
@@ -284,7 +284,7 @@ def print_course(course_id):
     course = models.Course.query.get_or_404(course_id)
     list_course(pdflist, course)
 
-    return pdflist.gen_response(course.full_name())
+    return pdflist.gen_response(course.full_name)
 
 
 @login_required
@@ -308,7 +308,7 @@ def print_bill(applicant_id, course_id):
     tag_str = 'Matrikelnummer {0}'.format(attendance.applicant.tag) if attendance.applicant.tag else ''
     now = datetime.now()
     str1 = 'für die Teilnahme am Kurs:'
-    course_str = attendance.course.full_name()
+    course_str = attendance.course.full_name
     amount_str = '{0} Euro'.format(attendance.amountpaid)
     str2 = 'bezahlt.'
     str3 = 'Stempel'

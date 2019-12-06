@@ -11,14 +11,12 @@ Kurslisten Export
     <form class="ui form" method="post" id="export" enctype="multipart/form-data">
         {{ csrf_field() }}
         <h3 class="ui dividing header">Auswahl</h3>
-        {{ render_option(form.select, multiple=True, required=True) }}
-        
+        {{ render_option(form.courses, multiple=True, required=True) }}
+
         <h3 class="ui dividing header">Konfiguration</h3>
         {{ render_option(form.format, required=True) }}
-        
-        {{ render_boolean(form.no_sections) }}
-        
-        
+
+
         {{ render_submit(submit='Herunterladen')}}
     </form>
 </div>

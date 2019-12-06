@@ -55,6 +55,15 @@ def applicant_data(mail='mika.mueller@beispiel.de'):
 
 
 @fixture
+def courses(limit=10):
+    # raise limit to stress test the export feature
+    recreate_tables()
+    insert_resources()
+    with app.app_context():
+        yield Course.query.limit(limit).all()
+
+
+@fixture
 def course():
     with app.app_context():
         yield Course.query.first()

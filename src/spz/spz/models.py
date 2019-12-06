@@ -10,11 +10,10 @@ from datetime import datetime, timedelta
 from functools import total_ordering
 import random
 import string
-import re
 
 from argon2 import argon2_hash
 
-from sqlalchemy import and_, between, func
+from sqlalchemy import and_, or_, between, func
 from sqlalchemy.dialects import postgresql
 
 from spz import app, db, token
@@ -343,7 +342,7 @@ class Course(db.Model):
         self.collision = collision
 
     def __repr__(self):
-        return '<Course %r>' % (self.full_name())
+        return '<Course %r>' % (self.full_name)
 
     def __lt__(self, other):
         return (self.language, self.level.lower()) < (other.language, other.level.lower())
@@ -363,22 +362,25 @@ class Course(db.Model):
     def get_active_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting]
 
-    """ active attendances without debt """
-    def get_paid_attendances(self):
-        return [attendance for attendance in self.attendances if not attendance.waiting
-                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
-
     def get_paying_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and attendance.has_to_pay]
 
     def get_free_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
 
+    @property
     def full_name(self):
         result = '{0} {1}'.format(self.language.name, self.level)
         if self.alternative:
             result = '{0} {1}'.format(result, self.alternative)
         return result
+
+    """ active attendants without debt """
+    @property
+    def course_list(self):
+        return [attendance.applicant for attendance in self.attendances
+                if not attendance.waiting
+                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
 
 
 @total_ordering
@@ -551,20 +553,14 @@ class Origin(db.Model):
 
     __tablename__ = 'origin'
 
-    short_names = {
-        'KIT (Mitarbeiter)': 'KIT Mitarb.',
-        'Hochschule Karlsruhe': 'HS KA',
-        'PH Karlsruhe': 'PH KA',
-        'HfG Karlsruhe': 'HfG KA',
-        'Musikhochschule Karlsruhe': 'MHS KA'
-    }
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True, nullable=False)
+    short_name = db.Column(db.String(10), nullable=False)
     validate_registration = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, name, validate_registration):
+    def __init__(self, name, short_name, validate_registration):
         self.name = name
+        self.short_name = short_name
         self.validate_registration = validate_registration
 
     def __repr__(self):
@@ -572,11 +568,6 @@ class Origin(db.Model):
 
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
-
-    def get_short_name(self):
-        if self.name in self.short_names:
-            return self.short_names[self.name]
-        return re.sub('\\(.+?\\)', '', self.name)
 
 
 @total_ordering
@@ -860,3 +851,47 @@ class LogEntry(db.Model):
             entries = entries[:limit]
 
         return entries
+
+
+@total_ordering
+class ExportFormat(db.Model):
+    """Format used when exporting course lists
+
+       :param id: unique ID
+       :param name: human readable name for the format
+       :param formatter: class name of the python formatter to be used
+       :param template: optional template descriptor, supplied to the formatter
+       :param language: language for which the export format is intended (NULL for any)
+    """
+    __tablename__ = 'export_format'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    formatter = db.Column(db.String(50), nullable=False)
+    template = db.Column(db.String(50))
+    language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
+    language = db.relationship("Language")
+
+    def __init__(self, name, formatter, template=None, extension=None, language=None):
+        self.name = name
+        self.formatter = formatter
+        self.template = template
+        self.language = language
+
+    def __repr__(self):
+        return '<ExportFormat "{}">'.format(self.descriptive_name)
+
+    def __lt__(self, other):
+        return self.name.lower() < other.name.lower()
+
+    @property
+    def descriptive_name(self):
+        return self.name
+
+    @staticmethod
+    def list_formatters(languages=[]):
+        language_ids = [l.id for l in languages]
+        return ExportFormat.query.filter(or_(
+            ExportFormat.language == None,  # noqa
+            ExportFormat.language_id.in_(language_ids)
+        )).all()

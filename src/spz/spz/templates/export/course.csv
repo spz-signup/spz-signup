@@ -1,0 +1,2 @@
+Kurs;Nachname;Vorname;Hochschule;Matrikelnummer;E-Mail;Telefon
+course.full_name;applicant.last_name;applicant.first_name;applicant.origin.name;applicant.tag;applicant.mail;applicant.phone
