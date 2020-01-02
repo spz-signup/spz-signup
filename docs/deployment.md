@@ -58,7 +58,7 @@ That's our baby, requires a good amount of modifications. I'll walk you through 
 - generate 3 random entries for `SECRET_KEY`, `TOKEN_SECRET_KEY` and `ARGON2_SALT`
 - set `SEMESTER_NAME` to the correct value
 - enter `ILIAS_USERNAME`, `ILIAS_PASSWORD` and `ILIAS_REFID` (hints: it's the integer value in the URL of the test, not the one of the course that contains it)
-- check that `SELF_SIGNOFF_PERIOD`, `MANUAL_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day
+- check that `SELF_SIGNOFF_PERIOD` and `RANDOM_WINDOW_CLOSED_FOR` are pointing to meaningful times of day
 
 `src/spz/util/docker_entrypoint.sh`
 - set correct DB password to the line `PGPASSWORD=mysecretpassword psql -h postgres ...` somewhere in the `init` function

@@ -376,6 +376,7 @@ class Course(db.Model):
         return result
 
     """ active attendants without debt """
+
     @property
     def course_list(self):
         return [attendance.applicant for attendance in self.attendances
@@ -403,16 +404,19 @@ class Language(db.Model):
     # See: http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.Interval
     signup_begin = db.Column(db.DateTime())
     signup_rnd_window_end = db.Column(db.DateTime())
+    signup_manual_end = db.Column(db.DateTime())
     signup_end = db.Column(db.DateTime())
     signup_auto_end = db.Column(db.DateTime())
 
     signup_constraint = db.CheckConstraint(signup_end > signup_begin)
 
-    def __init__(self, name, reply_to, signup_begin, signup_rnd_window_end, signup_end, signup_auto_end):
+    def __init__(self, name, reply_to, signup_begin, signup_rnd_window_end, signup_manual_end, signup_end,
+                 signup_auto_end):
         self.name = name
         self.reply_to = reply_to
         self.signup_begin = signup_begin
         self.signup_rnd_window_end = signup_rnd_window_end
+        self.signup_manual_end = signup_manual_end
         self.signup_end = signup_end
         self.signup_auto_end = signup_auto_end
 
@@ -434,10 +438,6 @@ class Language(db.Model):
     def signup_manual_begin(self):
         # XXX: find something better
         return datetime.min
-
-    @property
-    def signup_manual_end(self):
-        return self.signup_rnd_end + app.config['MANUAL_PERIOD']
 
     @property
     def self_signoff_end(self):
