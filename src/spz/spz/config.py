@@ -144,6 +144,9 @@ class Testing(BaseConfig):
     TOKEN_SECRET_KEY = 'test-secret'
     ARGON2_SALT = 'test-secret'
 
+    CELERY_BROKER_URL = 'redis://localhost:6379'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
     DB_DB = 'spz'
     DB_DRIVER = 'postgresql'
     DB_HOST = 'localhost'
