@@ -313,7 +313,7 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
-    level = db.Column(db.String(120))
+    level = db.Column(db.String(120), nullable=False)
     alternative = db.Column(db.String(10), nullable=False)
     limit = db.Column(db.Integer, nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, nullable=False)
@@ -331,7 +331,9 @@ class Course(db.Model):
         rating_lowest <= rating_highest
     ))
 
-    def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest, collision):
+    def __init__(
+        self, language, level, alternative, limit, price, ger=None, rating_highest=100, rating_lowest=0, collision=[]
+    ):
         self.language = language
         self.level = level
         self.alternative = alternative
