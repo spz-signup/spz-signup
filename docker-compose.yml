@@ -81,7 +81,7 @@ services:
             - back
         restart: unless-stopped
     redis:
-        image: redis:3.0
+        image: redis:5.0
         command: redis-server --appendonly yes
         volumes:
             - data_redis:/data
@@ -90,7 +90,7 @@ services:
             - back
         restart: unless-stopped
     postgres:
-        image: postgres:9.4
+        image: postgres:12.1
         volumes:
             - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
             - data_postgres:/var/lib/postgresql/data
@@ -113,7 +113,7 @@ services:
             - back
         restart: unless-stopped
     nginx:
-        image: nginx:1.11
+        image: nginx:1.17
         command: nginx -g "worker_processes 16;"
         volumes:
             - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro

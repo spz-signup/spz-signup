@@ -3,10 +3,11 @@ language: python
 cache: pip
 
 python:
-  - "3.5"
+  - "3.7"
 
 services:
   - postgresql
+  - redis-server
 
 install: "pip install -q -r requirements.txt"
 

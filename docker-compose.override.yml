@@ -12,11 +12,11 @@ services:
         environment:
             - FLASK_ENV=development
     celery_default:
-        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
         environment:
             - FLASK_ENV=development
     celery_slow_mails:
-        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --autoreload --concurrency 1
+        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
         environment:
             - FLASK_ENV=development
     redis:
@@ -26,7 +26,7 @@ services:
         ports:
             - "127.0.0.1:25432:5432"
     mail:
-        image: djfarrelly/maildev:1.0.0-rc2
+        image: djfarrelly/maildev:1.1.0
         ports:
             - "127.0.0.1:8080:80"
     nginx:
