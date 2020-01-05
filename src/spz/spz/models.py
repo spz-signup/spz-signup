@@ -314,15 +314,16 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
     level = db.Column(db.String(120), nullable=False)
-    alternative = db.Column(db.String(10), nullable=False)
+    alternative = db.Column(db.String(10), nullable=True)
     limit = db.Column(db.Integer, nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, nullable=False)
+    ger = db.Column(db.String(10), nullable=True)
     rating_highest = db.Column(db.Integer, nullable=False)
     rating_lowest = db.Column(db.Integer, nullable=False)
     collision = db.Column(postgresql.ARRAY(db.String(120)), nullable=False)
     has_waiting_list = db.Column(db.Boolean, nullable=False, default=False)
 
-    unique_constraint = db.UniqueConstraint(language_id, level, alternative)
+    unique_constraint = db.UniqueConstraint(language_id, level, alternative, ger)
     limit_constraint = db.CheckConstraint(limit > 0)
     price_constraint = db.CheckConstraint(price > 0)
     rating_constraint = db.CheckConstraint(and_(
@@ -339,6 +340,7 @@ class Course(db.Model):
         self.alternative = alternative
         self.limit = limit
         self.price = price
+        self.ger = ger
         self.rating_highest = rating_highest
         self.rating_lowest = rating_lowest
         self.collision = collision
