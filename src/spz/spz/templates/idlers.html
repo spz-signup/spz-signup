@@ -1,0 +1,35 @@
+{% extends 'baselayout.html' %}
+{% from 'formhelpers.html' import td_sorted %}
+
+{% block caption %}
+Restplätze {{ config['SEMESTER_NAME'] }}
+{% endblock caption %}
+
+
+{% block body %}
+<div class="row">
+    <table class="ui selectable sortable compact small striped table">
+        <thead>
+            <tr>
+                <th>Sprache</th>
+                <th>Kurs</th>
+                <th>GER-Einstufung</th>
+                <th>Restplätze</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for language in languages %}
+            {% for course in language.courses %}
+            <tr>
+                {{ td_sorted(language.name) }}
+                {{ td_sorted(course.full_name) }}
+                {{ td_sorted(course.ger or '-') }}
+                {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

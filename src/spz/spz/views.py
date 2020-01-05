@@ -145,6 +145,19 @@ def index():
     return dict(form=form)
 
 
+@templated('idlers.html')
+def idlers():
+    languages = db.session.query(models.Language) \
+        .join(models.Course, models.Language.courses) \
+        .order_by(models.Language.name) \
+        .order_by(models.Course.ger) \
+        .order_by(models.Course.level) \
+        .order_by(models.Course.alternative)
+        #.from_self()
+
+    return dict(languages=languages)
+
+
 @templated('licenses.html')
 def licenses():
     return None

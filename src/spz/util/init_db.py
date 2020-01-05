@@ -78,7 +78,8 @@ def insert_courses(json_file):
             ref_lang = Language(
                 # ISO 8601 / RFC 3339 -- better way to parse this?
                 signup_begin=datetime.strptime(language.pop('signup_begin_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
-                signup_rnd_window_end=datetime.strptime(language.pop('signup_random_window_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                signup_rnd_window_end=datetime.strptime(
+                    language.pop('signup_random_window_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
                 signup_manual_end=datetime.strptime(language.pop('signup_manual_end'), "%Y-%m-%dT%H:%M:%SZ"),
                 # see also Jsonschema RFC, date-time
                 signup_end=datetime.strptime(language.pop('signup_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
