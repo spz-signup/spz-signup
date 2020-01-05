@@ -31,6 +31,10 @@
                             "type": "string",
                             "format": "date-time"
                         },
+                        "signup_manual_end": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
                         "courses": {
                             "type": "array",
                             "items": {
@@ -69,7 +73,7 @@
                             "uniqueItems": true
                         }
                     },
-                    "required": [ "name", "reply_to", "signup_begin_iso_utc", "signup_end_iso_utc", "courses" ]
+                    "required": [ "name", "reply_to", "signup_begin_iso_utc", "signup_end_iso_utc", "signup_manual_end", "courses" ]
                 },
                 "uniqueItems": true
             }
