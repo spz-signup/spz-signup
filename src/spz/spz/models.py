@@ -85,7 +85,7 @@ class Attendance(db.Model):
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
        :param graduation: The intended :py:class:`Graduation` of the :py:class:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
-       :param is_free: Whether this :py:class:`Attendance` is a free one or if the applicant has to pay.
+       :param discount: Discount percentage for this :py:class:`Attendance` from 0 (no discount) to 100 (free).
        :param informed_about_rejection: Tells us if we already send a "you're (not) in the course" mail
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
@@ -102,7 +102,7 @@ class Attendance(db.Model):
     graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
     waiting = db.Column(db.Boolean)  # do not change, please use the set_waiting_status function
-    discount = db.Column(db.Numeric(precision=3))  # discount factor in percent from 0 (no discount) to 100 (free)
+    discount = db.Column(db.Numeric(precision=3))
     amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
 
     paidbycash = db.Column(db.Boolean)  # could be remove, since cash payments are not allowed anyway
@@ -395,7 +395,7 @@ class Course(db.Model):
             if is_free is not None:
                 valid &= att.is_free == is_free
             if valid:
-                result += att
+                result.append(att)
         return result
 
     @hybrid_method

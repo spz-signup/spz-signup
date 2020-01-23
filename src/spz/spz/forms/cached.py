@@ -56,7 +56,7 @@ def upcoming_courses_to_choicelist():
     upcoming = [course for course in available if course.language.is_upcoming(time)]
 
     def generate_marker(course):
-        if course.is_overbooked():
+        if course.is_overbooked:
             return ' (Überbucht)'
         elif course.has_waiting_list:
             return ' (Warteliste)'

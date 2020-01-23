@@ -107,7 +107,7 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
-            not course.is_overbooked(),  # no transaction guarantees here, but overbooking is some sort of soft limit
+            not course.is_overbooked,  # no transaction guarantees here, but overbooking is some sort of soft limit
             'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen!',
             user_has_special_rights
         )
