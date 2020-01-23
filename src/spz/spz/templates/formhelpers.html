@@ -2,14 +2,14 @@
 {# Independent short macros, to allow for greater flexibility #}
 
 
-{% macro render_input(field, width=12, placeholder=None, required=True, required_extras=None, type="text", help=None, icon=None, step=None) %}
+{% macro render_input(field, width=12, placeholder=None, required=True, required_extras=None, type="text", help=None, icon=None, step=None, min=None, max=None) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
     <div class="ui labeled input">
         <div class="ui label" for="{{ field.id }}">
             {% if icon %}<i class="{{ icon }} icon"></i>{% endif %}
             {{ field.label }}
         </div>
-        <input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }}"{% if field.data != None %} value="{{ field.data }}" {% endif %} placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{% if step %} step="{{ step }}"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }} />
+        <input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }}"{% if field.data != None %} value="{{ field.data }}" {% endif %} placeholder="{{ placeholder|default('', true) }}"{% if required %} data-required="true"{% endif %}{% if step %} step="{{ step }}"{% endif %}{% if min %} min="{{ min }}"{% endif %}{% if max %} max="{{ max }}"{% endif %}{{ (' ' ~ required_extras|safe) if required_extras }} />
     </div>
     {% for error in field.errors %}
         <span class="ui red pointing prompt label transition visible">{{ error }}</span>
@@ -129,4 +129,24 @@
 
 {% macro csrf_field() %}
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" data-storage="false" />
+{% endmacro %}
+
+{% macro attendance_status(attendance) %}
+{% if attendance.waiting %}
+    Warteliste
+{% else %}
+    Fester Platz
+    {% if attendance.is_free %}
+        Gebührenfrei
+    {% elif attendance.discount > 0 %}
+        Ermäßigt
+    {% else %}
+        Vollzahler
+    {% endif %}
+    {% if attendance.is_unpaid %}
+        Ausstehend: {{ attendance.unpaid }} &euro;
+    {% elif attendance.amountpaid > 0 %}
+        {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{ attendance.amountpaid }} &euro;
+    {% endif %}
+{% endif %}
 {% endmacro %}

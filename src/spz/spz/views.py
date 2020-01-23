@@ -691,7 +691,7 @@ def payments():
 def outstanding():
     outstanding = db.session.query(models.Attendance) \
         .join(models.Course, models.Applicant) \
-        .filter(models.Attendance.unpaid > 0)
+        .filter(models.Attendance.is_unpaid)
 
     return dict(outstanding=outstanding)
 
@@ -706,8 +706,8 @@ def status(applicant_id, course_id):
         try:
             attendance.graduation = form.get_graduation()
             attendance.payingdate = datetime.utcnow()
-            attendance.discount = 1 if form.has_to_pay.data else attendance.applicant.current_discount()
-            attendance.applicant.discounted = form.discounted.data
+            attendance.discount = form.discount.data
+            # attendance.applicant.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
             attendance.set_waiting_status(form.waiting.data)

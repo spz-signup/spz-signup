@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import csrf_field, render_input, render_option, render_boolean %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_option, render_boolean, attendance_status %}
 
 {% block caption %}
 Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
@@ -35,24 +35,7 @@ Bewerber: {{ form.first_name.data ~ " " ~ form.last_name.data }}
                     </td>
                     <td>
                         <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-                            {# TODO: use macro for status #}
-                            {% if attendance.waiting %}
-                                Warteliste
-                            {% else %}
-                                Fester Platz
-                                {% if attendance.discount >= 1 %}
-                                    Gebührenfrei
-                                {% elif attendance.discount > 0 %}
-                                    Ermäßigt
-                                {% else %}
-                                    Vollzahler
-                                {% endif %}
-                                {% if attendance.amountpaid > 0 %}
-                                    {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{ attendance.amountpaid }} &euro;
-                                {% elif 1 > attendance.discount %}
-                                    Gebührenpflichtig
-                                {% endif %}
-                            {% endif %}
+                            {{ attendance_status(attendance) }}
                         </a>
                     </td>
                 </tr>

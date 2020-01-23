@@ -301,7 +301,7 @@ class NotificationForm(FlaskForm):
 
         # single list of attendances
         for course in self.get_courses():
-            attendances = flatten(course.filter_attendandances(waiting=waiting_filter, unpaid=unpaid_filter))
+            attendances = flatten(course.filter_attendandances(waiting=waiting_filter, is_unpaid=unpaid_filter))
 
         recipients = [attendance.applicant.mail for attendance in attendances]
         return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
@@ -456,9 +456,11 @@ class StatusForm(FlaskForm):
     registered = StringField('Registrierungsdatum')
     payingdate = StringField('Zahlungsdatum')
     waiting = BooleanField('Warteliste')
-    has_to_pay = BooleanField('Zahlungspflichtig')
-    discounted = BooleanField('Ermäßigt')
     paidbycash = BooleanField('Zahlungsart: Bar')
+    discount = DecimalField(
+        'Ermäßigung',
+        [validators.NumberRange(min=0, max=100, message='Ungültige Prozentangabe')]
+    )
     amountpaid = DecimalField(
         'Zahlbetrag',
         [validators.NumberRange(min=0, message='Keine negativen Beträge')],
@@ -478,8 +480,7 @@ class StatusForm(FlaskForm):
         self.registered.data = attendance.registered
         self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
-        self.has_to_pay.data = attendance.discount < 1
-        self.discounted.data = attendance.applicant.discounted
+        self.discount.data = attendance.discount
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
 

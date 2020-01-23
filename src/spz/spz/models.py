@@ -114,7 +114,8 @@ class Attendance(db.Model):
     informed_about_rejection = db.Column(db.Boolean, nullable=False, default=False)
 
     amountpaid_constraint = db.CheckConstraint(amountpaid >= 0)
-    discount_constraint = db.CheckConstraint(between(discount, 0, 100))
+    MAX_DISCOUNT = 100  # discount stored as percentage
+    discount_constraint = db.CheckConstraint(between(discount, 0, MAX_DISCOUNT))
 
     def __init__(self, course, graduation, waiting, discount, informed_about_rejection=False):
         self.course = course
@@ -142,11 +143,15 @@ class Attendance(db.Model):
 
     @hybrid_property
     def is_free(self):
-        return self.discount == 100
+        return self.discount == self.MAX_DISCOUNT
 
     @hybrid_property
     def unpaid(self):
-        return (1 - self.discount / 100) * self.price - self.amountpaid
+        return (1 - self.discount / self.MAX_DISCOUNT) * self.price - self.amountpaid
+
+    @hybrid_property
+    def is_unpaid(self):
+        return self.unpaid > 0
 
     @hybrid_property
     def price(self):
@@ -269,9 +274,9 @@ class Applicant(db.Model):
     def current_discount(self):
         attends = len([attendance for attendance in self.attendances if not attendance.waiting])
         if self.is_student() and attends == 0:
-            return 1  # one free course for students
+            return Attendance.MAX_DISCOUNT  # one free course for students
         else:
-            return 0.5 if self.discounted else 0  # discounted applicants get 50% off
+            return Attendance.MAX_DISCOUNT / 2 if self.discounted else 0  # discounted applicants get 50% off
 
     def in_course(self, course):
         return course in [attendance.course for attendance in self.attendances]
@@ -382,16 +387,17 @@ class Course(db.Model):
         Criterias can be set to either True, False or to None (which includes both).
 
        :param waiting: Whether the attendant is on the waiting list
-       :param unpaid: Whether the course fee is still (partially) unpaid
+       :param is_unpaid: Whether the course fee is still (partially) unpaid
+       :param is_free: Whether the course is fully discounted
     """
-    def filter_attendances(self, waiting=None, unpaid=None, is_free=None):
+    def filter_attendances(self, waiting=None, is_unpaid=None, is_free=None):
         result = []
         for att in self.attendances:
             valid = True
             if waiting is not None:
                 valid &= att.waiting == waiting
-            if unpaid is not None:
-                valid &= att.unpaid == unpaid
+            if is_unpaid is not None:
+                valid &= att.is_unpaid == is_unpaid
             if is_free is not None:
                 valid &= att.is_free == is_free
             if valid:
@@ -403,12 +409,12 @@ class Course(db.Model):
         return len(self.filter_attendances(*args, **kw))
 
     @count_attendances.expression
-    def count_attendances(cls, waiting=None, unpaid=None, is_free=None):
+    def count_attendances(cls, waiting=None, is_unpaid=None, is_free=None):
         query = select([func.count(cls.id)])
         if waiting is not None:
             query = query.where(cls.waiting == waiting)
-        if unpaid is not None:
-            query = query.where(cls.unpaid == unpaid)
+        if is_unpaid is not None:
+            query = query.where(cls.is_unpaid == is_unpaid)
         if is_free is not None:
             query = query.where(cls.is_free == is_free)
         return query.label("attendance_count")
@@ -435,7 +441,7 @@ class Course(db.Model):
     """ active attendants without debt """
     @property
     def course_list(self):
-        return [attendance.applicant for attendance in self.filter_attendances(waiting=False, unpaid=False)]
+        return [attendance.applicant for attendance in self.filter_attendances(waiting=False, is_unpaid=False)]
 
 
 @total_ordering
