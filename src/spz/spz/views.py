@@ -12,7 +12,8 @@ from datetime import datetime
 
 from redis import ConnectionError
 
-from sqlalchemy import and_, func, not_
+from sqlalchemy import and_, func, not_, or_
+from sqlalchemy.orm import joinedload
 
 from flask import request, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
@@ -147,14 +148,25 @@ def index():
 
 @templated('idlers.html')
 def idlers():
-    languages = db.session.query(models.Language) \
-        .join(models.Course, models.Language.courses) \
+    # display courses to the user that either have a short waiting list or little vacancies left
+    courses = db.session.query(models.Course) \
+        .join(models.Language) \
+        .options(joinedload(models.Course.language)) \
+        .options(joinedload(models.Course.attendances)) \
         .order_by(models.Language.name) \
-        .order_by(models.Course.ger) \
-        .order_by(models.Course.level) \
-        .order_by(models.Course.alternative)
+        .order_by(models.Course.vacancies) \
+        .filter(or_(
+            and_(
+                not models.Course.is_full,
+                models.Course.vacancies <= app.config['LITTLE_VACANCIES']
+            ),
+            and_(
+                models.Course.is_full,
+                models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']
+            )
+        ))
 
-    return dict(languages=languages)
+    return dict(courses=courses)
 
 
 @templated('licenses.html')

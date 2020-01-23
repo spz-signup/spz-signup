@@ -410,13 +410,13 @@ class Course(db.Model):
 
     @count_attendances.expression
     def count_attendances(cls, waiting=None, is_unpaid=None, is_free=None):
-        query = select([func.count(cls.id)])
+        query = select([func.count(cls.attendances)])
         if waiting is not None:
-            query = query.where(cls.waiting == waiting)
+            query = query.where(Attendance.waiting == waiting)
         if is_unpaid is not None:
-            query = query.where(cls.is_unpaid == is_unpaid)
+            query = query.where(Attendance.is_unpaid == is_unpaid)
         if is_free is not None:
-            query = query.where(cls.is_free == is_free)
+            query = query.where(Attendance.is_free == is_free)
         return query.label("attendance_count")
 
     @hybrid_property

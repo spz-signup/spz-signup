@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import td_sorted %}
+{% from 'formhelpers.html' import td_sorted, course_status %}
 
 {% block caption %}
 Restplätze {{ config['SEMESTER_NAME'] }}
@@ -14,20 +14,17 @@ Restplätze {{ config['SEMESTER_NAME'] }}
                 <th>Sprache</th>
                 <th>Kurs</th>
                 <th>GER-Einstufung</th>
-                <th>Restplätze</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            {% for language in languages %}
-            {% for course in language.courses %}
+            {% for course in courses %}
             <tr>
-                {{ td_sorted(language.name) }}
+                {{ td_sorted(course.language.name) }}
                 {{ td_sorted(course.full_name) }}
                 {{ td_sorted(course.ger or '-') }}
-                {{ td_sorted(course.vacancies) }}
-                </td>
+                {{ td_sorted(course_status(course)) }}
             </tr>
-            {% endfor %}
             {% endfor %}
         </tbody>
     </table>

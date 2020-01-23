@@ -150,3 +150,15 @@
     {% endif %}
 {% endif %}
 {% endmacro %}
+
+{% macro course_status(course) %}
+{% if course.is_full %}
+    {% if course.count_attendances(waiting=True) <= config['SHORT_WAITING_LIST'] %}
+        Kurze Warteliste
+    {% endif %}
+{% else %}
+    {% if course.vacancies <= config['LITTLE_VACANCIES'] %}
+        Wenige Restplätze!
+    {% endif %}
+{% endif %}
+{% endmacro %}
