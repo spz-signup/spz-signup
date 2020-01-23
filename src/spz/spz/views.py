@@ -146,8 +146,8 @@ def index():
     return dict(form=form)
 
 
-@templated('idlers.html')
-def idlers():
+@templated('vacancies.html')
+def vacancies():
     # display courses to the user that either have a short waiting list or little vacancies left
     courses = db.session.query(models.Course) \
         .join(models.Language) \
@@ -157,7 +157,7 @@ def idlers():
         .order_by(models.Course.vacancies) \
         .filter(or_(
             and_(
-                not models.Course.is_full,
+                not_(models.Course.is_full),
                 models.Course.vacancies <= app.config['LITTLE_VACANCIES']
             ),
             and_(
