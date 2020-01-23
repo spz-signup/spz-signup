@@ -9,7 +9,7 @@ from zipfile import ZipFile
 
 from spz import db
 from spz.export import export_course_list
-from spz.models import ExportFormat, Graduation
+from spz.models import ExportFormat, Graduation, Attendance
 from test.sample_data import make_applicant
 
 
@@ -24,7 +24,7 @@ def fill(courses):
                 course=course,
                 graduation=graduation,
                 waiting=False,
-                discount=1)
+                discount=Attendance.MAX_DISCOUNT)
             count += 1
         db.session.commit()
     return count
