@@ -91,7 +91,7 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
-            course.is_allowed(applicant),
+            course.allows(applicant),
             'Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
             '(Hinweis: Der Datenabgleich mit Ilias erfolgt automatisch alle 15 Minuten.)',
             user_has_special_rights
@@ -123,7 +123,7 @@ def index():
                 course,
                 form.get_graduation(),
                 waiting=waiting,
-                has_to_pay=applicant.has_to_pay(),
+                discount=applicant.current_discount(),
                 informed_about_rejection=informed_about_rejection
             )
             db.session.add(applicant)
@@ -153,7 +153,6 @@ def idlers():
         .order_by(models.Course.ger) \
         .order_by(models.Course.level) \
         .order_by(models.Course.alternative)
-        #.from_self()
 
     return dict(languages=languages)
 
@@ -480,26 +479,27 @@ def course(id):
 
     if form.validate_on_submit() and current_user.superuser:
         try:
-            if len(course.get_active_attendances()) > 0:
-                flash('Der Kurs kann nicht gelöscht werden, weil aktive Teilnahmen bestehen.', 'error')
-                # TODO: handle active attendances automatically or make deleting them easier
-            else:
-                deleted = 0
-                name = course.full_name
-                for attendance in course.get_waiting_attendances():
+            deleted = 0
+            name = course.full_name
+            for attendance in course.attendances:
+                if attendance.waiting:
                     db.session.delete(attendance)
                     deleted += 1
                     # TODO: notify attendants
+                else:
+                    # TODO: handle active attendances automatically or make deleting them easier
+                    flash('Der Kurs kann nicht gelöscht werden, weil aktive Teilnahmen bestehen.', 'error')
+                    db.session.rollback()
+                    return dict(course=course)
 
-                db.session.delete(course)
+            db.session.delete(course)
+            db.session.commit()
+            flash(
+                'Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted),
+                'success'
+            )
 
-                db.session.commit()
-                flash(
-                    'Kurs "{0}" wurde gelöscht, {1} wartende Teilnahme(n) wurden entfernt.'.format(name, deleted),
-                    'success'
-                )
-
-                return redirect(url_for('lists'))
+            return redirect(url_for('lists'))
         except Exception as e:
             db.session.rollback()
             flash(
@@ -608,10 +608,15 @@ def add_attendance(applicant, course, notify):
     if applicant.in_course(course) or applicant.active_in_parallel_course(course):
         raise ValueError('Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs teil!', 'warning')
 
-    applicant.add_course_attendance(course, None, False, applicant.has_to_pay())
+    applicant.add_course_attendance(
+        course=course,
+        graduation=None,
+        waiting=False,
+        discount=applicant.current_discount()
+    )
     db.session.commit()
 
-    if not course.is_allowed(applicant):
+    if not course.allows(applicant):
         flash(
             'Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-Ergebnisse. '
             'Teilnehmer wurde trotzdem eingetragen.',
@@ -629,11 +634,11 @@ def add_attendance(applicant, course, notify):
 def remove_attendance(applicant, course, notify):
     success = applicant.remove_course_attendance(course)
     if success:
-        if applicant.is_student():
+        if applicant.is_student():  # transfer free attendance
             active_courses = [a for a in applicant.attendances if not a.waiting]
-            free_courses = [a for a in active_courses if not a.has_to_pay]
+            free_courses = [a for a in active_courses if a.discount >= 1]
             if active_courses and not free_courses:
-                active_courses[0].has_to_pay = False
+                active_courses[0].discount = 1
 
     if notify and success:
         try:
@@ -672,7 +677,7 @@ def payments():
                                  func.avg(models.Attendance.amountpaid),
                                  func.min(models.Attendance.amountpaid),
                                  func.max(models.Attendance.amountpaid)) \
-                          .filter(not_(models.Attendance.waiting), models.Attendance.has_to_pay) \
+                          .filter(not_(models.Attendance.waiting), models.Attendance.discount != 1) \
                           .group_by(models.Attendance.paidbycash)
 
     desc = ['cash', 'sum', 'count', 'avg', 'min', 'max']
@@ -684,13 +689,9 @@ def payments():
 @login_required
 @templated('internal/outstanding.html')
 def outstanding():
-    # XXX: discounted /2
     outstanding = db.session.query(models.Attendance) \
-                            .join(models.Course, models.Applicant) \
-                            .filter(not_(models.Attendance.waiting),
-                                    not_(models.Applicant.discounted),
-                                    models.Attendance.has_to_pay,
-                                    models.Attendance.amountpaid < models.Course.price)
+        .join(models.Course, models.Applicant) \
+        .filter(models.Attendance.unpaid > 0)
 
     return dict(outstanding=outstanding)
 
@@ -705,7 +706,7 @@ def status(applicant_id, course_id):
         try:
             attendance.graduation = form.get_graduation()
             attendance.payingdate = datetime.utcnow()
-            attendance.has_to_pay = form.has_to_pay.data
+            attendance.discount = 1 if form.has_to_pay.data else attendance.applicant.current_discount()
             attendance.applicant.discounted = form.discounted.data
             attendance.paidbycash = form.paidbycash.data
             attendance.amountpaid = form.amountpaid.data
@@ -842,7 +843,7 @@ def unique():
                 for course
                 in courses
                 for attendance
-                in course.get_waiting_attendances()
+                in course.filter_attendances(waiting=True)
                 if attendance.applicant.active_in_parallel_course(course)
             ]
 

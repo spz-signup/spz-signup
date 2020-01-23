@@ -19,12 +19,12 @@ Restplätze
         </thead>
         <tbody>
             {% for course in courses %}
-                {% if course.limit > course.get_active_attendances()|count %}
+                {% if not course.is_full %}
                 <tr>
                     <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.full_name }}</a></td>
                     {{ td_sorted(course.limit) }}
-                    {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
-                    {{ td_sorted(course.get_waiting_attendances()|count) }}
+                    {{ td_sorted(course.vacancies) }}
+                    {{ td_sorted(course.count_attendances(is_free=False)) }}
                 </tr>
                 {% endif %}
             {% endfor %}

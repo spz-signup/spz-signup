@@ -22,12 +22,26 @@ Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applica
                 <tr>
                     <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name }} </a></td>
                     <td>
-<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
-{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
-{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
-{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
-</a>
+                        <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {# TODO: use macro for status #}
+                            {% if attendance.waiting %}
+                                Warteliste
+                            {% else %}
+                                Fester Platz
+                                {% if attendance.discount >= 1 %}
+                                    Gebührenfrei
+                                {% elif attendance.discount > 0 %}
+                                    Ermäßigt
+                                {% else %}
+                                    Vollzahler
+                                {% endif %}
+                                {% if attendance.amountpaid > 0 %}
+                                    {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{ attendance.amountpaid }} &euro;
+                                {% elif 1 > attendance.discount %}
+                                    Gebührenpflichtig
+                                {% endif %}
+                            {% endif %}
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}

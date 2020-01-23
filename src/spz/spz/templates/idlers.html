@@ -24,7 +24,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
                 {{ td_sorted(language.name) }}
                 {{ td_sorted(course.full_name) }}
                 {{ td_sorted(course.ger or '-') }}
-                {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
+                {{ td_sorted(course.vacancies) }}
                 </td>
             </tr>
             {% endfor %}

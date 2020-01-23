@@ -30,7 +30,7 @@ Doppelgänger
                 <td>
                     {% for applicant in applicants %}
                     {% for attendance in applicant.attendances %}
-                    {% if not attendance.waiting and not attendance.has_to_pay %}
+                    {% if not attendance.waiting and attendance.discount == 1 %}
                     <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
                         {{ 'A' ~ attendance.applicant.id ~ 'C' ~ attendance.course.id ~ ' (' ~ attendance.course.language.name ~ ')' }}
                     </a>

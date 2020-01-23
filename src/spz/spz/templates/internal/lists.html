@@ -29,9 +29,9 @@ Sprachen
                 <td><a href="{{ url_for('language', id=language.id) }}"><strong>{{ language.name }}</strong></a></td>
                 {{ td_sorted(courses) }}
                 {{ td_sorted(seats) }}
-                {{ td_sorted(language.get_waiting_attendances()|count) }}
-                {{ td_sorted(language.get_active_attendances()|count) }}
-                {{ td_sorted(language.get_paying_attendances()|count) }}
+                {{ td_sorted(language.count_attendances(waiting=True)) }}
+                {{ td_sorted(language.count_attendances(waiting=False)) }}
+                {{ td_sorted(language.count_attendances(is_free=False)) }}
                 <td class="collapsing"><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('export', type='language', id=language.id) }}"><button type="button" class="ui button">Export</button></a></td>
@@ -39,9 +39,9 @@ Sprachen
             {% if sums.update({
                 'courses_t': sums['courses_t'] + courses,
                 'seats_t': sums['seats_t'] + seats,
-                'waiting_t': sums['waiting_t'] + language.get_waiting_attendances()|count,
-                'active_t': sums['active_t'] + language.get_active_attendances()|count,
-                'paying_t': sums['paying_t'] + language.get_paying_attendances()|count
+                'waiting_t': sums['waiting_t'] + language.count_attendances(waiting=True),
+                'active_t': sums['active_t'] + language.count_attendances(waiting=False),
+                'paying_t': sums['paying_t'] + language.count_attendances(is_free=False)
             }) %}
             {% endif %}
             {% endfor %}

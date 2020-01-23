@@ -18,13 +18,13 @@ def fill(courses):
     graduation = Graduation.query.first()
     count = 0
     for course in courses:
-        while not course.is_full():
+        while not course.is_full:
             applicant = make_applicant(id=count)
             applicant.add_course_attendance(
                 course=course,
                 graduation=graduation,
                 waiting=False,
-                has_to_pay=False)
+                discount=1)
             count += 1
         db.session.commit()
     return count

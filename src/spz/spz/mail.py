@@ -58,7 +58,7 @@ def generate_status_mail(applicant, course, time=None, restock=False):
             template,
             applicant=applicant,
             course=course,
-            has_to_pay=attendance.has_to_pay if attendance else False,
+            has_to_pay=attendance.discount != 1 if attendance else False,
             date=time,
             signoff_window=signoff
         ),

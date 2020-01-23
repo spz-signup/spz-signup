@@ -184,8 +184,7 @@ def list_presence(pdflist, course):
     def maybe(x):
         return x if x else ''
 
-    active_no_debt = [attendance.applicant for attendance in course.attendances
-                      if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+    active_no_debt = course.course_list
     active_no_debt.sort()
 
     pdflist.add_page()
@@ -239,12 +238,7 @@ def list_course(pdflist, course):
     def maybe(x):
         return x if x else ''
 
-    active_no_debt = [
-        attendance.applicant
-        for attendance
-        in course.attendances
-        if not attendance.waiting and (not attendance.has_to_pay or attendance.amountpaid > 0)
-    ]
+    active_no_debt = course.course_list
     active_no_debt.sort()
 
     pdflist.add_page()

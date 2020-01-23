@@ -43,11 +43,11 @@ Sprache: {{ language.name }}
             <tr>
                 <td><a href="{{ url_for('course', id=course.id) }}"><strong>{{ course.full_name }}</strong></a></td>
                 {{ td_sorted(course.limit) }}
-                {{ td_sorted(course.limit - course.get_active_attendances()|count) }}
-                {{ td_sorted(course.attendances|count) }}
-                {{ td_sorted(course.get_active_attendances()|count) }}
-                {{ td_sorted(course.get_waiting_attendances()|count) }}
-                {{ td_sorted(course.get_paying_attendances()|count) }}
+                {{ td_sorted(course.vacancies) }}
+                {{ td_sorted(course.count_attendances()) }}
+                {{ td_sorted(course.count_attendances(waiting=False)) }}
+                {{ td_sorted(course.count_attendances(waiting=True)) }}
+                {{ td_sorted(course.count_attendances(is_free=False)) }}
                 <td class="collapsing"><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_course_presence', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('export', type='course', id=course.id) }}"><button type="button" class="ui button">Export</button></a></td>
@@ -55,11 +55,11 @@ Sprache: {{ language.name }}
             </tr>
             {% if sums.update({
               'limit': sums['limit'] + course.limit,
-              'rest': sums['rest'] + course.limit - course.get_active_attendances()|count,
-              'attendances': sums['attendances'] + course.attendances|count,
-              'active': sums['active'] + course.get_active_attendances()|count,
-              'waiting': sums['waiting'] + course.get_waiting_attendances()|count,
-              'paying': sums['paying'] + course.get_paying_attendances()|count,
+              'rest': sums['rest'] + course.vacancies,
+              'attendances': sums['attendances'] + course.count_attendances(),
+              'active': sums['active'] + course.count_attendances(waiting=False),
+              'waiting': sums['waiting'] + course.count_attendances(waiting=True),
+              'paying': sums['paying'] + course.count_attendances(is_free=False),
             }) %}{% endif %}
             {% endfor %}
         </tbody>
