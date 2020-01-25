@@ -149,11 +149,11 @@ def index():
 @templated('vacancies.html')
 def vacancies():
     # display courses to the user that either have a short waiting list or little vacancies left
-    courses = db.session.query(models.Course) \
-        .join(models.Language) \
-        .options(joinedload(models.Course.language)) \
-        .options(joinedload(models.Course.attendances)) \
+    languages = db.session.query(models.Language) \
+        .join(models.Course) \
+        .options(joinedload("courses.attendances")) \
         .order_by(models.Language.name) \
+        .order_by(models.Course.ger) \
         .order_by(models.Course.vacancies) \
         .filter(or_(
             and_(
@@ -166,7 +166,7 @@ def vacancies():
             )
         ))
 
-    return dict(courses=courses)
+    return dict(languages=languages)
 
 
 @templated('licenses.html')
