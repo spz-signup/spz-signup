@@ -11,18 +11,22 @@ Restplätze {{ config['SEMESTER_NAME'] }}
 
 
     {% for language in languages %}
-        <h3>{{ language.name }}</h3>
-        {% set groups = [(None, language.courses|rejectattr('ger','string'))] %}
+    <h3 class="ui dividing header">{{ language.name }}</h3>
+        {# Workaround: groupby cant work with None-values #}
+        {% set no_ger = language.courses|rejectattr('ger','string')|list %}
+        {% set groups = [(None, no_ger)] if no_ger else [] %}
         {% set groups = groups + language.courses|rejectattr('ger','none')|groupby('ger') %}
         {% for grouper, list in groups %}
+        <fieldset class="ui message">
             {% if grouper %}
-                <h4>{{ grouper }}</h4>
+                <legend>{{ grouper }}</legend>
             {% endif %}
             <ul>
             {% for course in list %}
                 <li>{{ course.full_name }}: {{ course_status(course) }}</li>
             {% endfor %}
             </ul>
+        </fieldset>
         {% endfor %}
     {% endfor %}
 </div>
