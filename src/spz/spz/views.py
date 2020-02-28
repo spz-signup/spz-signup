@@ -107,6 +107,12 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
+            not (applicant.is_student() and course.has_attendance_for_tag(applicant.tag)),
+            'Sie haben sich bereits mit einer anderen E-Mailadresse für diesen Kurs angemeldet. '
+            'Bitte kontaktieren Sie Ihren Fachleiter bei Fragen oder Problemen.',
+            user_has_special_rights
+        )
+        err |= check_precondition_with_auth(
             not course.is_overbooked(),  # no transaction guarantees here, but overbooking is some sort of soft limit
             'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen!',
             user_has_special_rights
