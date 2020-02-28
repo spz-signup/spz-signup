@@ -9,6 +9,17 @@ function check_and_change_kit_visibilty() {
     }
 }
 
+function show_mail_suggestion(html) {
+    var div = $('<div>', {class: 'suggestion-container'});
+    $(div).html(html);
+    $('#mail').parent().parent().children('.help-block').append(div);
+
+    $('#suggestion').click(function() {
+        $('#mail').val($('#suggestion').text());
+        $('.suggestion-container').remove();
+    });
+}
+
 $(document).ready(function() {
     'use strict';
 
@@ -103,20 +114,19 @@ $(document).ready(function() {
             topLevelDomains: mailcheckDomains['topLevelDomains'],
 
             suggested: function(element, suggestion) {
-                var div = $('<div>', {class: 'suggestion-container'});
-                $(div).html('Meinten Sie <em><a id=\'suggestion\'>' + suggestion['full'] + '</a></em>?');
-                $('#mail').parent().parent().children('.help-block').append(div);
-
-                $('#suggestion').click(function() {
-                    $('#mail').val($('#suggestion').text());
-                    $('.suggestion-container').remove();
-                });
+                show_mail_suggestion('Meinten Sie <em><a id="suggestion" href="#">' + suggestion['full'] + '</a></em>?');
             },
 
             empty: function() {
                 $('.suggestion-container').remove();
             }
         });
+
+        // Check if KIT email
+        if ($(this).val().endsWith('@kit.edu')) {
+            var studentEmail = $(this).val().replace('@kit.edu', '@student.kit.edu');
+            show_mail_suggestion('Studentische KIT E-Mail-Adressen enden auf "@student.kit.edu". Möchtest du <em><a id="suggestion" href="#">' + studentEmail + '</a></em> verwenden?');
+        }
     });
 
 });
