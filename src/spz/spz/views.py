@@ -107,9 +107,10 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
-            not (applicant.is_student() and course.has_attendance_for_tag(applicant.tag)),
-            'Sie haben sich bereits mit einer anderen E-Mailadresse für diesen Kurs angemeldet. '
-            'Bitte kontaktieren Sie Ihren Fachleiter bei Fragen oder Problemen.',
+            len(applicant.doppelgangers) == 0,
+            'Sie haben sich bereits mit einer anderen E-Mailadresse für einen Kurs angemeldet. '
+            'Benutzen Sie dieselbe Adresse wie bei Ihrer ersten Anmeldung erneut. '
+            'Bei Fragen oder Problemen kontaktieren Sie bitte Ihren Fachleiter.',
             user_has_special_rights
         )
         err |= check_precondition_with_auth(

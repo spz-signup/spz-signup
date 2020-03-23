@@ -291,6 +291,15 @@ class Applicant(db.Model):
             return False
         return att.signoff_window > datetime.utcnow()
 
+    @property
+    def doppelgangers(self):
+        if not self.tag:
+            return []
+        return Applicant.query \
+            .filter(Applicant.tag == self.tag) \
+            .filter(Applicant.id != self.id) \
+            .all()
+
 
 @total_ordering
 class Course(db.Model):
