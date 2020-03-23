@@ -100,3 +100,10 @@ def test_doppelganger_signup(client, applicant_data, other_applicant_data, cours
     response_text = get_text(response)
 
     assert "Sie haben sich bereits mit einer anderen E-Mailadresse für einen Kurs angemeldet." in response_text
+    assert not in_course(other_applicant_data, other_course)
+
+    # registrations using the same mail address must still be possible
+    other_applicant_data['mail'] = applicant_data['mail']
+    other_applicant_data['confirm_mail'] = applicant_data['confirm_mail']
+
+    test_opened_signup(client, other_applicant_data, other_course)

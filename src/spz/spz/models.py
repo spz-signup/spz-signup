@@ -297,7 +297,7 @@ class Applicant(db.Model):
             return []
         return Applicant.query \
             .filter(Applicant.tag == self.tag) \
-            .filter(Applicant.id != self.id) \
+            .filter(Applicant.mail != self.mail) \
             .all()
 
 
