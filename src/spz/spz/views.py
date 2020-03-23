@@ -119,6 +119,7 @@ def index():
             user_has_special_rights
         )
         if err:
+            db.session.rollback()
             return dict(form=form)
 
         # Run the final insert isolated in a transaction, with rollback semantics
