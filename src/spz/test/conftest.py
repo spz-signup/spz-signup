@@ -55,6 +55,22 @@ def applicant_data(mail='mika.mueller@beispiel.de'):
 
 
 @fixture
+def other_applicant_data(mail='max.muster@beispiel.de'):
+    yield dict(
+        first_name='Max',
+        last_name='Muster',
+        phone='01522 7654321',
+        mail=mail,
+        confirm_mail=mail,
+        tag='654321',
+        semester=3,
+        origin=Origin.query.first().id,
+        degree=Degree.query.first().id,
+        graduation=Graduation.query.first().id
+    )
+
+
+@fixture
 def courses(limit=10):
     # raise limit to stress test the export feature
     recreate_tables()
@@ -67,3 +83,9 @@ def courses(limit=10):
 def course():
     with app.app_context():
         yield Course.query.first()
+
+
+@fixture
+def other_course():
+    with app.app_context():
+        yield Course.query.filter(Course.id != Course.query.first().id).first()
