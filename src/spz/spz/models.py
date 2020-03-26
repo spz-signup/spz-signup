@@ -291,6 +291,15 @@ class Applicant(db.Model):
             return False
         return att.signoff_window > datetime.utcnow()
 
+    @property
+    def doppelgangers(self):
+        if not self.tag:
+            return []
+        return Applicant.query \
+            .filter(Applicant.tag == self.tag) \
+            .filter(Applicant.mail != self.mail) \
+            .all()
+
 
 @total_ordering
 class Course(db.Model):
@@ -356,6 +365,9 @@ class Course(db.Model):
     def is_overbooked(self):
         return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
 
+    def has_attendance_for_tag(self, tag):
+        return len(self.get_attendances_for_tag(tag)) > 0
+
     def get_waiting_attendances(self):
         return [attendance for attendance in self.attendances if attendance.waiting]
 
@@ -367,6 +379,9 @@ class Course(db.Model):
 
     def get_free_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
+
+    def get_attendances_for_tag(self, tag):
+        return [attendance for attendance in self.attendances if attendance.applicant.tag == tag]
 
     @property
     def full_name(self):

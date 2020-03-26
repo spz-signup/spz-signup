@@ -85,3 +85,25 @@ def test_priority_signup(client, applicant_data, course):
     assert "Prioritäranmeldung aktiv!" in response_text
     assert "Ihre Registrierung war erfolgreich" in response_text
     assert in_course(applicant_data, course)
+
+
+def test_doppelganger_signup(client, applicant_data, other_applicant_data, course, other_course):
+    assert course.id != other_course.id
+    other_applicant_data['tag'] = applicant_data['tag']
+
+    test_opened_signup(client, applicant_data, course)  # first signup
+    signup_set_open(other_course, open=True)
+
+    data = dict(other_applicant_data, course=other_course.id)
+
+    response = client.post('/', data=data)
+    response_text = get_text(response)
+
+    assert "Sie haben sich bereits mit einer anderen E-Mailadresse für einen Kurs angemeldet." in response_text
+    assert not in_course(other_applicant_data, other_course)
+
+    # registrations using the same mail address must still be possible
+    other_applicant_data['mail'] = applicant_data['mail']
+    other_applicant_data['confirm_mail'] = applicant_data['confirm_mail']
+
+    test_opened_signup(client, other_applicant_data, other_course)

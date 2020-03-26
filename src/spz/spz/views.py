@@ -107,11 +107,19 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
+            len(applicant.doppelgangers) == 0,
+            'Sie haben sich bereits mit einer anderen E-Mailadresse für einen Kurs angemeldet. '
+            'Benutzen Sie dieselbe Adresse wie bei Ihrer ersten Anmeldung erneut. '
+            'Bei Fragen oder Problemen kontaktieren Sie bitte Ihren Fachleiter.',
+            user_has_special_rights
+        )
+        err |= check_precondition_with_auth(
             not course.is_overbooked(),  # no transaction guarantees here, but overbooking is some sort of soft limit
             'Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen mehr entgegengenommen!',
             user_has_special_rights
         )
         if err:
+            db.session.rollback()
             return dict(form=form)
 
         # Run the final insert isolated in a transaction, with rollback semantics
