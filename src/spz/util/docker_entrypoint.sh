@@ -116,6 +116,9 @@ wait_for_services
         # update python documentation
         bash util/build_docs.sh
 
+        # generate translation-table (.pot)
+        bash util/collect_translations.sh
+
         # remember that we reached this point
         touch $FILE_DONE
         rm -f $FILE_PROCESS

@@ -6,6 +6,7 @@ services:
         volumes:
             - ./docs/python:/home/spz/code/doc.build:rw
             - ./conf/spz:/home/spz/config:ro
+            - ./conf/i18n:/home/spz/code/i18n.build
             - data_static:/home/spz/code/spz/static:rw
             - state_spz:/state:rw
         tmpfs:
