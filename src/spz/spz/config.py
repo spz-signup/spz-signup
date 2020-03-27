@@ -74,6 +74,9 @@ class BaseConfig(object):
         },
     }
 
+    BABEL_DEFAULT_LOCALE = 'de'
+    BABEL_DEFAULT_TIMEZONE = 'Europe/Berlin'
+
     MAIL_SERVER = 'mail'
     MAIL_PORT = 25
     MAIL_USE_TLS = False
