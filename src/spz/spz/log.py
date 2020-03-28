@@ -8,6 +8,8 @@ from sqlalchemy import event
 
 from spz import db, models
 
+from flask_babel import gettext as _
+
 
 def log(msg, language=None, timestamp=None):
     """Create new log entry.
@@ -28,7 +30,8 @@ def evt_set_attendance_waiting(target, value, oldvalue, _initiator):
     if value is False and oldvalue is True:
         course = target.course
         lang = course.language
-        msg = '{fname} ({mail}) wurde in {cname} gebucht.'.format(
+        msg = _(
+            '%(fname) (%(mail)) wurde in %(cname) gebucht.',
             fname=target.applicant.full_name,
             mail=target.applicant.mail,
             cname=course.full_name
@@ -41,11 +44,13 @@ def evt_set_course_wlstatus(target, value, oldvalue, _initiator):
     if value is not oldvalue:
         lang = target.language
         if value:
-            msg = '{cname} hat nun eine Warteliste.'.format(
+            msg = _(
+                '%(cname) hat nun eine Warteliste.',
                 cname=target.full_name
             )
         else:
-            msg = '{cname} ist nun Wartelisten-frei.'.format(
+            msg = _(
+                '%(cname) ist nun Wartelisten-frei.',
                 cname=target.full_name
             )
         log(msg, language=lang)
