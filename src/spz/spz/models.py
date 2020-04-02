@@ -320,6 +320,15 @@ class Applicant(db.Model):
             return False
         return att.signoff_window > datetime.utcnow()
 
+    @property
+    def doppelgangers(self):
+        if not self.tag:
+            return []
+        return Applicant.query \
+            .filter(Applicant.tag == self.tag) \
+            .filter(Applicant.mail != self.mail) \
+            .all()
+
 
 @total_ordering
 class Course(db.Model):
@@ -385,7 +394,6 @@ class Course(db.Model):
 
     """ Retrieves all attendances, that match a certain criteria.
         Criterias can be set to either True, False or to None (which includes both).
-
        :param waiting: Whether the attendant is on the waiting list
        :param is_unpaid: Whether the course fee is still (partially) unpaid
        :param is_free: Whether the course is fully discounted
@@ -403,6 +411,15 @@ class Course(db.Model):
             if valid:
                 result.append(att)
         return result
+
+    def has_attendance_for_tag(self, tag):
+        return len(self.get_attendances_for_tag(tag)) > 0
+
+    def get_waiting_attendances(self):
+        return [attendance for attendance in self.attendances if attendance.waiting]
+
+    def get_active_attendances(self):
+        return [attendance for attendance in self.attendances if not attendance.waiting]
 
     @hybrid_method
     def count_attendances(self, *args, **kw):
@@ -430,6 +447,9 @@ class Course(db.Model):
     @hybrid_property
     def is_overbooked(self):
         return self.count_attendances() >= (self.limit * app.config['OVERBOOKING_FACTOR'])
+
+    def get_attendances_for_tag(self, tag):
+        return [attendance for attendance in self.attendances if attendance.applicant.tag == tag]
 
     @property
     def full_name(self):
