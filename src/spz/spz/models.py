@@ -15,6 +15,8 @@ from argon2 import argon2_hash
 
 from sqlalchemy import and_, or_, between, func
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy import select
 
 from spz import app, db, token
 
@@ -83,7 +85,7 @@ class Attendance(db.Model):
        :param course: The :py:class:`Course` an :py:class:`Applicant` attends.
        :param graduation: The intended :py:class:`Graduation` of the :py:class:`Attendance`.
        :param waiting: Represents the waiting status of this :py:class`Attendance`.
-       :param has_to_pay: Represents if this :py:class:`Attendance` was already payed for.
+       :param discount: Discount percentage for this :py:class:`Attendance` from 0 (no discount) to 100 (free).
        :param informed_about_rejection: Tells us if we already send a "you're (not) in the course" mail
 
        .. seealso:: the :py:data:`Applicant` member functions for an easy way of establishing associations
@@ -100,9 +102,10 @@ class Attendance(db.Model):
     graduation = db.relationship("Graduation", backref="attendances", lazy="joined")
 
     waiting = db.Column(db.Boolean)  # do not change, please use the set_waiting_status function
-    has_to_pay = db.Column(db.Boolean)
-    paidbycash = db.Column(db.Boolean)
+    discount = db.Column(db.Numeric(precision=3))
     amountpaid = db.Column(db.Numeric(precision=5, scale=2), nullable=False)
+
+    paidbycash = db.Column(db.Boolean)  # could be remove, since cash payments are not allowed anyway
 
     registered = db.Column(db.DateTime(), default=datetime.utcnow)
     payingdate = db.Column(db.DateTime())
@@ -111,12 +114,14 @@ class Attendance(db.Model):
     informed_about_rejection = db.Column(db.Boolean, nullable=False, default=False)
 
     amountpaid_constraint = db.CheckConstraint(amountpaid >= 0)
+    MAX_DISCOUNT = 100  # discount stored as percentage
+    discount_constraint = db.CheckConstraint(between(discount, 0, MAX_DISCOUNT))
 
-    def __init__(self, course, graduation, waiting, has_to_pay, informed_about_rejection=False):
+    def __init__(self, course, graduation, waiting, discount, informed_about_rejection=False):
         self.course = course
         self.graduation = graduation
         self.waiting = waiting
-        self.has_to_pay = has_to_pay
+        self.discount = discount
         self.paidbycash = False
         self.amountpaid = 0
         self.payingdate = None
@@ -135,6 +140,26 @@ class Attendance(db.Model):
             self.waiting = False
         elif not self.waiting and waiting_list:
             self.waiting = True
+
+    @hybrid_property
+    def is_free(self):
+        return self.discount == self.MAX_DISCOUNT
+
+    @hybrid_property
+    def unpaid(self):
+        return (1 - self.discount / self.MAX_DISCOUNT) * self.price - self.amountpaid
+
+    @hybrid_property
+    def is_unpaid(self):
+        return self.unpaid > 0
+
+    @hybrid_property
+    def price(self):
+        return self.course.price
+
+    @price.expression
+    def price(cls):
+        return Course.price
 
 
 @total_ordering
@@ -245,9 +270,13 @@ class Applicant(db.Model):
 
         return 0
 
-    def has_to_pay(self):  # Has to pay if he joins another course and NOT if he has to pay at the moment
+    """ Discount (factor) for the next course beeing entered """
+    def current_discount(self):
         attends = len([attendance for attendance in self.attendances if not attendance.waiting])
-        return not self.is_student() or attends > 0
+        if self.is_student() and attends == 0:
+            return Attendance.MAX_DISCOUNT  # one free course for students
+        else:
+            return Attendance.MAX_DISCOUNT / 2 if self.discounted else 0  # discounted applicants get 50% off
 
     def in_course(self, course):
         return course in [attendance.course for attendance in self.attendances]
@@ -322,16 +351,17 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id'))
-    level = db.Column(db.String(120))
-    alternative = db.Column(db.String(10), nullable=False)
+    level = db.Column(db.String(120), nullable=False)
+    alternative = db.Column(db.String(10), nullable=True)
     limit = db.Column(db.Integer, nullable=False)  # limit is SQL keyword
     price = db.Column(db.Integer, nullable=False)
+    ger = db.Column(db.String(10), nullable=True)
     rating_highest = db.Column(db.Integer, nullable=False)
     rating_lowest = db.Column(db.Integer, nullable=False)
     collision = db.Column(postgresql.ARRAY(db.String(120)), nullable=False)
     has_waiting_list = db.Column(db.Boolean, nullable=False, default=False)
 
-    unique_constraint = db.UniqueConstraint(language_id, level, alternative)
+    unique_constraint = db.UniqueConstraint(language_id, level, alternative, ger)
     limit_constraint = db.CheckConstraint(limit > 0)
     price_constraint = db.CheckConstraint(price > 0)
     rating_constraint = db.CheckConstraint(and_(
@@ -340,12 +370,15 @@ class Course(db.Model):
         rating_lowest <= rating_highest
     ))
 
-    def __init__(self, language, level, alternative, limit, price, rating_highest, rating_lowest, collision):
+    def __init__(
+        self, language, level, alternative, limit, price, ger=None, rating_highest=100, rating_lowest=0, collision=[]
+    ):
         self.language = language
         self.level = level
         self.alternative = alternative
         self.limit = limit
         self.price = price
+        self.ger = ger
         self.rating_highest = rating_highest
         self.rating_lowest = rating_lowest
         self.collision = collision
@@ -356,14 +389,28 @@ class Course(db.Model):
     def __lt__(self, other):
         return (self.language, self.level.lower()) < (other.language, other.level.lower())
 
-    def is_allowed(self, applicant):
+    def allows(self, applicant):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
 
-    def is_full(self):
-        return len(self.get_active_attendances()) >= self.limit
-
-    def is_overbooked(self):
-        return len(self.attendances) >= (self.limit * app.config['OVERBOOKING_FACTOR'])
+    """ Retrieves all attendances, that match a certain criteria.
+        Criterias can be set to either True, False or to None (which includes both).
+       :param waiting: Whether the attendant is on the waiting list
+       :param is_unpaid: Whether the course fee is still (partially) unpaid
+       :param is_free: Whether the course is fully discounted
+    """
+    def filter_attendances(self, waiting=None, is_unpaid=None, is_free=None):
+        result = []
+        for att in self.attendances:
+            valid = True
+            if waiting is not None:
+                valid &= att.waiting == waiting
+            if is_unpaid is not None:
+                valid &= att.is_unpaid == is_unpaid
+            if is_free is not None:
+                valid &= att.is_free == is_free
+            if valid:
+                result.append(att)
+        return result
 
     def has_attendance_for_tag(self, tag):
         return len(self.get_attendances_for_tag(tag)) > 0
@@ -374,11 +421,32 @@ class Course(db.Model):
     def get_active_attendances(self):
         return [attendance for attendance in self.attendances if not attendance.waiting]
 
-    def get_paying_attendances(self):
-        return [attendance for attendance in self.attendances if not attendance.waiting and attendance.has_to_pay]
+    @hybrid_method
+    def count_attendances(self, *args, **kw):
+        return len(self.filter_attendances(*args, **kw))
 
-    def get_free_attendances(self):
-        return [attendance for attendance in self.attendances if not attendance.waiting and not attendance.has_to_pay]
+    @count_attendances.expression
+    def count_attendances(cls, waiting=None, is_unpaid=None, is_free=None):
+        query = select([func.count(cls.attendances)])
+        if waiting is not None:
+            query = query.where(Attendance.waiting == waiting)
+        if is_unpaid is not None:
+            query = query.where(Attendance.is_unpaid == is_unpaid)
+        if is_free is not None:
+            query = query.where(Attendance.is_free == is_free)
+        return query.label("attendance_count")
+
+    @hybrid_property
+    def vacancies(self):
+        return self.limit - self.count_attendances(waiting=False)
+
+    @hybrid_property
+    def is_full(self):
+        return self.vacancies <= 0
+
+    @hybrid_property
+    def is_overbooked(self):
+        return self.count_attendances() >= (self.limit * app.config['OVERBOOKING_FACTOR'])
 
     def get_attendances_for_tag(self, tag):
         return [attendance for attendance in self.attendances if attendance.applicant.tag == tag]
@@ -391,12 +459,9 @@ class Course(db.Model):
         return result
 
     """ active attendants without debt """
-
     @property
     def course_list(self):
-        return [attendance.applicant for attendance in self.attendances
-                if not attendance.waiting
-                and (not attendance.has_to_pay or attendance.amountpaid > 0)]
+        return [attendance.applicant for attendance in self.filter_attendances(waiting=False, is_unpaid=False)]
 
 
 @total_ordering
@@ -500,18 +565,11 @@ class Language(db.Model):
 
         return '{0} Tage {1} Stunden {2} Minuten und einige Sekunden'.format(delta.days, hours, minutes)  # XXX: plural
 
-    # In the following: sum(xs, []) basically is reduce(lambda acc x: acc + x, xs, [])
-    def get_waiting_attendances(self):
-        return sum([course.get_waiting_attendances() for course in self.courses], [])
-
-    def get_active_attendances(self):
-        return sum([course.get_active_attendances() for course in self.courses], [])
-
-    def get_paying_attendances(self):
-        return sum([course.get_paying_attendances() for course in self.courses], [])
-
-    def get_free_attendances(self):
-        return sum([course.get_free_attendances() for course in self.courses], [])
+    def count_attendances(self, *args, **kw):
+        count = 0
+        for course in self.courses:
+            count += course.count_attendances(*args, **kw)
+        return count
 
 
 @total_ordering

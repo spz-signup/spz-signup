@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import csrf_field, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_submit, attendance_status %}
 
 {% block caption %}
 Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.language.name }}</a> {{ course.level }} {{ course.alternative }}
@@ -47,12 +47,9 @@ Kurs: <a href="{{ url_for('language', id=course.language.id) }}">{{ course.langu
                 <td><a href="mailto:{{ attendance.applicant.mail }}">{{ attendance.applicant.mail }}</a></td>
                 <td>{{ attendance.applicant.tag }}</td>
                 <td>
-<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
-{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
-{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
-{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt:' if attendance.paidbycash else 'Überwiesen:' }} {{attendance.amountpaid}} &euro;{% endif %}
-</a>
+                    <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {{ attendance_status(attendance) }}
+                    </a>
                 </td>
                 <td>{{ attendance.applicant.origin.name }}</td>
                 <td>{% if attendance.registered < attendance.course.language.signup_rnd_window_end %}Zufall{% else %}First-Come-First-Served{% endif %}

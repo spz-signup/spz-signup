@@ -64,11 +64,7 @@ def insert_origins(json_file):
         res = json.load(fd)
 
         for origin in res["origins"]:
-            db.session.add(Origin(
-                name=origin["name"],
-                short_name=origin["short_name"],
-                validate_registration=origin["validate_registration"]
-            ))
+            db.session.add(Origin(**origin))
 
 
 def insert_courses(json_file):
@@ -76,29 +72,27 @@ def insert_courses(json_file):
         res = json.load(fd)
 
         for language in res["languages"]:
+            # pop 'courses' entry before creating the Language-object, so it doesn't get passed to the constructor
+            courses = language.pop('courses', [])
+
             ref_lang = Language(
-                language["name"],
-                language["reply_to"],
                 # ISO 8601 / RFC 3339 -- better way to parse this?
-                datetime.strptime(language["signup_begin_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
-                datetime.strptime(language["signup_random_window_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
-                datetime.strptime(language["signup_manual_end"], "%Y-%m-%dT%H:%M:%SZ"),
+                signup_begin=datetime.strptime(language.pop('signup_begin_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                signup_rnd_window_end=datetime.strptime(
+                    language.pop('signup_random_window_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                signup_manual_end=datetime.strptime(language.pop('signup_manual_end'), "%Y-%m-%dT%H:%M:%SZ"),
                 # see also Jsonschema RFC, date-time
-                datetime.strptime(language["signup_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
-                datetime.strptime(language["signup_auto_end_iso_utc"], "%Y-%m-%dT%H:%M:%SZ"),
+                signup_end=datetime.strptime(language.pop('signup_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                signup_auto_end=datetime.strptime(language.pop('signup_auto_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                **language
             )
 
-            for course in language["courses"]:
-                for alt in course["alternative"]:
+            for course in courses:
+                for alt in course.pop('alternatives', [None]):
                     db.session.add(Course(
                         language=ref_lang,
-                        level=course["level"],
                         alternative=alt,
-                        limit=course["limit"],
-                        price=course["price"],
-                        rating_lowest=course["rating_lowest"],
-                        rating_highest=course["rating_highest"],
-                        collision=course["collision"]
+                        **course
                     ))
 
 
@@ -107,8 +101,11 @@ def insert_export_formats(json_file):
         res = json.load(fd)
 
         for format in res["formats"]:
-            format['language'] = Language.query.filter(Language.name == format.get("language")).first()
-            db.session.add(ExportFormat(**format))
+            if 'language' in format:
+                lang_ref = Language.query.filter(Language.name == format.pop('language')).first()
+            else:
+                lang_ref = None
+            db.session.add(ExportFormat(**format, language=lang_ref))
 
 
 def insert_users(json_file):
@@ -118,17 +115,15 @@ def insert_users(json_file):
         print("create user accounts:")
         for user in res["users"]:
             ref_langs = []
-            for lang_name in user["languages"]:
+            for lang_name in user.pop('languages'):
                 lang = Language.query.filter(Language.name == lang_name).first()
                 if lang:
                     ref_langs.append(lang)
                 else:
                     print("  WARNING: language {} does not exist (user={})".format(lang_name, user["email"]))
             u = User(
-                email=user["email"],
-                active=user["active"],
-                superuser=user["superuser"],
-                languages=ref_langs
+                languages=ref_langs,
+                **user
             )
             pw = u.reset_password()
             print('  {} : {}'.format(u.email, pw))

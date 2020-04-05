@@ -43,6 +43,9 @@
                                     "level": {
                                         "type": "string"
                                     },
+                                    "ger": {
+                                        "type": "string"
+                                    },
                                     "limit": {
                                         "type": "integer"
                                     },
@@ -61,14 +64,14 @@
                                             "type": "string"
                                         }
                                     },
-                                    "alternative": {
+                                    "alternatives": {
                                         "type": "array",
                                         "items": {
                                             "type": "string"
                                         }
                                     }
                                 },
-                                "required": [ "level", "limit", "price", "rating_lowest", "rating_highest", "alternative" ]
+                                "required": [ "level", "limit", "price" ]
                             },
                             "uniqueItems": true
                         }
