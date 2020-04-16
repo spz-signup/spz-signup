@@ -658,7 +658,7 @@ def remove_attendance(applicant, course, notify):
             active_courses = [a for a in applicant.attendances if not a.waiting]
             free_courses = [a for a in active_courses if a.discount >= 1]
             if active_courses and not free_courses:
-                active_courses[0].discount = 1
+                active_courses[0].discount = models.Attendance.MAX_DISCOUNT
 
     if notify and success:
         try:
