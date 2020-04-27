@@ -14,7 +14,7 @@ services:
             - SPZ_CFG_FILE=production.cfg
     postgres:
         environment:
-            - POSTGRES_PASSWORD=mysecretpassword
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     mail:
         image: spzsignup/opensmtpd:6.0.3p1
         volumes:
@@ -32,7 +32,7 @@ services:
             POSTGRES_HOST: postgres
             POSTGRES_PORT: 5432
             POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: mysecretpassword
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB: spz
             MAX_BACKUPS: 200
             INIT_BACKUP: 'true'

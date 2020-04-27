@@ -427,7 +427,7 @@ class Course(db.Model):
 
     @count_attendances.expression
     def count_attendances(cls, waiting=None, is_unpaid=None, is_free=None):
-        query = select([func.count(cls.attendances)])
+        query = select([func.count(Attendance.applicant_id)]).where(Attendance.course_id == cls.id)
         if waiting is not None:
             query = query.where(Attendance.waiting == waiting)
         if is_unpaid is not None:
@@ -461,7 +461,9 @@ class Course(db.Model):
     """ active attendants without debt """
     @property
     def course_list(self):
-        return [attendance.applicant for attendance in self.filter_attendances(waiting=False, is_unpaid=False)]
+        list = [attendance.applicant for attendance in self.filter_attendances(waiting=False)]
+        list.sort()
+        return list
 
 
 @total_ordering

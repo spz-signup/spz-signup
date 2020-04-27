@@ -24,7 +24,7 @@ Restplätze
                     <td><a href="{{ url_for('course', id=course.id ) }}">{{ course.full_name }}</a></td>
                     {{ td_sorted(course.limit) }}
                     {{ td_sorted(course.vacancies) }}
-                    {{ td_sorted(course.count_attendances(is_free=False)) }}
+                    {{ td_sorted(course.count_attendances(waiting=True)) }}
                 </tr>
                 {% endif %}
             {% endfor %}

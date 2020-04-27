@@ -8,12 +8,12 @@
 import socket
 import re
 import csv
+import itertools
 from datetime import datetime
 
 from redis import ConnectionError
 
 from sqlalchemy import and_, func, not_, or_
-from sqlalchemy.orm import joinedload
 
 from flask import request, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
@@ -157,24 +157,22 @@ def index():
 @templated('vacancies.html')
 def vacancies():
     # display courses to the user that either have a short waiting list or little vacancies left
-    languages = db.session.query(models.Language) \
-        .join(models.Course) \
-        .options(joinedload("courses.attendances")) \
+    courses = models.Course.query \
+        .join(models.Language) \
         .order_by(models.Language.name) \
         .order_by(models.Course.ger) \
         .order_by(models.Course.vacancies) \
         .filter(or_(
-            and_(
-                not_(models.Course.is_full),
-                models.Course.vacancies <= app.config['LITTLE_VACANCIES']
-            ),
+            not_(models.Course.is_full),
             and_(
                 models.Course.is_full,
                 models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']
             )
-        ))
+        )).all()
 
-    return dict(languages=languages)
+    grouped = itertools.groupby(courses, lambda course: (course.language, course.ger))
+
+    return dict(courses=grouped)
 
 
 @templated('licenses.html')
@@ -711,7 +709,8 @@ def payments():
 def outstanding():
     outstanding = db.session.query(models.Attendance) \
         .join(models.Course, models.Applicant) \
-        .filter(models.Attendance.is_unpaid)
+        .filter(not_(models.Attendance.waiting),
+                models.Attendance.is_unpaid)
 
     return dict(outstanding=outstanding)
 

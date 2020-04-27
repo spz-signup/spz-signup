@@ -299,12 +299,13 @@ class NotificationForm(FlaskForm):
         else:
             unpaid_filter = None
 
-        # single list of attendances
-        for course in self.get_courses():
-            attendances = flatten(course.filter_attendandances(waiting=waiting_filter, is_unpaid=unpaid_filter))
+        recipients = set()  # One mail per recipient, even if in multiple recipient courses
 
-        recipients = [attendance.applicant.mail for attendance in attendances]
-        return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
+        for course in self.get_courses():
+            for attendance in course.filter_attendances(waiting=waiting_filter, is_unpaid=unpaid_filter):
+                recipients.add(attendance.applicant.mail)
+
+        return list(recipients)
 
     def get_body(self):
         return self.mail_body.data

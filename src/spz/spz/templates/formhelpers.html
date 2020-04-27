@@ -156,7 +156,7 @@
     Kurze Warteliste
 {% elif not course.is_full and config['LITTLE_VACANCIES'] >= course.vacancies %}
     Wenige Restplätze!
-{% else %}
-    {{ course.vacancies }} Restplätze
+{% elif not course.is_full %}
+    Restplätze
 {% endif %}
 {% endmacro %}
