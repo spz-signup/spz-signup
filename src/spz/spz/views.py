@@ -8,12 +8,11 @@
 import socket
 import re
 import csv
-import itertools
 from datetime import datetime
 
 from redis import ConnectionError
 
-from sqlalchemy import and_, func, not_, or_
+from sqlalchemy import and_, func, not_
 
 from flask import request, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
@@ -156,23 +155,9 @@ def index():
 
 @templated('vacancies.html')
 def vacancies():
-    # display courses to the user that either have a short waiting list or little vacancies left
-    courses = models.Course.query \
-        .join(models.Language) \
-        .order_by(models.Language.name) \
-        .order_by(models.Course.ger) \
-        .order_by(models.Course.vacancies) \
-        .filter(or_(
-            not_(models.Course.is_full),
-            and_(
-                models.Course.is_full,
-                models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']
-            )
-        )).all()
+    form = forms.VacanciesForm()
 
-    grouped = itertools.groupby(courses, lambda course: (course.language, course.ger))
-
-    return dict(courses=grouped)
+    return dict(form=form)
 
 
 @templated('licenses.html')

@@ -37,17 +37,21 @@ all_js = Bundle('js/jquery-2.2.2.min.js',
                 'js/moment.min.js',
                 'js/moment-de.js',
                 'js/spz.js',
-                filters='rjsmin', output='js/packed.js')
+                filters='rjsmin', output='js/packed/all.js')
 
 
 # Tooling bundles
 tools_js = Bundle('js/jquery.tablesort.js',
                   'js/internal.js',
-                  filters='rjsmin', output='js/packed_tools.js')
+                  filters='rjsmin', output='js/packed/tools.js')
 
 # signup script
 signup_js = Bundle('js/signup.js',
-                   filters='rjsmin', output='js/packed_signup.js')
+                   filters='rjsmin', output='js/packed/signup.js')
+
+# vacancies scripts
+vacancies_js = Bundle('js/vacancies.js',
+                   filters='rjsmin', output='js/packed/vacancies.js')
 
 
 # Stylesheet bundles:
@@ -55,7 +59,7 @@ signup_js = Bundle('js/signup.js',
 all_css = Bundle('css/lato.css',
                  'css/semantic.min.css',
                  'css/spz.css',
-                 filters='rcssmin', output='css/packed.css')
+                 filters='rcssmin', output='css/packed/all.css')
 
 
 # Hide concrete loading method inside this module

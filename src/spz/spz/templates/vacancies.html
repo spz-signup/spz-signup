@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import td_sorted, course_status %}
+{% from 'formhelpers.html' import td_sorted, course_status, render_option, render_boolean %}
 
 {% block caption %}
 Restplätze {{ config['SEMESTER_NAME'] }}
@@ -9,15 +9,31 @@ Restplätze {{ config['SEMESTER_NAME'] }}
 {% block body %}
 <div class="row">
 
-    {% if not courses %}
-        <fieldset class="ui message">
+    {% if not form.has_courses() %}
+        <div class="ui message">
             Aktuell gibt es keine Kurse mit wenigen Restplätzen oder kurzer Warteliste.
-        </fieldset>
+        </div>
+    {% else %}
+    <div class="ui styled accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            Filter
+        </div>
+        <div class="content">
+            <form class="ui form">
+                {{ render_boolean(form.include_waitinglist) }}
+                {{ render_boolean(form.include_vacancies) }}
+                {{ render_option(form.language_filter, multiple=True, required=False) }}
+                {{ render_option(form.ger_filter, multiple=True, required=False) }}
+            </form>
+        </div>
+    </div>
+
     {% endif %}
 
     {% set known_languages = [] %}
 
-    {% for ((language, ger), course_group) in courses %}
+    {% for ((language, ger), course_group) in form.get_courses() %}
         {% if language not in known_languages %}
             <h3 class="ui dividing header">{{ language.name }}</h3>
             {% if known_languages.append(language) %} {% endif %}
@@ -35,3 +51,10 @@ Restplätze {{ config['SEMESTER_NAME'] }}
     {% endfor %}
 </div>
 {% endblock body %}
+
+{% block scripts %}
+{{ super() }}
+{% assets "vacancies_js" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock scripts %}
