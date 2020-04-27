@@ -285,8 +285,6 @@ class NotificationForm(FlaskForm):
         def flatten(x):
             return sum(x, [])
 
-        attendances = []
-
         if self.only_active.data:
             waiting_filter = False
         elif self.only_waiting.data:
