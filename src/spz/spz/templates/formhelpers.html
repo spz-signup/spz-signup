@@ -153,10 +153,13 @@
 
 {% macro course_status(course) %}
 {% if course.is_full and config['SHORT_WAITING_LIST'] >= course.count_attendances(waiting=True) %}
-    <i class="clipboard list icon" title="Kurze Warteliste"></i>
+    {% set icon, color, text = "clipboard list", "orange", "Kurze Warteliste" %}
 {% elif not course.is_full and config['LITTLE_VACANCIES'] >= course.vacancies %}
-    <i class="loading hourglass icon" title="Wenige Restplätze"></i>
+    {% set icon, color, text = "loading hourglass", "yellow", "Wenige Restplätze" %}
 {% elif not course.is_full %}
-    <i class="hourglass icon" title="Restplätze"></i>
+    {% set icon, color, text = "hourglass", "green", "Restplätze" %}
 {% endif %}
+<div class="ui {{ color }} ribbon label">
+    <i class="{{ icon }} icon"></i> {{ text }}
+</div>
 {% endmacro %}
