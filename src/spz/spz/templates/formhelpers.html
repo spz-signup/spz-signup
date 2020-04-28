@@ -153,10 +153,10 @@
 
 {% macro course_status(course) %}
 {% if course.is_full and config['SHORT_WAITING_LIST'] >= course.count_attendances(waiting=True) %}
-    Kurze Warteliste
+    <i class="clipboard list icon" title="Kurze Warteliste"></i>
 {% elif not course.is_full and config['LITTLE_VACANCIES'] >= course.vacancies %}
-    Wenige Restplätze!
+    <i class="loading hourglass icon" title="Wenige Restplätze"></i>
 {% elif not course.is_full %}
-    Restplätze
+    <i class="hourglass icon" title="Restplätze"></i>
 {% endif %}
 {% endmacro %}

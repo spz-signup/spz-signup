@@ -252,7 +252,7 @@ class VacanciesForm(FlaskForm):
     def _populate(self):
         self.language_filter.choices = cached.languages_to_choicelist()
         # self.ger_filter.choices = cached.gers_to_choicelist()
-        self.ger_filter.choices = [ (0, "All") ]
+        self.ger_filter.choices = [(0, "All")]
         self.include_vacancies.data = True
         self.include_waitinglist.data = True
 

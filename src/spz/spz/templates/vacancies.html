@@ -14,7 +14,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
             Aktuell gibt es keine Kurse mit wenigen Restplätzen oder kurzer Warteliste.
         </div>
     {% else %}
-    <div class="ui styled accordion">
+    <div class="ui fluid card styled accordion">
         <div class="title">
             <i class="dropdown icon"></i>
             Filter
@@ -34,21 +34,29 @@ Restplätze {{ config['SEMESTER_NAME'] }}
     {% set known_languages = [] %}
 
     {% for ((language, ger), course_group) in form.get_courses() %}
+
         {% if language not in known_languages %}
-            <h3 class="ui dividing header">{{ language.name }}</h3>
+            {% if known_languages %}</div>{% endif %}
+            <div class="ui fluid card segments">
+            <h3 class="ui segment header">{{ language.name }}</h3>
             {% if known_languages.append(language) %} {% endif %}
         {% endif %}
-        <fieldset class="ui message">
+
+        <fieldset class="ui segment">
             {% if ger %}
                 <legend>{{ ger }}</legend>
             {% endif %}
-            <ul>
+            <div class="ui list">
             {% for course in course_group %}
-                <li>{{ course.full_name }}: {{ course_status(course) }}</li>
+                <div class="item">
+                    {{ course_status(course) }} {{ course.full_name }}
+                </div>
             {% endfor %}
-            </ul>
+            </div>
         </fieldset>
     {% endfor %}
+
+    {% if known_languages %}</div>{% endif %}
 </div>
 {% endblock body %}
 
