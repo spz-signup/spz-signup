@@ -5,6 +5,7 @@
    Manages the mapping between abstract entities and concrete database models.
 """
 
+from enum import Enum
 from binascii import hexlify
 from datetime import datetime, timedelta
 from functools import total_ordering
@@ -464,6 +465,25 @@ class Course(db.Model):
         list = [attendance.applicant for attendance in self.filter_attendances(waiting=False)]
         list.sort()
         return list
+
+    class Status(Enum):
+        VACANCIES = 0
+        LITTLE_VACANCIES = 1
+        SHORT_WAITINGLIST = 2
+        FULL = 3
+
+    @property
+    def status(self):
+        if self.is_full:
+            if self.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']:
+                return self.Status.SHORT_WAITINGLIST
+            else:
+                return self.Status.FULL
+        else:
+            if self.vacancies <= app.config['LITTLE_VACANCIES']:
+                return self.Status.LITTLE_VACANCIES
+            else:
+                return self.Status.VACANCIES
 
 
 @total_ordering

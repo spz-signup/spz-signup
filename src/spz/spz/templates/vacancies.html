@@ -20,7 +20,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
             Filter
         </div>
         <div class="content">
-            <form class="ui form">
+            <form class="ui filter form">
                 {{ render_boolean(form.include_waitinglist) }}
                 {{ render_boolean(form.include_vacancies) }}
                 {{ render_option(form.language_filter, multiple=True, required=False) }}
@@ -37,7 +37,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
 
         {% if language not in known_languages %}
             {% if known_languages %}</div>{% endif %}
-            <div class="ui fluid card segments">
+            <div class="ui fluid language card segments" data-language="{{ language.id }}" >
             <h3 class="ui segment header">{{ language.name }}</h3>
             {% if known_languages.append(language) %} {% endif %}
         {% endif %}
@@ -48,7 +48,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
             {% endif %}
             <div class="ui list">
             {% for course in course_group %}
-                <div class="item">
+                <div class="item" data-status="{{ course.status.value }}" >
                     {{ course_status(course) }} {{ course.full_name }}
                 </div>
             {% endfor %}
