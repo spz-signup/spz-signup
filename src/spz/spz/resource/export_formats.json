@@ -19,6 +19,24 @@
             "name": "Comma Separated (.csv)",
             "formatter": "csv",
             "template": "export/courselist.csv"
+        },
+        {
+            "name": "Spanisch 1-4",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch_1-4.xlsx"
+        },
+        {
+            "name": "Spanisch 5-7",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch_5-7.xlsx"
+        },
+        {
+            "name": "Spanisch Andere",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch_otros.xlsx"
         }
     ]
 }
