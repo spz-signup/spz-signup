@@ -30,4 +30,6 @@ function applyFilter(statusFilter, languages, gers) {
         var lang = $(this).attr('data-language');
         $(this).toggle(languages.length == 0 || languages.includes(lang));
     });
+    $('.ui.ger.segment').not(':has(.ui.course.item:visible)').hide();
+    $('.ui.language.card').not(':has(.ui.ger.segment:visible)').hide();
 }
