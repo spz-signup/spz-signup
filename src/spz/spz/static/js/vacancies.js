@@ -9,21 +9,25 @@ $(document).ready(function(){
 
     $('.ui.filter.form').submit(function(ev){
         var data = new FormData(ev.target);
-        var waitinglist = data.get('include_waitinglist');
-        var vacancies = data.get('include_vacancies');
+        var courseStatus = data.getAll('status_filter');
         var languages = data.getAll('language_filter');
-        applyFilter(waitinglist, vacancies, languages);
+        var gers = data.getAll('ger_filter');
+        applyFilter(courseStatus, languages, gers);
         return false;
     });
 });
 
-function applyFilter(waitinglist, vacancies, languages) {
-    console.log(waitinglist, vacancies, languages);
+function applyFilter(statusFilter, languages, gers) {
+    $('.ui.course.item').each(function(){
+        var status = $(this).attr('data-status');
+        $(this).toggle(statusFilter.length == 0 || statusFilter.includes(status));
+    });
+    $('.ui.ger.segment').each(function(){
+        var ger = $(this).attr('data-ger');
+        $(this).toggle(gers.length == 0 || gers.includes(ger));
+    });
     $('.ui.language.card').each(function(){
-        if (languages.includes($(this).attr('data-language'))) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
+        var lang = $(this).attr('data-language');
+        $(this).toggle(languages.length == 0 || languages.includes(lang));
     });
 }

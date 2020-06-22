@@ -7,7 +7,9 @@
 
 from datetime import datetime
 
-from spz import models, cache
+from spz import models, cache, db
+
+from sqlalchemy import distinct
 
 
 @cache.cached(key_prefix='degrees')
@@ -43,6 +45,24 @@ def languages_to_choicelist():
         (x.id, '{0}'.format(x.name))
         for x
         in models.Language.query.order_by(models.Language.name.asc())
+    ]
+
+
+@cache.cached(key_prefix='gers')
+def gers_to_choicelist():
+    return [
+        (x[0], x[0])
+        for x
+        in db.session.query(distinct(models.Course.ger)).order_by(models.Course.ger.asc())
+    ]
+
+
+@cache.cached(key_prefix='course_status')
+def course_status_to_choicelist():
+    return [
+        (x.value, x.name)
+        for x
+        in models.Course.Status
     ]
 
 

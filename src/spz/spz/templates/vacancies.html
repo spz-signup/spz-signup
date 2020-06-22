@@ -21,8 +21,7 @@ Restplätze {{ config['SEMESTER_NAME'] }}
         </div>
         <div class="content">
             <form class="ui filter form">
-                {{ render_boolean(form.include_waitinglist) }}
-                {{ render_boolean(form.include_vacancies) }}
+                {{ render_option(form.status_filter, multiple=True, required=False) }}
                 {{ render_option(form.language_filter, multiple=True, required=False) }}
                 {{ render_option(form.ger_filter, multiple=True, required=False) }}
             </form>
@@ -42,13 +41,13 @@ Restplätze {{ config['SEMESTER_NAME'] }}
             {% if known_languages.append(language) %} {% endif %}
         {% endif %}
 
-        <fieldset class="ui raised bottom-padded segment">
+        <fieldset class="ui raised bottom-padded ger segment" data-ger="{{ ger }}">
             {% if ger %}
                 <legend>{{ ger }}</legend>
             {% endif %}
             <div class="ui list">
             {% for course in course_group %}
-                <div class="item" data-status="{{ course.status.value }}" >
+                <div class="ui course item" data-status="{{ course.status.value }}" >
                     {{ course_status(course) }} {{ course.full_name }}
                 </div>
             {% endfor %}

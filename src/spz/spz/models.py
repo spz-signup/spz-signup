@@ -467,10 +467,10 @@ class Course(db.Model):
         return list
 
     class Status(Enum):
-        VACANCIES = 0
-        LITTLE_VACANCIES = 1
-        SHORT_WAITINGLIST = 2
-        FULL = 3
+        VACANCIES = 1
+        LITTLE_VACANCIES = 2
+        SHORT_WAITINGLIST = 4
+        FULL = 8
 
     @property
     def status(self):

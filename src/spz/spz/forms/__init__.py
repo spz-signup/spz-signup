@@ -227,20 +227,17 @@ class SignupForm(FlaskForm):
 
 class VacanciesForm(FlaskForm):
 
-    include_vacancies = BooleanField(
-        'Restplätze'
+    status_filter = SelectMultipleField(
+        'Status',
+        coerce=int
     )
 
-    include_waitinglist = BooleanField(
-        'Kurze Warteliste'
-    )
-
-    language_filter = SelectField(
+    language_filter = SelectMultipleField(
         'Sprachen',
         coerce=int
     )
 
-    ger_filter = SelectField(
+    ger_filter = SelectMultipleField(
         'GER',
         coerce=int
     )
@@ -250,11 +247,9 @@ class VacanciesForm(FlaskForm):
         self._populate()
 
     def _populate(self):
+        self.status_filter.choices = cached.course_status_to_choicelist()
         self.language_filter.choices = cached.languages_to_choicelist()
-        # self.ger_filter.choices = cached.gers_to_choicelist()
-        self.ger_filter.choices = [(0, "All")]
-        self.include_vacancies.data = True
-        self.include_waitinglist.data = True
+        self.ger_filter.choices = cached.gers_to_choicelist()
 
     def get_courses(self):
         courses = models.Course.query \

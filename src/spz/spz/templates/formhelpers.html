@@ -47,7 +47,7 @@
 {% macro render_boolean(field, width=12, help=None, required=False) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
     <div class="ui toggle checkbox">
-        <input type="checkbox" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} checked="checked"{% endif %} />
+        <input type="checkbox" id="{{ field.id }}" name="{{ field.id }}"{% if field.data %} checked="checked"{% endif %} {% if 'value' in field.render_kw %} value="{{ field.render_kw['value']}}" {% endif %}/>
         {{ field.label }}
     </div>
     {% for error in field.errors %}
