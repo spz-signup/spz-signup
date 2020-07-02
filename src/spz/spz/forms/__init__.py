@@ -281,32 +281,29 @@ class NotificationForm(FlaskForm):
     def get_courses(self):
         return models.Course.query.filter(models.Course.id.in_(self.mail_courses.data))
 
-    # TODO: refactor by using the course's get_active_attendances member function
     def get_recipients(self):
         def flatten(x):
             return sum(x, [])
 
-        attendances = flatten([course.attendances for course in self.get_courses()])  # single list of attendances
-
         if self.only_active.data:
-            attendances = [att for att in attendances if not att.waiting]
-
-        if self.only_waiting.data:
-            attendances = [att for att in attendances if att.waiting]
+            waiting_filter = False
+        elif self.only_waiting.data:
+            waiting_filter = True
+        else:
+            waiting_filter = None
 
         if self.only_have_to_pay.data:
-            attendances = [
-                att
-                for att
-                in attendances
-                if not att.waiting and
-                att.has_to_pay and
-                not att.applicant.discounted and
-                att.amountpaid < att.course.price
-            ]
+            unpaid_filter = True
+        else:
+            unpaid_filter = None
 
-        recipients = [attendance.applicant.mail for attendance in attendances]
-        return list(set(recipients))  # One mail per recipient, even if in multiple recipient courses
+        recipients = set()  # One mail per recipient, even if in multiple recipient courses
+
+        for course in self.get_courses():
+            for attendance in course.filter_attendances(waiting=waiting_filter, is_unpaid=unpaid_filter):
+                recipients.add(attendance.applicant.mail)
+
+        return list(recipients)
 
     def get_body(self):
         return self.mail_body.data
@@ -458,9 +455,11 @@ class StatusForm(FlaskForm):
     registered = StringField('Registrierungsdatum')
     payingdate = StringField('Zahlungsdatum')
     waiting = BooleanField('Warteliste')
-    has_to_pay = BooleanField('Zahlungspflichtig')
-    discounted = BooleanField('Ermäßigt')
     paidbycash = BooleanField('Zahlungsart: Bar')
+    discount = DecimalField(
+        'Ermäßigung',
+        [validators.NumberRange(min=0, max=100, message='Ungültige Prozentangabe')]
+    )
     amountpaid = DecimalField(
         'Zahlbetrag',
         [validators.NumberRange(min=0, message='Keine negativen Beträge')],
@@ -480,8 +479,7 @@ class StatusForm(FlaskForm):
         self.registered.data = attendance.registered
         self.payingdate.data = attendance.payingdate
         self.waiting.data = attendance.waiting
-        self.has_to_pay.data = attendance.has_to_pay
-        self.discounted.data = attendance.applicant.discounted
+        self.discount.data = attendance.discount
         self.paidbycash.data = attendance.paidbycash
         self.amountpaid.data = attendance.amountpaid
 

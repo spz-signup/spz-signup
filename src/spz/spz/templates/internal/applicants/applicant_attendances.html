@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import render_input, render_option %}
+{% from 'formhelpers.html' import render_input, render_option, attendance_status %}
 
 {% block caption %}
 Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applicant.first_name ~ " " ~ applicant.last_name }}</a>
@@ -22,12 +22,9 @@ Kurswünsche von <a href="{{ url_for('applicant', id=applicant.id)}}">{{ applica
                 <tr>
                     <td><a href="{{ url_for('course', id=attendance.course.id ) }}"> {{ attendance.course.full_name }} </a></td>
                     <td>
-<a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
-{{ 'Warteliste' if attendance.waiting else 'Fester Platz' }}
-{% if not attendance.waiting and not attendance.amountpaid > 0 %}, Gebühren{{ 'pflichtig' if attendance.has_to_pay else 'frei' }}{% endif %}
-{% if not attendance.waiting and attendance.has_to_pay %}, {{ 'Ermäßigt' if attendance.applicant.discounted else 'Vollzahler' }} {% endif %}
-{% if not attendance.waiting and attendance.has_to_pay and attendance.amountpaid > 0 %}, {{ 'Barbezahlt' if attendance.paidbycash else 'Überwiesen' }} {% endif %}
-</a>
+                        <a href="{{ url_for('status', applicant_id=attendance.applicant.id, course_id=attendance.course.id) }}">
+                            {{ attendance_status(attendance) }}
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}

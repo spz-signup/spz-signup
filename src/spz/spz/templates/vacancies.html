@@ -1,0 +1,37 @@
+{% extends 'baselayout.html' %}
+{% from 'formhelpers.html' import td_sorted, course_status %}
+
+{% block caption %}
+Restplätze {{ config['SEMESTER_NAME'] }}
+{% endblock caption %}
+
+
+{% block body %}
+<div class="row">
+
+    {% if not courses %}
+        <fieldset class="ui message">
+            Aktuell gibt es keine Kurse mit wenigen Restplätzen oder kurzer Warteliste.
+        </fieldset>
+    {% endif %}
+
+    {% set known_languages = [] %}
+
+    {% for ((language, ger), course_group) in courses %}
+        {% if language not in known_languages %}
+            <h3 class="ui dividing header">{{ language.name }}</h3>
+            {% if known_languages.append(language) %} {% endif %}
+        {% endif %}
+        <fieldset class="ui message">
+            {% if ger %}
+                <legend>{{ ger }}</legend>
+            {% endif %}
+            <ul>
+            {% for course in course_group %}
+                <li>{{ course.full_name }}: {{ course_status(course) }}</li>
+            {% endfor %}
+            </ul>
+        </fieldset>
+    {% endfor %}
+</div>
+{% endblock body %}

@@ -91,13 +91,13 @@ def populate_generic(time, attendance_filter, idx_prepare, idx_select):
             continue
 
         # keep default waiting status
-        if len(attendance.course.get_active_attendances()) >= attendance.course.limit:
+        if attendance.course.is_full:
             if not attendance.informed_about_rejection:
                 handled_attendances.append((attendance, attendance.informed_about_rejection))
                 attendance.informed_about_rejection = True
             continue
 
-        attendance.has_to_pay = attendance.applicant.has_to_pay()
+        attendance.discount = attendance.applicant.current_discount()
         attendance.set_waiting_status(False)
         handled_attendances.append((attendance, attendance.informed_about_rejection))
         attendance.informed_about_rejection = True
@@ -183,7 +183,7 @@ def update_waiting_list_status():
     """Update waiting list status of all courses."""
     courses = models.Course.query.all()
     for c in courses:
-        c.has_waiting_list = c.is_full()
+        c.has_waiting_list = c.is_full
     db.session.commit()
 
 
