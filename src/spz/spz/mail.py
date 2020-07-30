@@ -52,7 +52,7 @@ def generate_status_mail(applicant, course, time=None, restock=False):
         reply_to=course.language.reply_to,
         recipients=[applicant.mail],
         subject=_(
-            '[Sprachenzentrum] Kurs %(course) - %(status)',
+            '[Sprachenzentrum] Kurs %(course)s - %(status)s',
             course=course.full_name,
             status=subject_status),
         body=render_template(

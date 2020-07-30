@@ -40,4 +40,4 @@ def unauthorized(e):
 
 
 def bad_request(e):
-    return render_error(400, 'Fehlerhafte Anfrage (evt. Verdacht auf CSRF)')
+    return render_error(400, _('Fehlerhafte Anfrage (evt. Verdacht auf CSRF)'))
