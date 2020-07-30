@@ -218,7 +218,9 @@ def signoff():
                     flash(_('Abmeldung erfolgreich!'), 'positive')
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Konnte nicht erfolgreich abmelden, bitte erneut versuchen: %(error)s', error=e), 'negative')
+                    flash(
+                        _('Konnte nicht erfolgreich abmelden, bitte erneut versuchen: %(error)s',
+                            error=e), 'negative')
 
     return dict(form=form)
 
@@ -587,7 +589,10 @@ def applicant(id):
                     return redirect(url_for('status', applicant_id=applicant.id, course_id=add_to.id))
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Der Bewerber konnte nicht für den Kurs eingetragen werden: %(error)s', error=e), 'negative')
+                    flash(
+                        _('Der Bewerber konnte nicht für den Kurs eingetragen werden: %(error)s',
+                            error=e),
+                        'negative')
 
             return redirect(url_for('applicant', id=applicant.id))
 
