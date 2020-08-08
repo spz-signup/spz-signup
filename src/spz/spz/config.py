@@ -143,8 +143,9 @@ class Development(BaseConfig):
 
 class Testing(BaseConfig):
     TESTING = True
-    CACHE_CONFIG = {'CACHE_TYPE': 'null', 'CACHE_NO_NULL_WARNING': True}
 
+    CACHE_CONFIG = {'CACHE_TYPE': 'null', 'CACHE_NO_NULL_WARNING': True}
+    BABEL_DEFAULT_LOCALE = 'en'
     WTF_CSRF_ENABLED = False
 
     SECRET_KEY = 'test-secret'
