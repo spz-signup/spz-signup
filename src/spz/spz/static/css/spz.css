@@ -247,6 +247,16 @@ body {
     width: 100%;
 }
 
+.skip_label {
+    position: absolute;
+    right: 0;
+    padding: .67861429em;
+}
+
+.skip_label > input[type="checkbox"] {
+    vertical-align: baseline !important;
+}
+
 a > strong:only-child {
     display: inline-block;
 }
