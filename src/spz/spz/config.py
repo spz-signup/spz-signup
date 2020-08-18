@@ -74,6 +74,9 @@ class BaseConfig(object):
         },
     }
 
+    BABEL_DEFAULT_LOCALE = 'de'
+    BABEL_DEFAULT_TIMEZONE = 'Europe/Berlin'
+
     MAIL_SERVER = 'mail'
     MAIL_PORT = 25
     MAIL_USE_TLS = False
@@ -140,8 +143,9 @@ class Development(BaseConfig):
 
 class Testing(BaseConfig):
     TESTING = True
-    CACHE_CONFIG = {'CACHE_TYPE': 'null', 'CACHE_NO_NULL_WARNING': True}
 
+    CACHE_CONFIG = {'CACHE_TYPE': 'null', 'CACHE_NO_NULL_WARNING': True}
+    BABEL_DEFAULT_LOCALE = 'en'
     WTF_CSRF_ENABLED = False
 
     SECRET_KEY = 'test-secret'
