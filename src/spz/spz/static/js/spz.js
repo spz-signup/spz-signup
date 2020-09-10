@@ -45,7 +45,7 @@ $(document).ready(function(){
     $('.skip_label').on('change', function() {
         var checked = $(this).find('input').is(':checked');
         var mainInput = $(this).closest('div.labeled.input').find('input').first();
-        mainInput.attr('disabled', checked);
+        mainInput.attr('readonly', checked);
         if (checked) {
             mainInput.val($(this).text().trim());
         } else {

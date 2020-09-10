@@ -107,3 +107,23 @@ def test_doppelganger_signup(client, applicant_data, other_applicant_data, cours
     other_applicant_data['confirm_mail'] = applicant_data['confirm_mail']
 
     test_opened_signup(client, other_applicant_data, other_course)
+
+
+def test_tag_skip(client, applicant_data, course):
+    signup_set_open(course, open=True)
+
+    assert not in_course(applicant_data, course)
+
+    applicant_data.tag = ''
+    data = dict(applicant_data, course=course.id)
+    response = client.post('/', data=data)
+    response_text = get_text(response)
+    assert "Matrikelnummer muss angegeben werden" in response_text
+    assert not in_course(applicant_data, course)
+
+    applicant_data.tag = "Wird nachgereicht"
+    data = dict(applicant_data, course=course.id)
+    response = client.post('/', data=data)
+    response_text = get_text(response)
+    assert "Ihre Registrierung war erfolgreich" in response_text
+    assert in_course(applicant_data, course)
