@@ -11,6 +11,8 @@ from spz import models, cache, db
 
 from sqlalchemy import distinct
 
+from flask_babel import gettext as _
+
 
 @cache.cached(key_prefix='degrees')
 def degrees_to_choicelist():
@@ -60,7 +62,7 @@ def gers_to_choicelist():
 @cache.cached(key_prefix='course_status')
 def course_status_to_choicelist():
     return [
-        (x.value, x.name)
+        (x.value, _(x.name))
         for x
         in models.Course.Status
     ]
