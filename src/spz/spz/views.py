@@ -38,7 +38,7 @@ def check_precondition_with_auth(cond, msg, auth=False):
     """
     if not cond:
         if auth:
-            flash(_('%(message) (Überschrieben durch Fachleiterzugang!)', message=msg), 'warning')
+            flash(_('%(message)s (Überschrieben durch Fachleiterzugang!)', message=msg), 'warning')
             return False
         else:
             flash(msg, 'negative')
@@ -81,8 +81,8 @@ def index():
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             _(
-                'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in %(date)',
-                course.language.until_signup_fmt()
+                'Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich in %(date)s',
+                date=course.language.until_signup_fmt()
             ),
             user_has_special_rights
         )
@@ -142,14 +142,14 @@ def index():
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            flash(_('Ihre Kurswahl konnte nicht registriert werden: %(error)', error=e), 'negative')
+            flash(_('Ihre Kurswahl konnte nicht registriert werden: %(error)s', error=e), 'negative')
             return dict(form=form)
 
         # Preterm signups are in by default and management wants us to send mail immediately
         try:
             tasks.send_slow.delay(generate_status_mail(applicant, course, time))
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(_('Eine Bestätigungsmail konnte nicht verschickt werden: %(error)', error=e), 'negative')
+            flash(_('Eine Bestätigungsmail konnte nicht verschickt werden: %(error)s', error=e), 'negative')
 
         # Finally redirect the user to an confirmation page, too
         return render_template('confirm.html', applicant=applicant, course=course)
@@ -203,7 +203,9 @@ def signoff():
                     flash(_('Abmeldung erfolgreich!'), 'positive')
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Konnte nicht erfolgreich abmelden, bitte erneut versuchen: %(error)', error=e), 'negative')
+                    flash(
+                        _('Konnte nicht erfolgreich abmelden, bitte erneut versuchen: %(error)s',
+                            error=e), 'negative')
 
     return dict(form=form)
 
@@ -254,17 +256,17 @@ def registrations_import():
                     db.session.add_all(unique_registrations)
                     db.session.commit()
                     flash(
-                        _('Import OK: %(deleted) Einträge gelöscht, %(added) Einträge hinzugefügt',
+                        _('Import OK: %(deleted)s Einträge gelöscht, %(added)s Einträge hinzugefügt',
                             deleted=num_deleted,
                             added=len(unique_registrations)),
                         'success')
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Konnte Einträge nicht speichern, bitte neu einlesen: %(error)', error=e), 'negative')
+                    flash(_('Konnte Einträge nicht speichern, bitte neu einlesen: %(error)s', error=e), 'negative')
 
                 return redirect(url_for('registrations'))
 
-            flash(_('Falscher Dateityp %(type), bitte nur Text oder CSV Dateien verwenden', type=mime), 'danger')
+            flash(_('Falscher Dateityp %(type)s, bitte nur Text oder CSV Dateien verwenden', type=mime), 'danger')
             return None
 
     flash(_('Datei konnte nicht gelesen werden'), 'negative')
@@ -313,16 +315,16 @@ def approvals_import():
                     db.session.add_all(approvals)
                     db.session.commit()
                     flash(
-                        _('Import OK: %(deleted) Einträge gelöscht, %(added) Einträge hinzugefügt',
+                        _('Import OK: %(deleted)s Einträge gelöscht, %(added)s Einträge hinzugefügt',
                             deleted=num_deleted,
                             added=len(approvals)),
                         'success')
                 except Exception as e:  # csv, index or db could go wrong here..
                     db.session.rollback()
-                    flash(_('Konnte Einträge nicht speichern, bitte neu einlesen: $(error)', error=e), 'negative')
+                    flash(_('Konnte Einträge nicht speichern, bitte neu einlesen: %(error)s', error=e), 'negative')
                 return dict(form=forms.TagForm())
 
-            flash(_('Falscher Dateityp %(type), bitte nur Text oder CSV Dateien verwenden', type=mime), 'danger')
+            flash(_('Falscher Dateityp %(type)s, bitte nur Text oder CSV Dateien verwenden', type=mime), 'danger')
             return redirect(url_for('approvals'))
 
     flash(_('Datei konnte nicht gelesen werden'), 'negative')
@@ -439,7 +441,7 @@ def notifications():
             return redirect(url_for('internal'))
 
         except (AssertionError, socket.error) as e:
-            flash(_('Mail wurde nicht verschickt: %(error)', error=e), 'negative')
+            flash(_('Mail wurde nicht verschickt: %(error)s', error=e), 'negative')
 
     return dict(form=form)
 
@@ -508,7 +510,7 @@ def course(id):
             db.session.delete(course)
             db.session.commit()
             flash(
-                _('Kurs "%(name)" wurde gelöscht, %(deleted) wartende Teilnahme(n) wurden entfernt.',
+                _('Kurs "%(name)s" wurde gelöscht, %(deleted)s wartende Teilnahme(n) wurden entfernt.',
                     name=name,
                     deleted=deleted),
                 'success')
@@ -517,7 +519,7 @@ def course(id):
         except Exception as e:
             db.session.rollback()
             flash(
-                _('Der Kurs konnte nicht gelöscht werden:  %(error)', error=e),
+                _('Der Kurs konnte nicht gelöscht werden: %(error)s', error=e),
                 'error'
             )
 
@@ -553,13 +555,13 @@ def applicant(id):
                 try:
                     remove_attendance(applicant, remove_from, notify)
                     flash(
-                        _('Der Bewerber wurde aus dem Kurs "(%(name))" genommen',
+                        _('Der Bewerber wurde aus dem Kurs "(%(name)s)" genommen',
                             name=remove_from.full_name),
                         'success')
                     db.session.commit()
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Der Bewerber konnte nicht aus dem Kurs genommen werden: %(error)', error=e), 'negative')
+                    flash(_('Der Bewerber konnte nicht aus dem Kurs genommen werden: %(error)s', error=e), 'negative')
 
             if add_to:
                 try:
@@ -572,13 +574,16 @@ def applicant(id):
                     return redirect(url_for('status', applicant_id=applicant.id, course_id=add_to.id))
                 except Exception as e:
                     db.session.rollback()
-                    flash(_('Der Bewerber konnte nicht für den Kurs eingetragen werden: %(error)', error=e), 'negative')
+                    flash(
+                        _('Der Bewerber konnte nicht für den Kurs eingetragen werden: %(error)s',
+                            error=e),
+                        'negative')
 
             return redirect(url_for('applicant', id=applicant.id))
 
         except Exception as e:
             db.session.rollback()
-            flash(_('Der Bewerber konnte nicht aktualisiert werden: %(error)', error=e), 'negative')
+            flash(_('Der Bewerber konnte nicht aktualisiert werden: %(error)s', error=e), 'negative')
             return dict(form=form)
 
     form.populate(applicant)
@@ -646,7 +651,7 @@ def add_attendance(applicant, course, notify):
             tasks.send_slow.delay(generate_status_mail(applicant, course, restock=True))
             flash(_('Bestätigungsmail wurde versendet', 'success'))
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(_('Bestätigungsmail konnte nicht versendet werden: %(error)', error=e), 'negative')
+            flash(_('Bestätigungsmail konnte nicht versendet werden: %(error)s', error=e), 'negative')
 
 
 def remove_attendance(applicant, course, notify):
@@ -663,7 +668,7 @@ def remove_attendance(applicant, course, notify):
             tasks.send_slow.delay(generate_status_mail(applicant, course))
             flash(_('Bestätigungsmail wurde versendet'), 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
-            flash(_('Bestätigungsmail konnte nicht versendet werden: %(error)', error=e), 'negative')
+            flash(_('Bestätigungsmail konnte nicht versendet werden: %(error)s', error=e), 'negative')
 
     return success
 
@@ -734,7 +739,7 @@ def status(applicant_id, course_id):
             flash(_('Der Status wurde aktualisiert'), 'success')
         except Exception as e:
             db.session.rollback()
-            flash(_('Der Status konnte nicht aktualisiert werden: %(error)', error=e), 'negative')
+            flash(_('Der Status konnte nicht aktualisiert werden: %(error)s', error=e), 'negative')
             return dict(form=form, attendance=attendance)
 
         if form.notify_change.data:
@@ -744,7 +749,7 @@ def status(applicant_id, course_id):
                 tasks.send_quick.delay(generate_status_mail(applicant, course))
                 flash(_('Mail erfolgreich verschickt'), 'success')
             except (AssertionError, socket.error, ConnectionError) as e:
-                flash(_('Mail konnte nicht verschickt werden: %(error)', error=e), 'negative')
+                flash(_('Mail konnte nicht verschickt werden: %(error)s', error=e), 'negative')
 
     form.populate(attendance)
     return dict(form=form, attendance=attendance)
@@ -786,7 +791,7 @@ def task_queue():
         everything = i.scheduled()
         jobs = everything[next(iter(everything.keys()))]
     except ConnectionError as e:
-        flash(_('Jobabfrage nicht möglich: %(error)', error=e), 'warning')
+        flash(_('Jobabfrage nicht möglich: %(error)s', error=e), 'warning')
 
     work = []
     for job in jobs:
@@ -820,10 +825,10 @@ def preterm():
                 )
             )
 
-            flash(_('Eine Mail mit der Token URL wurde an %(reeiver) verschickt', receiver=form.mail.data), 'success')
+            flash(_('Eine Mail mit der Token URL wurde an %(receiver)s verschickt', receiver=form.mail.data), 'success')
 
         except (AssertionError, socket.error) as e:
-            flash(_('Eine Bestätigungsmail konnte nicht verschickt werden: %(error)', error=e), 'negative')
+            flash(_('Eine Bestätigungsmail konnte nicht verschickt werden: %(error)s', error=e), 'negative')
 
     # always show preterm signups in this view
     attendances = models.Attendance.query \
@@ -872,13 +877,13 @@ def unique():
 
             db.session.commit()
             flash(
-                _('Kurse von %(deleted) wartenden Teilnehmern mit aktivem Parallelkurs bereinigt', deleted=deleted),
+                _('Kurse von %(deleted)s wartenden Teilnehmern mit aktivem Parallelkurs bereinigt', deleted=deleted),
                 'success')
         except Exception as e:
             db.session.rollback()
             flash(
                 _('Die Kurse konnten nicht von wartenden Teilnehmern mit aktivem Parallelkurs bereinigt werden:'
-                    ' %(error)', error=e),
+                    ' %(error)s', error=e),
                 'negative'
             )
             return redirect(url_for('unique'))

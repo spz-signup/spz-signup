@@ -5,6 +5,7 @@ services:
             - "127.0.0.1:3031:3031"
         volumes:
             - ./src/spz/spz:/home/spz/code/spz:ro
+            - ./src/spz/test:/home/spz/code/test:ro
             - ./src/spz/spz/translations:/home/spz/code/i18n.build:rw
             - ./src/spz/util:/home/spz/code/util:ro
         environment:
