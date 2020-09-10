@@ -114,14 +114,14 @@ def test_tag_skip(client, applicant_data, course):
 
     assert not in_course(applicant_data, course)
 
-    applicant_data.tag = ''
+    applicant_data['tag'] = ''
     data = dict(applicant_data, course=course.id)
     response = client.post('/', data=data)
     response_text = get_text(response)
     assert "Matrikelnummer muss angegeben werden" in response_text
     assert not in_course(applicant_data, course)
 
-    applicant_data.tag = "Wird nachgereicht"
+    applicant_data['tag'] = "Wird nachgereicht"
     data = dict(applicant_data, course=course.id)
     response = client.post('/', data=data)
     response_text = get_text(response)
