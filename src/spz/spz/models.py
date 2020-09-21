@@ -519,10 +519,6 @@ class Language(db.Model):
     auto_assign_constraint = db.CheckConstraint(auto_assign_begin < auto_assign_end)
     # Random signup comes before FCFS
     rnd_before_fcfs_constraint = db.CheckConstraint(signup_rnd_end < signup_fcfs_begin)
-    # FCFS only works while auto-assign is active
-    auto_assign_during_fcfs = (
-        db.CheckConstraint(auto_assign_begin < signup_fcfs_begin),
-        db.CheckConstraint(signup_fcfs_end < auto_assign_end))
 
     def __init__(self, name, reply_to, signup_rnd_begin, signup_rnd_end, signup_fcfs_begin, signup_fcfs_end,
                  auto_assign_begin, auto_assign_end, self_signoff_end):

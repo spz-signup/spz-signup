@@ -15,14 +15,16 @@ def signup_set_open(course, open=True):
     now = datetime.utcnow()
     delta = timedelta(hours=1)
 
+    language.signup_rnd_begin = now - 3 * delta
+    language.signup_rnd_end = now - 2 * delta
     if open:
-        language.signup_begin = now - delta
-        language.signup_end = now + delta
-        assert language.is_open_for_signup(now)
+        language.signup_fcfs_begin = now - delta
+        language.signup_fcfs_end = now + delta
+        assert language.is_open_for_signup_fcfs(now)
     else:
-        language.signup_begin = now - 3 * delta
-        language.signup_end = now - delta
-        assert not language.is_open_for_signup(now)
+        language.signup_fcfs_begin = now - 2 * delta
+        language.signup_fcfs_end = now - delta
+        assert not language.is_open_for_signup_fcfs(now)
 
 
 def in_course(applicant_data, course):
