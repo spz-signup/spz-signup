@@ -833,7 +833,7 @@ def preterm():
     # always show preterm signups in this view
     attendances = models.Attendance.query \
                         .join(models.Course, models.Language, models.Applicant) \
-                        .filter(models.Attendance.registered < models.Language.signup_begin) \
+                        .filter(models.Attendance.registered < models.Language.signup_rnd_begin) \
                         .order_by(models.Applicant.last_name, models.Applicant.first_name)
 
     return dict(form=form, token=token, preterm_signups=attendances)

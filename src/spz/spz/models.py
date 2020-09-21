@@ -308,7 +308,7 @@ class Applicant(db.Model):
     def over_limit(self):
         now = datetime.utcnow()
         # at least do not count in courses that are already over..
-        running = [att for att in self.attendances if att.course.language.signup_end >= now]
+        running = [att for att in self.attendances if att.course.language.signup_fcfs_end >= now]
         return len(running) >= app.config['MAX_ATTENDANCES']
 
     def matches_signoff_id(self, signoff_id):
@@ -492,8 +492,6 @@ class Language(db.Model):
     """Represents a language for a :py:class:`course`.
 
        :param name: The language's name
-       :param signup_begin: The date time the signup begins **in UTC**
-       :param signup_end: The date time the signup ends **in UTC**; constraint to **end > begin**
     """
 
     __tablename__ = 'language'
@@ -518,7 +516,7 @@ class Language(db.Model):
     signup_fcfs_constraint = db.CheckConstraint(signup_fcfs_begin < signup_fcfs_end)
     auto_assign_constraint = db.CheckConstraint(auto_assign_begin < auto_assign_end)
     # Random signup comes before FCFS
-    rnd_before_fcfs_constraint = db.CheckConstraint(signup_rnd_end < signup_fcfs_begin)
+    rnd_before_fcfs_constraint = db.CheckConstraint(signup_rnd_end <= signup_fcfs_begin)
 
     def __init__(self, name, reply_to, signup_rnd_begin, signup_rnd_end, signup_fcfs_begin, signup_fcfs_end,
                  auto_assign_begin, auto_assign_end, self_signoff_end):
@@ -562,7 +560,7 @@ class Language(db.Model):
 
     def until_signup_fmt(self):
         now = datetime.utcnow()
-        delta = self.signup_begin - now
+        delta = self.signup_rnd_begin - now
 
         # here we are in the closed window period; calculate delta to open again
         if delta.total_seconds() < 0:
