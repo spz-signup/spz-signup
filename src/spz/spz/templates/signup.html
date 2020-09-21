@@ -25,7 +25,7 @@ Anmeldung {{ config['SEMESTER_NAME'] }}
             </div>
             <div class="grouped fields">
                 {{ render_option(form.origin, icon='leaf') }}
-                {{ render_input(form.tag, required=False, help='Falls Sie kein KIT-Studierender sind und einen Englischkurs belegen wollen, tragen Sie hier die Ihnen vom Sprachenzentrum erteilte ID ein. Mitarbeiter müssen Ihren KIT-Account (login) eintragen.', icon='barcode') }}
+                {{ render_input(form.tag, skip='Wird nachgereicht', help='Falls Sie kein KIT-Studierender sind und einen Englischkurs belegen wollen, tragen Sie hier die Ihnen vom Sprachenzentrum erteilte ID ein. Mitarbeiter müssen Ihren KIT-Account (login) eintragen.', icon='barcode') }}
             </div>
             <div class="kit-only">
                 <h3 class="ui dividing header">Angaben für Studierende des KIT</h3>
