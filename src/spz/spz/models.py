@@ -372,7 +372,8 @@ class Course(db.Model):
     ))
 
     def __init__(
-        self, language, level, alternative, limit, price, ger_level=None, rating_highest=100, rating_lowest=0, collision=[]
+        self, language, level, alternative, limit, price, ger_level=None,
+        rating_highest=100, rating_lowest=0, collision=[]
     ):
         self.language = language
         self.level = level
