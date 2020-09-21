@@ -74,7 +74,7 @@ def populate_generic(time, attendance_filter, idx_prepare, idx_select):
         att
         for att
         in eager_load_waiting()
-        if attendance_filter(att) and not att.course.language.is_in_manual_mode(time)
+        if attendance_filter(att) and att.course.language.is_in_auto_assign_mode(time)
     ]
 
     # keep track of which attendances we set to active/waiting
@@ -126,7 +126,7 @@ def populate_rnd(time):
     weights = []
 
     def attendance_filter(att):
-        return (att.course.language.signup_begin) < att.registered < (att.course.language.signup_rnd_window_end)
+        return (att.course.language.signup_rnd_begin) < att.registered < (att.course.language.signup_rnd_end)
 
     def idx_prepare(to_assign):
         # (attendance, weight) tuples from query would be possible, too;

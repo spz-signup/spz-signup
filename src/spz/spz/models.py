@@ -372,14 +372,14 @@ class Course(db.Model):
     ))
 
     def __init__(
-        self, language, level, alternative, limit, price, ger=None, rating_highest=100, rating_lowest=0, collision=[]
+        self, language, level, alternative, limit, price, ger_level=None, rating_highest=100, rating_lowest=0, collision=[]
     ):
         self.language = language
         self.level = level
         self.alternative = alternative
         self.limit = limit
         self.price = price
-        self.ger = ger
+        self.ger = ger_level
         self.rating_highest = rating_highest
         self.rating_lowest = rating_lowest
         self.collision = collision
@@ -504,23 +504,40 @@ class Language(db.Model):
 
     # Not using db.Interval here, because it needs native db support
     # See: http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.Interval
-    signup_begin = db.Column(db.DateTime())
-    signup_rnd_window_end = db.Column(db.DateTime())
-    signup_manual_end = db.Column(db.DateTime())
-    signup_end = db.Column(db.DateTime())
-    signup_auto_end = db.Column(db.DateTime())
+    signup_rnd_begin = db.Column(db.DateTime())
+    signup_rnd_end = db.Column(db.DateTime())
+    signup_fcfs_begin = db.Column(db.DateTime())
+    signup_fcfs_end = db.Column(db.DateTime())
+    auto_assign_begin = db.Column(db.DateTime())
+    auto_assign_end = db.Column(db.DateTime())
+    self_signoff_end = db.Column(db.DateTime())
 
-    signup_constraint = db.CheckConstraint(signup_end > signup_begin)
+    # Begin must (obviously) be before end
+    signup_rnd_constraint = db.CheckConstraint(signup_rnd_begin < signup_rnd_end)
+    signup_fcfs_constraint = db.CheckConstraint(signup_fcfs_begin < signup_fcfs_end)
+    auto_assign_constraint = db.CheckConstraint(auto_assign_begin < auto_assign_end)
+    # Random signup comes before FCFS
+    rnd_before_fcfs_constraint = db.CheckConstraint(signup_rnd_end < signup_fcfs_begin)
+    # FCFS only works while auto-assign is active
+    auto_assign_during_fcfs = (
+        db.CheckConstraint(auto_assign_begin < signup_fcfs_begin),
+        db.CheckConstraint(signup_fcfs_end < auto_assign_end))
 
-    def __init__(self, name, reply_to, signup_begin, signup_rnd_window_end, signup_manual_end, signup_end,
-                 signup_auto_end):
+    def __init__(self, name, reply_to, signup_rnd_begin, signup_rnd_end, signup_fcfs_begin, signup_fcfs_end,
+                 auto_assign_begin, auto_assign_end, self_signoff_end):
         self.name = name
         self.reply_to = reply_to
-        self.signup_begin = signup_begin
-        self.signup_rnd_window_end = signup_rnd_window_end
-        self.signup_manual_end = signup_manual_end
-        self.signup_end = signup_end
-        self.signup_auto_end = signup_auto_end
+        self.signup_rnd_begin = signup_rnd_begin
+        self.signup_rnd_end = signup_rnd_end
+        self.signup_fcfs_begin = signup_fcfs_begin
+        self.signup_fcfs_end = signup_fcfs_end
+        self.auto_assign_begin = auto_assign_begin
+        self.auto_assign_end = auto_assign_end
+        self.self_signoff_end = self_signoff_end
+
+    @property
+    def now(self):
+        return datetime.utcnow()
 
     def __repr__(self):
         return '<Language %r>' % self.name
@@ -528,51 +545,23 @@ class Language(db.Model):
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
 
-    @property
-    def signup_rnd_begin(self):
-        return self.signup_begin
-
-    @property
-    def signup_rnd_end(self):
-        return self.signup_rnd_window_end
-
-    @property
-    def signup_manual_begin(self):
-        # XXX: find something better
-        return datetime.min
-
-    @property
-    def self_signoff_end(self):
-        return self.signup_manual_end + app.config['SELF_SIGNOFF_PERIOD']
-
-    @property
-    def signup_fcfs_begin(self):
-        return self.signup_rnd_end + app.config['RANDOM_WINDOW_CLOSED_FOR']
-
-    @property
-    def signup_fcfs_end(self):
-        return self.signup_end
+    def is_in_auto_assign_mode(self, time):
+        return self.auto_assign_begin < time < self.auto_assign_end
 
     def is_open_for_self_signoff(self, time):
         return time < self.self_signoff_end
 
     def is_open_for_signup_rnd(self, time):
-        return self.signup_rnd_begin < time < self.signup_rnd_end < self.signup_end
+        return self.signup_rnd_begin < time < self.signup_rnd_end
 
     def is_open_for_signup_fcfs(self, time):
         return self.signup_fcfs_begin < time < self.signup_fcfs_end
 
     def is_open_for_signup(self, time):
-        # management wants the system to be: open a few hours,
-        # then closed "overnight" for random selection, then open again.
-        # begin [-OPENFOR-] [-CLOSEDFOR-] openagain end
         return self.is_open_for_signup_rnd(time) or self.is_open_for_signup_fcfs(time)
 
     def is_upcoming(self, time):
-        return self.signup_end >= time and self.signup_begin - time < timedelta(days=2)
-
-    def is_in_manual_mode(self, time):
-        return (time < self.signup_manual_end) or (time > self.signup_auto_end)
+        return self.signup_fcfs_end >= time and self.signup_rnd_begin - time < timedelta(days=2)
 
     def until_signup_fmt(self):
         now = datetime.utcnow()

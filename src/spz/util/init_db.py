@@ -75,15 +75,16 @@ def insert_courses(json_file):
             # pop 'courses' entry before creating the Language-object, so it doesn't get passed to the constructor
             courses = language.pop('courses', [])
 
+            # ISO 8601 / RFC 3339 -- better way to parse this?
+            format = "%Y-%m-%dT%H:%M:%SZ"
             ref_lang = Language(
-                # ISO 8601 / RFC 3339 -- better way to parse this?
-                signup_begin=datetime.strptime(language.pop('signup_begin_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
-                signup_rnd_window_end=datetime.strptime(
-                    language.pop('signup_random_window_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
-                signup_manual_end=datetime.strptime(language.pop('signup_manual_end'), "%Y-%m-%dT%H:%M:%SZ"),
-                # see also Jsonschema RFC, date-time
-                signup_end=datetime.strptime(language.pop('signup_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
-                signup_auto_end=datetime.strptime(language.pop('signup_auto_end_iso_utc'), "%Y-%m-%dT%H:%M:%SZ"),
+                signup_rnd_begin=datetime.strptime(language.pop('signup_rnd_begin_iso_utc'), format),
+                signup_rnd_end=datetime.strptime(language.pop('signup_rnd_end_iso_utc'), format),
+                signup_fcfs_begin=datetime.strptime(language.pop('signup_fcfs_begin_iso_utc'), format),
+                signup_fcfs_end=datetime.strptime(language.pop('signup_fcfs_end_iso_utc'), format),
+                auto_assign_begin=datetime.strptime(language.pop('auto_assign_begin_iso_utc'), format),
+                auto_assign_end=datetime.strptime(language.pop('auto_assign_end_iso_utc'), format),
+                self_signoff_end=datetime.strptime(language.pop('self_signoff_end_iso_utc'), format),
                 **language
             )
 

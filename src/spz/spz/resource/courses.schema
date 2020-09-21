@@ -76,7 +76,18 @@
                             "uniqueItems": true
                         }
                     },
-                    "required": [ "name", "reply_to", "signup_begin_iso_utc", "signup_end_iso_utc", "signup_manual_end", "courses" ]
+                    "required": [
+                        "name",
+                        "reply_to",
+                        "courses",
+                        "signup_rnd_begin_iso_utc",
+                        "signup_rnd_end_iso_utc",
+                        "signup_fcfs_begin_iso_utc",
+                        "signup_fcfs_end_iso_utc",
+                        "auto_assign_begin_iso_utc",
+                        "auto_assign_end_iso_utc",
+                        "self_signoff_end_iso_utc"
+                    ]
                 },
                 "uniqueItems": true
             }
