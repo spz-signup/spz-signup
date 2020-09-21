@@ -5,7 +5,9 @@
    Manages the mapping between database models and HTML forms.
 """
 
-from sqlalchemy import func
+import itertools
+
+from sqlalchemy import func, and_, or_, not_
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
@@ -221,6 +223,51 @@ class SignupForm(FlaskForm):
             semester=self.get_semester(),
             origin=self.get_origin()
         )
+
+
+class VacanciesForm(FlaskForm):
+
+    status_filter = SelectMultipleField(
+        'Status',
+        coerce=int
+    )
+
+    language_filter = SelectMultipleField(
+        'Sprachen',
+        coerce=int
+    )
+
+    ger_filter = SelectMultipleField(
+        'GER',
+        coerce=int
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FlaskForm, self).__init__(*args, **kwargs)
+        self._populate()
+
+    def _populate(self):
+        self.status_filter.choices = cached.course_status_to_choicelist()
+        self.language_filter.choices = cached.languages_to_choicelist()
+        self.ger_filter.choices = cached.gers_to_choicelist()
+
+    def get_courses(self):
+        courses = models.Course.query \
+            .join(models.Language) \
+            .order_by(models.Language.name) \
+            .order_by(models.Course.ger) \
+            .order_by(models.Course.vacancies) \
+            .filter(or_(
+                not_(models.Course.is_full),
+                and_(
+                    models.Course.is_full,
+                    models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']
+                ))) \
+            .all()
+        return itertools.groupby(courses, lambda course: (course.language, course.ger))
+
+    def has_courses(self):
+        return True
 
 
 class NotificationForm(FlaskForm):

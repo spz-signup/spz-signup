@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-07-30 12:33+0000\n"
+"POT-Creation-Date: 2020-09-10 12:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,55 +80,55 @@ msgstr ""
 msgid "[Sprachenzentrum] Kurs %(course)s - %(status)s"
 msgstr ""
 
-#: spz/views.py:42
+#: spz/views.py:41
 #, python-format
 msgid "%(message)s (Überschrieben durch Fachleiterzugang!)"
 msgstr ""
 
-#: spz/views.py:69
+#: spz/views.py:68
 msgid ""
 "Angemeldet: Vorzeitige Registrierung möglich. Falls unerwünscht, bitte "
 "abmelden."
 msgstr ""
 
-#: spz/views.py:71
+#: spz/views.py:70
 msgid "Prioritäranmeldung aktiv!"
 msgstr ""
 
-#: spz/views.py:73
+#: spz/views.py:72
 msgid "Token für Prioritäranmeldung ungültig!"
 msgstr ""
 
-#: spz/views.py:86
+#: spz/views.py:85
 #, python-format
 msgid ""
 "Bitte gedulden Sie sich, die Anmeldung für diese Sprache ist erst möglich"
 " in %(date)s"
 msgstr ""
 
-#: spz/views.py:93
+#: spz/views.py:92
 msgid ""
 "Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. Bitte "
 "verwenden Sie die Adresse, an welche Sie auch die Einladung zur "
 "prioritären Anmeldung erhalten haben!"
 msgstr ""
 
-#: spz/views.py:100
+#: spz/views.py:99
 msgid ""
 "Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs "
 "zu wählen! (Hinweis: Der Datenabgleich mit Ilias erfolgt automatisch alle"
 " 15 Minuten.)"
 msgstr ""
 
-#: spz/views.py:106
+#: spz/views.py:105
 msgid "Sie sind bereits für diesen Kurs oder einem Parallelkurs angemeldet!"
 msgstr ""
 
-#: spz/views.py:111
+#: spz/views.py:110
 msgid "Sie haben das Limit an Bewerbungen bereits erreicht!"
 msgstr ""
 
-#: spz/views.py:116
+#: spz/views.py:115
 msgid ""
 "Sie haben sich bereits mit einer anderen E-Mailadresse für einen Kurs "
 "angemeldet. Benutzen Sie dieselbe Adresse wie bei Ihrer ersten Anmeldung "
@@ -136,197 +136,197 @@ msgid ""
 "Fachleiter."
 msgstr ""
 
-#: spz/views.py:123
+#: spz/views.py:122
 msgid ""
 "Der Kurs ist hoffnungslos überbelegt. Darum werden keine Registrierungen "
 "mehr entgegengenommen!"
 msgstr ""
 
-#: spz/views.py:146
+#: spz/views.py:145
 #, python-format
 msgid "Ihre Kurswahl konnte nicht registriert werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:153 spz/views.py:841
+#: spz/views.py:152 spz/views.py:831
 #, python-format
 msgid "Eine Bestätigungsmail konnte nicht verschickt werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:197
+#: spz/views.py:182
 msgid "Abmeldung fehlgeschlagen: E-Mailadresse nicht vorhanden."
 msgstr ""
 
-#: spz/views.py:202
+#: spz/views.py:187
 msgid "Abmeldung fehlgeschlagen: Ungültige Abmelde-ID!"
 msgstr ""
 
-#: spz/views.py:206
+#: spz/views.py:191
 msgid ""
 "Abmeldung fehlgeschlagen: Sie können sich nicht von einem Kurs abmelden, "
 "für den Sie nicht angemeldet waren!"
 msgstr ""
 
-#: spz/views.py:211
+#: spz/views.py:196
 msgid ""
 "Abmeldefrist abgelaufen: Zur Abmeldung bitte bei Ihrem Fachbereichsleiter"
 " melden!"
 msgstr ""
 
-#: spz/views.py:218
+#: spz/views.py:203
 msgid "Abmeldung erfolgreich!"
 msgstr ""
 
-#: spz/views.py:221
+#: spz/views.py:207
 #, python-format
 msgid "Konnte nicht erfolgreich abmelden, bitte erneut versuchen: %(error)s"
 msgstr ""
 
-#: spz/views.py:274 spz/views.py:333
+#: spz/views.py:261 spz/views.py:320
 #, python-format
 msgid "Import OK: %(deleted)s Einträge gelöscht, %(added)s Einträge hinzugefügt"
 msgstr ""
 
-#: spz/views.py:278 spz/views.py:337
+#: spz/views.py:265 spz/views.py:324
 #, python-format
 msgid "Konnte Einträge nicht speichern, bitte neu einlesen: %(error)s"
 msgstr ""
 
-#: spz/views.py:282 spz/views.py:340
+#: spz/views.py:269 spz/views.py:327
 #, python-format
 msgid "Falscher Dateityp %(type)s, bitte nur Text oder CSV Dateien verwenden"
 msgstr ""
 
-#: spz/views.py:285 spz/views.py:343
+#: spz/views.py:272 spz/views.py:330
 msgid "Datei konnte nicht gelesen werden"
 msgstr ""
 
-#: spz/views.py:453 spz/views.py:760
+#: spz/views.py:440 spz/views.py:750
 msgid "Mail erfolgreich verschickt"
 msgstr ""
 
-#: spz/views.py:457
+#: spz/views.py:444
 #, python-format
 msgid "Mail wurde nicht verschickt: %(error)s"
 msgstr ""
 
-#: spz/views.py:519
+#: spz/views.py:506
 msgid "Der Kurs kann nicht gelöscht werden, weil aktive Teilnahmen bestehen."
 msgstr ""
 
-#: spz/views.py:526
+#: spz/views.py:513
 #, python-format
 msgid ""
 "Kurs \"%(name)s\" wurde gelöscht, %(deleted)s wartende Teilnahme(n) "
 "wurden entfernt."
 msgstr ""
 
-#: spz/views.py:535
+#: spz/views.py:522
 #, python-format
 msgid "Der Kurs konnte nicht gelöscht werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:561
+#: spz/views.py:548
 msgid "Der Bewerber wurde aktualisiert"
 msgstr ""
 
-#: spz/views.py:571
+#: spz/views.py:558
 #, python-format
 msgid "Der Bewerber wurde aus dem Kurs \"(%(name)s)\" genommen"
 msgstr ""
 
-#: spz/views.py:577
+#: spz/views.py:564
 #, python-format
 msgid "Der Bewerber konnte nicht aus dem Kurs genommen werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:583
+#: spz/views.py:570
 msgid ""
 "Der Bewerber wurde in den Kurs eingetragen. Bitte jetzt Status setzen und"
 " überprüfen."
 msgstr ""
 
-#: spz/views.py:590
+#: spz/views.py:578
 #, python-format
 msgid "Der Bewerber konnte nicht für den Kurs eingetragen werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:596
+#: spz/views.py:586
 #, python-format
 msgid "Der Bewerber konnte nicht aktualisiert werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:641
+#: spz/views.py:631
 msgid ""
 "Der Teilnehmer ist bereits im Kurs oder nimmt aktiv an einem Parallelkurs"
 " teil!"
 msgstr ""
 
-#: spz/views.py:654
+#: spz/views.py:644
 msgid ""
 "Der Teilnehmer hat eigentlich nicht die entsprechenden Sprachtest-"
 "Ergebnisse. Teilnehmer wurde trotzdem eingetragen."
 msgstr ""
 
-#: spz/views.py:662 spz/views.py:679
+#: spz/views.py:652 spz/views.py:669
 msgid "Bestätigungsmail wurde versendet"
 msgstr ""
 
-#: spz/views.py:664 spz/views.py:681
+#: spz/views.py:654 spz/views.py:671
 #, python-format
 msgid "Bestätigungsmail konnte nicht versendet werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:705
+#: spz/views.py:695
 msgid "Belegungsnummer ungültig"
 msgstr ""
 
-#: spz/views.py:749
+#: spz/views.py:739
 msgid "Der Status wurde aktualisiert"
 msgstr ""
 
-#: spz/views.py:752
+#: spz/views.py:742
 #, python-format
 msgid "Der Status konnte nicht aktualisiert werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:762
+#: spz/views.py:752
 #, python-format
 msgid "Mail konnte nicht verschickt werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:804
+#: spz/views.py:794
 #, python-format
 msgid "Jobabfrage nicht möglich: %(error)s"
 msgstr ""
 
-#: spz/views.py:832
+#: spz/views.py:822
 msgid "[Sprachenzentrum] URL für prioritäre Anmeldung"
 msgstr ""
 
-#: spz/views.py:838
+#: spz/views.py:828
 #, python-format
 msgid "Eine Mail mit der Token URL wurde an %(receiver)s verschickt"
 msgstr ""
 
-#: spz/views.py:890
+#: spz/views.py:880
 #, python-format
 msgid ""
 "Kurse von %(deleted)s wartenden Teilnehmern mit aktivem Parallelkurs "
 "bereinigt"
 msgstr ""
 
-#: spz/views.py:895
+#: spz/views.py:885
 #, python-format
 msgid ""
 "Die Kurse konnten nicht von wartenden Teilnehmern mit aktivem "
 "Parallelkurs bereinigt werden: %(error)s"
 msgstr ""
 
-#: spz/views.py:913
+#: spz/views.py:903
 msgid "Du kommst hier net rein!"
 msgstr ""
 
-#: spz/views.py:920
+#: spz/views.py:910
 msgid "Tschau!"
 msgstr ""
 

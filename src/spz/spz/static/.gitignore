@@ -1,5 +1,3 @@
 .webassets-cache
-css/packed.css
-js/packed.js
-js/packed_signup.js
-js/packed_tools.js
+css/packed*
+js/packed*
