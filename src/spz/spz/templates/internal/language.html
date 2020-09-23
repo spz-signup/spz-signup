@@ -47,7 +47,7 @@ Sprache: {{ language.name }}
                 {{ td_sorted(course.count_attendances()) }}
                 {{ td_sorted(course.count_attendances(waiting=False)) }}
                 {{ td_sorted(course.count_attendances(waiting=True)) }}
-                {{ td_sorted(course.count_attendances(is_free=False)) }}
+                {{ td_sorted(course.count_attendances(is_free=False, waiting=False)) }}
                 <td class="collapsing"><a href="{{ url_for('print_course', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_course_presence', course_id=course.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('export', type='course', id=course.id) }}"><button type="button" class="ui button">Export</button></a></td>
@@ -59,7 +59,7 @@ Sprache: {{ language.name }}
               'attendances': sums['attendances'] + course.count_attendances(),
               'active': sums['active'] + course.count_attendances(waiting=False),
               'waiting': sums['waiting'] + course.count_attendances(waiting=True),
-              'paying': sums['paying'] + course.count_attendances(is_free=False),
+              'paying': sums['paying'] + course.count_attendances(is_free=False, waiting=False),
             }) %}{% endif %}
             {% endfor %}
         </tbody>

@@ -6,6 +6,7 @@
 """
 
 from flask import flash, redirect, render_template, url_for
+from flask_babel import gettext as _
 
 
 def render_error(errorcode, errormessage):
@@ -18,25 +19,25 @@ def render_error(errorcode, errormessage):
 
 
 def page_not_found(e):
-    return render_error(404, 'Seite nicht gefunden')
+    return render_error(404, _('Seite nicht gefunden'))
 
 
 def page_forbidden(e):
-    return render_error(403, 'Keine Berechtigung')
+    return render_error(403, _('Keine Berechtigung'))
 
 
 def page_gone(e):
-    return render_error(410, 'Seite wurde entfernt')
+    return render_error(410, _('Seite wurde entfernt'))
 
 
 def not_found(e):
-    return render_error(500, 'Interner Fehler')
+    return render_error(500, _('Interner Fehler'))
 
 
 def unauthorized(e):
-    flash('Bitte einloggen!', 'warning')
+    flash(_('Bitte einloggen!'), 'warning')
     return redirect(url_for('login'))
 
 
 def bad_request(e):
-    return render_error(400, 'Fehlerhafte Anfrage (evt. Verdacht auf CSRF)')
+    return render_error(400, _('Fehlerhafte Anfrage (evt. Verdacht auf CSRF)'))

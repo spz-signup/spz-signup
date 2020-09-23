@@ -19,7 +19,6 @@ def logout(client):
     return client.post('/internal/logout', follow_redirects=True)
 
 
-def get_text(response, expected_response_code=200):
-    assert response.status_code == expected_response_code
+def get_text(response):
     html = BeautifulSoup(response.data, 'html.parser')
-    return html.body.get_text()
+    return html.find('div', {'class': 'main'}).get_text()

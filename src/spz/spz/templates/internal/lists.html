@@ -31,7 +31,7 @@ Sprachen
                 {{ td_sorted(seats) }}
                 {{ td_sorted(language.count_attendances(waiting=True)) }}
                 {{ td_sorted(language.count_attendances(waiting=False)) }}
-                {{ td_sorted(language.count_attendances(is_free=False)) }}
+                {{ td_sorted(language.count_attendances(is_free=False, waiting=False)) }}
                 <td class="collapsing"><a href="{{ url_for('print_language', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('print_language_presence', language_id=language.id) }}"><button type="button" class="ui button">PDF</button></a></td>
                 <td class="collapsing"><a href="{{ url_for('export', type='language', id=language.id) }}"><button type="button" class="ui button">Export</button></a></td>
@@ -41,7 +41,7 @@ Sprachen
                 'seats_t': sums['seats_t'] + seats,
                 'waiting_t': sums['waiting_t'] + language.count_attendances(waiting=True),
                 'active_t': sums['active_t'] + language.count_attendances(waiting=False),
-                'paying_t': sums['paying_t'] + language.count_attendances(is_free=False)
+                'paying_t': sums['paying_t'] + language.count_attendances(is_free=False, waiting=False)
             }) %}
             {% endif %}
             {% endfor %}

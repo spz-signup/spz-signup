@@ -23,7 +23,8 @@ def find_table(workbook, table_name):
 
 
 def delete_last_row(sheet, range):
-    sheet.delete_rows(range.max_row)
+    for c in range.bottom:
+        sheet.cell(*c).value = None
     range.shrink(bottom=1)
 
 

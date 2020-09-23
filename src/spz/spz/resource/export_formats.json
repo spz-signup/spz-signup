@@ -1,25 +1,42 @@
 {
     "formats": [
         {
-            "name": "Excel (.xlsx)",
-            "formatter": "excel",
-            "template": "export/course.xlsx"
+            "name": "Excel (ein Blatt für alles)",
+            "formatter": "single-excel",
+            "template": "export/courselist.xlsx"
         },
         {
-            "name": "Excel (.xlsx / eine Mappe für alle Kurse)",
-            "formatter": "single-excel",
-            "template": "export/course.xlsx"
+            "name": "Excel (ein Blatt pro Kurs)",
+            "formatter": "excel",
+            "template": "export/courselist.xlsx"
+        },
+        {
+            "name": "Excel mit Zusatzfunktionen (eine Datei pro Kurs)",
+            "formatter": "zip-excel",
+            "template": "export/courselist-enhanced.xlsx"
         },
         {
             "name": "Comma Separated (.csv)",
             "formatter": "csv",
-            "template": "export/course.csv"
+            "template": "export/courselist.csv"
         },
         {
-            "name": "Spanisch Vorlage (.zip)",
+            "name": "Spanisch 1-4",
             "language": "Spanisch",
             "formatter": "zip-excel",
-            "template": "export/spanisch.xlsx"
+            "template": "export/spanisch_1-4.xlsx"
+        },
+        {
+            "name": "Spanisch 5-7",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch_5-7.xlsx"
+        },
+        {
+            "name": "Spanisch Andere",
+            "language": "Spanisch",
+            "formatter": "zip-excel",
+            "template": "export/spanisch_otros.xlsx"
         }
     ]
 }

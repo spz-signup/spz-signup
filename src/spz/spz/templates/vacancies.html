@@ -1,5 +1,5 @@
 {% extends 'baselayout.html' %}
-{% from 'formhelpers.html' import td_sorted, course_status %}
+{% from 'formhelpers.html' import td_sorted, course_status, render_option, render_boolean %}
 
 {% block caption %}
 Restplätze {{ config['SEMESTER_NAME'] }}
@@ -9,25 +9,59 @@ Restplätze {{ config['SEMESTER_NAME'] }}
 {% block body %}
 <div class="row">
 
+    {% if not form.has_courses() %}
+        <div class="ui message">
+            Aktuell gibt es keine Kurse mit wenigen Restplätzen oder kurzer Warteliste.
+        </div>
+    {% else %}
+    <div class="ui fluid card styled accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            Filter
+        </div>
+        <div class="content">
+            <form class="ui filter form">
+                {{ render_option(form.status_filter, multiple=True, required=False) }}
+                {{ render_option(form.language_filter, multiple=True, required=False) }}
+                {{ render_option(form.ger_filter, multiple=True, required=False) }}
+            </form>
+        </div>
+    </div>
 
-    {% for language in languages %}
-    <h3 class="ui dividing header">{{ language.name }}</h3>
-        {# Workaround: groupby cant work with None-values #}
-        {% set no_ger = language.courses|rejectattr('ger','string')|list %}
-        {% set groups = [(None, no_ger)] if no_ger else [] %}
-        {% set groups = groups + language.courses|rejectattr('ger','none')|groupby('ger') %}
-        {% for grouper, list in groups %}
-        <fieldset class="ui message">
-            {% if grouper %}
-                <legend>{{ grouper }}</legend>
+    {% endif %}
+
+    {% set known_languages = [] %}
+
+    {% for ((language, ger), course_group) in form.get_courses() %}
+
+        {% if language not in known_languages %}
+            {% if known_languages %}</div>{% endif %}
+            <div class="ui fluid language card segments" data-language="{{ language.id }}" >
+            <h3 class="ui segment header">{{ language.name }}</h3>
+            {% if known_languages.append(language) %} {% endif %}
+        {% endif %}
+
+        <fieldset class="ui raised bottom-padded ger segment" data-ger="{{ ger }}">
+            {% if ger %}
+                <legend>{{ ger }}</legend>
             {% endif %}
-            <ul>
-            {% for course in list %}
-                <li>{{ course.full_name }}: {{ course_status(course) }}</li>
+            <div class="ui list">
+            {% for course in course_group %}
+                <div class="ui course item" data-status="{{ course.status.value }}" >
+                    {{ course_status(course) }} {{ course.full_name }}
+                </div>
             {% endfor %}
-            </ul>
+            </div>
         </fieldset>
-        {% endfor %}
     {% endfor %}
+
+    {% if known_languages %}</div>{% endif %}
 </div>
 {% endblock body %}
+
+{% block scripts %}
+{{ super() }}
+{% assets "vacancies_js" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock scripts %}

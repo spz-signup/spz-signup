@@ -20,6 +20,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_caching import Cache
 from flask_wtf import CSRFProtect
+from flask_babel import Babel
 
 from jinja2 import Markup
 
@@ -131,6 +132,9 @@ mail = Mail(app)
 
 # Cache setup
 cache = Cache(app, config=app.config['CACHE_CONFIG'])
+
+# I18n setup
+babel = Babel(app)
 
 
 # Register all views here
