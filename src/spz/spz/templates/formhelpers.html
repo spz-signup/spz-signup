@@ -156,7 +156,7 @@
 
 {% macro course_status(course) %}
 {% if course.status == course.Status.SHORT_WAITINGLIST %}
-    {% set icon, color, text = "clipboard list", "orange", "Kurze Warteliste" %}
+    {% set icon, color, text = "clipboard", "orange", "Kurze Warteliste" %}
 {% elif course.status == course.Status.LITTLE_VACANCIES %}
     {% set icon, color, text = "loading hourglass", "yellow", "Wenige Restplätze" %}
 {% elif course.status == course.Status.VACANCIES %}
