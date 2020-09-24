@@ -108,7 +108,7 @@ class BaseConfig(object):
     SELF_SIGNOFF_PERIOD = timedelta(days=3)
     # The automatic restock system kicks in;
     # some time later, the RND process is finished and we continue with FCFS (in case there are empty slots)
-    RANDOM_WINDOW_CLOSED_FOR = timedelta(hours=36)
+    RANDOM_WINDOW_CLOSED_FOR = timedelta(hours=41)
 
     # limit for global amount of attendances; this does not affect attendances for courses that are already
     # done "now"; e.g. intensive
