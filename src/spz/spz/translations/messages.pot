@@ -43,16 +43,16 @@ msgstr ""
 
 #: spz/log.py:33
 #, python-format
-msgid "%(fname) (%(mail)) wurde in %(cname) gebucht."
+msgid "%(fname)s (%(mail)s) wurde in %(cname)s gebucht."
 msgstr ""
 
 #: spz/log.py:47
-msgid "%(cname) hat nun eine Warteliste."
+msgid "%(cname)s hat nun eine Warteliste."
 msgstr ""
 
 #: spz/log.py:52
 #, python-format
-msgid "%(cname) ist nun Wartelisten-frei."
+msgid "%(cname)s ist nun Wartelisten-frei."
 msgstr ""
 
 #: spz/mail.py:27
