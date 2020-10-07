@@ -326,6 +326,7 @@ class Applicant(db.Model):
         if not self.tag:
             return []
         return Applicant.query \
+            .filter(Applicant.tag != 'Wird nachgereicht') \
             .filter(Applicant.tag == self.tag) \
             .filter(Applicant.mail != self.mail) \
             .all()
