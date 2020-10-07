@@ -323,10 +323,9 @@ class Applicant(db.Model):
 
     @property
     def doppelgangers(self):
-        if not self.tag:
+        if not self.tag or self.tag == 'Wird nachgereicht':
             return []
         return Applicant.query \
-            .filter(Applicant.tag != 'Wird nachgereicht') \
             .filter(Applicant.tag == self.tag) \
             .filter(Applicant.mail != self.mail) \
             .all()
