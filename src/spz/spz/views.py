@@ -75,9 +75,9 @@ def index():
         applicant = form.get_applicant()
         course = form.get_course()
         user_has_special_rights = current_user.is_authenticated and current_user.can_edit_course(course)
+        preterm = applicant.mail and token_payload
 
         # signup at all times only with token or privileged users
-        preterm = applicant.mail and token_payload
         err = check_precondition_with_auth(
             course.language.is_open_for_signup(time) or preterm,
             _(
@@ -87,8 +87,8 @@ def index():
             user_has_special_rights
         )
         # when using a token, submitted mail address has to match the one stored in payload
-        err |= token_payload is not None and check_precondition_with_auth(
-            token_payload.lower() == applicant.mail,
+        err |= check_precondition_with_auth(
+            not preterm or token_payload.lower() == applicant.mail.lower(),
             _('Die eingegebene E-Mail-Adresse entspricht nicht der hinterlegten. '
                 'Bitte verwenden Sie die Adresse, an welche Sie auch die Einladung zur prioritären '
                 'Anmeldung erhalten haben!'),
