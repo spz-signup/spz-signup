@@ -95,6 +95,12 @@ def index():
             user_has_special_rights
         )
         err |= check_precondition_with_auth(
+            not course.has_rating_restrictions() or applicant.has_submitted_tag(),
+            _('Bei Kursen mit Zugangsbeschränkungen kann die Matrikelnummer nicht nachgereicht werden. '
+              'Bitte geben Sie eine Matrikelnummer an.'),
+            user_has_special_rights
+        )
+        err |= check_precondition_with_auth(
             course.allows(applicant),
             _('Sie haben nicht die vorausgesetzten Sprachtest-Ergebnisse um diesen Kurs zu wählen! '
                 '(Hinweis: Der Datenabgleich mit Ilias erfolgt automatisch alle 15 Minuten.)'),

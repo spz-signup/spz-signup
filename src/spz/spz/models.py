@@ -330,6 +330,9 @@ class Applicant(db.Model):
             .filter(Applicant.mail != self.mail) \
             .all()
 
+    def has_submitted_tag(self):
+        return self.tag and self.tag != 'Wird nachgereicht'
+
 
 @total_ordering
 class Course(db.Model):
@@ -392,6 +395,9 @@ class Course(db.Model):
 
     def allows(self, applicant):
         return self.rating_lowest <= applicant.best_rating() <= self.rating_highest
+
+    def has_rating_restrictions(self):
+        return self.rating_lowest > 0 or self.rating_highest < 100
 
     """ Retrieves all attendances, that match a certain criteria.
         Criterias can be set to either True, False or to None (which includes both).
