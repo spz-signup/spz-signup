@@ -4,8 +4,8 @@
 """
 
 from test import get_text
-from spz.models import Applicant
-from spz import token
+from spz.models import Applicant, Approval
+from spz import db, token
 
 from datetime import datetime, timedelta
 
@@ -125,5 +125,43 @@ def test_tag_skip(client, applicant_data, course):
     data = dict(applicant_data, course=course.id)
     response = client.post('/', data=data)
     response_text = get_text(response)
+    assert "Ihre Registrierung war erfolgreich" in response_text
+    assert in_course(applicant_data, course)
+
+
+def test_tag_skip_restricted_course(client, applicant_data, course):
+    signup_set_open(course, open=True)
+    course.rating_lowest = 50
+
+    assert not in_course(applicant_data, course)
+
+    applicant_data['tag'] = "Wird nachgereicht"
+    data = dict(applicant_data, course=course.id)
+    response = client.post('/', data=data)
+    response_text = get_text(response)
+    assert "Bei Kursen mit Zugangsbeschränkungen kann die Matrikelnummer nicht nachgereicht werden." in response_text
+    assert not in_course(applicant_data, course)
+
+
+def test_signup_restricted_course(client, applicant_data, course):
+    signup_set_open(course, open=True)
+    course.rating_lowest = 50
+    approval = Approval(
+        tag='1234567',
+        percent=80,
+        sticky=False,
+        priority=False
+    )
+    db.session.add(approval)
+    db.session.commit()
+
+    assert not in_course(applicant_data, course)
+    assert Approval.get_for_tag('1234567')[0].percent == 80
+
+    applicant_data['tag'] = '1234567'
+    data = dict(applicant_data, course=course.id)
+    response = client.post('/', data=data)
+    response_text = get_text(response)
+    print(response_text)
     assert "Ihre Registrierung war erfolgreich" in response_text
     assert in_course(applicant_data, course)
