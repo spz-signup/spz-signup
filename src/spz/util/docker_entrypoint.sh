@@ -88,22 +88,14 @@ init() {
     PGPASSWORD=mysecretpassword psql --host=postgres --port=5432 --username=postgres --command="CREATE DATABASE spz;"
     YES_I_KNOW_THAT_WORLD_ENDS_NOW=1 python -m util.init_db
 
-    echo "finished initialization"
-}
-
-build_assets() {
-    echo "Building assets"
-
     # build+compress assets
     python -m util.build_assets
     gzip --keep --recursive --force --best spz/static
 
-    echo "Assets built"
+    echo "finished initialization"
 }
 
 wait_for_services
-
-build_assets
 
 # locked block
 (
