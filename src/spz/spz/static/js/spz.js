@@ -43,11 +43,12 @@ $(document).ready(function(){
     });
 
     $('.skip_label').on('change', function() {
-        var checked = $(this).find('input').is(':checked');
-        var mainInput = $(this).closest('div.labeled.input').find('input').first();
+        var input = $(this).find('input')
+        var checked = input.is(':checked');
+        var mainInput = $('#' + input.attr('name').replace('_skipped', ''));
         mainInput.attr('readonly', checked);
         if (checked) {
-            mainInput.val($(this).text().trim());
+            mainInput.val(input.data('value').trim());
         } else {
             mainInput.val('');
         }

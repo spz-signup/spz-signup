@@ -25,6 +25,7 @@ body {
     color: #767676;
     display: block;
     width: 100%;
+    margin-top: 1em;
 }
 
 .ui.form .ui.pointing.label,
@@ -54,6 +55,12 @@ body {
 @media (max-width: 600px) {
     .ui.labeled > .ui.label {
         width: 45%;
+    }
+    .ui.labeled > .ui.label > .icon {
+        display: none;
+    }
+    .ui.labeled > .ui.label > label {
+        margin-left: 0 !important;
     }
     .ui.form .grouped.fields .ui.labeled > input {
         width: 55%;
@@ -247,14 +254,15 @@ body {
     width: 100%;
 }
 
-.skip_label {
-    position: absolute;
-    right: 0;
-    padding: .67861429em;
+.skip_container {
+    display: block;
+    width: 100%;
+    margin-top: 1em;
 }
 
-.skip_label > input[type="checkbox"] {
-    vertical-align: baseline !important;
+.skip_label {
+    display: flex;
+    align-items: center;
 }
 
 a > strong:only-child {
