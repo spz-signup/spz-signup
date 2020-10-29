@@ -655,7 +655,7 @@ def add_attendance(applicant, course, notify):
     if notify:
         try:
             tasks.send_slow.delay(generate_status_mail(applicant, course, restock=True))
-            flash(_('Bestätigungsmail wurde versendet', 'success'))
+            flash(_('Bestätigungsmail wurde versendet'), 'success')
         except (AssertionError, socket.error, ConnectionError) as e:
             flash(_('Bestätigungsmail konnte nicht versendet werden: %(error)s', error=e), 'negative')
 
