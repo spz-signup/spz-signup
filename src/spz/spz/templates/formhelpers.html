@@ -62,6 +62,18 @@
 </div>
 {% endmacro %}
 
+{% macro render_tristate(field, width=12, help=None, required=False) %}
+<div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
+    <div class="ui tristate">
+        <input type="range" id="{{ field.id }}" name="{{ field.id }}" min="-1" max="1" {% if field.data != None %}value="{{ field.data }}" {% endif %}/>
+        {{ field.labels }}
+    </div>
+    {% for error in field.errors %}
+        <span class="ui red pointing prompt label transition visible">{{ error }}</span>
+    {% endfor %}
+    {% if field.description %}<span class="help-block">{{ field.description }}</span>{% endif %}
+</div>
+{% endmacro %}
 
 {% macro render_textarea(field, width=12, placeholder=None, required=True, required_extras=None, help=None) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">

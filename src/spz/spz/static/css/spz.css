@@ -115,6 +115,61 @@ body {
 }
 
 /***************************************
+ **** Tri-state toggles ****************
+ **************************************/
+.ui.tristate input {
+    appearance: none;
+    width: 3.5rem;
+    height: 1.5rem;
+    outline: none;
+    border-radius: 500rem;
+}
+
+.ui.tristate input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 500rem;
+    background: #fff linear-gradient(#0000,rgba(0, 0, 0, 0));
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15),0 0 0 1px rgba(34,36,38,.15) inset;
+}
+
+.ui.tristate input::-moz-range-thumb {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 500rem;
+    background: #fff linear-gradient(#0000,rgba(0, 0, 0, 0));
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15),0 0 0 1px rgba(34,36,38,.15) inset;
+}
+
+.ui.tristate input[value="-1"] {
+    background-color: #db2828;
+}
+
+.ui.tristate input[value="-1"]:hover {
+    background-color: #d01919;
+}
+
+.ui.tristate input[value="0"] {
+    background-color: rgba(0,0,0,.05);
+}
+
+.ui.tristate input[value="0"]:hover {
+    background-color: rgba(0,0,0,.15);
+}
+
+.ui.tristate input[value="1"] {
+    background-color: #21ba45;
+}
+
+.ui.tristate input[value="1"]:hover {
+    background-color: #16ab39;
+}
+
+/***************************************
  **** Required Fields ******************
  **************************************/
 .ui.form .required.fields > .ui.labeled > .ui.label::after,

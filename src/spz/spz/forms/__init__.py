@@ -35,6 +35,11 @@ __all__ = [
     'ExportCourseForm'
 ]
 
+class TriStateField(IntegerField):
+    def __init__(self, labels, **kwargs):
+        super(IntegerField, self).__init__(self, **kwargs)
+        self.labels = labels
+
 
 class SignoffForm(FlaskForm):
     signoff_id = StringField(
@@ -306,14 +311,15 @@ class NotificationForm(FlaskForm):
         [validators.DataRequired('Absender muss angegeben werden')],
         coerce=int
     )
-    only_active = BooleanField(
-        'Nur an Aktive'
+    waiting_filter = TriStateField(
+        labels=['Nur Wartende',
+                'Aktive und Wartende',
+                'Nur Aktive'],
+        description='Legt fest, ob die Mail nur an aktive Teilnehmer, nur an wartende Teilnehmer oder an beide gesendet wird.'
     )
     only_have_to_pay = BooleanField(
-        'Nur an nicht Bezahlte'
-    )
-    only_waiting = BooleanField(
-        'Nur an Wartende'
+        'Nur an nicht Bezahlte',
+        description='Legt fest, dass die Mail nur an aktive Teilnehmer geht, die noch nicht den vollen Betrag gezahlt haben.'
     )
     attachments = MultipleFileField(
         'Anhang',
@@ -336,22 +342,18 @@ class NotificationForm(FlaskForm):
         def flatten(x):
             return sum(x, [])
 
-        if self.only_active.data:
-            waiting_filter = False
-        elif self.only_waiting.data:
-            waiting_filter = True
-        else:
-            waiting_filter = None
+        waiting = self.waiting_filter.data
 
         if self.only_have_to_pay.data:
-            unpaid_filter = True
+            unpaid = True
+            waiting = False  # only active applicants had a chance to pay
         else:
-            unpaid_filter = None
+            unpaid = None
 
         recipients = set()  # One mail per recipient, even if in multiple recipient courses
 
         for course in self.get_courses():
-            for attendance in course.filter_attendances(waiting=waiting_filter, is_unpaid=unpaid_filter):
+            for attendance in course.filter_attendances(waiting=waiting, is_unpaid=unpaid):
                 recipients.add(attendance.applicant.mail)
 
         return list(recipients)

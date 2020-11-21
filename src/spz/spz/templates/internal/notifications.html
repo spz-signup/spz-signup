@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import csrf_field, render_input, render_textarea, render_option, render_boolean, render_submit, render_file %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_textarea, render_option, render_boolean, render_submit, render_file, render_tristate %}
 {% from 'formhelpers.html' import render_multiple_files %}
 
 {% block caption %}
@@ -21,9 +21,8 @@ Mail Zentrale
         {{ render_textarea(form.mail_body) }}
         <h3 class="ui dividing header">Empfänger der Mail</h3>
         {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
-        {{ render_boolean(form.only_active, help='Nur an aktive Teilnehmer im Kurs') }}
-        {{ render_boolean(form.only_have_to_pay, help='Nur an aktive Teilnehmer im Kurs, die noch nicht den vollen Betrag gezahlt haben') }}
-        {{ render_boolean(form.only_waiting, help='Nur an wartende Teilnehmer im Kurs') }}
+        {{ render_tristate(form.waiting_filter) }}
+        {{ render_boolean(form.only_have_to_pay) }}
 
         <h3 class="ui dividing header"></h3>
         <div class="field">

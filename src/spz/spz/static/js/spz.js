@@ -53,6 +53,33 @@ $(document).ready(function(){
             mainInput.val('');
         }
     });
+
+    $('.ui.tristate input').each(function() {
+        this.inputChanged = false;
+        this.flipState = 1;
+        this.setAttribute('value', this.value);
+    });
+
+    $('.ui.tristate input').on('input', function() {
+        this.inputChanged = true;
+        this.setAttribute('value', this.value);
+    });
+
+    $('.ui.tristate input').on('click', function(ev) {
+        if (!this.inputChanged) {
+            var currentValue = parseInt(this.value);
+            var newValue;
+            if (currentValue != 0) {
+                newValue = 0;
+            } else {
+                newValue = this.flipState;
+                this.flipState *= -1;
+            }
+            this.value = newValue;
+            this.setAttribute('value', newValue);
+        }
+        this.inputChanged = false;
+    });
 });
 
 // contributors welcome :)
