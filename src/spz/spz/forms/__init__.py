@@ -263,8 +263,8 @@ class VacanciesForm(FlaskForm):
                     not_(models.Course.is_full),
                     and_(
                         models.Course.is_full,
-                        models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST']
-                ))),
+                        models.Course.count_attendances(waiting=True) <= app.config['SHORT_WAITING_LIST'])
+                )),
                 and_(models.Language.signup_begin <= datetime.utcnow(), models.Language.signup_end >= datetime.utcnow())
             ) \
             .all()
