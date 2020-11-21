@@ -29,7 +29,7 @@ register_filter(RCSSMin)
 
 
 # Javascript bundles:
-all_js = Bundle('js/jquery-2.2.2.min.js',
+all_js = Bundle('js/jquery.min.js',
                 'js/semantic.min.js',
                 'js/mailcheck.1.1.0.min.js',
                 'js/mailcheck-domains.js',
