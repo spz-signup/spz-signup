@@ -38,14 +38,28 @@ __all__ = [
 
 
 class TriStateField(IntegerField):
+
+    tristate_conversion = [False, None, True]
+
     def __init__(self, labels, **kwargs):
         super().__init__(**kwargs)
         self.labels = TriStateLabel(self.id, labels)
 
+    def process_formdata(self, valuelist):
+        try:
+            self.data = TriStateField.tristate_conversion[int(valuelist[0])]
+        except (TypeError, ValueError, IndexError):
+            self.data = None
+
+    @property
+    def ordinal_value(self):
+        if not self.data:
+            return 0
+        else:
+            return TriStateField.tristate_conversion.index(self.data)
+
 
 class TriStateLabel(Label):
-
-    tristate_conversion = [False, None, True]
 
     def __init__(self, field_id, text):
         super().__init__(field_id, text)
@@ -58,12 +72,6 @@ class TriStateLabel(Label):
             attributes = widgets.html_params(for_value=i, **kwargs)
             html += '<label %s>%s</label>' % (attributes, self.text[i])
         return Markup(html)
-
-    def process_formdata(self, formdata):
-        try:
-            self.data = TriStateLabel.tristate_conversion[int(formdata)]
-        except (TypeError, ValueError, IndexError):
-            self.data = None
 
 
 class SignoffForm(FlaskForm):
