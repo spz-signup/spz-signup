@@ -11,7 +11,8 @@ from datetime import datetime
 from sqlalchemy import func, and_, or_, not_
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
+from markupsafe import Markup
+from wtforms import widgets, StringField, SelectField, SelectMultipleField, IntegerField, Label
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
 from spz import app, models, token
@@ -35,10 +36,34 @@ __all__ = [
     'ExportCourseForm'
 ]
 
+
 class TriStateField(IntegerField):
     def __init__(self, labels, **kwargs):
-        super(IntegerField, self).__init__(self, **kwargs)
-        self.labels = labels
+        super().__init__(**kwargs)
+        self.labels = TriStateLabel(self.id, labels)
+
+
+class TriStateLabel(Label):
+
+    tristate_conversion = [False, None, True]
+
+    def __init__(self, field_id, text):
+        super().__init__(field_id, text)
+        assert len(self.text) == 3
+
+    def __call__(self, **kwargs):
+        kwargs.setdefault('for', self.field_id)
+        html = ''
+        for i in range(3):
+            attributes = widgets.html_params(for_value=i, **kwargs)
+            html += '<label %s>%s</label>' % (attributes, self.text[i])
+        return Markup(html)
+
+    def process_formdata(self, formdata):
+        try:
+            self.data = TriStateLabel.tristate_conversion[int(formdata)]
+        except (TypeError, ValueError, IndexError):
+            self.data = None
 
 
 class SignoffForm(FlaskForm):
@@ -315,11 +340,13 @@ class NotificationForm(FlaskForm):
         labels=['Nur Wartende',
                 'Aktive und Wartende',
                 'Nur Aktive'],
-        description='Legt fest, ob die Mail nur an aktive Teilnehmer, nur an wartende Teilnehmer oder an beide gesendet wird.'
+        description='Legt fest, ob die Mail nur an aktive Teilnehmer, nur an wartende Teilnehmer'
+                    ' oder an beide gesendet wird.'
     )
     only_have_to_pay = BooleanField(
         'Nur an nicht Bezahlte',
-        description='Legt fest, dass die Mail nur an aktive Teilnehmer geht, die noch nicht den vollen Betrag gezahlt haben.'
+        description='Legt fest, dass die Mail nur an aktive Teilnehmer geht,'
+                    ' die noch nicht den vollen Betrag gezahlt haben.'
     )
     attachments = MultipleFileField(
         'Anhang',

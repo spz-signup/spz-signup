@@ -54,31 +54,38 @@ $(document).ready(function(){
         }
     });
 
+    var update = function(input) {
+        input.setAttribute('value', input.value);
+        input.oldvalue = input.value;
+        var labels = $('label[for=' +  input.id + ']');
+        labels.hide();
+        labels.filter('[for_value=' +  input.value + ']').show();
+    }
+
     $('.ui.tristate input').each(function() {
-        this.inputChanged = false;
-        this.flipState = 1;
-        this.setAttribute('value', this.value);
+        this.valueChangedBySliding = false;
+        this.slideDirection = 1;
+        update(this);
     });
 
     $('.ui.tristate input').on('input', function() {
-        this.inputChanged = true;
-        this.setAttribute('value', this.value);
+        this.valueChangedBySliding = true;
+        if (this.value != this.oldvalue) {
+            this.slideDirection = this.value - this.oldvalue;
+        }
+        update(this);
     });
 
     $('.ui.tristate input').on('click', function(ev) {
-        if (!this.inputChanged) {
+        if (!this.valueChangedBySliding) {
             var currentValue = parseInt(this.value);
-            var newValue;
-            if (currentValue != 0) {
-                newValue = 0;
-            } else {
-                newValue = this.flipState;
-                this.flipState *= -1;
-            }
+            if (currentValue <= this.min) this.slideDirection = 1;
+            else if (currentValue >= this.max) this.slideDirection = -1;
+            var newValue = currentValue + this.slideDirection;
             this.value = newValue;
-            this.setAttribute('value', newValue);
+            update(this);
         }
-        this.inputChanged = false;
+        this.valueChangedBySliding = false;
     });
 });
 
