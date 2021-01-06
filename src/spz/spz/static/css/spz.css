@@ -146,11 +146,11 @@ body {
 }
 
 .ui.tristate input[value="0"] {
-    background-color: #db2828;
+    background-color: #2185d0;
 }
 
 .ui.tristate input[value="0"]:hover {
-    background-color: #d01919;
+    background-color: #18659b;
 }
 
 .ui.tristate input[value="1"] {
@@ -162,11 +162,11 @@ body {
 }
 
 .ui.tristate input[value="2"] {
-    background-color: #21ba45;
+    background-color: #2185d0;
 }
 
 .ui.tristate input[value="2"]:hover {
-    background-color: #16ab39;
+    background-color: #18659b;
 }
 
 .ui.tristate label {

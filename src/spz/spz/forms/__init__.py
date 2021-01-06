@@ -345,9 +345,10 @@ class NotificationForm(FlaskForm):
         coerce=int
     )
     waiting_filter = TriStateField(
-        labels=['Nur Wartende',
+        default=1,
+        labels=['Nur Aktive',
                 'Aktive und Wartende',
-                'Nur Aktive'],
+                'Nur Wartende'],
         description='Legt fest, ob die Mail nur an aktive Teilnehmer, nur an wartende Teilnehmer'
                     ' oder an beide gesendet wird.'
     )
