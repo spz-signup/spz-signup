@@ -20,9 +20,9 @@ Mail Zentrale
         {{ render_input(form.mail_subject) }}
         {{ render_textarea(form.mail_body) }}
         <h3 class="ui dividing header">Empfänger der Mail</h3>
-        {{ render_option(form.mail_courses, multiple=True, size=10, help='Mail geht an alle, solange nicht gefiltert über Optionen unten') }}
+        {{ render_option(form.mail_courses, multiple=True, size=10) }}
         {{ render_tristate(form.waiting_filter) }}
-        {{ render_boolean(form.only_have_to_pay) }}
+        {{ render_tristate(form.unpaid_filter) }}
 
         <h3 class="ui dividing header"></h3>
         <div class="field">

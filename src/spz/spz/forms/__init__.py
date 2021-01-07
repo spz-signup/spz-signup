@@ -53,10 +53,10 @@ class TriStateField(IntegerField):
 
     @property
     def ordinal_value(self):
-        if not self.data:
-            return 0
-        else:
+        try:
             return TriStateField.tristate_conversion.index(self.data)
+        except ValueError:
+            return 1
 
 
 class TriStateLabel(Label):
@@ -345,17 +345,19 @@ class NotificationForm(FlaskForm):
         coerce=int
     )
     waiting_filter = TriStateField(
-        default=1,
+        default=None,
         labels=['Nur Aktive',
                 'Aktive und Wartende',
                 'Nur Wartende'],
-        description='Legt fest, ob die Mail nur an aktive Teilnehmer, nur an wartende Teilnehmer'
-                    ' oder an beide gesendet wird.'
+        description='Die Mail kann bei Bedarf jeweils nur an aktive oder wartende Teilnehmer gesendet werden.'
     )
-    only_have_to_pay = BooleanField(
-        'Nur an nicht Bezahlte',
-        description='Legt fest, dass die Mail nur an aktive Teilnehmer geht,'
-                    ' die noch nicht den vollen Betrag gezahlt haben.'
+    unpaid_filter = TriStateField(
+        default=None,
+        labels=['Nur Teilnehmer ohne ausstehender Zahlung',
+                'Teilnehmer mit und Teilnehmer ohne ausstehender Zahlung',
+                'Nur Teilnehmer mit ausstehender Zahlung'],
+        description='Die Mail kann bei Bedarf nur an Teilnehmer gesendet werden, deren Zahlung noch aussteht.'
+                    ' Beide Filter können kombiniert werden.'
     )
     attachments = MultipleFileField(
         'Anhang',
@@ -379,12 +381,7 @@ class NotificationForm(FlaskForm):
             return sum(x, [])
 
         waiting = self.waiting_filter.data
-
-        if self.only_have_to_pay.data:
-            unpaid = True
-            waiting = False  # only active applicants had a chance to pay
-        else:
-            unpaid = None
+        unpaid = self.unpaid_filter.data
 
         recipients = set()  # One mail per recipient, even if in multiple recipient courses
 
