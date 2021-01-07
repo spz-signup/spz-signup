@@ -1,5 +1,5 @@
 {% extends 'internal/internal.html' %}
-{% from 'formhelpers.html' import csrf_field, render_input, render_boolean, render_option, render_submit %}
+{% from 'formhelpers.html' import csrf_field, render_input, render_boolean, render_option, render_submit, render_slider %}
 
 {% block caption %}
 <a href="{{ url_for('applicant', id=attendance.applicant.id)}}">{{ attendance.applicant.first_name ~ " " ~ attendance.applicant.last_name }}</a> im Kurs <a href="{{ url_for('course', id=attendance.course.id ) }}">{{ attendance.course.full_name }}</a>
@@ -15,11 +15,11 @@
         {% if form.payingdate.data %}
         <p>Letzte Änderung: <span class="fmt-datetime">{{ form.payingdate.data }}</span></p>
         {% endif %}
-        {{ render_option(form.graduation) }}
         {{ render_boolean(form.waiting) }}
-        {{ render_input(form.discount, type='number', step='1', min='0', max='100', help='Angaben in Prozent') }}
-        {{ render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') }}
+        {{ render_slider(form.discount, step='50', min='0', max='100', help='Angaben in Prozent') }}
+        {# render_boolean(form.paidbycash, help='Haken wenn Zahlungsart Bar, Kein Haken wenn Zahlungsart Überweisung') #}
         {{ render_input(form.amountpaid, type='number', step='0.01', min='0', help='Ein Zahlbetrag impliziert den Status \'bezahlt\'') }}
+        {{ render_option(form.graduation) }}
         {{ render_boolean(form.notify_change, help='Teilnehmer per Mail über Nachrückung benachrichtigen') }}
         {{ render_submit(submit='Änderung speichern') }}
         <div class="ui section divider"></div>

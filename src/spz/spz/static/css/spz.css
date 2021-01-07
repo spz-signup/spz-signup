@@ -25,7 +25,6 @@ body {
     color: #767676;
     display: block;
     width: 100%;
-    margin-top: 1em;
 }
 
 .ui.form .ui.pointing.label,
@@ -181,6 +180,18 @@ body {
     margin: -0.2em 0em 0em 0.2em;
     content: "*";
     color: #DB2828;
+}
+
+/***************************************
+ **** Slider        ********************
+ **************************************/
+.ui.form .slider.field > label,
+.ui.form .slider.field > .help-block {
+    display: inline;
+}
+
+.ui.labeled.slider {
+    padding-top: 2em !important;
 }
 
 /***************************************

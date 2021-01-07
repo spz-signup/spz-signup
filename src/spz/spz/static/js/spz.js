@@ -7,6 +7,20 @@ $(document).ready(function(){
             noResults: 'Keine Einträge vorhanden.'
         }
     });
+
+    $('.ui.slider').each(function() {
+        var t = $(this);
+        t.slider({
+            min: parseInt(t.attr('data-min')),
+            max: parseInt(t.attr('data-max')),
+            step:  parseInt(t.attr('data-step')),
+            start:  parseInt(t.attr('data-start')),
+            onChange: function(value) {
+                t.find('input').val(value);
+            }
+        });
+    });
+
     window.setTimeout(function(){
         $('.ui.selection.dropdown .menu').css('width', 'calc(100% + 2px)');
     }, 200);
