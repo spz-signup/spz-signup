@@ -314,9 +314,9 @@ def approvals_import():
                     if request.form.getlist("delete_old"):
                         # only remove sticky entries because
                         num_deleted = models.Approval.query.filter(and_(
-                            models.Approval.sticky == True,
+                            models.Approval.sticky == True,  # NOQA
                             models.Approval.priority == priority
-                        )).delete()  # NOQA
+                        )).delete()
                     # add approvals
                     db.session.add_all(approvals)
                     db.session.commit()

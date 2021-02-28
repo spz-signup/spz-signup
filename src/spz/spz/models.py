@@ -991,8 +991,8 @@ class ExportFormat(db.Model):
 
     @staticmethod
     def list_formatters(languages=[]):
-        language_ids = [l.id for l in languages]
+        language_ids = [lang.id for lang in languages]
         return ExportFormat.query.filter(or_(
-            ExportFormat.language == None,  # noqa
+            ExportFormat.language == None,  # NOQA
             ExportFormat.language_id.in_(language_ids)
         )).all()
