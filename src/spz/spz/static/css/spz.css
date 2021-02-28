@@ -25,7 +25,6 @@ body {
     color: #767676;
     display: block;
     width: 100%;
-    margin-top: 1em;
 }
 
 .ui.form .ui.pointing.label,
@@ -115,6 +114,65 @@ body {
 }
 
 /***************************************
+ **** Tri-state toggles ****************
+ **************************************/
+.ui.tristate input {
+    appearance: none;
+    width: 3.5rem;
+    height: 1.5rem;
+    outline: none;
+    border-radius: 500rem;
+}
+
+.ui.tristate input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 500rem;
+    background: #fff linear-gradient(#0000,rgba(0, 0, 0, 0));
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15),0 0 0 1px rgba(34,36,38,.15) inset;
+}
+
+.ui.tristate input::-moz-range-thumb {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 500rem;
+    background: #fff linear-gradient(#0000,rgba(0, 0, 0, 0));
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15),0 0 0 1px rgba(34,36,38,.15) inset;
+}
+
+.ui.tristate input[value="0"] {
+    background-color: #2185d0;
+}
+
+.ui.tristate input[value="0"]:hover {
+    background-color: #18659b;
+}
+
+.ui.tristate input[value="1"] {
+    background-color: rgba(0,0,0,.05);
+}
+
+.ui.tristate input[value="1"]:hover {
+    background-color: rgba(0,0,0,.15);
+}
+
+.ui.tristate input[value="2"] {
+    background-color: #2185d0;
+}
+
+.ui.tristate input[value="2"]:hover {
+    background-color: #18659b;
+}
+
+.ui.tristate label {
+    padding-left: 0.75rem;
+}
+
+/***************************************
  **** Required Fields ******************
  **************************************/
 .ui.form .required.fields > .ui.labeled > .ui.label::after,
@@ -122,6 +180,18 @@ body {
     margin: -0.2em 0em 0em 0.2em;
     content: "*";
     color: #DB2828;
+}
+
+/***************************************
+ **** Slider        ********************
+ **************************************/
+.ui.form .slider.field > label,
+.ui.form .slider.field > .help-block {
+    display: inline;
+}
+
+.ui.labeled.slider {
+    padding-top: 2em !important;
 }
 
 /***************************************

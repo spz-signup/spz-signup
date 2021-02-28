@@ -7,6 +7,20 @@ $(document).ready(function(){
             noResults: 'Keine Einträge vorhanden.'
         }
     });
+
+    $('.ui.slider').each(function() {
+        var t = $(this);
+        t.slider({
+            min: parseInt(t.attr('data-min')),
+            max: parseInt(t.attr('data-max')),
+            step:  parseInt(t.attr('data-step')),
+            start:  parseInt(t.attr('data-start')),
+            onChange: function(value) {
+                t.find('input').val(value);
+            }
+        });
+    });
+
     window.setTimeout(function(){
         $('.ui.selection.dropdown .menu').css('width', 'calc(100% + 2px)');
     }, 200);
@@ -52,6 +66,40 @@ $(document).ready(function(){
         } else {
             mainInput.val('');
         }
+    });
+
+    var update = function(input) {
+        input.setAttribute('value', input.value);
+        input.oldvalue = input.value;
+        var labels = $('label[for=' +  input.id + ']');
+        labels.hide();
+        labels.filter('[for_value=' +  input.value + ']').show();
+    }
+
+    $('.ui.tristate input').each(function() {
+        this.valueChangedBySliding = false;
+        this.slideDirection = 1;
+        update(this);
+    });
+
+    $('.ui.tristate input').on('input', function() {
+        this.valueChangedBySliding = true;
+        if (this.value != this.oldvalue) {
+            this.slideDirection = this.value - this.oldvalue;
+        }
+        update(this);
+    });
+
+    $('.ui.tristate input').on('click', function(ev) {
+        if (!this.valueChangedBySliding) {
+            var currentValue = parseInt(this.value);
+            if (currentValue <= this.min) this.slideDirection = 1;
+            else if (currentValue >= this.max) this.slideDirection = -1;
+            var newValue = currentValue + this.slideDirection;
+            this.value = newValue;
+            update(this);
+        }
+        this.valueChangedBySliding = false;
     });
 });
 

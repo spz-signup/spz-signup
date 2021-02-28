@@ -13,7 +13,7 @@
     </div>
     {% if skip %}
         <div class="skip_container">
-            <label class="skip_label"><input type="checkbox" name="{{ field.id }}_skipped" data-value="{{ skip_value }}" autocomplete="off"/>&nbsp;{{ skip }}</label>
+            <label class="skip_label"><input type="checkbox" name="{{ field.id }}_skipped" data-value="{{ skip_value }}" autocomplete="off" />&nbsp;{{ skip }}</label>
         </div>
     {% endif %}
     {% for error in field.errors %}
@@ -23,11 +23,24 @@
 </div>
 {% endmacro %}
 
+{% macro render_slider(field, required=True, min=0, max=10, step=1, help=None) %}
+<div class="{% if required %}required {% endif %}slider field{% if field.errors %} error{% endif %}">
+    {{ field.label }}
+    {% if help %}<span class="help-block">{{ help }}</span>{% endif %}
+    <div class="ui labeled blue slider" data-min="{{ min }}" data-max="{{ max }}" data-step="{{ step }}" data-start="{{ field.data }}">
+        <input type="hidden" id="{{ field.id }}" name="{{ field.id }}" value="{{ field.data }}" />
+    </div>
+    {% for error in field.errors %}
+        <span class="ui red pointing prompt label transition visible">{{ error }}</span>
+    {% endfor %}
+</div>
+{% endmacro %}
+
 {% macro render_file(field, width=12, help=None, required=True) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
     {{ field.label }}
     <div class="field">
-        <input type="file" id="{{ field.id }}" name="{{ field.id }}">
+        <input type="file" id="{{ field.id }}" name="{{ field.id }}" />
     </div>
     {% for error in field.errors %}
         <span class="ui red pointing prompt label transition visible">{{ error }}</span>
@@ -40,7 +53,7 @@
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
     {{ field.label }}
     <div class="field">
-        <input type="file" id="{{ field.id }}" name="{{ field.id }}" multiple>
+        <input type="file" id="{{ field.id }}" name="{{ field.id }}" multiple />
     </div>
     {% for error in field.errors %}
         <span class="ui red pointing prompt label transition visible">{{ error }}</span>
@@ -62,6 +75,18 @@
 </div>
 {% endmacro %}
 
+{% macro render_tristate(field, width=12, help=None, required=False) %}
+<div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
+    <div class="ui tristate">
+        <input type="range" id="{{ field.id }}" name="{{ field.id }}" min="0" max="2" value="{{ field.ordinal_value }}" />
+        {{ field.labels }}
+    </div>
+    {% for error in field.errors %}
+        <span class="ui red pointing prompt label transition visible">{{ error }}</span>
+    {% endfor %}
+    {% if field.description %}<span class="help-block">{{ field.description }}</span>{% endif %}
+</div>
+{% endmacro %}
 
 {% macro render_textarea(field, width=12, placeholder=None, required=True, required_extras=None, help=None) %}
 <div class="{% if required %}required {% endif %}field{% if field.errors %} error{% endif %}">
@@ -106,7 +131,7 @@
         {% for id, name in field.choices %}
             <div class="field">
                 <div class="ui radio checkbox{% if id == field.data %} checked{% endif %}">
-                    <input class="hidden" id="{{ field.id }}-{{ id }}" name="{{ field.id }}"{% if id == field.data %} checked="checked"{% endif %} value="{{ id }}" type="radio"/>
+                    <input class="hidden" id="{{ field.id }}-{{ id }}" name="{{ field.id }}"{% if id == field.data %} checked="checked"{% endif %} value="{{ id }}" type="radio" />
                     <label for="{{ field.id }}-{{ id }}">{{ name }}</label>
                 </div>
             </div>

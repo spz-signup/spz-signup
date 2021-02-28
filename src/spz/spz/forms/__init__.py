@@ -11,7 +11,8 @@ from datetime import datetime
 from sqlalchemy import func, and_, or_, not_
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, SelectField, SelectMultipleField, IntegerField
+from markupsafe import Markup
+from wtforms import widgets, StringField, SelectField, SelectMultipleField, IntegerField, Label
 from wtforms import TextAreaField, BooleanField, DecimalField, MultipleFileField
 
 from spz import app, models, token
@@ -34,6 +35,43 @@ __all__ = [
     'SignoffForm',
     'ExportCourseForm'
 ]
+
+
+class TriStateField(IntegerField):
+
+    tristate_conversion = [False, None, True]
+
+    def __init__(self, labels, **kwargs):
+        super().__init__(**kwargs)
+        self.labels = TriStateLabel(self.id, labels)
+
+    def process_formdata(self, valuelist):
+        try:
+            self.data = TriStateField.tristate_conversion[int(valuelist[0])]
+        except (TypeError, ValueError, IndexError):
+            self.data = None
+
+    @property
+    def ordinal_value(self):
+        try:
+            return TriStateField.tristate_conversion.index(self.data)
+        except ValueError:
+            return 1
+
+
+class TriStateLabel(Label):
+
+    def __init__(self, field_id, text):
+        super().__init__(field_id, text)
+        assert len(self.text) == 3
+
+    def __call__(self, **kwargs):
+        kwargs.setdefault('for', self.field_id)
+        html = ''
+        for i in range(3):
+            attributes = widgets.html_params(for_value=i, **kwargs)
+            html += '<label %s>%s</label>' % (attributes, self.text[i])
+        return Markup(html)
 
 
 class SignoffForm(FlaskForm):
@@ -306,14 +344,20 @@ class NotificationForm(FlaskForm):
         [validators.DataRequired('Absender muss angegeben werden')],
         coerce=int
     )
-    only_active = BooleanField(
-        'Nur an Aktive'
+    waiting_filter = TriStateField(
+        default=None,
+        labels=['Nur Aktive',
+                'Aktive und Wartende',
+                'Nur Wartende'],
+        description='Die Mail kann bei Bedarf jeweils nur an aktive oder wartende Teilnehmer gesendet werden.'
     )
-    only_have_to_pay = BooleanField(
-        'Nur an nicht Bezahlte'
-    )
-    only_waiting = BooleanField(
-        'Nur an Wartende'
+    unpaid_filter = TriStateField(
+        default=None,
+        labels=['Nur Teilnehmer ohne ausstehender Zahlung',
+                'Teilnehmer mit und Teilnehmer ohne ausstehender Zahlung',
+                'Nur Teilnehmer mit ausstehender Zahlung'],
+        description='Die Mail kann bei Bedarf nur an Teilnehmer gesendet werden, deren Zahlung noch aussteht.'
+                    ' Beide Filter können kombiniert werden.'
     )
     attachments = MultipleFileField(
         'Anhang',
@@ -336,22 +380,13 @@ class NotificationForm(FlaskForm):
         def flatten(x):
             return sum(x, [])
 
-        if self.only_active.data:
-            waiting_filter = False
-        elif self.only_waiting.data:
-            waiting_filter = True
-        else:
-            waiting_filter = None
-
-        if self.only_have_to_pay.data:
-            unpaid_filter = True
-        else:
-            unpaid_filter = None
+        waiting = self.waiting_filter.data
+        unpaid = self.unpaid_filter.data
 
         recipients = set()  # One mail per recipient, even if in multiple recipient courses
 
         for course in self.get_courses():
-            for attendance in course.filter_attendances(waiting=waiting_filter, is_unpaid=unpaid_filter):
+            for attendance in course.filter_attendances(waiting=waiting, is_unpaid=unpaid):
                 recipients.add(attendance.applicant.mail)
 
         return list(recipients)
