@@ -1,5 +1,5 @@
 # base information
-FROM python:3.7-slim
+FROM python:3.9-slim
 MAINTAINER Marco Neumann <marco@crepererum.net>
 
 # create user
@@ -39,4 +39,3 @@ ENTRYPOINT ["/home/spz/code/util/docker_entrypoint.sh"]
 
 # default to bash
 CMD ["bash"]
-

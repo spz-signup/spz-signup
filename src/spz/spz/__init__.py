@@ -66,13 +66,6 @@ def login_by_id(id):
     return User.query.filter(User.id == id).first()
 
 
-@login_manager.token_loader
-def login_by_token(tokenstring):
-    # local imports to avoid import before config
-    from spz.models import User
-    return User.get_by_token(tokenstring)
-
-
 # set up CSRF protection
 CSRFProtect(app)
 
