@@ -174,7 +174,7 @@ class SignupForm(FlaskForm):
         coerce=int
     )
     graduation = SelectField(
-        'Kurs&shy;abschluss',
+        'Kursabschluss',
         [
             validators.RequiredDependingOnOrigin('Angabe des Abschlusses ist für Sie Pflicht'),
             validators.Optional()
@@ -182,7 +182,7 @@ class SignupForm(FlaskForm):
         coerce=int
     )
     semester = IntegerField(
-        'Fach&shy;semester',
+        'Fachsemester',
         [
             validators.RequiredDependingOnOrigin('Angabe des Fachsemesters ist für Sie Pflicht'),
             validators.Optional(),
