@@ -149,13 +149,13 @@ class SignupForm(FlaskForm):
     )
 
     origin = SelectField(
-        'Bewerber&shy;kreis',
+        'Bewerberkreis',
         [validators.DataRequired('Herkunft muss angegeben werden')],
         coerce=int
     )
 
     tag = StringField(
-        'Matrikel&shy;nummer',
+        'Matrikelnummer',
         [
             validators.RequiredDependingOnOrigin('Matrikelnummer muss angegeben werden'),
             # validators.TagDependingOnOrigin(),
@@ -166,7 +166,7 @@ class SignupForm(FlaskForm):
     )
 
     degree = SelectField(
-        'Studien&shy;abschluss',
+        'Studienabschluss',
         [
             validators.RequiredDependingOnOrigin('Angabe des Studienabschlusses ist für Sie Pflicht'),
             validators.Optional()
