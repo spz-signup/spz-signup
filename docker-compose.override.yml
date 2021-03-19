@@ -32,6 +32,21 @@ services:
         ports:
             - "127.0.0.1:8080:80"
     nginx:
+        image: nginx:1.19
+        command: nginx -g "worker_processes 16;"
+        volumes:
+            - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./conf/nginx/ssl:/etc/nginx/ssl:ro
+            - cache_nginx:/var/cache/nginx
+            - data_static:/static:ro
+        tmpfs:
+            - /tmp
+        read_only: true
+        networks:
+            - front
+        links:
+            - uwsgi
+        restart: unless-stopped
         ports:
             - "127.0.0.1:8081:80"
             - "127.0.0.1:443:443"

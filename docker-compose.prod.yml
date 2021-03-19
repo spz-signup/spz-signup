@@ -3,6 +3,10 @@ services:
     uwsgi:
         environment:
             - SPZ_CFG_FILE=production.cfg
+            - VIRTUAL_HOST=anmeldung.spz.kit.edu
+            - LETSENCRYPT_HOST=anmeldung.spz.kit.edu
+            - VIRTUAL_PROTO=uwsgi
+            - VIRTUAL_PORT=3031
     celery_beat:
         environment:
             - SPZ_CFG_FILE=production.cfg
@@ -20,9 +24,36 @@ services:
         volumes:
             - ./conf/smtpd.conf:/etc/smtpd.conf
     nginx:
+        image: jwilder/nginx-proxy
+        container_name: nginx
+        restart: unless-stopped
+        volumes:
+            - cache_nginx:/var/cache/nginx
+            - data_static:/static:ro
+            - /etc/nginx/certs
+            - /etc/nginx/vhost.d
+            - /usr/share/nginx/html
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        networks:
+            - front
+        links:
+            - uwsgi
         ports:
             - "80:80"
             - "443:443"
+    nginx-letsencrypt:
+        image: jrcs/letsencrypt-nginx-proxy-companion
+        container_name: nginx-letsencrypt
+        restart: unless-stopped
+        volumes_from:
+            - nginx
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /etc/acme.sh
+        environment:
+            DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
+        depends_on:
+            - nginx
     pg-dump:
         image: spzsignup/docker-postgres-backup:latest
         container_name: pg-dump
