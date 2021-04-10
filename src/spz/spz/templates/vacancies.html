@@ -21,7 +21,6 @@ Restplätze {{ config['SEMESTER_NAME'] }}
         </div>
         <div class="content">
             <form class="ui filter form">
-                {{ render_option(form.status_filter, multiple=True, required=False) }}
                 {{ render_option(form.language_filter, multiple=True, required=False) }}
                 {{ render_option(form.ger_filter, multiple=True, required=False) }}
             </form>
