@@ -34,6 +34,9 @@ COPY ./conf/spz/production.cfg /home/spz/code/instance/production.cfg
 VOLUME ["/home/spz/code/spz/static", "/state"]
 USER 1000
 
+# expose port
+EXPOSE 3031
+
 # set entry point
 ENTRYPOINT ["/home/spz/code/util/docker_entrypoint.sh"]
 
