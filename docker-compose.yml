@@ -1,11 +1,13 @@
 version: '2'
 services:
     uwsgi:
-        image: spz-signup-webend:latest
+        image: spzsignup/wsgiapp:latest
         command: uwsgi --ini uwsgi.ini --workers 8 --threads 4
         volumes:
             - ./conf/spz:/home/spz/config:ro
             - data_static:/home/spz/code/spz/static:rw
+        tmpfs:
+            - /tmp
         read_only: true
         environment:
             - MAIL_PORT=tcp://mail:25
@@ -20,7 +22,7 @@ services:
             - back
         restart: unless-stopped
     celery_beat:
-        image: spz-signup-webend:latest
+        image: spzsignup/wsgiapp:latest
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
             - uwsgi
@@ -39,7 +41,7 @@ services:
             - back
         restart: unless-stopped
     celery_default:
-        image: spz-signup-webend:latest
+        image: spzsignup/wsgiapp:latest
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
         volumes_from:
             - uwsgi
@@ -58,7 +60,7 @@ services:
             - back
         restart: unless-stopped
     celery_slow_mails:
-        image: spz-signup-webend:latest
+        image: spzsignup/wsgiapp:latest
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
         volumes_from:
             - uwsgi
