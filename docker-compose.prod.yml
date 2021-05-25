@@ -1,28 +1,19 @@
 version: '2'
 services:
-    uwsgi:
+    webend:
         environment:
             - SPZ_CFG_FILE=production.cfg
             - VIRTUAL_HOST=anmeldung.spz.kit.edu
             - LETSENCRYPT_HOST=anmeldung.spz.kit.edu
             - VIRTUAL_PROTO=uwsgi
             - VIRTUAL_PORT=3031
-    celery_beat:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
-    celery_default:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
-    celery_slow_mails:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
     postgres:
         environment:
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     mail:
         image: spzsignup/opensmtpd:6.0.3p1
         volumes:
-            - ./conf/smtpd.conf:/etc/smtpd.conf
+            - ./conf/mail/smtpd.conf:/etc/smtpd.conf
     nginx:
         image: jwilder/nginx-proxy
         container_name: nginx
@@ -37,7 +28,7 @@ services:
         networks:
             - front
         links:
-            - uwsgi
+            - webend
         ports:
             - "80:80"
             - "443:443"

@@ -1,24 +1,6 @@
 version: '2'
 services:
     uwsgi:
-        ports:
-            - "127.0.0.1:3031:3031"
-        volumes:
-            - ./src/spz/spz:/home/spz/code/spz:ro
-            - ./src/spz/test:/home/spz/code/test:ro
-            - ./src/spz/spz/translations:/home/spz/code/i18n.build:rw
-            - ./src/spz/util:/home/spz/code/util:ro
-        environment:
-            - FLASK_ENV=development
-    celery_beat:
-        environment:
-            - FLASK_ENV=development
-    celery_default:
-        command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
-        environment:
-            - FLASK_ENV=development
-    celery_slow_mails:
-        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
         environment:
             - FLASK_ENV=development
     redis:
