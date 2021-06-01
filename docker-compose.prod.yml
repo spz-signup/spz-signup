@@ -1,6 +1,6 @@
 version: '2'
 services:
-    webend:
+    app:
         environment:
             - SPZ_CFG_FILE=production.cfg
             - VIRTUAL_HOST=anmeldung.spz.kit.edu
@@ -28,7 +28,7 @@ services:
         networks:
             - front
         links:
-            - webend
+            - app
         ports:
             - "80:80"
             - "443:443"

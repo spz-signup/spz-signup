@@ -1,7 +1,7 @@
 version: '2'
 services:
-    uwsgi:
-        image: spzsignup/wsgiapp:latest
+    app:
+        image: spzsignup/app:latest
         command: uwsgi --ini uwsgi.ini --workers 8 --threads 4
         volumes:
             - ./conf/spz:/home/spz/config:ro
@@ -22,10 +22,10 @@ services:
             - back
         restart: unless-stopped
     celery_beat:
-        image: spzsignup/wsgiapp:latest
+        image: spzsignup/app:latest
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
         volumes_from:
-            - uwsgi
+            - app
         tmpfs:
             - /tmp
         read_only: true
@@ -41,10 +41,10 @@ services:
             - back
         restart: unless-stopped
     celery_default:
-        image: spzsignup/wsgiapp:latest
+        image: spzsignup/app:latest
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
         volumes_from:
-            - uwsgi
+            - app
         tmpfs:
             - /tmp
         read_only: true
@@ -60,10 +60,10 @@ services:
             - back
         restart: unless-stopped
     celery_slow_mails:
-        image: spzsignup/wsgiapp:latest
+        image: spzsignup/app:latest
         command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
         volumes_from:
-            - uwsgi
+            - app
         tmpfs:
             - /tmp
         read_only: true

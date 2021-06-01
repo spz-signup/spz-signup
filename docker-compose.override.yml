@@ -1,6 +1,6 @@
 version: '2'
 services:
-    uwsgi:
+    app:
         environment:
             - FLASK_ENV=development
     redis:
@@ -27,7 +27,7 @@ services:
         networks:
             - front
         links:
-            - uwsgi
+            - app
         restart: unless-stopped
         ports:
             - "127.0.0.1:8081:80"
