@@ -2,33 +2,26 @@ version: '2'
 services:
     app:
         environment:
-            - FLASK_ENV=development
-    redis:
-        ports:
-            - "127.0.0.1:26379:6379"
-    postgres:
-        ports:
-            - "127.0.0.1:25432:5432"
+            FLASK_ENV: development
+            VIRTUAL_HOST: localhost
+    celery_beat:
+        environment:
+            FLASK_ENV: development
+    celery_default:
+        environment:
+            FLASK_ENV: development
+    celery_slow_mails:
+        environment:
+            FLASK_ENV: development
     mail:
         image: djfarrelly/maildev:1.1.0
         ports:
-            - "127.0.0.1:8080:80"
+            - "8080:80"
+    postgres:
+        environment:
+            POSTGRES_PASSWORD: dev-password
     nginx:
-        image: nginx:1.19
-        command: nginx -g "worker_processes 16;"
         volumes:
-            - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-            - ./conf/nginx/ssl:/etc/nginx/ssl:ro
-            - cache_nginx:/var/cache/nginx
-            - data_static:/static:ro
-        tmpfs:
-            - /tmp
-        read_only: true
-        networks:
-            - front
-        links:
-            - app
-        restart: unless-stopped
-        ports:
-            - "127.0.0.1:8081:80"
-            - "127.0.0.1:443:443"
+            - ./ssl/dhparam.pem:/etc/nginx/dhparam/dhparam.pem:ro
+            - ./ssl/main.crt+chain.pem:/etc/nginx/certs/localhost.crt:ro
+            - ./ssl/main.key.pem:/etc/nginx/certs/localhost.key:ro
