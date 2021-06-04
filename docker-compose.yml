@@ -7,6 +7,7 @@ x-spzsignup-app: &spzsignup-app
     links:
         - mail
         - redis
+        - postgres
     networks:
         - back
     read_only: true
@@ -23,10 +24,6 @@ services:
         networks:
             - front
             - back
-        links:
-            - mail
-            - redis
-            - postgres
     celery_beat:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
