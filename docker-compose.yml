@@ -47,7 +47,7 @@ services:
             - ./initdb:/docker-entrypoint-initdb.d:ro
             - data_postgres:/var/lib/postgresql/data
         tmpfs:
-            - /run/postgresql
+            - /run
             - /tmp
         networks:
             - back
@@ -69,15 +69,12 @@ services:
             - cache_nginx:/var/cache/nginx
             - state_nginx:/etc/nginx
         tmpfs:
-            - /var/run
+            - /run
             - /tmp
         networks:
             - front
         links:
             - app
-        ports:
-            - "80:80"
-            - "443:443"
         read_only: true
 
 volumes:

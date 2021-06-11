@@ -31,6 +31,9 @@ services:
             - /etc/nginx/certs
             - /etc/nginx/vhost.d
             - /usr/share/nginx/html
+        ports:
+            - "80:80"
+            - "443:443"
     nginx-letsencrypt:
         restart: unless-stopped
         image: jrcs/letsencrypt-nginx-proxy-companion:latest

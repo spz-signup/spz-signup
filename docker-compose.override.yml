@@ -25,3 +25,6 @@ services:
             - ./ssl/dhparam.pem:/etc/nginx/dhparam/dhparam.pem:ro
             - ./ssl/main.crt+chain.pem:/etc/nginx/certs/localhost.crt:ro
             - ./ssl/main.key.pem:/etc/nginx/certs/localhost.key:ro
+        ports:
+            - "80:80"
+            - "443:443"
