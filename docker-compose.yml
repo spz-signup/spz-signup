@@ -27,6 +27,8 @@ services:
     celery_beat:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
+        volumes:
+            - state_celery:/state
     celery_default:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
@@ -84,6 +86,7 @@ volumes:
     data_static: {}
     state_mail: {}
     state_nginx: {}
+    state_celery: {}
 
 networks:
     front: {}
