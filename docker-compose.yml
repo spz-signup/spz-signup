@@ -1,109 +1,59 @@
 version: '2'
+
+x-spzsignup-app: &spzsignup-app
+    image: spzsignup/app:latest
+    tmpfs:
+        - /tmp
+    links:
+        - mail
+        - redis
+        - postgres
+    networks:
+        - back
+    read_only: true
+
 services:
-    uwsgi:
-        build: .
-        command: uwsgi --ini /home/spz/config/uwsgi.ini --workers 8 --threads 4
-        volumes:
-            - ./docs/python:/home/spz/code/doc.build:rw
-            - ./conf/spz:/home/spz/config:ro
-            - ./conf/i18n/babel.conf:/home/spz/code/i18n.build/babel.conf:ro
-            - data_static:/home/spz/code/spz/static:rw
-            - state_spz:/state:rw
-        tmpfs:
-            - /tmp
-        read_only: true
+    app:
+        <<: *spzsignup-app
+        command: uwsgi --ini uwsgi.ini --workers 8 --threads 4
         environment:
-            - MAIL_PORT=tcp://mail:25
-            - POSTGRES_PORT=tcp://postgres:5432
-            - REDIS_PORT=tcp://redis:6379
-        links:
-            - mail
-            - postgres
-            - redis
+            VIRTUAL_PROTO: uwsgi
+            VIRTUAL_PORT: 3031
+        volumes:
+            - data_static:/home/spz/code/spz/static:rw
         networks:
             - front
             - back
-        restart: unless-stopped
     celery_beat:
-        build: .
+        <<: *spzsignup-app
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
-        volumes_from:
-            - uwsgi
-        tmpfs:
-            - /tmp
-        read_only: true
-        environment:
-            - MAIL_PORT=tcp://mail:25
-            - POSTGRES_PORT=tcp://postgres:5432
-            - REDIS_PORT=tcp://redis:6379
-        links:
-            - mail
-            - postgres
-            - redis
-        networks:
-            - back
-        restart: unless-stopped
+        volumes:
+            - state_celery:/state
     celery_default:
-        build: .
+        <<: *spzsignup-app
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
-        volumes_from:
-            - uwsgi
-        tmpfs:
-            - /tmp
-        read_only: true
-        environment:
-            - MAIL_PORT=tcp://mail:25
-            - POSTGRES_PORT=tcp://postgres:5432
-            - REDIS_PORT=tcp://redis:6379
-        links:
-            - mail
-            - postgres
-            - redis
-        networks:
-            - back
-        restart: unless-stopped
     celery_slow_mails:
-        build: .
-        command: celery --app=spz.tasks.cel worker --queue=slow_mails --loglevel=INFO --concurrency 1
-        volumes_from:
-            - uwsgi
-        tmpfs:
-            - /tmp
-        read_only: true
-        environment:
-            - MAIL_PORT=tcp://mail:25
-            - POSTGRES_PORT=tcp://postgres:5432
-            - REDIS_PORT=tcp://redis:6379
-        links:
-            - mail
-            - postgres
-            - redis
-        networks:
-            - back
-        restart: unless-stopped
+        <<: *spzsignup-app
+        command: celery --app=spz.tasks.cel worker --queues=slow_mails --loglevel=INFO --concurrency 1
     redis:
         image: redis:6.2
         command: redis-server --appendonly yes
         volumes:
             - data_redis:/data
-        read_only: true
         networks:
             - back
-        restart: unless-stopped
+        read_only: true
     postgres:
         image: postgres:13.2
         volumes:
-            - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
+            - ./initdb:/docker-entrypoint-initdb.d:ro
             - data_postgres:/var/lib/postgresql/data
         tmpfs:
-            - /run/postgresql
+            - /run
             - /tmp
-        read_only: true
-        environment:
-            - POSTGRES_PASSWORD=mysecretpassword
         networks:
             - back
-        restart: unless-stopped
+        read_only: true
     mail:
         volumes:
             - state_mail:/var/spool
@@ -112,16 +62,32 @@ services:
             - /tmp
         networks:
             - back
-        restart: unless-stopped
+        read_only: true
+    nginx:
+        image: jwilder/nginx-proxy:0.9
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - data_static:/static:ro
+            - cache_nginx:/var/cache/nginx
+            - state_nginx:/etc/nginx
+        tmpfs:
+            - /run
+            - /tmp
+        networks:
+            - front
+        links:
+            - app
+        read_only: true
 
 volumes:
-    backup: {}
     cache_nginx: {}
     data_postgres: {}
     data_redis: {}
     data_static: {}
     state_mail: {}
-    state_spz: {}
+    state_nginx: {}
+    state_celery: {}
+
 networks:
     front: {}
     back: {}

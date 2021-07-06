@@ -1,69 +1,61 @@
 version: '2'
 services:
-    uwsgi:
+    app:
+        restart: unless-stopped
         environment:
-            - SPZ_CFG_FILE=production.cfg
-            - VIRTUAL_HOST=anmeldung.spz.kit.edu
-            - LETSENCRYPT_HOST=anmeldung.spz.kit.edu
-            - VIRTUAL_PROTO=uwsgi
-            - VIRTUAL_PORT=3031
+            SPZ_CFG_FILE: production.cfg
+            VIRTUAL_HOST: ${HOST:?}
+            LETSENCRYPT_HOST: ${HOST:?}
+        volumes:
+            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_beat:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
+        restart: unless-stopped
     celery_default:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
+        restart: unless-stopped
     celery_slow_mails:
-        environment:
-            - SPZ_CFG_FILE=production.cfg
+        restart: unless-stopped
     postgres:
+        restart: unless-stopped
         environment:
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+        volumes:
+            - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
     mail:
+        restart: unless-stopped
         image: spzsignup/opensmtpd:6.0.3p1
         volumes:
             - ./conf/smtpd.conf:/etc/smtpd.conf
     nginx:
-        image: jwilder/nginx-proxy
-        container_name: nginx
         restart: unless-stopped
         volumes:
-            - cache_nginx:/var/cache/nginx
-            - data_static:/static:ro
             - /etc/nginx/certs
             - /etc/nginx/vhost.d
             - /usr/share/nginx/html
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-        networks:
-            - front
-        links:
-            - uwsgi
         ports:
             - "80:80"
             - "443:443"
     nginx-letsencrypt:
-        image: jrcs/letsencrypt-nginx-proxy-companion
-        container_name: nginx-letsencrypt
         restart: unless-stopped
+        image: jrcs/letsencrypt-nginx-proxy-companion:latest
         volumes_from:
             - nginx
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /etc/acme.sh
         environment:
-            DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
+            DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL:?}
         depends_on:
             - nginx
+        read_only: true
     pg-dump:
-        image: spzsignup/docker-postgres-backup:latest
-        container_name: pg-dump
         restart: unless-stopped
+        image: spzsignup/docker-postgres-backup:latest
         environment:
             CRON_TIME: 0 * * * *
             POSTGRES_HOST: postgres
             POSTGRES_PORT: 5432
             POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
             POSTGRES_DB: spz
             MAX_BACKUPS: 200
             INIT_BACKUP: 'true'
@@ -74,17 +66,18 @@ services:
         links:
             - postgres
     backup:
-        image: southclaws/restic-robot:latest
-        container_name: backup
         restart: unless-stopped
+        image: southclaws/restic-robot:latest
         environment:
-            # once every hour (10 minutes past)
             SCHEDULE: 0 10 * * * *
             RESTIC_REPOSITORY: 'b2:spz-backup'
             RESTIC_ARGS: /data
             RUN_ON_BOOT: 'true'
-            B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
-            B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
-            RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+            B2_ACCOUNT_ID: ${B2_ACCOUNT_ID:?}
+            B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY:?}
+            RESTIC_PASSWORD: ${RESTIC_PASSWORD:?}
         volumes:
-            - backup:/data/
+            - backup:/data
+
+volumes:
+    backup: {}

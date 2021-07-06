@@ -1,7 +1,0 @@
-[flake8]
-filename = *.py,*.cfg
-max-line-length = 120
-show-source = True
-show-pep8 = False
-max-complexity = 10
-exclude = ./src/spz/doc/*
