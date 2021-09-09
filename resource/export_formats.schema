@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "ExportFormats",
+        "type": "object",
+        "properties": {
+            "formats": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "formatter": {
+                            "type": "string"
+                        },
+                        "template": {
+                            "type": "string"
+                        },
+                        "language": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [ "name", "formatter" ]
+                },
+                "uniqueItems": true
+            }
+        },
+        "required": [ "formats" ]
+}

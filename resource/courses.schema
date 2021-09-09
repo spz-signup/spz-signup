@@ -1,0 +1,85 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Courses",
+        "type": "object",
+        "properties": {
+            "languages": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "reply_to": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "signup_begin_iso_utc": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "signup_random_window_end_iso_utc": {
+                            "type": "string",
+                            "format": "data-time"
+                        },
+                        "signup_end_iso_utc": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "signup_auto_end_iso_utc": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "signup_manual_end": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "courses": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "level": {
+                                        "type": "string"
+                                    },
+                                    "ger": {
+                                        "type": "string"
+                                    },
+                                    "limit": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    },
+                                    "rating_lowest": {
+                                        "type": "integer"
+                                    },
+                                    "rating_highest": {
+                                        "type": "integer"
+                                    },
+                                    "collision": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "alternatives": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [ "level", "limit", "price" ]
+                            },
+                            "uniqueItems": true
+                        }
+                    },
+                    "required": [ "name", "reply_to", "signup_begin_iso_utc", "signup_end_iso_utc", "signup_manual_end", "courses" ]
+                },
+                "uniqueItems": true
+            }
+        },
+        "required": [ "languages" ]
+}

@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Origins",
+        "type": "object",
+        "properties": {
+            "origins": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "short_name": {
+                            "type": "string"
+                        },
+                        "validate_registration": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [ "name", "short_name", "validate_registration" ]
+                },
+                "uniqueItems": true
+            }
+        },
+        "required": [ "origins" ]
+}

@@ -20,6 +20,7 @@ services:
             VIRTUAL_PROTO: uwsgi
             VIRTUAL_PORT: 3031
         volumes:
+            - ./resource:/home/spz/code/spz/resource:ro
             - data_static:/home/spz/code/spz/static:rw
         networks:
             - front
