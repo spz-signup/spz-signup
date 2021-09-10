@@ -46,7 +46,6 @@ services:
             DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL:?}
         depends_on:
             - nginx
-        read_only: true
     pg-dump:
         restart: unless-stopped
         image: spzsignup/docker-postgres-backup:latest
