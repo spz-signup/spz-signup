@@ -1,18 +1,6 @@
 {
     "users": [
         {
-            "email": "marco@crepererum.net",
-            "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
-            "email": "felix.rittler@outlook.com",
-            "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
             "email": "frank.forstmeyer@kit.edu",
             "active": true,
             "superuser": true,
@@ -21,12 +9,6 @@
         {
             "email": "silvia.buecher@kit.edu",
             "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
-            "email": "daniel@trvx.org",
-            "active": false,
             "superuser": true,
             "languages": []
         },
