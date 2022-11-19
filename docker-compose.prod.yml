@@ -34,7 +34,7 @@ services:
             - ./conf/postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
     mail:
         restart: unless-stopped
-        image: spzsignup/opensmtpd:6.0.3p1
+        image: spzsignup/opensmtpd:6.8.0p2
         volumes:
             - ./conf/smtpd.conf:/etc/smtpd.conf
     nginx:
