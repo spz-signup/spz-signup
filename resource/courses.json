@@ -2,6 +2,7 @@
     "languages": [
         {
             "name": "Arabisch",
+            "name_english": "Arabic",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2017-09-03T05:00:00Z",
             "signup_random_window_end_iso_utc": "2017-10-11T15:00:00Z",
@@ -27,6 +28,7 @@
         },
         {
             "name": "Chinesisch",
+            "name_english": "Chinese",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -74,6 +76,7 @@
         },
         {
             "name": "Englisch",
+            "name_english": "English",
             "reply_to": "englisch@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -410,6 +413,7 @@
         },
         {
             "name": "Englisch Intensiv",
+            "name_english": "English Intensive",
             "reply_to": "englisch@spz.kit.edu",
             "signup_begin_iso_utc": "2016-09-14T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -461,6 +465,7 @@
         },
         {
             "name": "Franz\u00f6sisch",
+            "name_english": "French",
             "reply_to": "franzoesisch@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -589,6 +594,7 @@
         },
         {
             "name": "Italienisch",
+            "name_english": "Italian",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -636,6 +642,7 @@
         },
         {
             "name": "Japanisch",
+            "name_english": "Japanese",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -692,6 +699,7 @@
         },
         {
             "name": "Latein",
+            "name_english": "Latin",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -713,6 +721,7 @@
         },
         {
             "name": "Niederl\u00e4ndisch",
+            "name_english": "Dutch",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -740,6 +749,7 @@
         },
         {
             "name": "Polnisch",
+            "name_english": "Polish",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -772,6 +782,7 @@
         },
         {
             "name": "Portugiesisch",
+            "name_english": "Portuguese",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -811,6 +822,7 @@
         },
         {
             "name": "Russisch",
+            "name_english": "Russian",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -856,6 +868,7 @@
         },
         {
             "name": "Schwedisch",
+            "name_english": "Swedish",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -901,6 +914,7 @@
         },
         {
             "name": "Spanisch",
+            "name_english": "Spanish",
             "reply_to": "spanisch@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
@@ -1071,6 +1085,7 @@
         },
         {
             "name": "T\u00fcrkisch",
+            "name_english": "Turkish",
             "reply_to": "info@spz.kit.edu",
             "signup_begin_iso_utc": "2016-10-11T05:00:00Z",
             "signup_random_window_end_iso_utc": "2016-10-11T15:00:00Z",
