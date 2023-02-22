@@ -1010,6 +1010,7 @@
                 },
                 {
                     "level": "r\u00e1pido 1",
+                    "level_english": "rapid 1",
                     "ger": "A1",
                     "limit": 22,
                     "price": 180,
@@ -1024,6 +1025,7 @@
                 },
                 {
                     "level": "r\u00e1pido 2",
+                    "level_english": "rapid 2",
                     "ger": "A2",
                     "limit": 22,
                     "price": 180,
@@ -1038,11 +1040,13 @@
                 },
                 {
                     "level": "Mejora tu o\u00eddo!",
+                    "level_english": "Listening Skills",
                     "limit": 20,
                     "price": 90
                 },
                 {
                     "level": "Mejora tu habla!",
+                    "level_english": "Speaking Skills",
                     "ger": "B2",
                     "limit": 20,
                     "price": 90
@@ -1054,29 +1058,34 @@
                 },
                 {
                     "level": "Gram\u00e1tica",
+                    "level_english": "Grammar Review A2/B1/B2",
                     "ger": "B2",
                     "limit": 20,
                     "price": 90
                 },
                 {
                     "level": "Auslandsvorbereitungskurs",
+                    "level_english": "Preparation for Study Abroad",
                     "ger": "B2",
                     "limit": 20,
                     "price": 90
                 },
                 {
                     "level": "Temas de actualidad",
+                    "level_english": "Topical Issues",
                     "ger": "C1",
                     "limit": 20,
                     "price": 90
                 },
                 {
                     "level": "DELE-Vorbereitungskurs",
+                    "level_english": "DELE B2 Preparation Course",
                     "limit": 20,
                     "price": 90
                 },
                 {
                     "level": "Intercultural",
+                    "level_english": "Intercultural Communication",
                     "ger": "C1",
                     "limit": 20,
                     "price": 90
