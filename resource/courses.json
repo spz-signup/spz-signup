@@ -1021,7 +1021,8 @@
                     "alternatives": [
                         "a",
                         "b"
-                    ]
+                    ],
+                    "ects_points": 4
                 },
                 {
                     "level": "r\u00e1pido 2",
@@ -1036,7 +1037,8 @@
                     "alternatives": [
                         "a",
                         "b"
-                    ]
+                    ],
+                    "ects_points": 4
                 },
                 {
                     "level": "Mejora tu o\u00eddo!",

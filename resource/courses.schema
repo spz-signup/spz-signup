@@ -11,6 +11,9 @@
                         "name": {
                             "type": "string"
                         },
+                        "name_english": {
+                            "type": "string"
+                        },
                         "reply_to": {
                             "type": "string",
                             "format": "email"
@@ -43,6 +46,9 @@
                                     "level": {
                                         "type": "string"
                                     },
+                                    "level_english": {
+                                        "type": "string"
+                                    },
                                     "ger": {
                                         "type": "string"
                                     },
@@ -69,6 +75,9 @@
                                         "items": {
                                             "type": "string"
                                         }
+                                    },
+                                    "ects_points": {
+                                        "type": "integer"
                                     }
                                 },
                                 "required": [ "level", "limit", "price" ]
