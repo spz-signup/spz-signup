@@ -43,12 +43,6 @@
             "languages": []
         },
         {
-            "email": "ziffik2@gmail.com",
-            "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
             "email": "urvdp@student.kit.edu",
             "active": true,
             "superuser": true,
