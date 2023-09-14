@@ -19,23 +19,36 @@ services:
         environment:
             VIRTUAL_PROTO: uwsgi
             VIRTUAL_PORT: 3031
+            SPZ_CFG_FILE: production.cfg
         volumes:
             - ./resource:/home/spz/code/spz/resource:ro
             - data_static:/home/spz/code/spz/static:rw
+            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
         networks:
             - front
             - back
     celery_beat:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel beat --schedule=/state/celerybeat-schedule --pidfile=/tmp/celerybeat.pid --loglevel=INFO
+        environment:
+            SPZ_CFG_FILE: production.cfg
         volumes:
             - state_celery:/state
+            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_default:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel worker --queues=default --loglevel=INFO --concurrency 1
+        environment:
+            SPZ_CFG_FILE: production.cfg
+        volumes:
+            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_slow_mails:
         <<: *spzsignup-app
         command: celery --app=spz.tasks.cel worker --queues=slow_mails --loglevel=INFO --concurrency 1
+        environment:
+            SPZ_CFG_FILE: production.cfg
+        volumes:
+            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     redis:
         image: redis:6.2
         command: redis-server --appendonly yes

@@ -3,29 +3,14 @@ services:
     app:
         restart: unless-stopped
         environment:
-            SPZ_CFG_FILE: production.cfg
             VIRTUAL_HOST: ${HOST:?}
             LETSENCRYPT_HOST: ${HOST:?}
-        volumes:
-            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_beat:
         restart: unless-stopped
-        environment:
-            SPZ_CFG_FILE: production.cfg
-        volumes:
-            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_default:
         restart: unless-stopped
-        environment:
-            SPZ_CFG_FILE: production.cfg
-        volumes:
-            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     celery_slow_mails:
         restart: unless-stopped
-        environment:
-            SPZ_CFG_FILE: production.cfg
-        volumes:
-            - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
     postgres:
         restart: unless-stopped
         environment:
