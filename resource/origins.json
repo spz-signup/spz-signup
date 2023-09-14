@@ -3,87 +3,104 @@
         {
             "name": "KIT (Fakultät Architektur)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Bauingenieur-, Geo- und Umweltwissenschaften)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Chemie und Biowissenschaften)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Chemieingenieurwesen und Verfahrenstechnik)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Elektrotechnik und Informationstechnik)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Geistes- und Sozialwissenschaften)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Informatik)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Maschinenbau)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Mathematik)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Physik)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Fakultät Wirtschaftswissenschaften)",
             "short_name": "KIT",
-            "validate_registration": true
+            "validate_registration": true,
+            "is_internal": true
         },
         {
             "name": "KIT (Mitarbeiter)",
             "short_name": "KIT",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": true
         },
         {
             "name": "Hochschule Karlsruhe",
             "short_name": "HS KA",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": false
         },
         {
             "name": "PH Karlsruhe",
             "short_name": "PH KA",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": false
         },
         {
             "name": "HfG Karlsruhe",
             "short_name": "HfG KA",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": false
         },
         {
             "name": "Musikhochschule Karlsruhe",
             "short_name": "MHS KA",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": false
         },
         {
             "name": "Sonstige",
             "short_name": "Sonst.",
-            "validate_registration": false
+            "validate_registration": false,
+            "is_internal": false
         }
     ]
 }
