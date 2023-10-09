@@ -67,7 +67,7 @@
             "is_internal": true
         },
         {
-            "name": "KIT (Mitarbeiter)",
+            "name": "KIT (Mitarbeiter*in)",
             "short_name": "KIT",
             "validate_registration": false,
             "is_internal": true
