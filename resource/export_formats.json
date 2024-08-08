@@ -31,6 +31,19 @@
             "language": "Spanisch",
             "formatter": "zip-excel",
             "template": "export/spanisch_hueber.xlsx"
+        },
+        {
+            "name": "Englisch Gesamtliste",
+            "language": "Englisch",
+            "formatter": "single-excel",
+            "template": "export/english_overview.xlsx",
+            "instance": "LANGUAGE"
+        },
+        {
+            "name": "Gesamtliste (allgemein)",
+            "formatter": "single-excel",
+            "template": "export/overview.xlsx",
+            "instance": "LANGUAGE"
         }
     ]
 }
