@@ -19,6 +19,9 @@
                         },
                         "language": {
                             "type": "string"
+                        },
+                        "instance": {
+                            "type": "string"
                         }
                     },
                     "required": [ "name", "formatter" ]
