@@ -19,7 +19,7 @@
             "languages": ["Englisch", "Englisch Intensiv"]
         },
         {
-            "email": "angela.althen@kit.edu",
+            "email": "cynthia.white@kit.edu",
             "active": true,
             "superuser": false,
             "languages": ["Englisch", "Englisch Intensiv"]
@@ -44,6 +44,12 @@
         },
         {
             "email": "urvdp@student.kit.edu",
+            "active": true,
+            "superuser": true,
+            "languages": []
+        },
+        {
+            "email": "bahar80.bn@gmail.com",
             "active": true,
             "superuser": true,
             "languages": []
