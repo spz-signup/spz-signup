@@ -78,7 +78,7 @@ services:
             - back
         read_only: true
     nginx:
-        image: jwilder/nginx-proxy:0.9
+        image: nginxproxy/nginx-proxy:1.6
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - data_static:/static:ro

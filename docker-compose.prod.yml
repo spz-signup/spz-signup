@@ -25,7 +25,7 @@ services:
     nginx:
         restart: unless-stopped
         volumes:
-            - /etc/nginx/certs
+            - certs:/etc/nginx/certs:ro
             - /etc/nginx/vhost.d
             - /usr/share/nginx/html
         ports:
@@ -33,10 +33,11 @@ services:
             - "443:443"
     nginx-letsencrypt:
         restart: unless-stopped
-        image: jrcs/letsencrypt-nginx-proxy-companion:latest
+        image: nginxproxy/acme-companion:2.4
         volumes_from:
             - nginx
         volumes:
+            - certs:/etc/nginx/certs:rw
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /etc/acme.sh
         environment:
@@ -77,3 +78,4 @@ services:
 
 volumes:
     backup: {}
+    certs: {}
