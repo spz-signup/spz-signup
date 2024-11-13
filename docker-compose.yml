@@ -24,6 +24,7 @@ services:
             - ./resource:/home/spz/code/spz/resource:ro
             - data_static:/home/spz/code/spz/static:rw
             - ./conf/app.conf:/home/spz/code/instance/production.cfg:ro
+            - files:/home/spz/code/spz/files:rw
         networks:
             - front
             - back
@@ -101,6 +102,7 @@ volumes:
     state_mail: {}
     state_nginx: {}
     state_celery: {}
+    files: {}
 
 networks:
     front: {}
