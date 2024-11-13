@@ -1,0 +1,14 @@
+{
+    "formats": [
+        {
+            "name": "Spanisch Hueber",
+            "grade_column": "M",
+            "languages": ["Spanisch"]
+        },
+        {
+            "name": "Englisch",
+            "grade_column": "S",
+            "languages": ["Englisch", "Englisch Intensiv"]
+        }
+    ]
+}
