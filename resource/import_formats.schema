@@ -21,6 +21,10 @@
             "type": "string",
             "minLength": 1
           },
+          "mail_column": {
+            "type": "string",
+            "minLength": 1
+          },
           "languages": {
             "type": "array",
             "items": {

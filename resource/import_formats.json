@@ -8,6 +8,7 @@
         {
             "name": "Englisch",
             "grade_column": "S",
+            "mail_column": "I",
             "languages": ["Englisch", "Englisch Intensiv"]
         }
     ]
