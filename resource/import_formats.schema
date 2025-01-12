@@ -25,6 +25,10 @@
             "type": "string",
             "minLength": 1
           },
+          "ects_column": {
+            "type": "string",
+            "minLength": 1
+          },
           "languages": {
             "type": "array",
             "items": {

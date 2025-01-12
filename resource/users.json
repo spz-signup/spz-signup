@@ -10,7 +10,7 @@
             "email": "maritza.bayona@kit.edu",
             "active": true,
             "superuser": true,
-            "languages": []
+            "languages": ["Spanisch"]
         },
         {
             "email": "donald.richardson@kit.edu",
