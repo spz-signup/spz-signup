@@ -3,14 +3,14 @@
         {
             "name": "Spanisch Hueber",
             "grade_column": "M",
-            "ects_column": "P",
+            "ects_column": "Q",
             "languages": ["Spanisch"]
         },
         {
             "name": "Englisch",
             "grade_column": "S",
             "mail_column": "I",
-            "ects_column": "V",
+            "ects_column": "W",
             "languages": ["Englisch", "Englisch Intensiv"]
         }
     ]
