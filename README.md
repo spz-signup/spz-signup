@@ -11,6 +11,7 @@ SPZ Signup
         Felix Rittler (felix.rittler@web.de)<br>
         Tobias Dierich (spz@tobiasdierich.de)<br>
         Simon Zimmermann (timzi777@gmail.com)<br>
+        Jan Fenker (coding@fenker.eu)<br>
     </td>
 </tr>
 <tr>
