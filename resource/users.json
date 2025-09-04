@@ -1,7 +1,7 @@
 {
     "users": [
         {
-            "email": "frank.forstmeyer@kit.edu",
+            "email": "monika.david@kit.edu",
             "active": true,
             "superuser": true,
             "languages": []
@@ -37,22 +37,11 @@
             "languages": ["Spanisch"]
         },
         {
-            "email": "spz@tobiasdierich.de",
-            "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
-            "email": "urvdp@student.kit.edu",
-            "active": true,
-            "superuser": true,
-            "languages": []
-        },
-        {
-            "email": "bahar80.bn@gmail.com",
+            "email": "jan.fenker@student.kit.edu",
             "active": true,
             "superuser": true,
             "languages": []
         }
     ]
 }
+
